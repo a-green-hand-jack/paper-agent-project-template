@@ -1,7 +1,7 @@
 ---
 name: bibliographic-metadata-services
 date: 2026-10-20
-source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165); keyless OpenAlex and Semantic Scholar responses and the tools' backoff code read 2026-10-20 (#171)
+source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165); keyless OpenAlex and Semantic Scholar responses and the tools' backoff code read 2026-10-20 (#171); shared credential file as the preferred key source (#176)
 scope: shared
 applies_to: paper repositories that run the online reference audits in .agents/scripts/
 status: active
@@ -24,8 +24,14 @@ superseded_by: null
   and Semantic Scholar. Google Books and Zotero are not used (the audit passes
   `--no-google-books`; the locked core excludes Zotero), nor are the optional
   Scholar, organizer, embedding or LLM extras.
-- **Variables.** Trusted local runs read the ignored root `.env` with a strict
-  parser that accepts only these names; already exported values win:
+- **Variables.** Trusted local runs read only these names, never by shell
+  evaluation. The preferred source is the device's shared credential file,
+  reached through `.project/credentials/.env` (the canonical checkout's link,
+  and in a worktree its `.project/credentials` link; `llm-credentials`): every
+  other key in it is skipped and never exported. The fallback is the ignored
+  root `.env`, which belongs to the project alone and fails on any other name.
+  Exported values win over the root `.env`, and the root `.env` over the
+  shared file:
   - `BIBTEX_CHECK_MAILTO`: a monitored contact address for the Crossref and
     OpenAlex polite pool; not a secret.
   - `OPENALEX_API_KEY`, `S2_API_KEY`: optional API keys; secrets.
