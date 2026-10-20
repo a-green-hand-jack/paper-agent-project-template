@@ -298,7 +298,7 @@ coding template it follows in `template.upstream`:
 | Repository | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.1) | the coding template and the tag it follows (v0.1.13) |
+| this template | itself, its release (v0.4.2) | the coding template and the tag it follows (v0.1.13) |
 | a paper made from this template | this template, the adopted tag | none |
 
 A repository follows `template.upstream` when it has that field, and

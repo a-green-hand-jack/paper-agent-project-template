@@ -4,7 +4,7 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
-## v0.4.2
+## v0.4.2 — 2026-10-20
 
 Fixes the defects downstream papers reported after adopting v0.4.1 (#173),
 and tests the adoption states this template documents before each release, so
