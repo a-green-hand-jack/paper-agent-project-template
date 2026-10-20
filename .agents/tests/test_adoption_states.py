@@ -1,6 +1,7 @@
 """The adoption states this template documents, built from its shipped files in
 a temporary root and run through the real gates before each release (DEV.md,
-"Releases"). A paper deletes this file with the rest of `scope: template`."""
+"Releases"), and the upgrade of a paper from an earlier release to them. A paper
+deletes this file with the rest of `scope: template`."""
 from __future__ import annotations
 
 import concurrent.futures
@@ -24,6 +25,9 @@ PLACEHOLDER_ERROR = "still declares the template placeholder"
 # Variables a calling make or shell may set that would change a state's gates.
 CALLER_VARIABLES = ("PAGE_BUDGET", "BUILD_DIR", "MAKEFLAGS", "MAKELEVEL", "MFLAGS", "PYTHONPYCACHEPREFIX")
 ENTRIES = 100
+# The release a paper is upgraded from with upgrade-template.sh.
+UPGRADE_SOURCE = "v0.4.1"
+CLONE = ".project/build/template-upgrade/paper-agent-project-template.git"
 
 # A stand-in for a venue's official kit, with the kind of text real kits carry
 # about authors; no real kit's text.
@@ -241,6 +245,105 @@ class AdoptionStateTests(unittest.TestCase):
                 errors = [line for line in anonymity.splitlines() if line.startswith("ERROR")]
                 self.assertTrue(errors)
                 self.assertEqual([line for line in errors if PLACEHOLDER_ERROR not in line], [], anonymity)
+
+
+def release_entries() -> list[tuple[str, str]]:
+    """Each `## <tag>` entry of RELEASE_NOTES.md, newest first."""
+    text = (ROOT / "RELEASE_NOTES.md").read_text(encoding="utf-8")
+    return [(entry.split(None, 1)[0], entry) for entry in re.split(r"^## ", text, flags=re.M)[1:]
+            if re.match(r"v\d", entry)]
+
+
+def git(*arguments: str, cwd: Path, **options) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", *arguments],
+                          cwd=cwd, check=True, capture_output=True, **options)
+
+
+def tree(root: Path) -> dict[str, bytes]:
+    return {str(path.relative_to(root)): os.readlink(path).encode() if path.is_symlink() else path.read_bytes()
+            for path in root.rglob("*")
+            if (path.is_file() or path.is_symlink()) and path.relative_to(root).parts[0] not in (".git", ".project")}
+
+
+class ReleaseNotesTests(unittest.TestCase):
+    def test_each_release_says_whether_the_command_completes_its_upgrade(self) -> None:
+        """release-doc-audit: every release a paper can cross with
+        upgrade-template.sh (those after v0.4.0) marks its upgrade section
+        **Command only.** or lists the manual steps."""
+        for tag, entry in release_entries():
+            if tag == "v0.4.0":
+                break
+            with self.subTest(release=tag):
+                section = re.search(r"^### Upgrading a paper from \S+\n(.*?)(?=^### |\Z)", entry, re.M | re.S)
+                self.assertIsNotNone(section, "no `### Upgrading a paper from <tag>` section")
+                body = section.group(1).strip()
+                self.assertTrue(body.startswith("**Command only.**") or re.search(r"^1\. ", body, re.M), body)
+
+
+class UpgradeStateTests(unittest.TestCase):
+    """A fresh paper at UPGRADE_SOURCE, upgraded with this release's
+    upgrade-template.sh to this tree, tagged as the newest release."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.directory = tempfile.TemporaryDirectory(prefix="adoption-upgrade-")
+        base = Path(cls.directory.name)
+        cls.target = release_entries()[0][0]
+        template = base / "template"
+        shipped_tree(template)
+        git("add", "-A", cwd=template)
+        git("commit", "-qm", cls.target, cwd=template)
+        git("tag", cls.target, cwd=template)
+        git("fetch", "-q", "--depth", "1", f"file://{ROOT}", f"refs/tags/{UPGRADE_SOURCE}:refs/tags/{UPGRADE_SOURCE}",
+            cwd=template)
+        cls.paper = base / "paper"
+        cls.paper.mkdir()
+        subprocess.run(["tar", "-x", "-C", str(cls.paper)], check=True,
+                       input=git("archive", UPGRADE_SOURCE, cwd=template).stdout)
+        git("init", "-q", cwd=cls.paper)
+        start_paper(cls.paper)
+        cls.before = tree(cls.paper)
+        # README "Template versions": the clone, and the target release's own copy of the command.
+        git("clone", "-q", "--bare", str(template), str(cls.paper / CLONE), cwd=base)
+        script = base / "upgrade-template.sh"
+        script.write_bytes(git("show", f"{cls.target}:.agents/scripts/upgrade-template.sh", cwd=template).stdout)
+        run = lambda *arguments: subprocess.run(["bash", str(script), *arguments], cwd=cls.paper,
+                                                capture_output=True, text=True, check=False)
+        cls.check = run("--check", cls.target)
+        cls.after_check = tree(cls.paper)
+        cls.upgrade = run(cls.target)
+        cls.expected = base / "expected"
+        shipped_tree(cls.expected)
+        start_paper(cls.expected)
+        registry = cls.expected / ".agents/content-registry.yaml"
+        registry.write_text(re.sub(r"(?m)^  version: \S+$", f"  version: {cls.target}",
+                                   registry.read_text(encoding="utf-8"), count=1), encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.directory.cleanup()
+
+    def test_check_plans_without_conflicts_and_changes_nothing(self) -> None:
+        self.assertEqual(self.check.returncode, 0, self.check.stdout + self.check.stderr)
+        self.assertEqual(self.after_check, self.before)
+
+    def test_the_upgrade_reaches_a_fresh_paper_of_this_release(self) -> None:
+        """Every path equals a paper started from this tree, except the
+        project-owned paper files, which keep the paper's own text."""
+        self.assertEqual(self.upgrade.returncode, 0, self.upgrade.stdout + self.upgrade.stderr)
+        upgraded, expected = tree(self.paper), tree(self.expected)
+        differing = {path for path in upgraded.keys() | expected.keys() if upgraded.get(path) != expected.get(path)}
+        for path in sorted(differing):
+            with self.subTest(path=path):
+                self.assertTrue(path.startswith("paper/"), self.upgrade.stdout)
+                self.assertEqual(upgraded.get(path), self.before.get(path))
+
+    @unittest.skipIf(shutil.which("latexmk") is None or shutil.which("pdftotext") is None, "make check builds the paper")
+    def test_make_check_passes_after_the_upgrade(self) -> None:
+        self.assertEqual(self.upgrade.returncode, 0)
+        result = subprocess.run(["make", "check"], cwd=self.paper, env=caller_environment(),
+                                capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stdout[-4000:] + result.stderr[-2000:])
 
 
 class OnlineAuditStateTests(unittest.TestCase):

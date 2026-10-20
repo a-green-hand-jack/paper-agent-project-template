@@ -164,7 +164,10 @@ git push -u origin main
 ```
 
 Read `RELEASE_NOTES.md` at that tag first. Later releases arrive through the
-`template-upgrade` skill, and a defect in the template goes back through
+`template-upgrade` skill: `bash .agents/scripts/upgrade-template.sh --check
+<TEMPLATE_TAG>` prints the plan and `upgrade-template.sh <TEMPLATE_TAG>`
+applies it; a release marked **Command only.** without a conflict needs
+nothing else (the light path). A defect in the template goes back through
 `template-feedback`. An existing paper repository joins through
 `template-adoption`; one that used `template-sync` follows the v0.4.0 notes in
 `RELEASE_NOTES.md`.

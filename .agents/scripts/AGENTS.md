@@ -33,6 +33,10 @@ This repository's own:
   structure, indexes, registry entries and vendored-file hashes.
 - `overleaf-sync.sh` — `status`, `push` and `pull` between `paper/` and an
   Overleaf project.
+- `upgrade-template.sh` — `[--check] TARGET_TAG`: the mechanical part of
+  `template-upgrade` (step 5) from the registry's `template.version`, with
+  conflicts refused and reported; its clone and merge proposals stay in
+  `.project/build/template-upgrade/`.
 - `check-reference-integrity.py`, `reference-evidence.py` — the offline
   reference gate and the citation-support records; `check-bibtex-format.py`,
   `check-reference-metadata.py`, `check-reference-corrections.py` — the optional

@@ -4,6 +4,66 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
+## v0.4.4 — 2026-10-20
+
+Adds a light upgrade path: one command applies the mechanical part of a
+template upgrade, and each release says whether anything else remains (#177).
+
+### Added
+
+- `.agents/scripts/upgrade-template.sh [--check] <TARGET_TAG>` upgrades a
+  paper from the registry's `template.version` to a target tag, across any
+  number of releases in one run. It fetches both tags into
+  `.project/build/template-upgrade/` (offline once they are there) and, for
+  each path changed between them, applies `template-upgrade` step 5 by the
+  target release's registry:
+  - `scope: template` is skipped and project-owned paths are left alone;
+  - a shared file is replaced above its `## In this repository` section
+    after check 1, or whole when it has no section; a new shared path is
+    added, and a removed one is deleted only when it is unchanged here;
+  - the registry is merged entry by entry, and `template.version` is set to
+    the target when nothing conflicts;
+  - `assets/`, `.project/` and `.env` are never touched.
+
+  A local edit is a conflict: never overwritten, reported with a three-way
+  merge proposal from `git merge-file`, and the command exits 1. It prints
+  what it applied, skipped, refused and left for manual steps: a section
+  whose slots or keyed steps changed, and the upgrade section of every
+  release it crosses. `--check` prints the same plan and changes nothing.
+- The light path (`template-upgrade`, "In this repository"): when every
+  release crossed is marked **Command only.** and `--check` reports neither a
+  conflict nor a manual step, the upgrade is one Issue, one worktree, the
+  command, `make check` and a PR. Otherwise the full procedure applies,
+  starting from the command's plan.
+- Each release entry's `### Upgrading a paper from <tag>` section starts with
+  **Command only.** or lists the manual steps that remain. `release-doc-audit`
+  requires it, and `test_adoption_states.py` checks every entry after v0.4.0.
+  It also upgrades a fresh paper at v0.4.1 to the release candidate with the
+  candidate's own command: the result equals a fresh paper of the candidate,
+  except the paper's own files, and passes `make check`.
+- `.agents/tests/test_upgrade_template.py` runs the command against a fixture
+  template repository with three tags. The `check` CI job checks out the full
+  history, so that the v0.4.1 tag is there.
+
+### Adoption states
+
+Unchanged from v0.4.2. `make check` passes in every state below, and
+`make release-check` fails only on the steps named, for the reasons v0.4.2
+gives.
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.3
+
+**Command only.** The command is new in this release, so run the release's
+own copy once, as `template-upgrade` shows under "In this repository":
+`--check` first, then without it, then `make check`.
+
 ## v0.4.3 — 2026-10-20
 
 Lets the online reference audits take their keys from the device's shared
@@ -41,7 +101,7 @@ gives.
 
 ### Upgrading a paper from v0.4.2
 
-Take the release with `template-upgrade`, then:
+**Manual steps.** Take the release with `template-upgrade`, then:
 
 1. If the device has a shared credential file, link the canonical checkout's
    `.project/credentials/.env` to it (create `.project/credentials/` first if
