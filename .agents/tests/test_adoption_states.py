@@ -94,6 +94,7 @@ def start_paper(root: Path) -> None:
     agents.write_text(drop_bullets(agents.read_text(encoding="utf-8"),
                                    lambda line: "protects the case branches" in line), encoding="utf-8")
     (root / "RELEASE_NOTES.md").write_text("# Release notes\n", encoding="utf-8")
+    (root / "README.md").write_text("# A paper\n\nBuild it with `make check`.\n", encoding="utf-8")
     for record, slots in ((".agents/memory/shared/page-budget-on-blind-build.md", ("PAGE_MARGIN",)),
                           (".agents/memory/shared/post-build-visual-inspection.md", ("MIN_FIGURE_TEXT", "LAST_LINE_FILL"))):
         rows = "".join(f"| `{slot}` | to be set for the venue |\n" for slot in slots)
@@ -329,13 +330,16 @@ class UpgradeStateTests(unittest.TestCase):
 
     def test_the_upgrade_reaches_a_fresh_paper_of_this_release(self) -> None:
         """Every path equals a paper started from this tree, except the
-        project-owned paper files, which keep the paper's own text."""
+        project-owned paper files and the Human documents marked
+        `upgrade: review`, which keep the paper's own text."""
         self.assertEqual(self.upgrade.returncode, 0, self.upgrade.stdout + self.upgrade.stderr)
         upgraded, expected = tree(self.paper), tree(self.expected)
+        registry = yaml.safe_load((ROOT / ".agents/content-registry.yaml").read_text(encoding="utf-8"))
+        owned = {entry["path"] for entry in registry["entries"] if entry.get("upgrade") == "review"}
         differing = {path for path in upgraded.keys() | expected.keys() if upgraded.get(path) != expected.get(path)}
         for path in sorted(differing):
             with self.subTest(path=path):
-                self.assertTrue(path.startswith("paper/"), self.upgrade.stdout)
+                self.assertTrue(path.startswith("paper/") or path in owned, self.upgrade.stdout)
                 self.assertEqual(upgraded.get(path), self.before.get(path))
 
     @unittest.skipIf(shutil.which("latexmk") is None or shutil.which("pdftotext") is None, "make check builds the paper")

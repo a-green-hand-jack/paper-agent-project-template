@@ -149,13 +149,30 @@ report with its evidence.
   5 applies, what it skips (`scope: template`, project-owned paths, and
   `assets/`, `.project/` and `.env`, which it never touches), each local
   conflict with a three-way merge proposal under
-  `.project/build/template-upgrade/proposals/`, each section to reconcile, and
-  the upgrade section of every release it crosses. Without `--check` it
-  applies the plan, never overwrites a conflict, and sets `template.version`
-  to the target when nothing conflicts; it exits 1 on a conflict. Run it again
-  after resolving one: a file that already holds the target's change counts as
-  applied. A paper without the command yet runs the target release's copy
-  once:
+  `.project/build/template-upgrade/proposals/`, what it leaves for review,
+  each section to reconcile, and the upgrade section of every release it
+  crosses. Without `--check` it applies the plan, never overwrites a
+  conflict, and sets `template.version` to the target when nothing
+  conflicts; it exits 1 on a conflict.
+  - The Human documents whose registry entry has `upgrade: review`
+    (`README.md`, `PAPER.md`, `DEV.md`) are the paper's own once it has
+    started: the command never changes them and prints the release's diff
+    for each under "Review", never as a conflict. Take from it only what the
+    release notes' manual steps require, or what the paper wants.
+  - A file adapted without a `## In this repository` section is merged three
+    ways with the source tag as base, and a merge without overlap is applied;
+    only an overlap is a conflict. For a Markdown file, "Review" proposes
+    moving its local text into a section (step 5); do it in the upgrade or a
+    later Issue, so that check 1 applies from then on.
+  - Run the command again after resolving a conflict: a file that already
+    holds the target's change counts as applied. A file resolved by hand in
+    any other way is accepted with `--resolved <path>` (repeat it per file,
+    `.agents/content-registry.yaml` included) once no conflict marker is
+    left, and the command then sets `template.version`; never edit the
+    version by hand.
+
+  A paper without the command yet, or whose target release notes say so,
+  runs the target release's copy once:
 
   ```bash
   clone=.project/build/template-upgrade/paper-agent-project-template.git
@@ -164,8 +181,9 @@ report with its evidence.
   ```
 
 - The light path: when every release crossed is marked **Command only.** and
-  `--check` reports no conflict and no manual step (`Light path: yes`), the
-  upgrade is one Issue, one Herdr worktree, the command, `make check` and a
-  PR. It needs no migration map and no full-procedure session, and its
-  dispatch can use the low tier. Otherwise the full procedure applies, and
-  the command's plan is the start of its migration map.
+  `--check` reports no conflict and no manual step (`Light path: yes`; review
+  items do not count), the upgrade is one Issue, one Herdr worktree, the
+  command, `make check` and a PR. It needs no migration map and no
+  full-procedure session, and its dispatch can use the low tier. Otherwise
+  the full procedure applies, and the command's plan is the start of its
+  migration map.
