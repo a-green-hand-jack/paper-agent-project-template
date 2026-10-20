@@ -6,25 +6,40 @@ on:
     branches:
       - dev
       - main
+  schedule:
+    - cron: "23 4 * * 1"
   workflow_dispatch: {}
 
 permissions:
   contents: read
 
 concurrency:
-  group: reference-validation-${{ github.event.pull_request.number || github.ref }}
+  group: reference-validation-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+# Three tiers (DEV.md, "Reference audits"):
+# - references, on every pull request and push: the offline gates, and the
+#   online audits of only the entries new or changed against the base or
+#   their ledger fingerprint. Required; usually seconds.
+# - references, on the release path (a pull request into main, a push to
+#   main): the full online audit. Required.
+# - references-full, weekly and on workflow_dispatch: the full online audit,
+#   the two audits in parallel, with the cache kept between runs. It reports
+#   and blocks no merge.
 
 jobs:
   references:
     name: references
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - name: Checkout the validated head
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && 'refs/heads/main' || github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # The changed tier compares the bibliography with the base commit.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -60,6 +75,46 @@ jobs:
             *) exit "$status" ;;
           esac
 
+      - name: Choose the audit tier
+        id: tier
+        if: steps.policy.outputs.enabled == 'true'
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ ( "$EVENT" == pull_request && "$BASE_REF" == main ) || ( "$EVENT" == push && "$REF" == refs/heads/main ) ]]; then
+            echo "args=--scope all --timeout 1800" >> "$GITHUB_OUTPUT"
+            echo "Release path: full online audit of every entry."
+          else
+            echo "args=--scope changed --base $BASE_SHA --timeout 600" >> "$GITHUB_OUTPUT"
+            echo "Changed tier: entries new or changed against $BASE_SHA or their ledger fingerprint."
+          fi
+
+      # The audits' HTTP caches, kept between runs: a request a cached run
+      # already answered is not sent again, and an entry whose BibTeX changed
+      # makes new requests. Saved even when an audit fails or reaches its cap,
+      # so the next run continues; the audits remove any row holding a key.
+      - name: Restore the correction audit cache
+        if: steps.policy.outputs.enabled == 'true'
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            .project/build/reference-integrity/cache/corrections-http.db
+            .project/build/reference-integrity/cache/corrections-resolution.json
+          key: reference-audit-corrections-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: reference-audit-corrections-v1-
+
+      - name: Restore the metadata audit cache
+        if: steps.policy.outputs.enabled == 'true'
+        uses: actions/cache/restore@v6
+        with:
+          path: .project/build/reference-integrity/cache/metadata.db
+          key: reference-audit-metadata-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: reference-audit-metadata-v1-
+
       - name: Install the locked uv runner
         if: steps.policy.outputs.enabled == 'true'
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
@@ -78,35 +133,61 @@ jobs:
             python .agents/tests/test_bibtex_format_helper.py
           uv run --project .agents/scripts/reference-integrity --frozen --no-dev \
             python .agents/tests/test_bibtex_correction_helper.py
+          uv run --project .agents/scripts/reference-integrity --frozen --no-dev \
+            python .agents/tests/test_reference_tool_contract.py
           python3 .agents/scripts/check-bibtex-format.py
 
       - name: Run keyless correction audit
+        timeout-minutes: 35
         if: steps.policy.outputs.enabled == 'true' && github.event_name == 'pull_request'
         env:
           BIBTEX_CHECK_MAILTO: ${{ vars.BIBTEX_CHECK_MAILTO }}
-        run: python3 .agents/scripts/check-reference-corrections.py
+          TIER_ARGS: ${{ steps.tier.outputs.args }}
+        run: python3 .agents/scripts/check-reference-corrections.py $TIER_ARGS
 
       - name: Run keyless metadata audit
+        timeout-minutes: 35
         if: steps.policy.outputs.enabled == 'true' && github.event_name == 'pull_request'
         env:
           BIBTEX_CHECK_MAILTO: ${{ vars.BIBTEX_CHECK_MAILTO }}
-        run: python3 .agents/scripts/check-reference-metadata.py
+          TIER_ARGS: ${{ steps.tier.outputs.args }}
+        run: python3 .agents/scripts/check-reference-metadata.py $TIER_ARGS
 
       - name: Run trusted correction audit
+        timeout-minutes: 35
         if: steps.policy.outputs.enabled == 'true' && github.event_name != 'pull_request'
         env:
           BIBTEX_CHECK_MAILTO: ${{ vars.BIBTEX_CHECK_MAILTO }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           S2_API_KEY: ${{ secrets.S2_API_KEY }}
-        run: python3 .agents/scripts/check-reference-corrections.py
+          TIER_ARGS: ${{ steps.tier.outputs.args }}
+        run: python3 .agents/scripts/check-reference-corrections.py $TIER_ARGS
 
       - name: Run trusted metadata audit
+        timeout-minutes: 35
         if: steps.policy.outputs.enabled == 'true' && github.event_name != 'pull_request'
         env:
           BIBTEX_CHECK_MAILTO: ${{ vars.BIBTEX_CHECK_MAILTO }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           S2_API_KEY: ${{ secrets.S2_API_KEY }}
-        run: python3 .agents/scripts/check-reference-metadata.py
+          TIER_ARGS: ${{ steps.tier.outputs.args }}
+        run: python3 .agents/scripts/check-reference-metadata.py $TIER_ARGS
+
+      - name: Save the correction audit cache
+        if: always() && steps.policy.outputs.enabled == 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: |
+            .project/build/reference-integrity/cache/corrections-http.db
+            .project/build/reference-integrity/cache/corrections-resolution.json
+          key: reference-audit-corrections-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Save the metadata audit cache
+        if: always() && steps.policy.outputs.enabled == 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .project/build/reference-integrity/cache/metadata.db
+          key: reference-audit-metadata-v1-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Upload reference audit evidence
         if: always() && steps.policy.outputs.enabled == 'true'
@@ -127,3 +208,92 @@ jobs:
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
+
+  references-full:
+    name: references-full (${{ matrix.audit }})
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - audit: corrections
+            cache: |
+              .project/build/reference-integrity/cache/corrections-http.db
+              .project/build/reference-integrity/cache/corrections-resolution.json
+            evidence: |
+              .project/build/reference-integrity/corrections/candidate.bib
+              .project/build/reference-integrity/corrections/report.jsonl
+              .project/build/reference-integrity/corrections/run.json
+              .project/build/reference-integrity/corrections/format.json
+              .project/build/reference-integrity/corrections/validation.json
+          - audit: metadata
+            cache: .project/build/reference-integrity/cache/metadata.db
+            evidence: |
+              .project/build/reference-integrity/metadata.jsonl
+              .project/build/reference-integrity/run.json
+    steps:
+      - name: Checkout the audited branch
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Detect reviewed activation policy
+        id: policy
+        shell: bash
+        run: |
+          set +e
+          python3 .agents/scripts/check-reference-integrity.py --policy-enabled
+          status=$?
+          set -e
+          case "$status" in
+            0) echo "enabled=true" >> "$GITHUB_OUTPUT" ;;
+            1) echo "enabled=false" >> "$GITHUB_OUTPUT" ;;
+            *) exit "$status" ;;
+          esac
+
+      - name: Restore the audit cache
+        if: steps.policy.outputs.enabled == 'true'
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ matrix.cache }}
+          key: reference-audit-${{ matrix.audit }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: reference-audit-${{ matrix.audit }}-v1-
+
+      - name: Install the locked uv runner
+        if: steps.policy.outputs.enabled == 'true'
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.11.23"
+          enable-cache: true
+          cache-dependency-glob: .agents/scripts/reference-integrity/uv.lock
+
+      - name: Run the full audit
+        timeout-minutes: 95
+        if: steps.policy.outputs.enabled == 'true'
+        env:
+          BIBTEX_CHECK_MAILTO: ${{ vars.BIBTEX_CHECK_MAILTO }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          S2_API_KEY: ${{ secrets.S2_API_KEY }}
+        run: python3 .agents/scripts/check-reference-${{ matrix.audit }}.py --scope all --timeout 5400
+
+      - name: Save the audit cache
+        if: always() && steps.policy.outputs.enabled == 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ matrix.cache }}
+          key: reference-audit-${{ matrix.audit }}-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Upload the audit evidence
+        if: always() && steps.policy.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: reference-full-${{ matrix.audit }}-${{ github.run_id }}
+          path: ${{ matrix.evidence }}
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30

@@ -11,4 +11,11 @@ at the rendered pages. `make check` runs every test here with
 with `-p test_<name>.py`. Tests write only to temporary directories. The two
 BibTeX helper tests run only inside the locked reference environment
 (`uv run --project .agents/scripts/reference-integrity ...`, as CI does) and
-are skipped elsewhere.
+are skipped elsewhere, and so is the locked-tool contract test
+(`test_reference_tool_contract.py`), which CI runs in the same environment.
+
+`test_adoption_states.py` belongs to this template (`scope: template`): it
+builds each adoption state from the shipped files in a temporary directory,
+runs `make check` and `make release-check` there and compares the failures
+with the newest `RELEASE_NOTES.md` entry. It is a release requirement
+(`DEV.md`, "Releases"); a paper deletes it.

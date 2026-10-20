@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # make release-check: build blind and submission and fail when the blind build
-# shows an author identity (PDF text, PDF metadata or any source it reads),
-# when submission still has \PaperTODO, \PaperNote or TODO, when the main text
-# of blind is over PAGE_BUDGET or no budget is set, or when the references do
-# not pass the release profile. Run make check first; this adds release gates.
+# shows an author identity (PDF text, PDF metadata or any source it reads) or
+# paper/authors.tex still declares the template's placeholder identity, when
+# submission still has \PaperTODO, \PaperNote or TODO, when the main text of
+# blind is over PAGE_BUDGET or no budget is set, when the references do not
+# pass the release profile, or when the full online metadata audit of every
+# bibliography entry does not pass (it needs uv and the network; a provider
+# failure is an infrastructure outcome). Run make check first; this adds
+# release gates.
 set -uo pipefail
 
 root=$(git rev-parse --show-toplevel)
@@ -44,6 +48,9 @@ run 'pages' check pages blind --budget "${PAGE_BUDGET:-}" --require-budget --fai
 
 step 'reference integrity (release)'
 run 'references' python3 .agents/scripts/check-reference-integrity.py --profile release
+
+step 'reference metadata (full online audit)'
+run 'metadata' python3 .agents/scripts/check-reference-metadata.py
 
 echo
 if ((${#failed[@]})); then

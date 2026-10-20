@@ -75,11 +75,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--uv", default="uv")
-    parser.add_argument("--timeout", type=int, default=720)
+    parser.add_argument("--timeout", type=int, default=3600, help="cap of the whole run, in seconds")
     parser.add_argument("--request-timeout", type=int, default=20)
     parser.add_argument("--rate-limit", type=int, default=30)
-    parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--scope", choices=("all", "changed"), default="all",
+                        help="all entries, or only those new or changed against --base or their ledger fingerprint")
+    parser.add_argument("--base", help="base commit of the changed scope")
     args = parser.parse_args()
+    if args.scope == "changed" and not args.base:
+        parser.error("--scope changed needs --base")
     root = args.root.expanduser().resolve()
     output = root / ".project/build/reference-integrity/corrections"
     summary = output / "run.json"
@@ -110,15 +115,29 @@ def main() -> int:
         except OSError:
             return False
 
-    keys = set(integrity.bibtex_keys(original.decode("utf-8")))
-    if not keys:
+    text = original.decode("utf-8")
+    entries = dict(integrity.bibtex_entries(text))
+    if not entries:
         write_summary(summary, outcome="skipped", detail="bibliography has no entries", canonical_sha256=original_hash)
         print("SKIP reference_corrections bibliography has no entries")
         return 0
+    selected = list(entries)
+    if args.scope == "changed":
+        selected, base_problem = integrity.changed_entries(root, policy, text, args.base)
+        if base_problem:
+            print(f"WARN reference correction audit: {base_problem}")
+        if not selected:
+            write_summary(summary, outcome="skipped", detail="no entry is new or changed", canonical_sha256=original_hash,
+                          scope=args.scope, selected_keys=[])
+            print(f"SKIP reference_corrections none of {len(entries)} entries is new or changed; no provider queried")
+            return 0
+        print(f"INFO reference correction audit checks {len(selected)} of {len(entries)} entries, new or changed")
+    keys = set(selected)
 
     try:
         env_helper = load_module(root / ".agents/scripts/_reference_env.py", "paper_reference_env")
         env_helper.load_reference_env(root)
+        bounded = load_module(root / ".agents/scripts/_bounded_run.py", "paper_bounded_run")
     except Exception as exc:
         write_summary(summary, outcome="infrastructure_error", detail=str(exc), canonical_sha256=original_hash)
         print(f"ERROR reference correction audit could not load .env: {exc}")
@@ -144,7 +163,9 @@ def main() -> int:
     for stale in (candidate, report, format_report, validation_report):
         if stale.exists():
             stale.unlink()
-    source.write_bytes(original)
+    source.write_bytes(original if args.scope == "all" else
+                       ("\n".join(entries[key] for key in selected) + "\n").encode("utf-8"))
+    cache = root / ".project/build/reference-integrity/cache"
     environment = os.environ.copy()
     environment["UV_PROJECT_ENVIRONMENT"] = str(root / ".project/build/reference-integrity/venv")
     environment["UV_CACHE_DIR"] = str(root / ".project/build/reference-integrity/uv-cache")
@@ -154,34 +175,44 @@ def main() -> int:
     command = [
         uv, "run", "--project", str(dependency_root), "--frozen", "--no-dev",
         "bibtex-update", str(source), "--output", str(candidate), "--report", str(report),
-        "--cache", str(output / "http-cache.db"),
-        "--resolution-cache", str(output / "resolution-cache.json"),
+        "--cache", str(cache / "corrections-http.db"),
+        "--resolution-cache", str(cache / "corrections-resolution.json"),
         "--rate-limit", str(max(1, args.rate_limit)),
         "--max-workers", str(max(1, args.workers)),
         "--timeout", str(max(1, args.request_timeout)),
         "--check-fields", "--fill-fields", "--field-fill-mode", "required",
     ]
+    skipped = ["openalex"] if bounded.skip_keyless_openalex(
+        cache / "corrections-http.db", environment, args.timeout + 3600) else []
+    if skipped:
+        print("WARN reference correction audit skips OpenAlex without OPENALEX_API_KEY: its keyless daily budget"
+              " does not cover a bibliography, and each refused request is retried for minutes")
     run_error: str | None = None
+    timed_out = False
     try:
-        result = subprocess.run(
-            command, cwd=root, env=environment, text=True, capture_output=True,
-            timeout=max(1, args.timeout), check=False,
+        bounded_result = bounded.run_bounded(command, cwd=root, env=environment, timeout=max(1, args.timeout))
+        result = None if bounded_result.timed_out else subprocess.CompletedProcess(
+            command, bounded_result.returncode, bounded_result.stdout, bounded_result.stderr
         )
-    except subprocess.TimeoutExpired:
-        result = None
-        run_error = "correction audit timed out"
+        timed_out = bounded_result.timed_out
+        if timed_out:
+            run_error = f"correction audit reached its {args.timeout}s cap before writing a report"
     except OSError as exc:
         result = None
         run_error = f"could not start correction audit: {exc}"
+    bounded.scrub_cache(cache, bounded.credential_values(environment))
     if not canonical_matches():
         write_summary(summary, outcome="unsafe_output", detail="canonical bibliography changed during candidate generation")
         print("ERROR reference correction audit detected canonical bibliography mutation")
         return 2
     if result is None:
-        outcome = "provider_unavailable" if run_error == "correction audit timed out" else "infrastructure_error"
-        write_summary(summary, outcome=outcome, detail=run_error, canonical_sha256=original_hash)
-        print(f"{'WARN' if outcome == 'provider_unavailable' else 'ERROR'} reference_corrections {run_error}")
-        return 0 if outcome == "provider_unavailable" else 2
+        # The cap is a budget, not a provider outage; the kept cache lets the
+        # next run continue. Candidates are advisory, so CI is not blocked.
+        outcome = "incomplete" if timed_out else "infrastructure_error"
+        write_summary(summary, outcome=outcome, detail=run_error, canonical_sha256=original_hash,
+                      unfinished_keys=sorted(keys) if outcome == "incomplete" else [], skipped_services=skipped)
+        print(f"{'WARN' if outcome == 'incomplete' else 'ERROR'} reference_corrections {run_error}")
+        return 0 if outcome == "incomplete" else 2
     if result.stdout:
         print(result.stdout, end="")
     if result.stderr:
@@ -286,7 +317,7 @@ def main() -> int:
         canonical_sha256=original_hash, updater_returncode=result.returncode,
         candidate=".project/build/reference-integrity/corrections/candidate.bib",
         report=".project/build/reference-integrity/corrections/report.jsonl",
-        changed_keys=changed, incomplete_keys=incomplete,
+        changed_keys=changed, incomplete_keys=incomplete, skipped_services=skipped,
     )
     print(f"{'WARN' if outcome != 'no_corrections' else 'OK'} reference_corrections outcome={outcome} candidates={len(changed)}")
     return exit_code
