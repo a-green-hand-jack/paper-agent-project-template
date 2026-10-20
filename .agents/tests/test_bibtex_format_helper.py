@@ -12,7 +12,7 @@ except ImportError:
     pybtex = None
 
 ROOT = Path(__file__).resolve().parents[2]
-HELPER = ROOT / ".agents/tools/_validate-bibtex-with-pybtex.py"
+HELPER = ROOT / ".agents/scripts/_validate-bibtex-with-pybtex.py"
 sys.path.insert(0, str(HELPER.parent))
 
 

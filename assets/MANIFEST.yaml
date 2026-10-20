@@ -1,0 +1,20 @@
+# One entry per result table, figure data file or reported number the paper
+# takes from a code repository, and per external or unusually large asset.
+# Link targets are machine-specific: keep only the stable id here and record
+# local link targets in .project/assets.links (see assets/README.md).
+#
+# Entry fields:
+#   - id: main-result                  # stable id; interface-macro records cite it
+#     kind: number                     # number | table | figure-data | figure | dataset | checkpoint
+#     status: observed                 # observed | planned (planned results are never written as observations)
+#     source:
+#       repository: https://github.com/OWNER/CODE-REPOSITORY
+#       commit: 0123456789abcdef0123456789abcdef01234567
+#       run: RUN-OR-CONFIG-ID
+#     path: results/main.csv           # file in the source repository, or assets/NAME
+#     sha256: SHA-256 OF THE FILE AS USED
+#     regenerate: COMMAND THAT REBUILDS IT IN THE SOURCE REPOSITORY
+#     paper_path: paper/tables/main.tex   # where the paper uses it (optional)
+#     macro: \MainResult                  # interface macro that carries a number (optional)
+version: 1
+assets: []

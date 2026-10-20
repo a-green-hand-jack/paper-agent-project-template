@@ -1,17 +1,27 @@
-.PHONY: pdf clean
+# Public build entry for the paper in paper/. Output and intermediates go to
+# this worktree's .project/build/; nothing is written into paper/ or the root.
+#   make pdf | blind | submission   build one form (.project/build/<job>.pdf)
+#   make check                      builds main and blind and runs every check
+#   make release-check              release gates for blind and submission
+#   make clean                      remove the build output
+# TEXBIN=<TeX Live bin directory> selects the TeX binaries when the right
+# latexmk is not first on PATH. PAGE_BUDGET is the venue's main-text page
+# limit, measured on the blind build (.agents/memory/shared/page-budget-on-blind-build.md);
+# PAGE_BUDGET=none declares a release without a page limit, such as arXiv.
+PAGE_BUDGET ?=
+TEXBIN ?=
+BUILD_DIR := $(CURDIR)/.project/build
+export PAGE_BUDGET TEXBIN BUILD_DIR
 
-VARIANT ?= draft
-SUPPORTED_VARIANTS := draft anonymous camera-ready arxiv
-VARIANT_FILE := $(subst -,_,$(VARIANT))
-PDF_NAME := $(if $(filter draft,$(VARIANT)),main,main-$(VARIANT))
-CLEAN_STEMS := main main-anonymous main-camera-ready main-arxiv
-CLEAN_EXTENSIONS := pdf aux bbl bcf blg dvi fdb_latexmk fls lof log lot nav out ps run.xml snm synctex.gz toc vrb xdv
-CLEAN_OUTPUTS := $(foreach stem,$(CLEAN_STEMS),$(foreach ext,$(CLEAN_EXTENSIONS),paper/$(stem).$(ext)))
+.PHONY: pdf blind submission check release-check clean
 
 pdf:
-	@case " $(SUPPORTED_VARIANTS) " in *" $(VARIANT) "*) ;; *) echo "ERROR unsupported VARIANT=$(VARIANT); choose one of: $(SUPPORTED_VARIANTS)" >&2; exit 2 ;; esac
-	@test -f "paper/variants/$(VARIANT_FILE).tex" || { echo "ERROR missing variant driver: paper/variants/$(VARIANT_FILE).tex" >&2; exit 2; }
-	cd paper && latexmk -pdf -jobname="$(PDF_NAME)" -interaction=nonstopmode -halt-on-error "variants/$(VARIANT_FILE).tex"
-
+	@$(MAKE) --no-print-directory -C paper main
+blind submission:
+	@$(MAKE) --no-print-directory -C paper $@
+check:
+	@bash .agents/scripts/paper-check.sh
+release-check:
+	@bash .agents/scripts/release-check.sh
 clean:
-	rm -f $(CLEAN_OUTPUTS)
+	@$(MAKE) --no-print-directory -C paper clean

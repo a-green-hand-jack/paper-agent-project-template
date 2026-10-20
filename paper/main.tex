@@ -1,19 +1,25 @@
+% One source, three builds (.agents/memory/shared/one-source-three-builds.md).
+% blind.tex and submission.tex set a switch and then read this file; Overleaf
+% can use either of them as the main document (Menu, Main document).
+%   main        working draft: authors, acknowledgements and author notes
+%   submission  author-visible copy without notes (arXiv, camera-ready)
+%   blind       anonymous review copy: no identity, acknowledgements or notes
 \documentclass{article}
+\newif\ifPaperBlind
+\newif\ifPaperNotes
+\PaperNotestrue
+\ifdefined\PaperBlindBuild \PaperBlindtrue\PaperNotesfalse\fi
+\ifdefined\PaperSubmissionBuild \PaperNotesfalse\fi
 \usepackage{style/paper-harness}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
 \input{macros}
-\providecommand{\PaperVariant}{anonymous}
-\input{variants/common}
-\input{variants/config/draft}
-\input{variants/config/anonymous}
-\input{variants/config/camera_ready}
-\input{variants/config/arxiv}
-\csname ApplyPaperVariant@\PaperVariant\endcsname
-\input{venue_preamble}
 \title{\PaperTitle}
-\ifPaperAnonymous
+\ifPaperBlind
   \author{Anonymous Authors}
 \else
-  \author{\PaperAuthors}
+  \input{authors}
 \fi
 \begin{document}
 \input{sections/00_title}
@@ -24,13 +30,14 @@
 \input{sections/05_exp}
 \input{sections/06_conclusion}
 \input{sections/07_limitations}
-\ifPaperAcknowledgements
+\ifPaperBlind\else
   \input{sections/08_acknowledgement}
 \fi
+% make check reports the page of this label as the main-text length. Move it
+% to the end of the last part the venue counts.
+\label{PaperMainTextEnd}
 \bibliographystyle{plain}
 \bibliography{refs}
-\ifPaperFullAppendix
-  \appendix
-  \input{sections/10_appendix}
-\fi
+\appendix
+\input{sections/10_appendix}
 \end{document}
