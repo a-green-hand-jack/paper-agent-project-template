@@ -4,7 +4,7 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
-## v0.4.3
+## v0.4.3 — 2026-10-20
 
 Lets the online reference audits take their keys from the device's shared
 credential file, as the inherited `llm-credentials` record prescribes (#176).
