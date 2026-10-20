@@ -120,6 +120,12 @@ home of another agent CLI, a proxy's tokens) gives each one a `login` rule in
 | `SHARED_CREDENTIAL_FILE` | the device's shared file named by user-level configuration; none by default, and a paper runs without it |
 | `CREDENTIAL_DIR` | `credentials` |
 
+The online reference audits (`.agents/scripts/_reference_env.py`) read the
+link `.project/credentials/.env` to the shared file, in a worktree through the
+`.project/credentials` link, and export only `BIBTEX_CHECK_MAILTO`,
+`OPENALEX_API_KEY` and `S2_API_KEY` from it (Apply step 4). A root `.env` with
+only those keys stays a fallback and wins over the link.
+
 No script, build or check of this repository calls an LLM provider. The one
 shipped tool that can is the optional CLI fallback of `image-to-editable-ppt`
 (`editppt`), which reads `OPENAI_API_KEY`, `OPENAI_BASE_URL` and
