@@ -17,5 +17,9 @@ are skipped elsewhere, and so is the locked-tool contract test
 `test_adoption_states.py` belongs to this template (`scope: template`): it
 builds each adoption state from the shipped files in a temporary directory,
 runs `make check` and `make release-check` there and compares the failures
-with the newest `RELEASE_NOTES.md` entry. It is a release requirement
+with the newest `RELEASE_NOTES.md` entry. It also upgrades a fresh paper at
+v0.4.1 to the shipped files with `upgrade-template.sh` and runs `make check`
+there, and checks that every release entry marks its upgrade section.
+`test_upgrade_template.py` runs the command against a fixture template
+repository with three tags. It is a release requirement
 (`DEV.md`, "Releases"); a paper deletes it.

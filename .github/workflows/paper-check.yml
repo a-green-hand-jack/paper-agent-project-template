@@ -25,6 +25,8 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # test_adoption_states.py upgrades a paper from the v0.4.1 tag.
+          fetch-depth: 0
 
       - name: Install TeX, PDF text tools and PyYAML
         run: |

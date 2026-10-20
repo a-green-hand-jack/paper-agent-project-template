@@ -294,7 +294,11 @@ there. `make check` runs `.agents/tests/test_adoption_states.py`, which
 builds each state from the shipped files, runs `make check` and
 `make release-check` on it and compares the failures with that table, and
 runs the online metadata audit on a bibliography of realistic size; a release
-needs it passing.
+needs it passing. Its upgrade section, `### Upgrading a paper from <previous
+tag>`, starts with **Command only.** when `upgrade-template.sh` alone completes
+the upgrade, or lists the manual steps that remain; the same test checks every
+entry after v0.4.0 and upgrades a fresh paper at v0.4.1 to the release
+candidate with the candidate's own command.
 
 ## Relationship with the templates
 
@@ -319,6 +323,11 @@ A repository follows `template.upstream` when it has that field, and
 - A paper takes this template's releases through `template-upgrade`, reading
   `RELEASE_NOTES.md` at the target tag. It continues the
   `## In this repository` sections this template wrote.
+  `bash .agents/scripts/upgrade-template.sh [--check] <TARGET_TAG>` applies
+  the procedure's mechanical part (step 5) and prints the rest; when it
+  reports no conflict and every release it crosses is **Command only.**, the
+  upgrade takes the light path that `template-upgrade` defines in its
+  `## In this repository` section.
 - A defect or gap a paper finds goes to this template through
   `template-feedback`. This template forwards a defect in inherited content to
   the coding template and links the two Issues.
