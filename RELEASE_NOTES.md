@@ -4,7 +4,7 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
-## v0.4.5
+## v0.4.5 — 2026-10-21
 
 Lets `upgrade-template.sh` complete the light path in a real paper: it no
 longer refuses the Human documents a paper rewrites or the files it adapted
