@@ -92,10 +92,22 @@ def run_checker(root: Path, profile: str = "draft") -> subprocess.CompletedProce
 
 class ReferenceIntegrityTests(unittest.TestCase):
     def test_factory_template_passes_draft_and_release(self) -> None:
-        for profile in ("draft", "release"):
-            with self.subTest(profile=profile):
-                result = run_checker(ROOT, profile)
-                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        # The factory state, not this repository's: a paper's own ledger is
+        # held to Release strength by make release-check, not by make check.
+        shipped = json.loads((ROOT / ".agents/references/ledger.json").read_text(encoding="utf-8"))
+        factory = {field: [] if isinstance(value, list) else value for field, value in shipped.items()}
+        bibliography = (ROOT / "paper/refs.bib").read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / ".agents/references/policy.json",
+                  (ROOT / ".agents/references/policy.json").read_text(encoding="utf-8"))
+            write(root / ".agents/references/ledger.json", json.dumps(factory, indent=2) + "\n")
+            write(root / "paper/refs.bib",
+                  "".join(line for line in bibliography.splitlines(keepends=True) if line.startswith("%")))
+            for profile in ("draft", "release"):
+                with self.subTest(profile=profile):
+                    result = run_checker(root, profile)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_missing_policy_skips_for_legacy_downstream(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -165,6 +177,15 @@ class ReferenceIntegrityTests(unittest.TestCase):
             result = run_checker(root)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("ledger absent", result.stdout)
+
+    def test_ci_runs_ledger_commands_only_when_a_ledger_exists(self) -> None:
+        workflow = (ROOT / ".github/workflows/reference-validation.yml").read_text(encoding="utf-8")
+        steps = workflow.split("\n      - name: ")[1:]
+        ledger_steps = [step for step in steps if "reference-evidence.py" in step]
+        self.assertTrue(ledger_steps)
+        for step in ledger_steps:
+            with self.subTest(step=step.splitlines()[0]):
+                self.assertIn("if: hashFiles('.agents/references/ledger.json') != ''", step)
 
     def test_ledgerless_draft_still_rejects_an_invented_citation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -850,6 +871,134 @@ raise SystemExit(4)
                 self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
                 summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
                 self.assertEqual(summary["outcome"], "infrastructure_error")
+
+    def fake_checker(self, root: Path, records: list[dict[str, object]], stderr: str = "", code: int = 0) -> str:
+        """A uv stand-in that writes the given bibtex-check records and log."""
+        runner = root / "fake-uv"
+        write(
+            runner,
+            "#!/usr/bin/env python3\nimport json, pathlib, sys\n"
+            "assert '--verbose' in sys.argv\n"
+            "target = pathlib.Path(sys.argv[sys.argv.index('--jsonl') + 1])\n"
+            "target.parent.mkdir(parents=True, exist_ok=True)\n"
+            f"target.write_text(''.join(json.dumps(record) + '\\n' for record in {records!r}))\n"
+            f"sys.stderr.write({stderr!r})\n"
+            f"raise SystemExit({code})\n",
+        )
+        runner.chmod(0o755)
+        return str(runner)
+
+    def openreview_reference(self, key: str, review: str = "agent-resolved") -> dict[str, object]:
+        record = reference(key, review=review)
+        record["identifiers"] = {"openreview": "forum-id"}
+        record["verification"] = {"sources": ["openreview"], "checked_at": "2026-10-20"}
+        return record
+
+    @staticmethod
+    def checker_record(key: str, status: str, fields: list[str], sources: list[str]) -> dict[str, object]:
+        return {
+            "key": key, "status": status, "abstained": False, "coverage_incomplete": False,
+            "mismatched_fields": fields, "api_sources": sources, "errors": [],
+        }
+
+    DBLP_CHALLENGE = (
+        "INFO: Checking 1/1: entry\n"
+        'INFO: HTTP Request: GET https://dblp.org/search/publ/api?q=A+title&h=3&format=json "HTTP/1.1 202 Accepted"\n'
+        "DEBUG: request detail https://api.example.org/?api_key=not-for-logs\n"
+    )
+
+    def test_dblp_bot_challenge_is_provider_unavailable_not_a_miss(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@inproceedings{entry, title={A}}\n", [reference("entry", status="unverified")])
+            runner = self.fake_checker(
+                root,
+                [self.checker_record("entry", "strict_warn_cnv", ["year"], ["crossref", "openreview"])],
+                self.DBLP_CHALLENGE,
+                4,
+            )
+            result = self.run_metadata(root, runner)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("dblp answered with a bot challenge", result.stdout)
+            self.assertIn("Checking 1/1", result.stderr)
+            self.assertNotIn("HTTP Request", result.stdout + result.stderr)
+            self.assertNotIn("api_key", result.stdout + result.stderr)
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+            self.assertEqual(summary["outcome"], "provider_unavailable")
+            self.assertEqual(summary["bot_challenged_services"], ["dblp"])
+
+    def test_dblp_bot_challenge_does_not_hide_positive_problem(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@inproceedings{entry, title={A}}\n", [reference("entry")])
+            runner = self.fake_checker(
+                root, [self.checker_record("entry", "venue_mismatch", ["venue"], ["openreview"])], self.DBLP_CHALLENGE, 4
+            )
+            result = self.run_metadata(root, runner)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+            self.assertEqual(summary["outcome"], "reference_problem")
+
+    def test_reviewed_openreview_identity_reports_year_or_venue_residue(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(
+                root,
+                "@inproceedings{full, title={A}}\n@inproceedings{alias, title={B}}\n",
+                [self.openreview_reference("full"), self.openreview_reference("alias", "human-confirmed")],
+            )
+            runner = self.fake_checker(
+                root,
+                [
+                    self.checker_record("full", "venue_mismatch", ["venue"], ["crossref", "openreview"]),
+                    self.checker_record("alias", "strict_warn_cnv", ["year"], ["openreview"]),
+                ],
+                code=4,
+            )
+            result = self.run_metadata(root, runner)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("full: venue_mismatch on venue against OpenReview", result.stdout)
+            self.assertIn("alias: strict_warn_cnv on year against OpenReview", result.stdout)
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+            self.assertEqual(summary["outcome"], "passed")
+            self.assertEqual(summary["ledger_reviewed_openreview_keys"], ["alias", "full"])
+            self.assertFalse(summary["approves_claim_support"])
+
+    def test_openreview_residue_needs_a_reviewed_openreview_identity_and_only_year_or_venue(self) -> None:
+        cases = {
+            "identity from another source": (
+                reference("entry", review="agent-resolved"),
+                self.checker_record("entry", "venue_mismatch", ["venue"], ["openreview"]),
+            ),
+            "identity awaiting review": (
+                self.openreview_reference("entry", review="pending"),
+                self.checker_record("entry", "venue_mismatch", ["venue"], ["openreview"]),
+            ),
+            "author mismatch as well": (
+                self.openreview_reference("entry"),
+                self.checker_record("entry", "venue_mismatch", ["author", "venue"], ["openreview"]),
+            ),
+            "wrong year": (
+                self.openreview_reference("entry"),
+                self.checker_record("entry", "year_mismatch", ["year"], ["openreview"]),
+            ),
+            "not matched on OpenReview": (
+                self.openreview_reference("entry"),
+                self.checker_record("entry", "venue_mismatch", ["venue"], ["crossref"]),
+            ),
+        }
+        for name, (ledger_record, checker_record) in cases.items():
+            with self.subTest(case=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                self.add_lock(root)
+                fixture(root, "@inproceedings{entry, title={A}}\n", [ledger_record])
+                result = self.run_metadata(root, self.fake_checker(root, [checker_record], code=4))
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+                self.assertEqual(summary["ledger_reviewed_openreview_keys"], [])
 
 
 class BibtexFormatTests(unittest.TestCase):

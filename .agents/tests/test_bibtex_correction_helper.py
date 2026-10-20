@@ -58,6 +58,44 @@ class BibtexCorrectionHelperTests(unittest.TestCase):
             self.assertFalse(false_metadata["passed"])
             self.assertTrue(any("title_new" in error for error in false_metadata["errors"]))
 
+    def test_latex_accents_normalize_like_unicode(self) -> None:
+        helper = self.load_helper()
+        for unicode_title, latex_forms in {
+            "A Study of Café Models": (
+                "A Study of Caf{\\'e} Models", "A Study of Caf\\'{e} Models", "A Study of Caf\\'e Models",
+                "A Study of Café Models",
+            ),
+            "Schrödinger Bridges": ("Schr{\\\"o}dinger Bridges", "Schr\\\"{o}dinger Bridges"),
+            "Hegedűs, Garçon and Wałęsa": ("Heged{\\H u}s, Gar{\\c c}on and Wa{\\l}{\\k e}sa",),
+            "Martí Learns": ("Mart{\\'\\i} Learns",),
+        }.items():
+            for latex_title in latex_forms:
+                with self.subTest(title=latex_title):
+                    self.assertEqual(helper.normalize_title(latex_title), helper.normalize_title(unicode_title))
+        self.assertNotEqual(helper.normalize_title("A Study of Cafe Models"),
+                            helper.normalize_title("A Study of Café Models"))
+
+    def test_accent_encoding_is_not_a_semantic_title_change(self) -> None:
+        helper = self.load_helper()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.bib"
+            candidate = root / "candidate.bib"
+            report = root / "report.jsonl"
+            source.write_text("@article{cafe, title={A Study of Caf{\\'e} Models}}\n", encoding="utf-8")
+            candidate.write_text(
+                "@article{cafe, title={A Study of Café Models}, doi={10.1/cafe}}\n", encoding="utf-8"
+            )
+            report.write_text(json.dumps({
+                "file": str(source), "key_old": "cafe", "key_new": "cafe",
+                "doi_old": None, "doi_new": "10.1/cafe", "action": "upgraded",
+                "method": "search", "confidence": 1.0,
+                "title_old": "A Study of Café Models", "title_new": "A Study of Café Models",
+            }) + "\n", encoding="utf-8")
+            result = helper.validate(source, candidate, report)
+            self.assertTrue(result["passed"], result["errors"])
+            self.assertEqual(result["semantic_title_change_keys"], [])
+
     def test_false_replacement_with_duplicate_identity_is_rejected(self) -> None:
         helper = self.load_helper()
         with tempfile.TemporaryDirectory() as directory:

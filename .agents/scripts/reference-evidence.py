@@ -589,6 +589,19 @@ def cmd_inventory(args: argparse.Namespace) -> int:
         for item in ledger.data.get("citation_occurrences", [])
         if isinstance(item, dict) and item.get("occurrence_id")
     }
+    current_ids = {item["occurrence_id"] for item in scanned}
+    # A changed claim gets a new occurrence id. Evidence of the dropped
+    # occurrence at the same location with the same keys moves to the new one
+    # and keeps its old fingerprint, so it reads as stale instead of pointing
+    # at nothing.
+    def place(item: dict[str, Any]) -> tuple[Any, frozenset[str]]:
+        return item.get("manuscript_location"), frozenset(item.get("citation_keys") or [])
+
+    dropped: dict[tuple[Any, frozenset[str]], list[str]] = {}
+    for occurrence_id, item in existing.items():
+        if occurrence_id not in current_ids:
+            dropped.setdefault(place(item), []).append(occurrence_id)
+    added: dict[tuple[Any, frozenset[str]], list[str]] = {}
     for item in occurrences:
         if item["occurrence_id"] in existing:
             existing[item["occurrence_id"]]["manuscript_location"] = item["manuscript_location"]
@@ -597,7 +610,16 @@ def cmd_inventory(args: argparse.Namespace) -> int:
         else:
             item["review_state"] = "pending"
             existing[item["occurrence_id"]] = item
-    current_ids = {item["occurrence_id"] for item in scanned}
+            added.setdefault(place(item), []).append(item["occurrence_id"])
+    moved = {
+        dropped[key][0]: new_ids[0]
+        for key, new_ids in added.items()
+        if len(new_ids) == 1 and len(dropped.get(key, [])) == 1
+    }
+    for record in ledger.data.get("claim_evidence", []):
+        if isinstance(record, dict) and record.get("occurrence_id") in moved:
+            record["occurrence_id"] = moved[record["occurrence_id"]]
+            record["evidence_id"] = evidence_id(record["occurrence_id"], str(record.get("citation_key", "")))
     ledger.data["citation_occurrences"] = [
         item for item in existing.values() if item["occurrence_id"] in current_ids
     ]
@@ -1024,6 +1046,11 @@ def cmd_migrate(args: argparse.Namespace) -> int:
         if not key:
             continue
         by_key_fingerprint.setdefault(key, claim_record)
+    identifiers_by_key = {
+        record["citation_key"]: record.get("identifiers") or {}
+        for record in ledger.data.get("references", [])
+        if isinstance(record, dict) and record.get("citation_key")
+    }
 
     occurrences: list[dict[str, Any]] = []
     evidence: list[dict[str, Any]] = []
@@ -1044,7 +1071,9 @@ def cmd_migrate(args: argparse.Namespace) -> int:
             legacy = by_key_fingerprint.get(key)
             if legacy is None:
                 continue
-            source_identity = {"citation_key": key}
+            # As in `record`: the reference's identifiers and a hash over them.
+            source_identity = {"citation_key": key, **identifiers_by_key.get(key, {})}
+            source_identity["source_hash"] = source_hash(source_identity)
             evidence.append(
                 {
                     "evidence_id": evidence_id(item["occurrence_id"], key),

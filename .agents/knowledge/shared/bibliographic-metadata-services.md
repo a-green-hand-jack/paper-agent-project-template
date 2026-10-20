@@ -1,7 +1,7 @@
 ---
 name: bibliographic-metadata-services
-date: 2026-09-02
-source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/reference-integrity/, moved into a record by Issue #156
+date: 2026-10-20
+source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165)
 scope: shared
 applies_to: paper repositories that run the online reference audits in .agents/scripts/
 status: active
@@ -42,6 +42,28 @@ superseded_by: null
   checker's circuit breaker is recorded as `rate_limited`; network failures and
   timeouts without a status as `provider_unavailable`. Neither blocks CI or
   classifies a reference as false.
+- **DBLP bot challenge.** DBLP answers automated search requests, locally and
+  on GitHub-hosted runners, with HTTP 202 and an HTML challenge page, which
+  `bibtex-check` 1.6.1 reads as "no hits" without an error. The wrapper runs
+  the checker with `--verbose`, finds the 202 in its HTTP log (and keeps that
+  log, which holds request URLs, out of the console and the reports), records
+  `bot_challenged_services`, and treats an `unverified` result in that run as
+  `provider_unavailable`. A positive problem still fails.
+- **OpenReview-only venues.** `bibtex-check` 1.6.1 takes an OpenReview
+  record's year from `content.year` or a year inside `content.venue`; COLM
+  records have neither (`venue` is `COLM`, the year is only in `venueid`), and
+  `COLM` does not match `First Conference on Language Modeling`. A COLM entry
+  therefore ends `venue_mismatch` (full name) or `strict_warn_cnv` with the
+  year unconfirmed (abbreviation). The wrapper reports instead of failing such
+  a record when the checker matched the OpenReview record, only `year` or
+  `venue` differ, and the ledger records the reference `verified` from
+  `openreview` and `agent-resolved` or `human-confirmed`
+  (`ledger_reviewed_openreview_keys`). It does not patch the locked package.
+- **Upstream state.** Later `bibtex-updater` releases map `COLM` to its full
+  name (1.11.0) and report DBLP's 202 as a lookup that did not complete
+  (1.12.0), so a lock upgrade, which is a separate change, takes both. 1.12.0
+  still reads no year from an OpenReview `venueid` or `pdate`; that is
+  reported upstream ([rpatrik96/bibtexupdater#82](https://github.com/rpatrik96/bibtexupdater/issues/82)).
 - **Assessed and not adopted:**
   - `color4-alt/CiteCheck`, default branch at
     `fae7888bf7c1ce92bbafad15faf61cf55b7e2bd7`, reviewed 2026-08-08: MIT, but no
@@ -55,6 +77,11 @@ superseded_by: null
 
 - `REFERENCES.md` of this template at v0.3.1 and #153; `uv.lock` and
   `THIRD_PARTY.md` in `.agents/scripts/reference-integrity/`.
+- 2026-10-20 (#165): a DBLP search request answered `202 Accepted` with
+  `text/html`, and keyless `bibtex-check` runs with the wrapper's options on a
+  public COLM 2024 entry gave `venue_mismatch` (`mismatched_fields: [venue]`)
+  and, with `booktitle={{COLM}}`, `strict_warn_cnv` (`[year]`), each with
+  OpenReview among the sources and no error recorded.
 
 ## Refresh
 

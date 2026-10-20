@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 import subprocess
 import sys
 import tempfile
@@ -70,6 +71,18 @@ class AgentContentChecks(unittest.TestCase):
     def test_repository_content_passes(self) -> None:
         result = run(ROOT)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_adoption_names_the_diagnostics_that_fail_before_dev_exists(self) -> None:
+        # The inherited diagnostics fail until the maintainer creates dev after
+        # an adoption merges; template-adoption must name exactly those lines.
+        script = (ROOT / ".agents/scripts/diagnose-environment.sh").read_text(encoding="utf-8")
+        branch_checks = re.findall(r"FAIL ([^'(:]+?)(?::[^'(]*)? \(run \.agents/scripts/init-branches\.sh\)", script)
+        self.assertEqual(branch_checks, ["local dev branch", "origin/dev branch", "GitHub default branch"])
+        skill = (ROOT / ".agents/skills/shared/template-adoption/SKILL.md").read_text(encoding="utf-8")
+        section = skill.split("\n## In this repository\n", 1)[1]
+        for name in branch_checks:
+            with self.subTest(check=name):
+                self.assertIn(f"`FAIL {name}", section)
 
     def test_fixture_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

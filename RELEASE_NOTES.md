@@ -4,6 +4,80 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
+## v0.4.1
+
+Fixes the reference tooling and the adoption order that downstream papers
+reported after taking v0.4.0 (#166).
+
+### Fixed
+
+- `reference-evidence.py inventory` recorded `claim_text` from the citation
+  command instead of the start of the sentence, so the claim was missing from
+  the record and its fingerprint (#159). It now records the whole sentence;
+  the part before or after the citation that is longer than 600 characters is
+  cut at a word boundary and marked `claim_text_truncated`.
+- When a cited sentence changed, `inventory` gave it a new occurrence and left
+  its evidence pointing at the old one, which the Draft gate rejected
+  (`points to unknown occurrence`). The evidence now moves to the new
+  occurrence at the same location with the same keys and keeps its old
+  fingerprint, so it is stale: Draft warns and Release fails, as the
+  reference contract says.
+- A shipped test ran the Release reference gate on the repository itself, so
+  `make check` failed in any paper whose ledger was still at Draft strength
+  (#160). It now tests the factory state in a temporary directory, and
+  `make check` is the Draft gate again.
+- `diagnose-environment.sh` cannot pass during an adoption from `main`, before
+  `dev` exists (#161). The v0.4.0 notes (steps 8 and 10) and
+  `template-adoption` now name the three branch-model lines that are expected
+  to fail until the maintainer runs `init-branches.sh` after the merge. The
+  script is inherited unchanged; the change to it is reported upstream.
+- `reference-evidence.py migrate` wrote evidence that the Draft gate rejected
+  (`source_identity lacks a stable identifier or source_hash`) (#162). It now
+  copies the reference's identifiers and a `source_hash` into
+  `source_identity`, as `record` does.
+- The `references` CI job failed in a repository with a policy and no ledger,
+  a state the Draft gate accepts (#163). Its `status` and `inventory` step now
+  runs only when `.agents/references/ledger.json` exists.
+- Title normalization read a LaTeX accent (`Caf{\'e}`) as a wording change, so
+  the correction audit failed against a Unicode candidate title (#164). Accents
+  are now decoded to Unicode with the locked `bibtex-updater`'s own decoder
+  before NFKC.
+- The online metadata audit could not verify a COLM citation (#165):
+  - a DBLP `202` bot-challenge page is now an infrastructure outcome
+    (`bot_challenged_services`; an `unverified` run becomes
+    `provider_unavailable`), not "no hit";
+  - a reference that the ledger records `verified` from `openreview` and
+    `agent-resolved` or `human-confirmed` is reported, not failed, when the
+    checker matched its OpenReview record and only the year or the venue name
+    differs (`ledger_reviewed_openreview_keys`).
+
+  The locked `bibtex-updater` 1.6.1 is not patched. Its later releases map
+  `COLM` (1.11.0) and report DBLP's 202 as an incomplete lookup (1.12.0);
+  reading an OpenReview record's year from `venueid` is reported upstream
+  ([rpatrik96/bibtexupdater#82](https://github.com/rpatrik96/bibtexupdater/issues/82)).
+
+### Upgrading a paper from v0.4.0
+
+Take the release with `template-upgrade`, then:
+
+1. Run `python3 .agents/scripts/reference-evidence.py inventory`. The claim
+   fingerprint and the occurrence id change for every citation (#159); until
+   `inventory` runs, the Draft gate fails on occurrences missing from the
+   ledger. Afterwards every occurrence is `pending` and its evidence stale
+   (Draft warns, Release fails). Record the support evidence again with
+   `packet` and `record` (the `citation-support-review` skill), and have the
+   Human confirm it again before `make release-check`.
+2. A paper that migrated a v1 ledger with v0.4.0 and repaired
+   `source_identity` by hand keeps working. Every occurrence that `migrate`
+   writes starts `pending`, because occurrence-level review is new in v2, and
+   needs a fresh Human confirmation before `make release-check` (#162).
+3. Drop any local workaround for #160 (a skipped Release subtest) or #163 (a
+   ledger bootstrapped only to turn the `references` job green).
+4. A COLM or other OpenReview-only citation that the audit cannot verify:
+   record its identity in the ledger as `verified` with `openreview` among the
+   sources, an `openreview` identifier, and `agent-resolved` (or
+   `human-confirmed` by the Human).
+
 ## v0.4.0 — 2026-10-20
 
 This is a breaking release. The template is rebuilt on
@@ -191,16 +265,22 @@ adoption, and use `template-upgrade` for every later release.
 8. **Verify** with `bash .agents/scripts/setup-worktree.sh`,
    `bash .agents/scripts/diagnose-environment.sh`, `make pdf`, `make blind`,
    `make submission` and `make check`, and confirm that `git status --short`
-   is empty afterwards. Compare `blind` and `submission` with the last
+   is empty afterwards. Until step 10 creates `dev`, `diagnose-environment.sh`
+   exits 1 on its three branch-model lines, and only on them:
+   `FAIL local dev branch`, `FAIL origin/dev branch` and
+   `FAIL GitHub default branch: main` (a `skip` where `gh` is not
+   authenticated). This is expected; every other line must pass. Compare `blind` and `submission` with the last
    anonymous and camera-ready PDFs, by page count and by their `pdftotext`
    text: the move changes how the paper is built, not the paper.
 9. **Overleaf.** `bash .agents/scripts/overleaf-sync.sh status` reports
    `overleaf-behind` (Overleaf holds an earlier state of `paper/`) or
    `in-sync`; if it reports Overleaf edits, `pull` them first. After the PR
    merges into `dev`, run `push`.
-10. **On GitHub**, make `dev` the default branch if it is not
-    (`bash .agents/scripts/init-branches.sh`), and move the required checks
-    on `main` to `structure`, `check`, `paper-only` and `references`.
+10. **On GitHub**, after the merge, the maintainer makes `dev` the default
+    branch if it is not (`bash .agents/scripts/init-branches.sh`), and moves
+    the required checks on `main` to `structure`, `check`, `paper-only` and
+    `references`. `diagnose-environment.sh` then passes its three
+    branch-model lines as well.
 
 ## Earlier releases
 
