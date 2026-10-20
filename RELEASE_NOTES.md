@@ -4,7 +4,7 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
-## v0.4.4
+## v0.4.4 — 2026-10-20
 
 Adds a light upgrade path: one command applies the mechanical part of a
 template upgrade, and each release says whether anything else remains (#177).
