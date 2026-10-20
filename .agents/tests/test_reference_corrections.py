@@ -11,11 +11,11 @@ from unittest import mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CORRECTIONS = ROOT / ".agents/tools/check-reference-corrections.py"
-INTEGRITY = ROOT / ".agents/tools/check-reference-integrity.py"
-ENV_HELPER = ROOT / ".agents/tools/_reference_env.py"
-FORMAT_HELPER = ROOT / ".agents/tools/_validate-bibtex-with-pybtex.py"
-CORRECTION_HELPER = ROOT / ".agents/tools/_validate-bibtex-correction.py"
+CORRECTIONS = ROOT / ".agents/scripts/check-reference-corrections.py"
+INTEGRITY = ROOT / ".agents/scripts/check-reference-integrity.py"
+ENV_HELPER = ROOT / ".agents/scripts/_reference_env.py"
+FORMAT_HELPER = ROOT / ".agents/scripts/_validate-bibtex-with-pybtex.py"
+CORRECTION_HELPER = ROOT / ".agents/scripts/_validate-bibtex-correction.py"
 
 
 def write(path: Path, text: str) -> None:
@@ -24,22 +24,17 @@ def write(path: Path, text: str) -> None:
 
 
 def prepare(root: Path, bib: str = "") -> None:
-    write(root / ".agents/tools/check-reference-integrity.py", INTEGRITY.read_text(encoding="utf-8"))
-    write(root / ".agents/tools/_reference_env.py", ENV_HELPER.read_text(encoding="utf-8"))
-    write(root / ".agents/tools/_validate-bibtex-with-pybtex.py", FORMAT_HELPER.read_text(encoding="utf-8"))
-    write(root / ".agents/tools/_validate-bibtex-correction.py", CORRECTION_HELPER.read_text(encoding="utf-8"))
-    write(root / ".agents/dependencies/reference-integrity/uv.lock", "fixture lock\n")
-    write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
+    write(root / ".agents/scripts/check-reference-integrity.py", INTEGRITY.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/_reference_env.py", ENV_HELPER.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/_validate-bibtex-with-pybtex.py", FORMAT_HELPER.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/_validate-bibtex-correction.py", CORRECTION_HELPER.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/reference-integrity/uv.lock", "fixture lock\n")
     write(
-        root / "PUBLICATION.md",
-        """<!-- REFERENCE-INTEGRITY:START -->
-```json
-{"schema_version":"paper-reference-integrity-policy-v1","enforcement":"enforced","ledger":"references/ledger.json","bibliography":"paper/refs.bib"}
-```
-<!-- REFERENCE-INTEGRITY:END -->
+        root / ".agents/references/policy.json",
+        """{"schema_version":"paper-reference-integrity-policy-v1","enforcement":"enforced","ledger":".agents/references/ledger.json","bibliography":"paper/refs.bib"}
 """,
     )
-    write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n" + bib)
+    write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n" + bib)
     keys = ["real"] if bib else []
     references = [{
         "citation_key": key,
@@ -48,7 +43,7 @@ def prepare(root: Path, bib: str = "") -> None:
         "verification": {"sources": ["crossref"], "checked_at": "2026-08-08"},
         "human_review": {"state": "human-confirmed", "rationale": "fixture"},
     } for key in keys]
-    write(root / "references/ledger.json", json.dumps({
+    write(root / ".agents/references/ledger.json", json.dumps({
         "schema_version": "paper-reference-ledger-v1",
         "references": references,
         "citation_usages": [],
@@ -111,7 +106,7 @@ class ReferenceCorrectionTests(unittest.TestCase):
             prepare(root)
             result = run(root, "missing-uv")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/corrections/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/corrections/run.json").read_text())
             self.assertEqual(summary["outcome"], "skipped")
             self.assertFalse(summary["rewrites_bibliography"])
 
@@ -124,7 +119,7 @@ class ReferenceCorrectionTests(unittest.TestCase):
             result = run(root, str(fake_uv(root, "upgraded")))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertEqual((root / "paper/refs.bib").read_bytes(), before)
-            summary = json.loads((root / "dist/reference-integrity/corrections/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/corrections/run.json").read_text())
             self.assertEqual(summary["outcome"], "candidates_found")
             self.assertEqual(summary["changed_keys"], ["real"])
             self.assertFalse(summary["approves_bibliography_changes"])
@@ -136,7 +131,7 @@ class ReferenceCorrectionTests(unittest.TestCase):
             prepare(root, "@article{real, author={A}, title={T}, journal={J}, year={2026}}\n")
             result = run(root, str(fake_uv(root, mutate=True)))
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/corrections/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/corrections/run.json").read_text())
             self.assertEqual(summary["outcome"], "unsafe_output")
 
     def test_local_env_is_allowlisted_and_does_not_override_exported_values(self) -> None:

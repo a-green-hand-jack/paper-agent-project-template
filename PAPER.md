@@ -30,10 +30,10 @@ the Agent drafts and revises on request and brings high-impact choices to a
 decision packet.
 
 In **autonomous** mode the Human provides the brief and materials, then the
-Agent proceeds through drafting, self-review, polish, and variant and checkpoint
-builds on its own, and may prepare idea shaping and evidence analysis as
-proposals only. The Agent stops for Human approval before changing a locked
-item, approving a release, or final submission.
+Agent proceeds through drafting, self-review, polish, and the `main`,
+`submission` and `blind` builds on its own, and may prepare idea shaping and
+evidence analysis as proposals only. The Agent stops for Human approval before
+changing a locked item, approving a release, or final submission.
 
 ## What readers should believe
 
@@ -56,7 +56,12 @@ Use this section only for high-impact commitments. Examples include:
 - the primary comparison or fairness condition;
 - the main narrative arc;
 - a limitation or negative result required for an honest conclusion;
-- the meaning of a stable paper interface such as `\MainAccuracy`.
+- the meaning of a stable paper interface such as `\MainResult{}`.
+
+Link each locked claim to its evidence: the question in
+`.agents/memory/project/experiments.md` and the `assets/MANIFEST.yaml` entries
+behind it. A claim whose evidence is still planned says so; it is never
+written as an observed result.
 
 Current locked items:
 

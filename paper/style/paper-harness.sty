@@ -1,10 +1,11 @@
 % paper-harness.sty
-% Reusable presentation macros for the internal draft/arXiv layout.
-% Project-specific macros belong in paper/macros.tex, not here — this file
-% must stay swappable (e.g. for a compat.sty venue shim) without touching
-% paper/sections/*.tex.
+% Reusable presentation macros for the article layout of the three builds.
+% Project-specific macros belong in paper/macros.tex, not here: this file
+% must stay swappable (for compat.sty under a venue kit) without touching
+% paper/sections/*.tex. T1 font encoding keeps underscores and other
+% characters intact in the PDF text layer; make check verifies it.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{paper-harness}[2026/08/28 v1.1 reusable paper display macros for the agent-writing harness]
+\ProvidesPackage{paper-harness}[2026/10/20 v1.2 reusable paper display macros for paper-agent-project-template]
 
 \RequirePackage[T1]{fontenc}
 \RequirePackage{etoolbox}

@@ -1,0 +1,7 @@
+# Vendored files keep their upstream bytes (each package's PROVENANCE.md hashes
+# them), including whitespace that git diff --check would otherwise report.
+image-to-editable-ppt/cli/editppt/__init__.py whitespace=-blank-at-eof
+proofread/SKILL.md whitespace=-trailing-space
+proofread/templates/output_template.md whitespace=-trailing-space
+thesis-figure-skill/SKILL.md whitespace=-trailing-space
+thesis-figure-skill/references/tikz-global-rules.md whitespace=-blank-at-eof

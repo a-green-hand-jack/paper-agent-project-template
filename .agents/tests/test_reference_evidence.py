@@ -8,8 +8,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CLI = ROOT / ".agents/tools/reference-evidence.py"
-CHECKER = ROOT / ".agents/tools/check-reference-integrity.py"
+CLI = ROOT / ".agents/scripts/reference-evidence.py"
+CHECKER = ROOT / ".agents/scripts/check-reference-integrity.py"
 
 
 def write(path: Path, text: str) -> None:
@@ -49,17 +49,12 @@ def ledger_v2(references: list[dict], usages: list[dict], occurrences: list[dict
 
 
 def policy() -> str:
-    return """# Publication
-<!-- REFERENCE-INTEGRITY:START -->
-```json
-{
+    return """{
   "schema_version": "paper-reference-integrity-policy-v1",
   "enforcement": "enforced",
-  "ledger": "references/ledger.json",
+  "ledger": ".agents/references/ledger.json",
   "bibliography": "paper/refs.bib"
 }
-```
-<!-- REFERENCE-INTEGRITY:END -->
 """
 
 
@@ -98,9 +93,8 @@ def fixture(
     usages: list[dict] | None = None,
     ledger_json: str | None = None,
 ) -> None:
-    write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
-    write(root / "PUBLICATION.md", policy())
-    write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n@article{k1, title={One}, author={A}, year={2024}}\n@article{k2, title={Two}, author={B}, year={2025}}\n")
+    write(root / ".agents/references/policy.json", policy())
+    write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n@article{k1, title={One}, author={A}, year={2024}}\n@article{k2, title={Two}, author={B}, year={2025}}\n")
     if teX is not None:
         write(root / "paper/sections/02_intro.tex", teX)
     if ledger_json is None:
@@ -110,7 +104,7 @@ def fixture(
             occurrences or [],
             evidence or [],
         )
-    write(root / "references/ledger.json", ledger_json)
+    write(root / ".agents/references/ledger.json", ledger_json)
 
 
 def inventory_occurrences(root: Path) -> list[dict]:
@@ -123,8 +117,8 @@ def inventory_cache(root: Path) -> Path:
 
     --run-dir is a main-parser option and must precede the subcommand.
     """
-    run(root, "--run-dir", str(root / "dist/reference-support/testrun"), "inventory")
-    return root / "dist/reference-support/testrun" / "inventory.json"
+    run(root, "--run-dir", str(root / ".project/build/reference-support/testrun"), "inventory")
+    return root / ".project/build/reference-support/testrun" / "inventory.json"
 
 
 class CliInventoryTests(unittest.TestCase):
@@ -150,6 +144,23 @@ class CliInventoryTests(unittest.TestCase):
             result = run(root, "inventory", "--location", "paper/sections/03_related.tex")
             self.assertEqual(result.returncode, 0)
             self.assertIn("occurrences=0", result.stdout)
+
+
+    def test_inventory_location_filter_keeps_other_occurrence_records(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root, teX=teX_occurrence())
+            write(root / "paper/sections/03_related.tex", "Related work~\\citep{k1} is cited here.\n")
+            self.assertEqual(run(root, "inventory").returncode, 0)
+            ledger = root / ".agents/references/ledger.json"
+            before = json.loads(ledger.read_text(encoding="utf-8"))["citation_occurrences"]
+            self.assertEqual(len(before), 2)
+            result = run(root, "inventory", "--location", "paper/sections/03_related.tex")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("occurrences=1", result.stdout)
+            after = json.loads(ledger.read_text(encoding="utf-8"))["citation_occurrences"]
+            self.assertEqual(sorted(item["occurrence_id"] for item in after),
+                             sorted(item["occurrence_id"] for item in before))
 
 
 class CliResolveTests(unittest.TestCase):
@@ -309,6 +320,19 @@ class CliRecordTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("requires an explicit --approval", result.stdout)
 
+    def test_record_rejects_an_unknown_passage_origin(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root, teX=teX_occurrence())
+            cache = inventory_cache(root)
+            occ_id = json.loads(cache.read_text(encoding="utf-8"))[0]["occurrence_id"]
+            result = run(root, "record", "--occurrence-id", occ_id, "--key", "k1", "--verdict", "supported",
+                         "--passage-text", "A passage.", "--locator", "p. 1", "--origin", "supplied-bibliography")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("invalid choice: 'supplied-bibliography'", result.stderr)
+            ledger = json.loads((root / ".agents/references/ledger.json").read_text(encoding="utf-8"))
+            self.assertEqual(ledger["claim_evidence"], [])
+
     def test_record_provisional_and_staleness_guard(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -390,7 +414,7 @@ class MigrateTests(unittest.TestCase):
             result = run(root, "migrate")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("migrated_evidence=1", result.stdout)
-            migrated = json.loads((root / "references/ledger.json").read_text(encoding="utf-8"))
+            migrated = json.loads((root / ".agents/references/ledger.json").read_text(encoding="utf-8"))
             self.assertEqual(migrated["schema_version"], "paper-reference-ledger-v2")
             self.assertEqual(len(migrated["citation_occurrences"]), 1)
             self.assertEqual(len(migrated["claim_evidence"]), 1)

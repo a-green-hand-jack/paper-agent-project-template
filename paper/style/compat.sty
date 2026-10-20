@@ -1,16 +1,15 @@
 % compat.sty
-% Venue-layout compatibility shim for the paper display API.
+% Venue-kit compatibility shim for the paper display API.
 %
-% It is available for venue-layout variants and release packaging. The factory
-% paper/main.tex uses style/paper-harness.sty directly, so this shim is not loaded
-% unless a venue-layout variant or official kit activates it. It provides the
-% same macro names as paper-harness.sty (\parahead, \headbf, \figref/\tabref/
-% \algref/\eqnref, \tablestyle, \cmark/\xmark, compact column types x/y/z/P/Y,
-% and optional \papercolor/\paperstyle) on top of packages already loaded by the
-% venue style. Canonical sections remain shared across internal and venue
-% layouts.
+% paper/main.tex loads style/paper-harness.sty. When the paper moves to a
+% venue's official kit, load this shim instead: it provides the same macro
+% names as paper-harness.sty (\parahead, \headbf, \figref/\tabref/\algref/
+% \eqnref, \tablestyle, \cmark/\xmark, compact column types x/y/z/P/Y, and
+% optional \papercolor/\paperstyle) on top of the packages the kit already
+% loads, so paper/sections/*.tex stay unchanged. Keep T1 encoding unless the
+% kit sets its own.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{compat}[2026/08/28 v1.1 paper-harness venue-layout compat shim]
+\ProvidesPackage{compat}[2026/10/20 v1.2 paper-harness venue-kit compat shim]
 
 \makeatletter
 \@ifpackageloaded{etoolbox}{}{\RequirePackage{etoolbox}}

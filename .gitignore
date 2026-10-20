@@ -1,6 +1,34 @@
-.DS_Store
+# Python and common build output
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+
+# Worktree-local control plane. It is visible in the worktree but not tracked.
+.project/
+
+# Local environment and secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
+
+# Asset payloads and machine-specific links stay local. Keep only the stable
+# manifest, documentation and placeholder tracked in the repository.
+assets/*
+!assets/README.md
+!assets/MANIFEST.yaml
+!assets/.gitkeep
+
+# LaTeX leftovers of a build run in place instead of through make; make writes
+# them to .project/build/ (or paper/build/ in a copy of paper/ alone).
 *.aux
 *.bbl
 *.blg
@@ -9,9 +37,9 @@ __pycache__/
 *.log
 *.out
 *.synctex.gz
-paper/main*.pdf
-/dist/
+paper/*.pdf
+
+# Local agent runtime configuration
 /.orca/
-/.env
 /opencode.jsonc
 /opencode.json

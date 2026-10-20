@@ -1,0 +1,80 @@
+---
+name: reference-repair
+description: Use when an Agent must investigate and repair BibTeX identity, metadata, duplicates, or preprint and version records.
+---
+
+# Reference Repair
+
+## Authority
+
+The Agent retrieves evidence, edits `paper/refs.bib` and the reference ledger
+`.agents/references/ledger.json`, and runs the complete validation loop. The
+Human is not expected to edit BibTeX or approve routine same-object metadata
+repairs.
+
+Ask the Human only when multiple plausible identities or versions remain and
+the choice can change the cited object, claim support, source locator or
+scientific interpretation.
+
+## Audits
+
+Run from the repository root (rules in
+`.agents/memory/shared/reference-integrity.md`):
+
+```bash
+python3 .agents/scripts/check-bibtex-format.py
+python3 .agents/scripts/check-reference-corrections.py
+python3 .agents/scripts/check-reference-metadata.py
+python3 .agents/scripts/check-reference-integrity.py --profile draft
+```
+
+Their reports go to `.project/build/reference-integrity/`, and each run
+replaces its own report.
+
+## Procedure
+
+1. Before any edit, run the four audits and keep their unmodified output as the
+   baseline: save each command's output and copy the reports into
+   `.project/build/reference-integrity/baseline/`.
+2. Treat correction candidates as retrieval leads, never as source-of-truth
+   edits.
+3. Inspect every manuscript use and existing claim-evidence locator for the key.
+4. Retrieve authoritative records, preferring DOI, publisher or proceedings
+   pages, OpenReview, exact arXiv identifiers or domain-primary sources
+   (`.agents/knowledge/shared/bibliographic-metadata-services.md` lists the
+   services and their limits).
+5. Compare title, complete authors, year, venue, type, identifiers and version
+   lineage. Never rely on a tool's confidence alone.
+6. Reject candidates with substantive title changes, new duplicate DOI or title
+   identities, or evidence for a different work.
+7. For an unambiguous same-object repair, edit `paper/refs.bib` and
+   `.agents/references/ledger.json` in the same change. Preserve the citation
+   key unless rekeying is necessary; if it is, update every use atomically.
+8. Record `agent-resolved` only for a verified identity with a stable
+   identifier, source list, checked date and concise rationale. Leave
+   insufficient evidence as `unverified`.
+9. Never carry claim-evidence locators across a version change without checking
+   the actual target document.
+10. Run the four audits again, then
+    `python3 .agents/scripts/check-reference-integrity.py --profile release`,
+    `make check` and `make submission`. Compare the results with the baseline,
+    and report a failure that predates the repair as pre-existing.
+
+## Routine repairs
+
+The Agent may resolve without a Human decision:
+
+- capitalization, punctuation, whitespace and LaTeX protection;
+- exact DOI or stable identifier addition for an already matched work;
+- author formatting and complete author-list repair from the authoritative
+  record;
+- page, volume, issue, venue and type corrections for the same object;
+- removal of a proven duplicate after every citation use is mapped safely.
+
+## Decision packet
+
+When a Human choice is required, provide the current entry and manuscript
+locations, candidate identities and versions, authoritative links and
+identifiers, all metadata differences, affected claims and locators, and the
+Agent recommendation. Pause only the ambiguous key; continue reversible work
+elsewhere.

@@ -1,0 +1,372 @@
+schema_version: 1
+purpose: >-
+  Record which development-plane content is reusable across repositories and
+  which content belongs to one concrete project.
+template:
+  repository: https://github.com/a-green-hand-jack/paper-agent-project-template
+  version: v0.4.0
+  # This repository is a derived template: it records itself above and the
+  # template it follows below. A paper made from it removes the upstream block
+  # and keeps the two lines above as the template and release it adopted
+  # (README.md, "Start a paper").
+  upstream:
+    repository: https://github.com/a-green-hand-jack/coding-agent-project-template
+    version: v0.1.13
+default_scope: project
+matching: Most specific path wins; explicit entries override directory defaults.
+classes:
+  shared:
+    meaning: Generic process that can be reused across projects.
+    rule: Reuse only after checking adaptation notes and local tool availability.
+  shared_with_adaptation:
+    meaning: Reusable structure whose paths, commands or evidence must change.
+    rule: >-
+      Copy skills and memory records verbatim and write the destination's slot
+      values and step additions only in their trailing `## In this repository`
+      section (template-adoption step 5), so template-upgrade replaces the text
+      above it; copy other files selectively and rewrite them for the
+      destination project.
+  project:
+    meaning: Content about one project's product, environment or history.
+    rule: Create independently; never copy the directory wholesale.
+  template:
+    meaning: Content that defines this template itself.
+    rule: Keep in the template repository only.
+entries:
+  # Human plane and build entry
+  - path: AGENTS.md
+    scope: shared_with_adaptation
+    note: Agent rules and the paper task routing; a paper keeps the three planes and the routing and adds its own rules.
+  - path: CLAUDE.md
+    scope: shared
+    kind: symlink-index
+    note: Recreate as a relative symlink to AGENTS.md; never duplicate its content.
+  - path: README.md
+    scope: shared_with_adaptation
+    note: Rewrite for the paper (what it is, how to build it); keep the directory table and the build commands.
+  - path: PAPER.md
+    scope: shared_with_adaptation
+    note: The Human contract with the locked, bounded, free and unresolved cues; a paper fills it, from its brief through paper-brief-ingest.
+  - path: DEV.md
+    scope: shared_with_adaptation
+    note: Development process of a paper; keep the Issue, build, Overleaf and release sections and adapt names.
+  - path: RELEASE_NOTES.md
+    scope: template
+    note: Template release history stays in the template repository; a paper keeps its own release notes, one entry per release tag.
+  - path: Makefile
+    scope: shared_with_adaptation
+    note: Public build entry; set PAGE_BUDGET to the venue's limit (or none); keep the targets.
+  - path: .env.example
+    scope: shared_with_adaptation
+    note: Variable names only; keep the reference-audit names and add the paper's own.
+  - path: .gitignore
+    scope: shared_with_adaptation
+    note: Keep the template rules (.project/, assets/* exceptions, LaTeX leftovers); add the paper's own.
+  - path: .github/
+    scope: shared
+    note: Issue and PR templates and CI (template-check, paper-check, reference-validation); a paper keeps the job names its branch protection requires.
+  # Product plane
+  - path: paper/
+    scope: project
+    note: The paper itself; the template ships a placeholder that a paper replaces section by section.
+  - path: paper/Makefile
+    scope: shared
+    note: latexmk builds of main, blind and submission into BUILD_DIR, with the TEXBIN override; replace with the template's on upgrade unless the paper changed it.
+  - path: paper/main.tex
+    scope: shared_with_adaptation
+    note: Keep the build switches, the authors.tex input and the PaperMainTextEnd label; the document class, packages and sections are the paper's.
+  - path: paper/blind.tex
+    scope: shared
+    note: One-line entry file of the anonymous build.
+  - path: paper/submission.tex
+    scope: shared
+    note: One-line entry file of the named build without notes.
+  - path: paper/authors.tex
+    scope: project
+    note: The paper's author identity and its PaperIdentity strings.
+  - path: paper/macros.tex
+    scope: shared_with_adaptation
+    note: Keep the required interface markers (PaperTODO, PaperNote, PaperIdentity, PaperTitle); add the paper's interfaces with markers.
+  - path: paper/style/
+    scope: shared
+    note: Display macros (paper-harness.sty with T1 encoding) and the venue-kit compatibility layer (compat.sty).
+  - path: assets/MANIFEST.yaml
+    scope: shared_with_adaptation
+    note: Keep the schema, then register the paper's actual result tables, figure data and reported numbers with their source repository, commit, run, checksum and regeneration command.
+  - path: assets/README.md
+    scope: shared
+    note: Asset directory rules.
+  # Development plane: directories
+  - path: .agents/content-registry.yaml
+    scope: shared_with_adaptation
+    note: Rewrite entries as the paper grows; keep the template block; a paper made from this derived template removes template.upstream and records only this template.
+  - path: .agents/**/AGENTS.md
+    scope: shared_with_adaptation
+    note: Keep the uniform directory guardrails and indexes, then adapt wording to the destination.
+  - path: .agents/skills/
+    scope: project
+    note: The directory is reusable as a layout; its non-shared contents are local.
+  - path: .agents/skills/shared/.gitattributes
+    scope: shared
+    note: Whitespace exceptions for vendored files that keep upstream bytes git diff --check would report; extend it when vendoring such a file.
+  - path: .agents/memory/
+    scope: shared_with_adaptation
+    note: Keep the directory rules and indexes; destination records belong under shared/ or project/.
+  - path: .agents/memory/shared/
+    scope: shared
+    note: Reusable durable decisions; adapt paths and commands before reuse.
+  - path: .agents/memory/project/
+    scope: project
+    note: Decisions owned by the destination repository; never copy wholesale.
+  - path: .agents/memory/ENTRY_TEMPLATE.md
+    scope: shared
+    note: Reusable record shape; keep the destination source and scope accurate.
+  - path: .agents/knowledge/
+    scope: shared_with_adaptation
+    note: Keep the directory rules and indexes; destination facts belong under shared/ or project/.
+  - path: .agents/knowledge/shared/
+    scope: shared
+    note: Reusable sourced facts with a refresh condition; recheck before relying on them.
+  - path: .agents/knowledge/project/
+    scope: project
+    note: Facts owned by the destination, such as a workshop's rules.
+  - path: .agents/knowledge/ENTRY_TEMPLATE.md
+    scope: shared
+    note: Reusable record shape; keep the destination source, scope and refresh condition accurate.
+  - path: .agents/knowledge/VENUE_TEMPLATE.md
+    scope: shared
+    note: Record shape for a venue's submission facts; unknown values stay UNKNOWN.
+  - path: .agents/references/
+    scope: project
+    note: The paper's reference ledger and policy; the template ships an empty ledger and an enforced policy; never copy a populated ledger.
+  - path: .agents/scripts/
+    scope: shared_with_adaptation
+    note: Adopt the coding template's scripts unchanged and preserve lifecycle boundaries; the paper scripts below come from this template and are replaced on upgrade.
+  - path: .agents/scripts/setup-project.sh
+    scope: shared_with_adaptation
+    note: This template's setup hook (creates .project/build/, reports the TeX tools); a paper adds its own setup lines.
+  - path: .agents/scripts/migrate-project.rules
+    scope: shared_with_adaptation
+    note: Teardown rules for the .project/ entries setup-project.sh creates (build is dropped); a paper adds a line for each entry it creates.
+  - path: .agents/scripts/reference-integrity/
+    scope: shared
+    note: Locked dependencies of the optional reference checks (bibtex-updater, pybtex) and their licence inventory.
+  - path: .agents/tests/
+    scope: shared
+    note: Unit tests of the shared scripts; a paper adds tests only for its own scripts.
+  - path: .project/
+    scope: project
+    note: Worktree-local state is never copied into a new repository template.
+  # Inherited skills (coding-agent-project-template)
+  - path: .agents/skills/shared/worktree-lifecycle/
+    scope: shared_with_adaptation
+    note: Adapt Herdr workspace names, setup commands and repository state paths; here .project/build/ is rebuildable and dropped at teardown.
+  - path: .agents/skills/shared/issue-workflow/
+    scope: shared_with_adaptation
+    note: Fill the adaptation slots for base branch, repository, agent kind and prefix, dispatch tier models, effort arguments, CI and product gate; here the gate is make check.
+  - path: .agents/skills/shared/project-memory-governance/
+    scope: shared
+    note: Generic classification, registration and cleanup procedure.
+  - path: .agents/skills/shared/cli-first-operations/
+    scope: shared
+    note: Use the project's public entry points (make, .agents/scripts/) instead of ad hoc wrappers.
+  - path: .agents/skills/shared/template-feedback/
+    scope: shared_with_adaptation
+    note: Feedback from a paper goes to this template first; defects this template inherited go upstream.
+  - path: .agents/skills/shared/template-adoption/
+    scope: shared_with_adaptation
+    note: Adapt the target repository's rules, product paths and acceptance commands; here the product tree is paper/ and acceptance is the builds and make check.
+  - path: .agents/skills/shared/template-upgrade/
+    scope: shared_with_adaptation
+    note: This repository follows template.upstream; a paper follows this template and upgrades from its RELEASE_NOTES.md.
+  - path: .agents/skills/shared/release-doc-audit/
+    scope: shared_with_adaptation
+    note: Set RELEASE_HEADING to the destination's release-notes layout; the audit runs against the destination tree and target tag.
+  - path: .agents/skills/shared/asset-lifecycle/
+    scope: shared_with_adaptation
+    note: Adapt asset classes and storage roots; here result tables, figure data and reported numbers from code repositories.
+  # Paper workflow skills (this template's own)
+  - path: .agents/skills/shared/paper-orientation/
+    scope: shared
+    note: Session start and context recovery for a paper repository.
+  - path: .agents/skills/shared/paper-brief-ingest/
+    scope: shared
+    note: Validates a brief and fills PAPER.md; carries scripts/paper-brief.py, which refuses to ingest into the template itself.
+  - path: .agents/skills/shared/control-review/
+    scope: shared
+    note: Review before changing anything a control cue protects.
+  - path: .agents/skills/shared/decision-packet/
+    scope: shared
+    note: Prepare a Human decision and record it as a project memory record.
+  - path: .agents/skills/shared/section-writing/
+    scope: shared
+    note: Section drafting and revision; its references hold the paper-writing guide.
+  - path: .agents/skills/shared/style-alignment/
+    scope: shared
+    note: Positioning, narrative and writing policy; its references hold the writing-style guide.
+  - path: .agents/skills/shared/paper-interface-maintenance/
+    scope: shared
+    note: Interface macros, the paper-interfaces record and manifest entries change together.
+  - path: .agents/skills/shared/manuscript-consistency-review/
+    scope: shared
+    note: Findings-only review of a version the Human names.
+  - path: .agents/skills/shared/citation-support-review/
+    scope: shared
+    note: Occurrence-level citation support at Draft, Review and Release strength.
+  - path: .agents/skills/shared/reference-repair/
+    scope: shared
+    note: Repair BibTeX identity, metadata, duplicates and versions.
+  - path: .agents/skills/shared/publication-planning/
+    scope: shared
+    note: Venue, page budget, builds and every Overleaf status, pull or push request.
+  - path: .agents/skills/shared/release-review/
+    scope: shared
+    note: make release-check, the release PR from dev to main and the tag.
+  # Writing skills
+  - path: .agents/skills/shared/writing-router/
+    scope: shared
+    note: House router for prose tasks, harvested from downstream papers and generalized.
+  - path: .agents/skills/shared/scientific-writing/
+    scope: shared
+    note: Vendored from a-green-hand-jack/research-skills@26226c9 with the maintainer's permission (no licence file upstream); PROVENANCE.md and SOURCES.md.
+  - path: .agents/skills/shared/scientific-english-editor/
+    scope: shared
+    note: Vendored, MIT, SailRain/scientific-english-editor-skill@2b5ed82; PROVENANCE.md.
+  - path: .agents/skills/shared/better-usage/
+    scope: shared
+    note: Vendored, MIT, msimchowitz/writing-skills@214981f; PROVENANCE.md.
+  - path: .agents/skills/shared/academic-voice/
+    scope: shared
+    note: Vendored, MIT, msimchowitz/writing-skills@214981f; PROVENANCE.md.
+  - path: .agents/skills/shared/lieflat-less-ai-tone/
+    scope: shared
+    note: Vendored, MIT, larashero3-dotcom/writing-dna-skill@d5145ef; standalone since the Writing DNA suite was retired; PROVENANCE.md.
+  - path: .agents/skills/shared/proofread/
+    scope: shared
+    note: Vendored, MIT, JakobThumm/proofreading@cf2f0d7; PROVENANCE.md.
+  - path: .agents/skills/shared/writing-reference-finder/
+    scope: shared
+    note: House skill harvested from downstream papers; exemplars are never citations.
+  - path: .agents/skills/shared/openreview-review-collector/
+    scope: shared
+    note: House skill harvested from downstream papers; collects reviews into a dossier and a revision queue.
+  # Figure and poster skills
+  - path: .agents/skills/shared/figure-router/
+    scope: shared
+    note: House router for figure work, harvested from downstream papers and generalized.
+  - path: .agents/skills/shared/scientific-figure-workflow/
+    scope: shared
+    note: House figure workflow, harvested from downstream papers and generalized; names no image provider.
+  - path: .agents/skills/shared/scipilot-figure-skill/
+    scope: shared
+    note: Vendored, MIT, Haojae/scipilot-figure-skill@43098dd; PROVENANCE.md.
+  - path: .agents/skills/shared/icarus-figures/
+    scope: shared
+    note: Vendored, MIT, TAO-QKV/Icarus-Figures@0bcaa40; front matter patched to parse, recorded in PROVENANCE.md.
+  - path: .agents/skills/shared/thesis-figure-skill/
+    scope: shared
+    note: Vendored, MIT, 0xE1337/thesis-figure-skill@ffe6d07; PROVENANCE.md.
+  - path: .agents/skills/shared/tikz-figure-code/
+    scope: shared
+    note: Vendored, MIT, 0xE1337/thesis-figure-skill@ffe6d07; PROVENANCE.md.
+  - path: .agents/skills/shared/image-to-editable-ppt/
+    scope: shared
+    note: Vendored, MIT, ningzimu/image-to-editable-ppt-skill@b7be494; patched to remove the fallback that read another tool's login, recorded in PROVENANCE.md.
+  - path: .agents/skills/shared/poster-build/
+    scope: shared
+    note: House skill for the optional poster/ product tree, harvested from a downstream paper and generalized.
+  # Memory records
+  - path: .agents/memory/shared/issue-in-herdr-worktree.md
+    scope: shared
+    note: Each Issue runs in its own Herdr worktree and agent session under the handoff's working rules.
+  - path: .agents/memory/shared/issue-close-out.md
+    scope: shared
+    note: Close out the worktree after the PR merges.
+  - path: .agents/memory/shared/issue-dispatch-by-difficulty.md
+    scope: shared
+    note: Dispatch each Issue agent with an explicit model and effort per difficulty tier; tier models are in the issue-workflow slots.
+  - path: .agents/memory/shared/product-state-root.md
+    scope: shared_with_adaptation
+    note: Fill STATE_MARKER, STATE_ENV and DEFAULT_ROOT; here the paper's build directory.
+  - path: .agents/memory/shared/resolve-real-paths-before-moving.md
+    scope: shared
+    note: Resolve both paths and stop on overlap before moving, replacing or symlinking a directory.
+  - path: .agents/memory/shared/llm-credentials.md
+    scope: shared_with_adaptation
+    note: Fill SHARED_CREDENTIAL_FILE from user-level configuration and CREDENTIAL_DIR (credentials) under the canonical checkout's .project/; credentials pass by variable name, never as command-line arguments; here only the optional image-to-editable-ppt CLI uses one.
+  - path: .agents/memory/shared/third-party-llm-compat-patches.md
+    scope: shared_with_adaptation
+    note: Fill PATCH_DIR; here a vendored tool is changed in its vendored copy and the change is recorded in its PROVENANCE.md.
+  - path: .agents/memory/shared/one-source-three-builds.md
+    scope: shared
+    note: main, submission and blind from one source in a fixed order, each removing a layer.
+  - path: .agents/memory/shared/results-through-interface-macros.md
+    scope: shared
+    note: Reported numbers only through interface macros with a manifest source; planned results are never observations.
+  - path: .agents/memory/shared/reference-integrity.md
+    scope: shared
+    note: Identity and claim support are separate, occurrence-level obligations.
+  - path: .agents/memory/shared/page-budget-on-blind-build.md
+    scope: shared_with_adaptation
+    note: Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
+  - path: .agents/memory/shared/post-build-visual-inspection.md
+    scope: shared_with_adaptation
+    note: Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
+  - path: .agents/memory/shared/official-venue-kit-unmodified.md
+    scope: shared
+    note: Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only.
+  - path: .agents/memory/shared/tex-engine-from-texbin.md
+    scope: shared
+    note: TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
+  - path: .agents/memory/shared/overleaf-paper-tree-only.md
+    scope: shared
+    note: Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force.
+  - path: .agents/memory/shared/sync-overleaf-before-editing.md
+    scope: shared
+    note: Take in Overleaf edits before writing and deliver to both sides together.
+  - path: .agents/memory/shared/skill-frontmatter-validity.md
+    scope: shared
+    note: Every SKILL.md front matter parses; make check re-parses them.
+  - path: .agents/memory/project/brief.md
+    scope: project
+    note: Starter record a paper fills from its brief.
+  - path: .agents/memory/project/experiments.md
+    scope: project
+    note: Starter record of the paper's evidence questions.
+  - path: .agents/memory/project/paper-interfaces.md
+    scope: project
+    note: Starter record of the paper's interface macros; make check reads it.
+  - path: .agents/memory/project/publication.md
+    scope: project
+    note: Starter record of the paper's venue, kit, budget, Overleaf and release tags.
+  - path: .agents/memory/project/rebuild-on-coding-template.md
+    scope: template
+    note: This template's v0.4.0 migration map; a paper made from the template deletes it.
+  - path: .agents/memory/project/protected-case-branches.md
+    scope: template
+    note: This template's protected case branches and trackers (DEC-0014); a paper records its own.
+  - path: .agents/memory/project/repository-identity.md
+    scope: template
+    note: This template's name, description and branches.
+  - path: .agents/memory/project/paper-run-boundary.md
+    scope: template
+    note: The boundary between this template and paper-run (#152).
+  # Knowledge records
+  - path: .agents/knowledge/shared/gpt5-strict-backend-requests.md
+    scope: shared
+    note: Inherited with the two LLM memory records it belongs to; dated GPT-5.x request shapes that strict Responses backends reject; no tool here sends such requests.
+  - path: .agents/knowledge/shared/venue-iclr-2027.md
+    scope: shared
+    note: Dated ICLR 2027 facts and kit hashes; refresh at the decisions and the camera-ready instructions.
+  - path: .agents/knowledge/shared/venue-icml-2026.md
+    scope: shared
+    note: Dated ICML 2026 facts and kit hashes; ICML 2027 unknown until its call is published.
+  - path: .agents/knowledge/shared/venue-neurips-2026-poster.md
+    scope: shared
+    note: Dated NeurIPS 2026 poster sizes and print deadlines; recheck before ordering.
+  - path: .agents/knowledge/shared/official-latex-templates.md
+    scope: shared
+    note: Official publisher and venue kits and their authorities as last compiled by the retired smoke tests.
+  - path: .agents/knowledge/shared/bibliographic-metadata-services.md
+    scope: shared
+    note: Services, variables and secrets of the online reference audits.

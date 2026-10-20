@@ -1,0 +1,3 @@
+# Rules for the .project/ entries this paper's setup creates; the format is in
+# migrate-assets.sh (NAME|ACTION|WHY).
+build|drop|make rebuilds it from paper/: PDFs, intermediates, logs, page renders and caches

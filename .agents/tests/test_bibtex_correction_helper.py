@@ -13,7 +13,7 @@ except ImportError:
     bibtexparser = None
 
 ROOT = Path(__file__).resolve().parents[2]
-HELPER = ROOT / ".agents/tools/_validate-bibtex-correction.py"
+HELPER = ROOT / ".agents/scripts/_validate-bibtex-correction.py"
 sys.path.insert(0, str(HELPER.parent))
 
 
