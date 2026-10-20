@@ -4,6 +4,64 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
+## v0.4.5 — 2026-10-21
+
+Lets `upgrade-template.sh` complete the light path in a real paper: it no
+longer refuses the Human documents a paper rewrites or the files it adapted
+without a `## In this repository` section, and it can finish after a conflict
+resolved by hand (#182).
+
+### Fixed
+
+- The command refused `README.md` and `DEV.md` in every paper, because README
+  "Start a paper" tells a paper to rewrite them, and refused any shared file
+  adapted without a section, such as `.agents/scripts/AGENTS.md`, even when
+  the release's change did not touch the local text. After a hand merge it
+  still refused them and would not set `template.version`, so agents edited
+  the registry by hand.
+  - Paper-owned Human documents: a registry entry may carry
+    `upgrade: review`, documented under the registry's `upgrade:` key.
+    `README.md`, `PAPER.md` and `DEV.md` carry it; `RELEASE_NOTES.md` stays
+    `scope: template` and is skipped. The command never changes such a file
+    and prints the release's diff for it under "Review", never as a
+    conflict. Review items do not block the light path.
+  - Section-less adapted files: merged three ways with the source tag as
+    base; a merge without overlap is applied and only an overlap is a
+    conflict. For a Markdown file, "Review" proposes moving its local text
+    into a section, as `template-upgrade` step 5 describes.
+  - Resolved conflicts: `--resolved <path>` (repeatable, the registry too)
+    accepts a file resolved by hand once it has no conflict markers, and the
+    command then sets `template.version`.
+- `test_upgrade_template.py` upgrades a fixture paper with its own README and
+  DEV and a section-less adapted `AGENTS.md` with no conflict to
+  `template.version` set, still refuses a real overlap, and finishes it with
+  `--resolved`. The adoption-state upgrade from v0.4.1 now starts its paper
+  with a rewritten README, and keeps the `upgrade: review` documents as the
+  paper wrote them.
+
+### Adoption states
+
+Unchanged from v0.4.2. `make check` passes in every state below, and
+`make release-check` fails only on the steps named, for the reasons v0.4.2
+gives.
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.4
+
+**Command only.** The command alone completes the upgrade from v0.4.4, but
+only this release's copy: the v0.4.4 copy refuses `.agents/scripts/AGENTS.md`
+in a paper that added its own lines to it, because this release changes that
+file. Run this release's own copy once, as `template-upgrade` shows under "In this
+repository": `--check` first, then without it, then `make check`. Its
+"Review" list may propose a `## In this repository` section for a
+section-less adapted `AGENTS.md`; that move can wait for a later Issue.
+
 ## v0.4.4 — 2026-10-20
 
 Adds a light upgrade path: one command applies the mechanical part of a

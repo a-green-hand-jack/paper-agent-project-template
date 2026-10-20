@@ -26,6 +26,17 @@ entries:
   - path: TEMPLATE.md
     scope: template
     note: The template's own record.
+  - path: README.md
+    scope: shared_with_adaptation
+    upgrade: review
+    note: Rewritten for the project.
+  - path: DEV.md
+    scope: shared_with_adaptation
+    upgrade: review
+    note: The project's development process.
+  - path: .agents/**/AGENTS.md
+    scope: shared_with_adaptation
+    note: Directory rules and indexes, adapted by the project.
 {extra}"""
 EXTRAS = """  # Added in v2
   - path: extras/
@@ -43,6 +54,10 @@ SKILL = {
     "v3": "# Skill\n\n1. First step, changed.\n2. Second step, reworded.\n",
 }
 LOCAL_SECTION = "\n## In this repository\n\n- Step 1 (First step): also run the local check.\n"
+INDEX = "# Tools\n\n{rules}\n\n## Index\n\n- `a.sh` — does a.\n"
+LOCAL_INDEX_LINE = "- `mine.sh` — the project's own tool.\n"
+OWN_README = "# My project\n\nBuild it with make.\n"
+OWN_DEV = "# Developing my project\n"
 
 
 def release(version: str, repository: str) -> dict[str, str]:
@@ -57,7 +72,12 @@ def release(version: str, repository: str) -> dict[str, str]:
         "shared/edited.txt": "a\nb\nc\n" if number < 3 else "a\nb\nC\n",
         "TEMPLATE.md": f"template record {version}\n",
         "notes/plan.txt": f"plan {version}\n",
+        "shared/overlap.txt": "x\n" if number < 3 else "z\n",
         "assets/README.md": "assets\n" if number < 2 else "assets, revised\n",
+        "README.md": "# Template\n\nStart here.\n" if number < 3 else "# Template\n\nStart here, then run init.\n",
+        "DEV.md": "# Development\n\nRelease the template.\n" if number < 2 else
+                  "# Development\n\nRelease the template with a tag.\n",
+        ".agents/tools/AGENTS.md": INDEX.format(rules="Rules." if number < 3 else "Rules, revised."),
     }
     if number < 3:
         files["shared/gone.txt"] = "removed in v3\n"
@@ -104,8 +124,10 @@ class UpgradeTemplateTests(unittest.TestCase):
 
     def paper(self, version: str, edited: bool) -> Path:
         """A paper made from the template at VERSION: without the scope
-        template file and its entry, with its own release notes and a section
-        in the shared skill; EDITED also changes a shared file locally."""
+        template file and its entry, with its own release notes, README and
+        DEV, a section in the shared skill and an index line of its own in a
+        section-less AGENTS.md; EDITED also changes two shared files locally,
+        one of them where the template changes it too."""
         root = self.base / f"paper-{version}"
         files = release(version, str(self.template))
         del files["TEMPLATE.md"]
@@ -114,8 +136,11 @@ class UpgradeTemplateTests(unittest.TestCase):
             "  - path: TEMPLATE.md\n    scope: template\n    note: The template's own record.\n", "")
         files["RELEASE_NOTES.md"] = "# Release notes\n"
         files["shared/skill.md"] += LOCAL_SECTION
+        files["README.md"], files["DEV.md"] = OWN_README, OWN_DEV
+        files[".agents/tools/AGENTS.md"] += LOCAL_INDEX_LINE
         if edited:
             files["shared/edited.txt"] = "A\nb\nc\n"
+            files["shared/overlap.txt"] = "y\n"
         write(root, files)
         git("init", "-q", cwd=root)
         return root
@@ -142,7 +167,13 @@ class UpgradeTemplateTests(unittest.TestCase):
                      "entry extras/ added",
                      "TEMPLATE.md: scope template",
                      "notes/plan.txt: project-owned (project)",
-                     "shared/edited.txt: changed here; merge proposal:",
+                     "shared/edited.txt: merged with the local text (three-way, no overlap)",
+                     "shared/overlap.txt: changed here and in v3; merge proposal with conflict markers:",
+                     "Refused (conflicts): 1",
+                     "README.md: the paper's own (upgrade: review); the release's change:",
+                     "    +Start here, then run init.",
+                     "DEV.md: the paper's own (upgrade: review)",
+                     ".agents/tools/AGENTS.md: adapted here without a ## In this repository section;",
                      "assets/README.md: changed in v3; this command never touches it",
                      "shared/skill.md: reconcile its ## In this repository section (step 1",
                      "v3: command only",
@@ -159,7 +190,9 @@ class UpgradeTemplateTests(unittest.TestCase):
         read = lambda name: (root / name).read_text(encoding="utf-8")
         self.assertEqual(read("shared/plain.txt"), "two\n")
         self.assertEqual(read("shared/skill.md"), SKILL["v3"] + LOCAL_SECTION)
-        self.assertEqual(read("shared/edited.txt"), "A\nb\nc\n")
+        self.assertEqual(read("shared/edited.txt"), "A\nb\nC\n")
+        self.assertEqual(read("shared/overlap.txt"), "y\n")
+        self.assertEqual((read("README.md"), read("DEV.md")), (OWN_README, OWN_DEV))
         self.assertEqual(read("shared/new.txt"), "new in v2\n")
         self.assertTrue(os.access(root / "extras/tool.sh", os.X_OK))
         self.assertFalse((root / "shared/gone.txt").exists())
@@ -171,14 +204,36 @@ class UpgradeTemplateTests(unittest.TestCase):
         self.assertNotIn("TEMPLATE.md", registry)
         self.assertEqual(self.version(root), "v1")
 
-        proposal = root / ".project/build/template-upgrade/proposals/shared/edited.txt"
-        self.assertEqual(proposal.read_text(encoding="utf-8"), "A\nb\nC\n")
-        shutil.copyfile(proposal, root / "shared/edited.txt")
+        proposal = root / ".project/build/template-upgrade/proposals/shared/overlap.txt"
+        self.assertEqual(proposal.read_text(encoding="utf-8"), "<<<<<<< here\ny\n=======\nz\n>>>>>>> v3\n")
+        shutil.copyfile(proposal, root / "shared/overlap.txt")
+        result = self.upgrade(root, "--resolved", "shared/overlap.txt", "v3")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("shared/overlap.txt: --resolved, but conflict markers remain", result.stdout)
+
+        # A resolution by hand that no merge reproduces: still a conflict until --resolved names it.
+        (root / "shared/overlap.txt").write_text("y, then z\n", encoding="utf-8")
         result = self.upgrade(root, "v3")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertEqual(self.version(root), "v1")
+        result = self.upgrade(root, "--resolved", "shared/overlap.txt", "v3")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("shared/overlap.txt: changed here and in v3: resolved here (--resolved)", result.stdout)
         self.assertIn("shared/edited.txt: already has the change of v3", result.stdout)
+        self.assertEqual(read("shared/overlap.txt"), "y, then z\n")
         self.assertEqual(self.version(root), "v3")
         self.assertIn("already v3", self.upgrade(root, "v3").stdout)
+
+    def test_own_human_documents_and_a_section_less_adaptation_do_not_conflict(self) -> None:
+        root = self.paper("v1", edited=False)
+        result = self.upgrade(root, "v3")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Refused (conflicts): 0", result.stdout)
+        self.assertIn("Review (left to the paper; never conflicts): 3", result.stdout)
+        read = lambda name: (root / name).read_text(encoding="utf-8")
+        self.assertEqual((read("README.md"), read("DEV.md")), (OWN_README, OWN_DEV))
+        self.assertEqual(read(".agents/tools/AGENTS.md"), INDEX.format(rules="Rules, revised.") + LOCAL_INDEX_LINE)
+        self.assertEqual(self.version(root), "v3")
 
     def test_a_command_only_release_is_the_light_path_and_runs_offline(self) -> None:
         root = self.paper("v2", edited=False)
@@ -191,6 +246,7 @@ class UpgradeTemplateTests(unittest.TestCase):
         result = self.upgrade(root, "v3")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Light path: yes", result.stdout)
+        self.assertIn("README.md: the paper's own (upgrade: review)", result.stdout)
         self.assertEqual((root / "shared/edited.txt").read_text(encoding="utf-8"), "a\nb\nC\n")
         self.assertEqual((root / "shared/skill.md").read_text(encoding="utf-8"), SKILL["v3"])
         self.assertEqual(self.version(root), "v3")
