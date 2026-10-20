@@ -64,6 +64,55 @@ gives.
 own copy once, as `template-upgrade` shows under "In this repository":
 `--check` first, then without it, then `make check`.
 
+## v0.4.3 — 2026-10-20
+
+Lets the online reference audits take their keys from the device's shared
+credential file, as the inherited `llm-credentials` record prescribes (#176).
+
+### Fixed
+
+- The reference audits read keys only from the root `.env`, and failed on any
+  key other than `BIBTEX_CHECK_MAILTO`, `OPENALEX_API_KEY` and `S2_API_KEY`
+  (`.env:<n> unsupported key`). A paper therefore had to copy its keys into a
+  project `.env`, which `llm-credentials` forbids, or link the shared file as
+  `.env`, which then failed on the shared file's other keys.
+  `_reference_env.py` now also reads `.project/credentials/.env`, the link to
+  the shared file (in a worktree reached through the `.project/credentials`
+  link). From it, it exports only those three keys; every other key is skipped,
+  never exported and never printed. The process environment wins over the
+  root `.env`, and the root `.env` over the shared file. The root `.env` keeps
+  its strict allowlist and stays a supported fallback. `.env.example`,
+  `DEV.md` ("Reference audits"), `bibliographic-metadata-services` and the
+  local section of `llm-credentials` name the shared file as the preferred
+  route.
+
+### Adoption states
+
+Unchanged from v0.4.2. `make check` passes in every state below, and
+`make release-check` fails only on the steps named, for the reasons v0.4.2
+gives.
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.2
+
+**Manual steps.** Take the release with `template-upgrade`, then:
+
+1. If the device has a shared credential file, link the canonical checkout's
+   `.project/credentials/.env` to it (create `.project/credentials/` first if
+   the paper has none). Do not copy the file or its values.
+2. Re-run `bash .agents/scripts/setup-worktree.sh` in each existing worktree,
+   so that a worktree created before the canonical checkout had
+   `.project/credentials/` gets its `.project/credentials` link.
+3. A root `.env` that holds only these keys keeps working and wins over the
+   shared file; remove it once the keys come from the shared file, so that a
+   stale copy cannot hide a rotated key.
+
 ## v0.4.2 — 2026-10-20
 
 Fixes the defects downstream papers reported after adopting v0.4.1 (#173),

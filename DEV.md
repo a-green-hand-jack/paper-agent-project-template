@@ -170,6 +170,14 @@ the entries it left open, never a failed entry. The rules are in
 services, keys and caches in
 [`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md).
 
+Locally the audits take `BIBTEX_CHECK_MAILTO`, `OPENALEX_API_KEY` and
+`S2_API_KEY` from the environment first. The preferred file source is the
+device's shared credential file: link the canonical checkout's
+`.project/credentials/.env` to it, and each worktree reaches it through the
+`.project/credentials` link that `setup-worktree.sh` creates. Only these three
+keys are exported from it; every other key is skipped. A project-only root `.env`
+holding just these keys remains the fallback and wins over the shared file.
+
 ## Overleaf
 
 Overleaf mirrors `paper/` on `dev`, and only `paper/`
@@ -302,7 +310,7 @@ coding template it follows in `template.upstream`:
 | Repository | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.2) | the coding template and the tag it follows (v0.1.13) |
+| this template | itself, its release (v0.4.3) | the coding template and the tag it follows (v0.1.13) |
 | a paper made from this template | this template, the adopted tag | none |
 
 A repository follows `template.upstream` when it has that field, and

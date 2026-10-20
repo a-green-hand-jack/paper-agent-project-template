@@ -16,6 +16,17 @@ INTEGRITY = ROOT / ".agents/scripts/check-reference-integrity.py"
 ENV_HELPER = ROOT / ".agents/scripts/_reference_env.py"
 FORMAT_HELPER = ROOT / ".agents/scripts/_validate-bibtex-with-pybtex.py"
 CORRECTION_HELPER = ROOT / ".agents/scripts/_validate-bibtex-correction.py"
+REFERENCE_KEYS = ("BIBTEX_CHECK_MAILTO", "OPENALEX_API_KEY", "S2_API_KEY")
+# Synthetic lines of a device's shared credential file: other consumers' keys around the allowlisted ones.
+SHARED_FILE = (
+    "# device shared credentials\n"
+    "OPENAI_API_KEY=synthetic-openai\n"
+    "export S2_API_KEY='synthetic-s2'\n"
+    "CLAUDE_CODE_OAUTH_TOKEN=\"unmatched\n"
+    "not an assignment\n"
+    "OPENALEX_API_KEY=synthetic-openalex\n"
+)
+UNRELATED_KEYS = ("OPENAI_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN")
 
 
 def write(path: Path, text: str) -> None:
@@ -52,19 +63,34 @@ def prepare(root: Path, bib: str = "") -> None:
     }))
 
 
-def run(root: Path, uv: str) -> subprocess.CompletedProcess[str]:
+def run(root: Path, uv: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, str(CORRECTIONS), "--root", str(root), "--uv", uv, "--timeout", "5"],
-        text=True, capture_output=True, check=False,
+        text=True, capture_output=True, check=False, env=env,
     )
 
 
-def fake_uv(root: Path, action: str = "unchanged", mutate: bool = False) -> Path:
+def load_env_helper():
+    spec = importlib.util.spec_from_file_location("test_reference_env", ENV_HELPER)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def without_reference_keys() -> dict[str, str]:
+    return {key: value for key, value in os.environ.items() if key not in REFERENCE_KEYS}
+
+
+def fake_uv(root: Path, action: str = "unchanged", mutate: bool = False, record_env: Path | None = None) -> Path:
     runner = root / "fake-uv"
+    record = (f"pathlib.Path({str(record_env)!r}).write_text(json.dumps("
+              f"{{k: os.environ.get(k) for k in {REFERENCE_KEYS + UNRELATED_KEYS!r}}}))") if record_env else "pass"
     write(
         runner,
         f"""#!/usr/bin/env python3
-import json, pathlib, shutil, sys
+import json, os, pathlib, shutil, sys
+{record}
 if 'bibtex-update' in sys.argv:
     assert '--in-place' not in sys.argv and '--dedupe' not in sys.argv and '--rekey' not in sys.argv
     assert '--use-scholarly' not in sys.argv and '--zotero' not in sys.argv
@@ -186,11 +212,8 @@ class ReferenceCorrectionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             write(root / ".env", "OPENALEX_API_KEY=local\nS2_API_KEY=semantic\n")
-            spec = importlib.util.spec_from_file_location("test_reference_env", ENV_HELPER)
-            assert spec is not None and spec.loader is not None
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            with mock.patch.dict(os.environ, {"OPENALEX_API_KEY": "exported"}, clear=False):
+            module = load_env_helper()
+            with mock.patch.dict(os.environ, {**without_reference_keys(), "OPENALEX_API_KEY": "exported"}, clear=True):
                 loaded = module.load_reference_env(root)
                 self.assertEqual(os.environ["OPENALEX_API_KEY"], "exported")
                 self.assertEqual(os.environ["S2_API_KEY"], "semantic")
@@ -199,6 +222,88 @@ class ReferenceCorrectionTests(unittest.TestCase):
             write(root / ".env", "UNSAFE=value\n")
             with self.assertRaisesRegex(ValueError, "unsupported key"):
                 module.load_reference_env(root)
+
+
+    def test_shared_file_exports_only_the_allowlisted_keys(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / ".project/credentials/.env", SHARED_FILE)
+            with mock.patch.dict(os.environ, without_reference_keys(), clear=True):
+                for key in UNRELATED_KEYS:
+                    os.environ.pop(key, None)
+                loaded = load_env_helper().load_reference_env(root)
+                self.assertEqual(sorted(loaded), ["OPENALEX_API_KEY", "S2_API_KEY"])
+                self.assertEqual(os.environ["S2_API_KEY"], "synthetic-s2")
+                self.assertEqual(os.environ["OPENALEX_API_KEY"], "synthetic-openalex")
+                for key in UNRELATED_KEYS:
+                    self.assertNotIn(key, os.environ)
+
+            write(root / ".project/credentials/.env", "S2_API_KEY='unmatched\n")
+            with mock.patch.dict(os.environ, without_reference_keys(), clear=True):
+                with self.assertRaises(ValueError) as raised:
+                    load_env_helper().load_reference_env(root)
+            self.assertEqual(str(raised.exception), ".project/credentials/.env:1 has unmatched quotes")
+
+    def test_environment_wins_over_root_env_and_root_env_over_shared_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / ".env", "OPENALEX_API_KEY=root\nS2_API_KEY=root\n")
+            write(root / ".project/credentials/.env",
+                  "BIBTEX_CHECK_MAILTO=shared@example.invalid\nOPENALEX_API_KEY=shared\nS2_API_KEY=shared\n")
+            with mock.patch.dict(os.environ, {**without_reference_keys(), "OPENALEX_API_KEY": "exported"}, clear=True):
+                loaded = load_env_helper().load_reference_env(root)
+                self.assertEqual(loaded, ["S2_API_KEY", "BIBTEX_CHECK_MAILTO"])
+                self.assertEqual(os.environ["OPENALEX_API_KEY"], "exported")
+                self.assertEqual(os.environ["S2_API_KEY"], "root")
+                self.assertEqual(os.environ["BIBTEX_CHECK_MAILTO"], "shared@example.invalid")
+
+            write(root / ".env", "UNSAFE=value\n")
+            with mock.patch.dict(os.environ, without_reference_keys(), clear=True):
+                with self.assertRaisesRegex(ValueError, r"^\.env:1 unsupported key: UNSAFE$"):
+                    load_env_helper().load_reference_env(root)
+
+    def test_worktree_reaches_the_shared_file_through_the_credentials_link(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            device = base / "device/.credentials/.env"
+            write(device, SHARED_FILE)
+            canonical = base / "canonical"
+            (canonical / ".project/credentials").mkdir(parents=True)
+            (canonical / ".project/credentials/.env").symlink_to(device)
+            worktree = base / "worktree"
+            prepare(worktree, "@article{real, author={A}, title={T}, journal={J}, year={2026}}\n")
+            (worktree / ".project").mkdir(exist_ok=True)
+            (worktree / ".project/credentials").symlink_to(canonical / ".project/credentials")
+
+            with mock.patch.dict(os.environ, without_reference_keys(), clear=True):
+                self.assertEqual(sorted(load_env_helper().load_reference_env(worktree)), ["OPENALEX_API_KEY", "S2_API_KEY"])
+
+            seen = base / "seen.json"
+            environment = {key: value for key, value in without_reference_keys().items() if key not in UNRELATED_KEYS}
+            result = run(worktree, str(fake_uv(worktree, record_env=seen)), env=environment)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(json.loads(seen.read_text()), {
+                "BIBTEX_CHECK_MAILTO": None, "OPENALEX_API_KEY": "synthetic-openalex", "S2_API_KEY": "synthetic-s2",
+                "OPENAI_API_KEY": None, "CLAUDE_CODE_OAUTH_TOKEN": None,
+            })
+            for value in ("synthetic-openalex", "synthetic-s2", "synthetic-openai"):
+                self.assertNotIn(value, result.stdout + result.stderr)
+
+    def test_missing_files_load_nothing_and_a_missing_root_env_leaves_the_shared_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / ".project").mkdir()
+            (root / ".project/credentials").symlink_to(root / "absent-canonical/.project/credentials")
+            with mock.patch.dict(os.environ, without_reference_keys(), clear=True):
+                self.assertEqual(load_env_helper().load_reference_env(root), [])
+                for key in REFERENCE_KEYS:
+                    self.assertNotIn(key, os.environ)
+
+            (root / ".project/credentials").unlink()
+            write(root / ".project/credentials/.env", "S2_API_KEY=synthetic-s2\n")
+            with mock.patch.dict(os.environ, without_reference_keys(), clear=True):
+                self.assertEqual(load_env_helper().load_reference_env(root), ["S2_API_KEY"])
+                self.assertEqual(os.environ["S2_API_KEY"], "synthetic-s2")
 
 
 if __name__ == "__main__":
