@@ -25,6 +25,8 @@ LATEX_ERROR = re.compile(r"^(?:\./)?([^\s:]+\.(?:tex|sty|cls)):(\d+): (.+)$", re
 BLG_MISSING = re.compile(r'I didn\'t find a database entry for "([^"]+)"')
 MAIN_TEXT_END = re.compile(r"\\newlabel\{PaperMainTextEnd\}\{\{[^{}]*\}\{([^{}]*)\}")
 IDENTITY = re.compile(r"\\PaperIdentity\{([^{}]+)\}")
+# The identity paper/authors.tex ships with; a release declares the real one.
+PLACEHOLDER_IDENTITIES = ("Template-Author-Name", "template-author@example.invalid", "Template-Institution")
 LEFTOVER_MACROS = ("PaperTODO", "PaperNote")
 DEFINITION = re.compile(r"\\(?:newcommand|renewcommand|providecommand|DeclareRobustCommand|def)\b")
 UNDERSCORE_TOKEN = re.compile(r"[A-Za-z0-9.:/-]*[A-Za-z0-9](?:\\_[A-Za-z0-9.:/-]*[A-Za-z0-9])+")
@@ -213,11 +215,16 @@ def cmd_identity(args: argparse.Namespace) -> int:
     if not identities:
         print(f"ERROR no \\PaperIdentity declarations in {shown(authors, args.paper)}")
         return 1
+    failed = 0
+    for identity in identities:
+        if identity in PLACEHOLDER_IDENTITIES:
+            print(f"ERROR {args.job}: {shown(authors, args.paper)} still declares the template placeholder"
+                  f" '{identity}'; declare the paper's real identity")
+            failed = 1
     text = normalize(pdf_text(files["pdf"]))
     info = normalize(pdf_info(files["pdf"]))
     bibliography = bbl_text(files["bbl"])
     sources = paper_sources(files, args.paper)
-    failed = 0
     for identity in identities:
         needle = normalize(identity)
         in_text, in_bib = text.count(needle), bibliography.count(needle)

@@ -2,11 +2,15 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
+
+import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 CHECKER = ROOT / ".agents/scripts/check-reference-integrity.py"
@@ -92,18 +96,21 @@ def run_checker(root: Path, profile: str = "draft") -> subprocess.CompletedProce
 
 class ReferenceIntegrityTests(unittest.TestCase):
     def test_factory_template_passes_draft_and_release(self) -> None:
-        # The factory state, not this repository's: a paper's own ledger is
-        # held to Release strength by make release-check, not by make check.
-        shipped = json.loads((ROOT / ".agents/references/ledger.json").read_text(encoding="utf-8"))
-        factory = {field: [] if isinstance(value, list) else value for field, value in shipped.items()}
-        bibliography = (ROOT / "paper/refs.bib").read_text(encoding="utf-8")
+        # The factory state, built here: this repository's own ledger may be
+        # absent (a policy without a ledger passes Draft) or at Draft strength,
+        # and make release-check, not make check, holds it to Release.
+        factory = {
+            "schema_version": "paper-reference-ledger-v2",
+            "references": [],
+            "citation_usages": [],
+            "citation_occurrences": [],
+            "claim_evidence": [],
+        }
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root / ".agents/references/policy.json",
-                  (ROOT / ".agents/references/policy.json").read_text(encoding="utf-8"))
+            write(root / ".agents/references/policy.json", policy())
             write(root / ".agents/references/ledger.json", json.dumps(factory, indent=2) + "\n")
-            write(root / "paper/refs.bib",
-                  "".join(line for line in bibliography.splitlines(keepends=True) if line.startswith("%")))
+            write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n")
             for profile in ("draft", "release"):
                 with self.subTest(profile=profile):
                     result = run_checker(root, profile)
@@ -439,6 +446,7 @@ class ReferenceMetadataTests(unittest.TestCase):
         write(root / ".agents/scripts/reference-integrity/uv.lock", "fixture lock\n")
         write(root / ".agents/scripts/check-reference-integrity.py", CHECKER.read_text(encoding="utf-8"))
         write(root / ".agents/scripts/_reference_env.py", (ROOT / ".agents/scripts/_reference_env.py").read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/_bounded_run.py", (ROOT / ".agents/scripts/_bounded_run.py").read_text(encoding="utf-8"))
 
     def test_policy_absent_skips_without_uv(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -471,7 +479,7 @@ class ReferenceMetadataTests(unittest.TestCase):
                 """#!/usr/bin/env python3
 import json, pathlib, sys
 assert sys.argv[sys.argv.index('--rate-limit') + 1] == '30'
-assert sys.argv[sys.argv.index('--workers') + 1] == '1'
+assert sys.argv[sys.argv.index('--workers') + 1] == '4'
 assert '--no-google-books' in sys.argv
 target = pathlib.Path(sys.argv[sys.argv.index('--jsonl') + 1])
 target.parent.mkdir(parents=True, exist_ok=True)
@@ -1000,6 +1008,267 @@ raise SystemExit(4)
                 summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
                 self.assertEqual(summary["ledger_reviewed_openreview_keys"], [])
 
+    # A uv stand-in that, like `uv run`, starts the checker as a child in its
+    # process group. The checker streams one record per entry, with a cache
+    # keyed by the entry text, as bibtex-check does: a cached entry costs
+    # nothing, an uncached one SECONDS and a query logged to queries.log.
+    STREAMING_CHECKER = """#!/usr/bin/env python3
+import hashlib, json, os, pathlib, re, sqlite3, subprocess, sys, time
+if os.environ.get('FAKE_CHECKER_CHILD') != '1':
+    pidfile = pathlib.Path(sys.argv[0]).with_name('checker.pid')
+    child = subprocess.Popen([sys.executable] + sys.argv, env=dict(os.environ, FAKE_CHECKER_CHILD='1'))
+    pidfile.write_text(str(child.pid))
+    raise SystemExit(child.wait())
+seconds = float(os.environ.get('FAKE_CHECKER_SECONDS', '0'))
+argv = sys.argv
+bib = pathlib.Path(argv[argv.index('bibtex-check') + 1]).read_text()
+target = pathlib.Path(argv[argv.index('--jsonl') + 1])
+cache_file = pathlib.Path(argv[argv.index('--cache-file') + 1])
+cache_file.parent.mkdir(parents=True, exist_ok=True)
+cache = sqlite3.connect(cache_file)
+cache.execute('CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT NOT NULL, timestamp REAL NOT NULL)')
+log = pathlib.Path(sys.argv[0]).with_name('queries.log')
+key = os.environ.get('OPENALEX_API_KEY', '')
+target.parent.mkdir(parents=True, exist_ok=True)
+with target.open('a') as report:
+    for entry in re.findall(r'@\\w+\\{[^@]*', bib):
+        name = re.match(r'@\\w+\\{([^,]+),', entry).group(1)
+        request = 'https://api.openalex.org/works?search=' + hashlib.sha256(entry.encode()).hexdigest()
+        if key:
+            request += '&api_key=' + key
+        if cache.execute('SELECT 1 FROM cache WHERE key = ?', (request,)).fetchone() is None:
+            with log.open('a') as queries:
+                queries.write(name + '\\n')
+            time.sleep(seconds)
+            cache.execute('INSERT INTO cache VALUES (?, ?, ?)', (request, '{}', time.time()))
+            cache.commit()
+        status = 'year_mismatch' if name.startswith('wrong') else 'verified'
+        report.write(json.dumps({'key': name, 'status': status, 'abstained': False,
+                                 'coverage_incomplete': False, 'errors': []}) + '\\n')
+        report.flush()
+"""
+
+    def streaming_checker(self, root: Path) -> str:
+        runner = root / "fake-uv"
+        write(runner, self.STREAMING_CHECKER)
+        runner.chmod(0o755)
+        return str(runner)
+
+    def run_capped(self, root: Path, runner: str, timeout: int, **env: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(METADATA), "--root", str(root), "--uv", runner, "--timeout", str(timeout)],
+            text=True, capture_output=True, check=False, env={**os.environ, **env},
+        )
+
+    @staticmethod
+    def alive(pid: int) -> bool:
+        try:
+            state = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0]
+        except (FileNotFoundError, IndexError):
+            return False
+        return state != "Z"
+
+    def test_cap_ends_the_checker_and_reports_finished_and_unfinished_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "".join(f"@article{{e{i}, title={{T{i}}}}}\n" for i in range(3)),
+                    [reference(f"e{i}", status="unverified") for i in range(3)])
+            started = time.monotonic()
+            result = self.run_capped(root, self.streaming_checker(root), 3, FAKE_CHECKER_SECONDS="2")
+            elapsed = time.monotonic() - started
+            self.assertLess(elapsed, 12, "the run outlived its cap")
+            pid = int((root / "checker.pid").read_text())
+            deadline = time.monotonic() + 5
+            while self.alive(pid) and time.monotonic() < deadline:
+                time.sleep(0.1)
+            self.assertFalse(self.alive(pid), "the checker outlived the cap that ended its uv parent")
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+            self.assertEqual(summary["outcome"], "incomplete")
+            self.assertEqual(summary["checked_keys"], ["e0"])
+            self.assertEqual(summary["unfinished_keys"], ["e1", "e2"])
+            self.assertIn("unfinished: e1, e2", result.stdout)
+
+    def test_cap_keeps_a_positive_problem_among_finished_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@article{wrong, title={A}}\n@article{later, title={B}}\n",
+                    [reference("wrong"), reference("later")])
+            result = self.run_capped(root, self.streaming_checker(root), 2, FAKE_CHECKER_SECONDS="1.5")
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            self.assertIn("ERROR reference_metadata wrong: year_mismatch", result.stdout)
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+            self.assertEqual(summary["outcome"], "reference_problem")
+            self.assertEqual(summary["unfinished_keys"], ["later"])
+
+    def test_kept_cache_queries_only_new_or_changed_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@article{same, title={A}}\n@article{edited, title={B}}\n",
+                    [reference("same"), reference("edited")])
+            runner = self.streaming_checker(root)
+            first = self.run_capped(root, runner, 30)
+            self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+            write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n"
+                  "@article{same, title={A}}\n@article{edited, title={B, revised}}\n")
+            second = self.run_capped(root, runner, 30)
+            self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
+            self.assertEqual((root / "queries.log").read_text().split(), ["same", "edited", "edited"])
+
+    def test_cache_keeps_no_credential(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@article{real, title={A}}\n", [reference("real")])
+            runner = self.streaming_checker(root)
+            keyless = self.run_capped(root, runner, 30, OPENALEX_API_KEY="")
+            keyed = self.run_capped(root, runner, 30, OPENALEX_API_KEY="fixture-secret-value")
+            self.assertEqual(keyed.returncode, 0, keyed.stdout + keyed.stderr)
+            cache = root / ".project/build/reference-integrity/cache"
+            for path in cache.iterdir():
+                self.assertNotIn(b"fixture-secret-value", path.read_bytes(), path.name)
+            rows = sqlite3.connect(cache / "metadata.db").execute(
+                "SELECT key FROM cache WHERE key LIKE 'https://%'").fetchall()
+            self.assertEqual(len(rows), 1, rows)  # the keyless response stays cached
+            self.assertEqual(keyless.returncode, 0, keyless.stdout + keyless.stderr)
+
+    def test_keyless_run_skips_openalex_through_the_checker_circuit(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@article{real, title={A}}\n", [reference("real")])
+            runner = self.streaming_checker(root)
+            summary_path = root / ".project/build/reference-integrity/run.json"
+            database = root / ".project/build/reference-integrity/cache/metadata.db"
+
+            def circuit() -> dict[str, float]:
+                row = sqlite3.connect(database).execute(
+                    "SELECT value FROM cache WHERE key = '__bibtex_updater_circuit_open_until__'").fetchone()
+                return json.loads(row[0])
+
+            keyless = self.run_capped(root, runner, 30, OPENALEX_API_KEY="")
+            self.assertIn("skips OpenAlex", keyless.stdout)
+            self.assertEqual(json.loads(summary_path.read_text())["skipped_services"], ["openalex"])
+            self.assertGreater(circuit()["openalex"], time.time())
+            keyed = self.run_capped(root, runner, 30, OPENALEX_API_KEY="fixture-secret-value")
+            self.assertNotIn("skips OpenAlex", keyed.stdout)
+            self.assertEqual(json.loads(summary_path.read_text())["skipped_services"], [])
+            self.assertNotIn("openalex", circuit())
+
+    def test_ci_runs_three_tiers_and_keeps_each_audit_cache(self) -> None:
+        workflow = yaml.safe_load((ROOT / ".github/workflows/reference-validation.yml").read_text(encoding="utf-8"))
+        self.assertIn("schedule", workflow[True])
+        self.assertIn("workflow_dispatch", workflow[True])
+        jobs = workflow["jobs"]
+        self.assertIn("pull_request", jobs["references"]["if"])
+        self.assertIn("push", jobs["references"]["if"])
+        self.assertNotIn("pull_request", jobs["references-full"]["if"])
+        tier = next(step for step in jobs["references"]["steps"] if step.get("id") == "tier")["run"]
+        self.assertIn('"$BASE_REF" == main', tier)  # the release path audits everything
+        self.assertIn("--scope all", tier)
+        self.assertIn("--scope changed --base $BASE_SHA", tier)
+        # The scheduled full audit runs both audits in parallel.
+        self.assertEqual({entry["audit"] for entry in jobs["references-full"]["strategy"]["matrix"]["include"]},
+                         {"corrections", "metadata"})
+        for name, job in jobs.items():
+            steps = job["steps"]
+            names = [step["name"] for step in steps]
+            audits = [index for index, step in enumerate(steps) if "check-reference-" in str(step.get("run", ""))
+                      and "integrity" not in str(step.get("run", ""))]
+            restores = [index for index, step in enumerate(steps) if "actions/cache/restore@" in step.get("uses", "")]
+            saves = [steps[index] for index, step in enumerate(steps) if "actions/cache/save@" in step.get("uses", "")]
+            with self.subTest(job=name):
+                self.assertTrue(audits and restores and saves, names)
+                self.assertLess(max(restores), min(audits))
+                for save in saves:  # saved even when an audit fails or reaches its cap
+                    self.assertTrue(save["if"].startswith("always()"), save)
+                    self.assertIn("github.run_id", save["with"]["key"])
+                for step in steps:
+                    if "upload-artifact" in step.get("uses", ""):
+                        self.assertNotIn("/cache", step["with"]["path"])
+
+    def commit(self, root: Path) -> None:
+        for command in (["git", "init", "-q"], ["git", "add", "-A"],
+                        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                         "commit", "-q", "--allow-empty", "-m", "state"]):
+            subprocess.run(command, cwd=root, check=True, capture_output=True)
+
+    def run_scoped(self, root: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(METADATA), "--root", str(root), "--uv", str(root / "fake-uv"), "--timeout", "30",
+             *arguments],
+            text=True, capture_output=True, check=False,
+        )
+
+    def test_changed_tier_queries_nothing_for_an_unchanged_verified_bibliography(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            keys = [f"entry{number:03d}" for number in range(100)]
+            fixture(root, "".join(f"@article{{{key}, title={{T {key}}}}}\n" for key in keys),
+                    [reference(key) for key in keys])
+            self.streaming_checker(root)
+            full = self.run_scoped(root, "--record")
+            self.assertEqual(full.returncode, 0, full.stdout + full.stderr)
+            self.assertIn("recorded 100 fingerprints", full.stdout)
+            self.commit(root)
+            (root / "queries.log").unlink()
+            changed = self.run_scoped(root, "--scope", "changed", "--base", "HEAD")
+            self.assertEqual(changed.returncode, 0, changed.stdout + changed.stderr)
+            self.assertIn("no provider queried", changed.stdout)
+            self.assertFalse((root / "queries.log").exists(), "the changed tier ran the checker")
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
+            self.assertEqual((summary["outcome"], summary["selected_keys"]), ("skipped", []))
+
+    def test_changed_tier_selects_new_changed_and_stale_entries_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            fixture(root, "@article{kept, title={A}}\n@article{edited, title={B}}\n@article{stale, title={C}}\n"
+                          "@article{unrecorded, title={D}}\n",
+                    [reference(key) for key in ("kept", "edited", "stale", "unrecorded")])
+            self.streaming_checker(root)
+            ledger_path = root / ".agents/references/ledger.json"
+            self.assertEqual(self.run_scoped(root, "--record").returncode, 0)
+            recorded = json.loads(ledger_path.read_text())
+            for record in recorded["references"]:
+                if record["citation_key"] == "stale":  # verified in another form than the one committed
+                    record["verification"]["bibtex_fingerprint"] = "sha256:" + "0" * 64
+                if record["citation_key"] == "unrecorded":
+                    del record["verification"]["bibtex_fingerprint"]
+            ledger_path.write_text(json.dumps(recorded))
+            self.commit(root)
+            write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n"
+                  "@article{kept, title={A}}\n@article{edited, title={B, revised}}\n@article{stale, title={C}}\n"
+                  "@article{unrecorded, title={D}}\n@article{added, title={E}}\n")
+            recorded["references"].append(reference("added"))
+            ledger_path.write_text(json.dumps(recorded))
+            (root / "queries.log").unlink()
+            changed = self.run_scoped(root, "--scope", "changed", "--base", "HEAD", "--record")
+            self.assertEqual(changed.returncode, 0, changed.stdout + changed.stderr)
+            report = (root / ".project/build/reference-integrity/metadata.jsonl").read_text().splitlines()
+            self.assertEqual([json.loads(line)["key"] for line in report], ["edited", "stale", "added"])
+            self.assertEqual((root / "queries.log").read_text().split(), ["edited", "added"])  # stale was cached
+            fingerprints = {record["citation_key"]: record["verification"].get("bibtex_fingerprint")
+                            for record in json.loads(ledger_path.read_text())["references"]}
+            self.assertIsNone(fingerprints["unrecorded"])  # unchanged against the base: left to the full audit
+            self.assertNotEqual(fingerprints["stale"], "sha256:" + "0" * 64)
+
+    def test_record_drops_the_fingerprint_of_a_positive_problem(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.add_lock(root)
+            record = reference("wrong")
+            record["verification"]["bibtex_fingerprint"] = "sha256:" + "1" * 64
+            fixture(root, "@article{wrong, title={A}}\n", [record])
+            self.streaming_checker(root)
+            result = self.run_scoped(root, "--record")
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            stored = json.loads((root / ".agents/references/ledger.json").read_text())["references"][0]
+            self.assertNotIn("bibtex_fingerprint", stored["verification"])
 
 class BibtexFormatTests(unittest.TestCase):
     def run_format(self, root: Path, uv: str) -> subprocess.CompletedProcess[str]:

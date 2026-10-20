@@ -4,7 +4,7 @@ purpose: >-
   which content belongs to one concrete project.
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.4.1
+  version: v0.4.2
   # This repository is a derived template: it records itself above and the
   # template it follows below. A paper made from it removes the upstream block
   # and keeps the two lines above as the template and release it adopted
@@ -154,6 +154,9 @@ entries:
   - path: .agents/tests/
     scope: shared
     note: Unit tests of the shared scripts; a paper adds tests only for its own scripts.
+  - path: .agents/tests/test_adoption_states.py
+    scope: template
+    note: Builds the adoption states this template documents from its shipped files and checks them against the newest RELEASE_NOTES.md entry; a paper made from the template deletes it.
   - path: .project/
     scope: project
     note: Worktree-local state is never copied into a new repository template.

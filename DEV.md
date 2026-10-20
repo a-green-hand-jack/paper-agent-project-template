@@ -147,6 +147,29 @@ Figure sources:
 
 `figure-router` and `scientific-figure-workflow` apply this policy.
 
+## Reference audits
+
+The offline reference gate runs in `make check` (Draft) and
+`make release-check` (Release). The online audits, the metadata audit
+(`check-reference-metadata.py`) and the correction candidates
+(`check-reference-corrections.py`), run in three tiers:
+
+| When | What runs | Gate |
+| --- | --- | --- |
+| every pull request and push (`references` job) | the entries new or changed against the base commit, or whose ledger fingerprint no longer matches | required; usually seconds |
+| a pull request into `main`, a push to `main`, and `make release-check` | the full metadata audit of every entry (CI also runs the correction audit) | required |
+| weekly and on `workflow_dispatch` (`references-full` job) | the full audit, both audits in parallel, with the cache kept between runs | reports; blocks no merge |
+
+A verified entry's fingerprint is recorded in the ledger
+(`verification.bibtex_fingerprint`) by
+`python3 .agents/scripts/check-reference-metadata.py --record`. Run it once
+with the full scope after adopting the tiers and commit the ledger. A provider
+outage, rate limit or bot challenge is an infrastructure outcome that names
+the entries it left open, never a failed entry. The rules are in
+[`reference-integrity`](.agents/memory/shared/reference-integrity.md) and the
+services, keys and caches in
+[`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md).
+
 ## Overleaf
 
 Overleaf mirrors `paper/` on `dev`, and only `paper/`
@@ -255,7 +278,15 @@ version):
 This template's own releases are `v<major>.<minor>.<patch>` tags on `main`,
 each with a `## <tag>` heading in `RELEASE_NOTES.md`. Before a template
 release, run `release-doc-audit` and `make check`; `main` requires the CI jobs
-`structure`, `check`, `paper-only` and `references`.
+`structure`, `check`, `paper-only` and `references`. The release entry has an
+"Adoption states" table: for each state a paper reaches by following README
+"Start a paper" (a fresh paper, an existing bibliography with no ledger or a
+migrated one, a venue kit), the `make release-check` steps expected to fail
+there. `make check` runs `.agents/tests/test_adoption_states.py`, which
+builds each state from the shipped files, runs `make check` and
+`make release-check` on it and compares the failures with that table, and
+runs the online metadata audit on a bibliography of realistic size; a release
+needs it passing.
 
 ## Relationship with the templates
 
@@ -267,7 +298,7 @@ coding template it follows in `template.upstream`:
 | Repository | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.1) | the coding template and the tag it follows (v0.1.13) |
+| this template | itself, its release (v0.4.2) | the coding template and the tag it follows (v0.1.13) |
 | a paper made from this template | this template, the adopted tag | none |
 
 A repository follows `template.upstream` when it has that field, and

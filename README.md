@@ -41,9 +41,10 @@ the Human before a locked change, a release or a submission.
    - Delete the files the registry marks `scope: template`, together with
      their registry entries and index lines:
      `.agents/memory/project/rebuild-on-coding-template.md`,
-     `protected-case-branches.md`, `repository-identity.md` and
-     `paper-run-boundary.md`. In `AGENTS.md`, replace the rule about this
-     template's case branches with the paper's own list, or remove it.
+     `protected-case-branches.md`, `repository-identity.md`,
+     `paper-run-boundary.md` and `.agents/tests/test_adoption_states.py`. In
+     `AGENTS.md`, replace the rule about this template's case branches with
+     the paper's own list, or remove it.
    - Replace `RELEASE_NOTES.md` with the paper's own, which starts empty and
      gets one `## <tag>` heading per release.
    - Rewrite this README for the paper: what it is and how to build it.
@@ -59,7 +60,13 @@ the Human before a locked change, a release or a submission.
 7. When the venue is known, put its official kit into `paper/` unchanged, set
    `PAGE_BUDGET` in the root `Makefile`, and record the venue in
    `.agents/memory/project/publication.md` (`publication-planning`). Put the
-   authors in `paper/authors.tex`.
+   authors in `paper/authors.tex`, replacing the template's placeholder
+   identity (`Template-Author-Name` and the rest) with a `\PaperIdentity` for
+   each real name, e-mail address and affiliation. Until then
+   `make release-check` fails its `identity` step on the placeholder, as it
+   fails `leftovers` on the template's `\PaperTODO` text and `pages` until
+   `PAGE_BUDGET` is set; `make check` passes. The placeholder matches no
+   venue kit's text.
 8. Write in `paper/`. Register every result table, figure data file and
    reported number in `assets/MANIFEST.yaml`, and put numbers into the text
    only through interface macros in `paper/macros.tex`.
@@ -79,7 +86,7 @@ repository root.
 | `make submission` | `submission`: named, notes removed |
 | `make blind` | `blind`: anonymous; author identity, acknowledgements and notes removed |
 | `make check` | builds `main` and `blind`; fails on undefined references or citations, missing files, multiply defined labels, interface-macro and reference-ledger errors, invalid skill or record front matter and failing unit tests; reports the main-text pages of `blind` against `PAGE_BUDGET` |
-| `make release-check` | builds `blind` and `submission`; fails on author identity in the anonymous PDF or its sources, leftover notes or TODOs in `submission`, a page count over budget, or references below release strength |
+| `make release-check` | builds `blind` and `submission`; fails on author identity in the anonymous PDF or its sources (or the template's placeholder identity), leftover notes or TODOs in `submission`, a page count over budget, references below release strength, or a full online metadata audit that does not pass (needs `uv` and the network) |
 | `make clean` | removes the build output |
 
 The three builds come from one source: `paper/main.tex` is `main`, and the

@@ -62,6 +62,13 @@ and are only a planning stand-in for ICML 2027, whose pages are not published.
   - bundled `algorithm.sty`: `93fd0eb31c112eb405833db8f1d7f5d238c7e691b1c05680d7276e68f36d564a`
   - bundled `algorithmic.sty`: `48d18794a5d97c0479a588cc2eac0917992feb9da83acc4631b8f55757d80f9b`
 - The archive hash equals the one downstream papers recorded in September 2026.
+- `icml2026.sty` contains the words "author names" (line 340, a comment) and
+  "author name" (line 474, an error message). `make release-check` matches
+  each `\PaperIdentity` string against every line the blind build reads, so an
+  identity made of those words matches the unmodified kit. The template's
+  placeholder identity does not; it fails `identity` on its own until the
+  paper declares its authors (#170, checked 2026-10-20 against the archive
+  above).
 
 ### Unknowns and conflicts
 
