@@ -154,6 +154,9 @@ entries:
   - path: .agents/tests/
     scope: shared
     note: Unit tests of the shared scripts; a paper adds tests only for its own scripts.
+  - path: .agents/tests/test_adoption_states.py
+    scope: template
+    note: Builds the adoption states this template documents from its shipped files and checks them against the newest RELEASE_NOTES.md entry; a paper made from the template deletes it.
   - path: .project/
     scope: project
     note: Worktree-local state is never copied into a new repository template.

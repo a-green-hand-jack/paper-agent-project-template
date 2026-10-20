@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -178,10 +180,11 @@ def matching_entry_end(text: str, open_index: int, opener: str) -> int:
     raise IntegrityError("unterminated BibTeX entry")
 
 
-def bibtex_keys(text: str) -> list[str]:
+def bibtex_entries(text: str) -> list[tuple[str, str]]:
+    """Each reference entry as (citation key, entry text), in file order."""
     active = strip_tex_or_bib_comments(text)
     header = re.compile(r"@\s*([A-Za-z]+)\s*([({])")
-    keys: list[str] = []
+    entries: list[tuple[str, str]] = []
     cursor = 0
     while True:
         match = header.search(active, cursor)
@@ -199,9 +202,59 @@ def bibtex_keys(text: str) -> list[str]:
             key = content[:comma].strip()
             if not key or any(character.isspace() for character in key):
                 raise IntegrityError(f"BibTeX @{entry_type} entry has an invalid citation key: {key!r}")
-            keys.append(key)
+            entries.append((key, active[match.start() : end + 1]))
         cursor = end + 1
-    return keys
+    return entries
+
+
+def bibtex_keys(text: str) -> list[str]:
+    return [key for key, _ in bibtex_entries(text)]
+
+
+def bibtex_fingerprint(entry: str) -> str:
+    """What the online audit verified: the entry's text, whitespace collapsed,
+    so that re-indenting it does not count as a change."""
+    return "sha256:" + hashlib.sha256(" ".join(entry.split()).encode("utf-8")).hexdigest()
+
+
+def recorded_fingerprints(root: Path, policy: dict[str, Any]) -> dict[str, str]:
+    """verification.bibtex_fingerprint of each ledger reference that has one."""
+    ledger_path = project_path(root, policy["ledger"], "ledger")
+    if not ledger_path.is_file():
+        return {}
+    found: dict[str, str] = {}
+    for record in load_ledger(ledger_path)["references"]:
+        if isinstance(record, dict) and nonempty(record.get("citation_key")):
+            fingerprint = (record.get("verification") or {}).get("bibtex_fingerprint")
+            if nonempty(fingerprint):
+                found[record["citation_key"]] = fingerprint
+    return found
+
+
+def changed_entries(root: Path, policy: dict[str, Any], text: str, base: str) -> tuple[list[str], str | None]:
+    """The entries the per-PR tier audits: those whose recorded fingerprint no
+    longer matches, and, without a fingerprint, those new or changed against
+    the base commit. Returns the keys and a warning when the base is unknown."""
+    recorded = recorded_fingerprints(root, policy)
+    relative = Path(policy["bibliography"]).as_posix()
+    shown = subprocess.run(["git", "show", f"{base}:{relative}"], cwd=root, capture_output=True, text=True)
+    if shown.returncode == 0:
+        before: dict[str, str] | None = {key: bibtex_fingerprint(entry) for key, entry in bibtex_entries(shown.stdout)}
+        problem = None
+    elif subprocess.run(["git", "cat-file", "-e", f"{base}^{{commit}}"], cwd=root, capture_output=True).returncode == 0:
+        before, problem = {}, None  # the base has no bibliography: every entry is new
+    else:
+        before, problem = None, f"base {base!r} is not a known commit; only recorded fingerprints select entries"
+    selected: list[str] = []
+    for key, entry in bibtex_entries(text):
+        current = bibtex_fingerprint(entry)
+        if key in recorded:
+            changed = recorded[key] != current
+        else:
+            changed = before is not None and before.get(key) != current
+        if changed:
+            selected.append(key)
+    return selected, problem
 
 
 def cited_keys(root: Path) -> set[str]:
@@ -284,6 +337,9 @@ def validate_reference_record(record: Any, profile: str, index: int) -> tuple[in
             dt.date.fromisoformat(checked_at)
         except ValueError:
             code |= error(f"{label}.verification.checked_at must be an ISO date")
+    fingerprint = verification.get("bibtex_fingerprint")
+    if fingerprint is not None and not (isinstance(fingerprint, str) and re.fullmatch(r"sha256:[0-9a-f]{64}", fingerprint)):
+        code |= error(f"{label}.verification.bibtex_fingerprint must be sha256:<64 hex digits>")
     review = record.get("human_review")
     if not isinstance(review, dict):
         code |= error(f"{label}.human_review must be an object")

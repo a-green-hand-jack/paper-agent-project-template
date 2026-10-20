@@ -2,9 +2,10 @@
 % blind build and every source it reads stay anonymous. Declare each string the
 % blind build must not contain (names, e-mail addresses, affiliations, project
 % URLs) with \PaperIdentity; make release-check searches the blind PDF, its
-% metadata and its sources for each one.
-\PaperIdentity{Author Name}
-\PaperIdentity{author@example.org}
-\PaperIdentity{Example Institution}
-\author{Author Name \\ Example Institution \\ \texttt{author@example.org}}
-\hypersetup{pdfauthor={Author Name}}
+% metadata and its sources for each one. The template's placeholders below
+% match no venue kit, and make release-check fails until they are replaced.
+\PaperIdentity{Template-Author-Name}
+\PaperIdentity{template-author@example.invalid}
+\PaperIdentity{Template-Institution}
+\author{Template-Author-Name \\ Template-Institution \\ \texttt{template-author@example.invalid}}
+\hypersetup{pdfauthor={Template-Author-Name}}

@@ -1,7 +1,7 @@
 ---
 name: bibliographic-metadata-services
 date: 2026-10-20
-source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165)
+source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165); keyless OpenAlex and Semantic Scholar responses and the tools' backoff code read 2026-10-20 (#171)
 scope: shared
 applies_to: paper repositories that run the online reference audits in .agents/scripts/
 status: active
@@ -37,11 +37,30 @@ superseded_by: null
   artifacts are an explicit list of reports; environments and HTTP/SQLite
   caches are excluded because request URLs can contain keys. Missing keys
   degrade to keyless access.
-- **Rate limits.** The wrapper uses one worker and a conservative request rate,
-  runs at most 12 minutes, and reuses its SQLite cache. HTTP 429 or the
-  checker's circuit breaker is recorded as `rate_limited`; network failures and
-  timeouts without a status as `provider_unavailable`. Neither blocks CI or
-  classifies a reference as false.
+- **Rate limits.** The wrappers use a conservative request rate per service.
+  HTTP 429 or the checker's circuit breaker is recorded as `rate_limited`;
+  network failures and timeouts without a status as `provider_unavailable`.
+  Neither blocks CI or classifies a reference as false.
+- **Keyless budgets (observed 2026-10-20, #171).** Keyless OpenAlex charges 10
+  credits per search against 1000 a day per address (its `x-ratelimit-*`
+  headers), so about 100 searches; once they are spent it answers 429 with a
+  `Retry-After` of hours. The adaptive limiter of `bibtex-check` 1.6.1 (and of
+  1.12.0) sleeps for that whole `Retry-After`; `bibtex-update` caps each retry
+  at 60 s but retries six times per request. Without `OPENALEX_API_KEY` both
+  audits therefore skip OpenAlex by opening the tool's own circuit for it in
+  their cache (`skipped_services`). Keyless Semantic Scholar shares one global
+  pool and answers 429 to a large share of requests; each costs retries of
+  seconds to a minute. Only `200` responses are cached, so a request that
+  ended in 429 is sent again by the next run.
+- **Caps, workers and cache.** Each audit runs the tool in its own process
+  group and ends the group at `--timeout` (default 3600 s; CI: 600 s in the
+  changed tier, 1800 s on the release path, 5400 s in the weekly full audit).
+  A capped metadata run reports `checked_keys` and `unfinished_keys`. Four
+  workers share each service's rate limit; on 20 public entries without keys
+  they finished a cold audit in 201 s against 519 s for one (2026-10-20). The
+  HTTP caches are in `.project/build/reference-integrity/cache/`, one CI cache
+  per audit; CI restores and saves them on every run, after the audits removed
+  each row that holds an API key.
 - **DBLP bot challenge.** DBLP answers automated search requests, locally and
   on GitHub-hosted runners, with HTTP 202 and an HTML challenge page, which
   `bibtex-check` 1.6.1 reads as "no hits" without an error. The wrapper runs

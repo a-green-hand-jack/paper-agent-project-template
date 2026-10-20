@@ -95,3 +95,11 @@ This template's own releases are `v<major>.<minor>.<patch>` tags with one
 the coding-template tag it follows. A paper made from it tags paper releases
 (`submit-<venue>-<yyyy>`, `arxiv-v1`, `camera-ready`) and writes one `## <tag>`
 heading per release in its own `RELEASE_NOTES.md`.
+
+- Step 3 (Check release instructions), for this template's own releases: the
+  `## <tag>` entry has an "Adoption states" table naming, per adoption state,
+  the `make release-check` steps expected to fail, and its upgrade steps say
+  what a paper on the previous release must do. Run
+  `python3 -m unittest discover -s .agents/tests -p 'test_adoption_states.py'`;
+  it builds each state from the release candidate and checks the table. A
+  failure is a finding: fix the template or the table before tagging.

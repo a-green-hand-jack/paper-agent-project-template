@@ -77,7 +77,8 @@ looking like a fabricated citation.
 
 - `make check` runs the offline gate:
   `python3 .agents/scripts/check-reference-integrity.py --profile draft`;
-  `make release-check` runs `--profile release`.
+  `make release-check` runs `--profile release` and the full online metadata
+  audit of every entry, which needs `uv` and the network.
 - Inventory and record support with `.agents/scripts/reference-evidence.py`
   (`inventory`, `packet`, `record`; `migrate` upgrades a v1 ledger), following
   the `citation-support-review` skill. Occurrence-level review is new in v2,
@@ -91,5 +92,20 @@ looking like a fabricated citation.
   keyless on pull requests and with repository secrets on protected branches;
   see the bibliographic-metadata-services knowledge record for the services
   and variables.
+- **Audit tiers.** The required `references` job audits online only the
+  entries new or changed against the base commit, or whose
+  `verification.bibtex_fingerprint` in the ledger no longer matches
+  (`--scope changed --base <commit>`); an unchanged, fingerprinted entry is
+  never queried there. A pull request into `main` and a push to `main` run the
+  full audit, and so does `make release-check`. The `references-full` job
+  runs the full audit weekly and on `workflow_dispatch`, both audits in
+  parallel with a kept cache; it reports and blocks no merge. A provider
+  outage, rate limit or bot challenge is an infrastructure outcome that names
+  the entries it left open, never a failed entry.
+- **Fingerprints.** `check-reference-metadata.py --record` writes the
+  fingerprint of each entry it verified into the ledger and drops it from an
+  entry with a positive problem. Run it once after adopting the tiers, with
+  the full scope, and commit the ledger; afterwards a changed entry loses its
+  match and is queried again automatically.
 - Repair a reference with the `reference-repair` skill. Never copy an empty
   template ledger over a populated one.

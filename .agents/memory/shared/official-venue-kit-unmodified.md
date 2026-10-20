@@ -44,7 +44,12 @@ changed.
   `paper/style/compat.sty` keeps the template's display macros working under a
   venue kit.
 - Build `make submission` and `make blind`, then run `make release-check`: it
-  searches the anonymous PDF text, its metadata and its sources for every
-  `\PaperIdentity` string.
+  searches the anonymous PDF text, its metadata and its sources, the kit's
+  files included, for every `\PaperIdentity` string. Replace the template's
+  placeholder identity in `paper/authors.tex` first: `identity` fails on the
+  placeholder until then. The placeholder is a synthetic token, so a kit's
+  own text about authors does not match it. The search matches substrings, so declare specific strings (a full
+  name, not a lone common word); a declared string that the kit's text
+  contains still fails.
 - Look up the venue's dated facts in `.agents/knowledge/shared/` and refresh
   them when their `refresh_after` condition is met.

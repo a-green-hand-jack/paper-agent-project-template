@@ -4,6 +4,156 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
+## v0.4.2
+
+Fixes the defects downstream papers reported after adopting v0.4.1 (#173),
+and tests the adoption states this template documents before each release, so
+that the next such defect is found here first.
+
+### Fixed
+
+- `make check` failed in a paper with a reference policy and no ledger, a
+  state the Draft gate accepts (#169): the factory-state reference test read
+  the repository's own `.agents/references/ledger.json`. It now builds the
+  empty v2 ledger, the policy and the marker itself.
+- `make release-check` failed its `identity` step on a fresh adoption with an
+  unmodified ICML 2026 kit (#170). The shipped placeholder `Author Name`
+  matched the kit's own text ("author names", "author name" in
+  `icml2026.sty`), because the step matches each `\PaperIdentity` string as a
+  substring of every line the blind build reads. The placeholder is now
+  synthetic (`Template-Author-Name`, `template-author@example.invalid`,
+  `Template-Institution`), and `identity` fails with a message of its own
+  while `paper/authors.tex` still declares it. The substring search over every
+  source the blind build reads is unchanged, so the gate is as strict for real
+  names.
+- The online reference audits could not finish a bibliography of realistic
+  size within their cap or the `references` job's 30 minutes (#171). The
+  causes, each confirmed before the fix:
+  - **The cap did not reach the checker.** It killed only `uv`; the checker
+    `uv run` started kept running, querying providers and writing the report
+    and cache after the audit had returned. Both audits now run the tool in
+    its own process group and end the whole group at the cap, which bounds
+    the whole run, retries included.
+  - **A capped run reported nothing.** `bibtex-check` streams one record per
+    entry, but the audit discarded them. A metadata run that reaches its cap
+    now ends `incomplete` (exit 2) with `checked_keys` and `unfinished_keys`
+    in `run.json`; a positive problem among the checked entries still fails
+    as `reference_problem`. A correction run that reaches its cap ends
+    `incomplete` (advisory, as before), no longer `provider_unavailable`.
+  - **The CI cache always started cold.** Every run queried every entry
+    again.
+  - **Keyless providers stall the tools.** Without a key, OpenAlex allows
+    about 100 searches a day per address and then answers 429 with a
+    `Retry-After` of hours: `bibtex-check` 1.6.1 waits it out, uncapped, and
+    `bibtex-update` retries each request for minutes. That is what kept both
+    audits at their caps. Keyless Semantic Scholar answers 429 to a large
+    share of requests, and the tools cache only `200` responses, so even a
+    warm cache did not make a full keyless audit of 100 entries fit 30
+    minutes (measured: about 18 s per entry).
+
+  The fix, as the maintainer decided on #171, splits the online audits into
+  three tiers (`DEV.md`, "Reference audits"):
+
+  | When | What runs | Gate |
+  | --- | --- | --- |
+  | every pull request and push (`references`) | only the entries new or changed against the base commit, or whose ledger fingerprint no longer matches | required; usually seconds |
+  | a pull request into `main`, a push to `main`, `make release-check` | the full metadata audit (CI also runs the correction audit) | required |
+  | weekly and on `workflow_dispatch` (`references-full`) | the full audit, both audits in parallel, with a kept cache | reports; blocks no merge |
+
+  - **Ledger fingerprints.** `check-reference-metadata.py --record` writes
+    `verification.bibtex_fingerprint` for each entry it verified and drops it
+    for an entry with a positive problem. An unchanged, fingerprinted entry
+    makes no query in the changed tier (`--scope changed --base <commit>`);
+    with nothing to audit the tool does not start at all.
+  - **Provider failures** (outage, rate limit, bot challenge) are
+    infrastructure outcomes that name the entries left open
+    (`unfinished_keys`), never a failed entry.
+  - **Cache.** Each audit's HTTP cache, in
+    `.project/build/reference-integrity/cache/`, is restored and saved by
+    every CI run, also a failed or capped one, so a rerun continues. Before
+    saving, the audits remove each row that holds an API key, which OpenAlex
+    receives as a URL parameter.
+  - **Keyless OpenAlex is skipped.** Without `OPENALEX_API_KEY` the audits
+    open the tool's own circuit for OpenAlex and record `skipped_services`.
+  - **Defaults.** Both audits use four workers, which share each service's
+    rate limit (on 20 public entries: 201 s cold against 519 s for one
+    worker), and a 3600 s cap; CI passes 600 s in the changed tier, 1800 s on
+    the release path and 5400 s weekly.
+
+  The locked `bibtex-updater` 1.6.1 is not patched; its newest release still
+  takes a 429's `Retry-After` uncapped.
+
+### Added
+
+- `.agents/tests/test_adoption_states.py` (#172) builds each adoption state
+  below from the shipped files in a temporary directory, runs the real
+  `make check` and `make release-check` there, compares the failures with the
+  table below, and runs the metadata audit on a 100-entry bibliography with a
+  stub checker: a capped full audit and the changed tier. It belongs to this template (`scope: template`); `DEV.md`
+  "Releases" and `release-doc-audit` require it before a release.
+- `.agents/tests/test_reference_tool_contract.py` checks, in the locked
+  environment, the cache format and circuit state the audits write.
+
+### Adoption states
+
+`make check` passes in every state below. `make release-check` fails only on
+the steps named, and its `identity` step only because `paper/authors.tex`
+still declares the template's placeholder identity. Its full metadata audit
+(`metadata`) passes when the providers verify every entry; the tests run it
+with a stub checker.
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+A fresh paper is the template after README "Start a paper" steps 4 and 5. An
+existing bibliography adds a cited `paper/refs.bib`, with no ledger or with a
+v1 ledger after `reference-evidence.py migrate`; `references` fails until the
+ledger records every reference and occurrence at Release strength. A venue
+kit adds an unmodified kit under `paper/style/` that the blind build loads.
+`identity` passes once the paper declares its authors, `leftovers` once the
+template's `\PaperTODO` text is gone, and `pages` once `PAGE_BUDGET` is set.
+
+In the online metadata audit, a capped full audit on a cold cache ends
+`incomplete` and names the unfinished entries, and the next run continues
+from the kept cache; once the full audit has recorded the fingerprints, an
+unchanged bibliography of 100 entries makes no query in the changed tier.
+
+### Upgrading a paper from v0.4.1
+
+Take the release with `template-upgrade`, then:
+
+1. Declare the paper's real identity in `paper/authors.tex` if it still has
+   the v0.4.1 placeholder (`Author Name`, `author@example.org`,
+   `Example Institution`); that placeholder matches some venue kits' text.
+2. Take `.github/workflows/reference-validation.yml` whole: the tiered
+   `references` job (it now checks out the full history to compare with the
+   base commit), the weekly `references-full` job, the cache steps and the
+   contract test. Keep any job names your branch protection requires;
+   `references` stays the required check.
+3. Record the fingerprints once: on a branch, run
+   `python3 .agents/scripts/check-reference-metadata.py --record` (the full
+   audit; it needs `uv` and the network, and `.env` keys help), review the
+   report, and commit `.agents/references/ledger.json` through a PR. Until
+   then the changed tier audits only the entries a PR adds or changes. A
+   paper without a ledger has no fingerprints; its changed tier compares with
+   the base commit only.
+4. `make release-check` now runs the full metadata audit; run it where `uv`
+   and the network are available.
+5. The audits' caches moved to `.project/build/reference-integrity/cache/`.
+   The old `metadata-cache.db`, `corrections/http-cache.db` and
+   `corrections/resolution-cache.json` are no longer read; delete them. Set
+   `OPENALEX_API_KEY` and `S2_API_KEY` as repository secrets if you can
+   (`bibliographic-metadata-services`); trusted runs then use OpenAlex and
+   authenticated Semantic Scholar. Pull-request runs stay keyless.
+6. A Draft-strength ledger bootstrapped only to keep `make check` green
+   (#169) can stay or go; `make check` no longer needs it.
+7. Do not take `.agents/tests/test_adoption_states.py`; it is
+   `scope: template`. Delete it if the upgrade copied it.
+
 ## v0.4.1 — 2026-10-20
 
 Fixes the reference tooling and the adoption order that downstream papers

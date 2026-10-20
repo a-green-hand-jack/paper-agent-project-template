@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -47,6 +48,16 @@ def load_integrity_module(root: Path) -> ModuleType:
     spec = importlib.util.spec_from_file_location("paper_reference_integrity", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load structural checker: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_script(root: Path, filename: str, name: str) -> ModuleType:
+    path = root / ".agents/scripts" / filename
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load helper: {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -244,15 +255,129 @@ def only_rate_limit_infrastructure(records: list[dict[str, Any]], services: set[
     )
 
 
+def record_fingerprints(
+    integrity: ModuleType,
+    root: Path,
+    policy: dict[str, Any],
+    records: list[dict[str, Any]],
+    entries: dict[str, str],
+    reviewed: set[str],
+) -> None:
+    """Write into the ledger the fingerprint of each entry this run verified,
+    and drop it from each entry with a positive problem, so that the per-PR
+    tier queries an entry again only once it changes."""
+    ledger_path = integrity.project_path(root, policy["ledger"], "ledger")
+    if not ledger_path.is_file():
+        print("WARN reference metadata audit: no ledger to record fingerprints in")
+        return
+    ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+    verdicts = {
+        record["key"]: "passed" if openreview_residual(record, reviewed) else classify_records([record])
+        for record in records
+    }
+    written = dropped = 0
+    for reference in ledger.get("references", []):
+        key = reference.get("citation_key") if isinstance(reference, dict) else None
+        verification = reference.get("verification") if key in verdicts else None
+        if not isinstance(verification, dict):
+            continue
+        fingerprint = integrity.bibtex_fingerprint(entries[key])
+        if verdicts[key] == "passed" and verification.get("bibtex_fingerprint") != fingerprint:
+            verification["bibtex_fingerprint"] = fingerprint
+            written += 1
+        elif verdicts[key] == "reference_problem" and verification.pop("bibtex_fingerprint", None):
+            dropped += 1
+    if written or dropped:
+        ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"OK reference metadata audit recorded {written} fingerprints and dropped {dropped} in the ledger")
+
+
+def finished_records(path: Path, bibliography_keys: set[str]) -> list[dict[str, Any]]:
+    """The records a stopped run streamed before its cap; a line the stop cut
+    short, or a record that fails validation, is left out."""
+    if not path.is_file():
+        return []
+    records: dict[str, dict[str, Any]] = {}
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if (
+            isinstance(record, dict)
+            and record.get("key") in bibliography_keys
+            and validate_records([record], {record["key"]}) is None
+        ):
+            records[record["key"]] = record
+    return list(records.values())
+
+
+def report_unfinished(
+    summary: Path,
+    report: Path,
+    bibliography_keys: set[str],
+    reviewed: set[str],
+    timeout: int,
+    attempt: int,
+    stdout: str,
+    stderr: str,
+    challenged: set[str],
+    skipped: list[str],
+    scope: str,
+) -> int:
+    """A run the cap ended: report what it verified and name what it did not.
+    A positive problem among the finished entries still fails as one."""
+    finished = finished_records(report, bibliography_keys)
+    unfinished = sorted(bibliography_keys - {record["key"] for record in finished})
+    residual = [record for record in finished if openreview_residual(record, reviewed)]
+    checked = classify_records([record for record in finished if record not in residual]) if finished else "none"
+    outcome = "reference_problem" if checked == "reference_problem" else "incomplete"
+    write_summary(
+        summary,
+        outcome=outcome,
+        detail=f"time cap of {timeout}s reached; {len(finished)} of {len(bibliography_keys)} entries checked",
+        attempts=attempt,
+        checker_returncode=None,
+        report=".project/build/reference-integrity/metadata.jsonl",
+        checked_keys=sorted(record["key"] for record in finished),
+        checked_outcome=checked,
+        unfinished_keys=unfinished,
+        bot_challenged_services=sorted(challenged),
+        skipped_services=skipped,
+        scope=scope,
+        ledger_reviewed_openreview_keys=sorted(record["key"] for record in residual),
+    )
+    if stdout:
+        print(stdout, end="")
+    if stderr:
+        print(stderr, end="", file=sys.stderr)
+    for record in finished:
+        if record not in residual and classify_records([record]) == "reference_problem":
+            print(f"ERROR reference_metadata {record['key']}: {record['status']}")
+    print(
+        f"ERROR reference metadata audit reached its {timeout}s cap"
+        f" with {len(finished)} of {len(bibliography_keys)} entries checked ({checked});"
+        f" unfinished: {', '.join(unfinished) or 'none'}. The kept cache lets the next run continue."
+    )
+    return 1 if outcome == "reference_problem" else 2
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--uv", default="uv", help="uv executable used with the committed lock")
     parser.add_argument("--attempts", type=int, default=1)
-    parser.add_argument("--timeout", type=int, default=720)
+    parser.add_argument("--timeout", type=int, default=3600, help="cap of the whole run, in seconds")
     parser.add_argument("--rate-limit", type=int, default=30, help="per-service requests per minute")
-    parser.add_argument("--workers", type=int, default=1, help="concurrent bibliography entries")
+    parser.add_argument("--workers", type=int, default=4, help="concurrent bibliography entries; each service keeps its own rate")
+    parser.add_argument("--scope", choices=("all", "changed"), default="all",
+                        help="all entries, or only those new or changed against --base or their ledger fingerprint")
+    parser.add_argument("--base", help="base commit of the changed scope")
+    parser.add_argument("--record", action="store_true",
+                        help="write the fingerprint of each verified entry into the ledger")
     args = parser.parse_args()
+    if args.scope == "changed" and not args.base:
+        parser.error("--scope changed needs --base")
     root = args.root.expanduser().resolve()
     output = root / ".project/build/reference-integrity"
     report = output / "metadata.jsonl"
@@ -280,27 +405,41 @@ def main() -> int:
 
     bibliography = integrity.project_path(root, policy["bibliography"], "bibliography")
     try:
-        bibliography_keys = set(integrity.bibtex_keys(bibliography.read_text(encoding="utf-8")))
+        text = bibliography.read_text(encoding="utf-8")
+        entries = dict(integrity.bibtex_entries(text))
+        selected = list(entries)
+        if args.scope == "changed":
+            selected, base_problem = integrity.changed_entries(root, policy, text, args.base)
+            if base_problem:
+                print(f"WARN reference metadata audit: {base_problem}")
     except Exception as exc:
         write_summary(summary, outcome="local_validation_failed", detail=str(exc), attempts=0)
         print(f"ERROR reference metadata audit could not read bibliography: {exc}")
         return 1
-    if not bibliography_keys:
-        write_summary(summary, outcome="skipped", detail="bibliography has no entries", attempts=0)
+    if not entries:
+        write_summary(summary, outcome="skipped", detail="bibliography has no entries", attempts=0, scope=args.scope)
         print("SKIP reference_metadata bibliography has no entries")
         return 0
+    if not selected:
+        write_summary(summary, outcome="skipped", detail="no entry is new or changed", attempts=0, scope=args.scope,
+                      selected_keys=[], entries=len(entries))
+        print(f"SKIP reference_metadata none of {len(entries)} entries is new or changed; no provider queried")
+        return 0
+    bibliography_keys = set(selected)
+    audited = bibliography
+    if args.scope == "changed":
+        print(f"INFO reference metadata audit checks {len(selected)} of {len(entries)} entries, new or changed:"
+              f" {', '.join(selected)}")
+        audited = output / "selected.bib"
+        audited.parent.mkdir(parents=True, exist_ok=True)
+        audited.write_text("\n".join(entries[key] for key in selected) + "\n", encoding="utf-8")
 
     try:
-        env_path = root / ".agents/scripts/_reference_env.py"
-        spec = importlib.util.spec_from_file_location("paper_reference_env", env_path)
-        if spec is None or spec.loader is None:
-            raise RuntimeError(f"cannot load environment helper: {env_path}")
-        env_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(env_module)
-        env_module.load_reference_env(root)
+        load_script(root, "_reference_env.py", "paper_reference_env").load_reference_env(root)
+        bounded = load_script(root, "_bounded_run.py", "paper_bounded_run")
     except Exception as exc:
         write_summary(summary, outcome="infrastructure_error", detail=str(exc), attempts=0)
-        print(f"ERROR reference metadata audit could not load .env: {exc}")
+        print(f"ERROR reference metadata audit could not load .env or its helpers: {exc}")
         return 2
 
     uv = shutil.which(args.uv)
@@ -317,6 +456,7 @@ def main() -> int:
         return 2
 
     output.mkdir(parents=True, exist_ok=True)
+    cache = output / "cache"
     environment = os.environ.copy()
     environment["UV_PROJECT_ENVIRONMENT"] = str(output / "venv")
     environment["UV_CACHE_DIR"] = str(output / "uv-cache")
@@ -328,7 +468,7 @@ def main() -> int:
         "--frozen",
         "--no-dev",
         "bibtex-check",
-        str(bibliography),
+        str(audited),
         "--non-generative",
         "--strict",
         "--strict-warn-cnv",
@@ -337,33 +477,38 @@ def main() -> int:
         "--workers",
         str(max(1, args.workers)),
         "--cache-file",
-        str(output / "metadata-cache.db"),
+        str(cache / "metadata.db"),
         "--no-google-books",
         "--verbose",
         "--jsonl",
         str(report),
     ]
 
+    skipped = ["openalex"] if bounded.skip_keyless_openalex(cache / "metadata.db", environment, args.timeout + 3600) else []
+    if skipped:
+        print("WARN reference metadata audit skips OpenAlex without OPENALEX_API_KEY: its keyless daily budget"
+              " does not cover a bibliography, and the checker then waits out a Retry-After of hours")
+    # The cap bounds the whole run, retries included.
     attempts = max(1, min(args.attempts, 3))
+    deadline = time.monotonic() + max(1, args.timeout)
     last_detail = "metadata checker did not run"
     for attempt in range(1, attempts + 1):
         if report.exists():
             report.unlink()
-        try:
-            result = subprocess.run(
-                command,
-                cwd=root,
-                env=environment,
-                text=True,
-                capture_output=True,
-                timeout=max(1, args.timeout),
-                check=False,
+        remaining = deadline - time.monotonic()
+        if remaining < 1:
+            break
+        bounded_result = bounded.run_bounded(command, cwd=root, env=environment, timeout=remaining)
+        bounded.scrub_cache(cache, bounded.credential_values(environment))
+        stderr, challenged = split_checker_log(bounded_result.stderr)
+        if args.record:
+            record_fingerprints(integrity, root, policy, finished_records(report, bibliography_keys), entries, reviewed)
+        if bounded_result.timed_out:
+            return report_unfinished(
+                summary, report, bibliography_keys, reviewed, args.timeout, attempt,
+                bounded_result.stdout, stderr, challenged, skipped, args.scope,
             )
-        except subprocess.TimeoutExpired:
-            last_detail = f"metadata checker timed out after {args.timeout}s"
-            continue
-        stderr, challenged = split_checker_log(result.stderr)
-        result = subprocess.CompletedProcess(result.args, result.returncode, result.stdout, stderr)
+        result = subprocess.CompletedProcess(command, bounded_result.returncode, bounded_result.stdout, stderr)
         records = read_jsonl(report)
         if records is not None:
             validation_error = validate_records(records, bibliography_keys)
@@ -386,6 +531,12 @@ def main() -> int:
             # Strict mode exits 4 for the residual records reported below.
             if outcome == "passed" and result.returncode not in ({0, 4} if residual else {0}):
                 outcome = "infrastructure_error"
+            # Entries a provider failure left open: named, never failed.
+            unfinished = [] if validation_error else sorted(
+                record["key"] for record in records
+                if classify_records([record]) == "infrastructure_error"
+                or (outcome in {"rate_limited", "provider_unavailable"} and classify_records([record]) == "unverified")
+            )
             write_summary(
                 summary,
                 outcome=outcome,
@@ -396,12 +547,18 @@ def main() -> int:
                 rate_limit_degraded=throttled,
                 rate_limited_services=sorted(services),
                 bot_challenged_services=sorted(challenged),
+                skipped_services=skipped,
+                scope=args.scope,
+                unfinished_keys=unfinished,
                 ledger_reviewed_openreview_keys=sorted(record["key"] for record in residual),
             )
             if result.stdout:
                 print(result.stdout, end="")
             if result.stderr:
                 print(result.stderr, end="", file=sys.stderr)
+            if unfinished:
+                print(f"WARN reference metadata audit could not finish {len(unfinished)} entries for provider reasons:"
+                      f" {', '.join(unfinished)}")
             for service in sorted(challenged):
                 print(f"WARN reference metadata service {service} answered with a bot challenge (HTTP 202); its silence is not a miss")
             for record in residual:
