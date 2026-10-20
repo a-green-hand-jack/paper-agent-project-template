@@ -34,7 +34,10 @@ jobs:
       - name: Run the offline ledger gate
         run: python3 .agents/scripts/check-reference-integrity.py --profile draft
 
+      # A policy without a ledger passes the Draft gate above; status and
+      # inventory need a ledger, so they run only when one exists.
       - name: Record offline citation-support state
+        if: hashFiles('.agents/references/ledger.json') != ''
         run: |
           python3 .agents/scripts/reference-evidence.py status
           python3 .agents/scripts/reference-evidence.py --offline inventory

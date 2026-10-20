@@ -28,6 +28,18 @@ THROTTLED_SERVICE_PATTERNS = (
     re.compile(r"service ['\"]([^'\"]+)['\"] is rate-limited/unavailable", re.IGNORECASE),
     re.compile(r"circuit open for service\s+([^\s,;]+)", re.IGNORECASE),
 )
+# --verbose log lines: the level prefix, and an HTTP response line. The checker
+# reads DBLP's 202 bot-challenge page as "no hits"; only this line shows it.
+LOG_LEVEL_RE = re.compile(r"^(DEBUG|INFO|WARNING|ERROR|CRITICAL): ")
+HTTP_RESPONSE_PREFIX = "INFO: HTTP Request: "
+BOT_CHALLENGE_PATTERNS = {
+    "dblp": re.compile(r'^INFO: HTTP Request: [A-Z]+ https://(?:[\w-]+\.)*dblp\.org/\S* "HTTP/[\d.]+ 202\b'),
+}
+# A reviewed OpenReview identity may differ from the checker only in what the
+# locked checker cannot read from OpenReview: a year missing from the record,
+# or a venue abbreviation such as COLM.
+OPENREVIEW_RESIDUAL_STATUSES = {"venue_mismatch", "unconfirmed", "strict_warn_cnv"}
+OPENREVIEW_RESIDUAL_FIELDS = {"year", "venue"}
 
 
 def load_integrity_module(root: Path) -> ModuleType:
@@ -116,6 +128,52 @@ def classify_records(records: list[dict[str, Any]]) -> str:
     if unverified:
         return "unverified"
     return "passed"
+
+
+def split_checker_log(stderr: str) -> tuple[str, set[str]]:
+    """Drop the --verbose detail, which holds request URLs, and return the
+    services that answered with a bot challenge."""
+    kept: list[str] = []
+    challenged: set[str] = set()
+    hidden = False
+    for line in stderr.splitlines(keepends=True):
+        level = LOG_LEVEL_RE.match(line)
+        if level:
+            hidden = level.group(1) == "DEBUG" or line.startswith(HTTP_RESPONSE_PREFIX)
+            challenged.update(name for name, pattern in BOT_CHALLENGE_PATTERNS.items() if pattern.match(line))
+        if not hidden:
+            kept.append(line)
+    return "".join(kept), challenged
+
+
+def reviewed_openreview_keys(integrity: ModuleType, root: Path, policy: dict[str, Any]) -> set[str]:
+    """References whose verified OpenReview identity the ledger records as reviewed."""
+    ledger_path = integrity.project_path(root, policy["ledger"], "ledger")
+    if not ledger_path.is_file():
+        return set()
+    keys: set[str] = set()
+    for record in integrity.load_ledger(ledger_path)["references"]:
+        if (
+            isinstance(record, dict)
+            and record.get("status") == "verified"
+            and (record.get("human_review") or {}).get("state") in {"agent-resolved", "human-confirmed"}
+            and "openreview" in ((record.get("verification") or {}).get("sources") or [])
+        ):
+            keys.add(record["citation_key"])
+    return keys
+
+
+def openreview_residual(record: dict[str, Any], reviewed: set[str]) -> bool:
+    fields = set(record.get("mismatched_fields") or [])
+    return (
+        record["key"] in reviewed
+        and str(record["status"]).strip().lower() in OPENREVIEW_RESIDUAL_STATUSES
+        and "openreview" in (record.get("api_sources") or [])
+        and bool(fields)
+        and fields <= OPENREVIEW_RESIDUAL_FIELDS
+        and not record["errors"]
+        and record["coverage_incomplete"] is False
+    )
 
 
 def rate_limited(result: subprocess.CompletedProcess[str], records: list[dict[str, Any]]) -> bool:
@@ -218,6 +276,7 @@ def main() -> int:
         write_summary(summary, outcome="local_validation_failed", detail="offline ledger gate failed", attempts=0)
         print("ERROR reference metadata audit blocked by offline ledger validation")
         return 1
+    reviewed = reviewed_openreview_keys(integrity, root, policy)
 
     bibliography = integrity.project_path(root, policy["bibliography"], "bibliography")
     try:
@@ -280,6 +339,7 @@ def main() -> int:
         "--cache-file",
         str(output / "metadata-cache.db"),
         "--no-google-books",
+        "--verbose",
         "--jsonl",
         str(report),
     ]
@@ -302,21 +362,29 @@ def main() -> int:
         except subprocess.TimeoutExpired:
             last_detail = f"metadata checker timed out after {args.timeout}s"
             continue
+        stderr, challenged = split_checker_log(result.stderr)
+        result = subprocess.CompletedProcess(result.args, result.returncode, result.stdout, stderr)
         records = read_jsonl(report)
         if records is not None:
             validation_error = validate_records(records, bibliography_keys)
-            outcome = "infrastructure_error" if validation_error else classify_records(records)
+            residual = [] if validation_error else [record for record in records if openreview_residual(record, reviewed)]
+            outcome = "infrastructure_error" if validation_error else classify_records(
+                [record for record in records if record not in residual]
+            )
             throttled = not validation_error and rate_limited(result, records)
             services = set() if validation_error else throttled_services(result, records)
             if throttled and outcome == "unverified":
                 outcome = "rate_limited"
+            elif challenged and outcome == "unverified":
+                outcome = "provider_unavailable"
             elif outcome == "infrastructure_error" and only_transient_provider_infrastructure(records):
                 outcome = (
                     "rate_limited"
                     if throttled and only_rate_limit_infrastructure(records, services)
                     else "provider_unavailable"
                 )
-            if outcome == "passed" and result.returncode != 0:
+            # Strict mode exits 4 for the residual records reported below.
+            if outcome == "passed" and result.returncode not in ({0, 4} if residual else {0}):
                 outcome = "infrastructure_error"
             write_summary(
                 summary,
@@ -327,12 +395,22 @@ def main() -> int:
                 report=".project/build/reference-integrity/metadata.jsonl",
                 rate_limit_degraded=throttled,
                 rate_limited_services=sorted(services),
+                bot_challenged_services=sorted(challenged),
+                ledger_reviewed_openreview_keys=sorted(record["key"] for record in residual),
             )
             if result.stdout:
                 print(result.stdout, end="")
             if result.stderr:
                 print(result.stderr, end="", file=sys.stderr)
-            if outcome == "passed" and result.returncode == 0:
+            for service in sorted(challenged):
+                print(f"WARN reference metadata service {service} answered with a bot challenge (HTTP 202); its silence is not a miss")
+            for record in residual:
+                print(
+                    f"WARN reference_metadata {record['key']}: {record['status']} on "
+                    f"{', '.join(sorted(record['mismatched_fields']))} against OpenReview; "
+                    "the ledger records a reviewed OpenReview identity, so this is reported, not failed"
+                )
+            if outcome == "passed":
                 print("OK reference_metadata identity audit passed; claim support not approved")
                 return 0
             if outcome == "rate_limited":

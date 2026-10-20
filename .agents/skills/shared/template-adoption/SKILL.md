@@ -135,3 +135,11 @@ and the coding template in `template.upstream`.
   `bash .agents/scripts/setup-worktree.sh`,
   `bash .agents/scripts/diagnose-environment.sh`, `make pdf`, `make blind`,
   `make submission` and `make check`, with `git status --short` empty afterwards.
+  A repository that adopts from `main` has no `dev` until the maintainer runs
+  `bash .agents/scripts/init-branches.sh` after the merge, so until then
+  `diagnose-environment.sh` exits 1 on its three branch-model lines, and only
+  on them: `FAIL local dev branch`, `FAIL origin/dev branch` and
+  `FAIL GitHub default branch: main` (the last one only where `gh` is
+  authenticated; otherwise that line is a `skip`). This is expected; every
+  other line must pass. Creating `dev` or changing the default branch is the
+  maintainer's step, not the Issue session's.

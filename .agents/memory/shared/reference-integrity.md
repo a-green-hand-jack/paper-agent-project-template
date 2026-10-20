@@ -27,10 +27,15 @@ superseded_by: null
 3. **Reference identity has three states:** `verified` (external metadata
    positively matches), `problematic` (positive evidence of a mismatch or
    defect) and `unverified` (no available source could decide; never
-   "fabricated"). Network failures and rate limits are infrastructure outcomes
-   in the reports, never states in the ledger. An agent may record an
-   unambiguous verified identity as `agent-resolved`; `human-confirmed` is
-   reserved for a choice the Human made.
+   "fabricated"). Network failures, rate limits and bot-challenge pages are
+   infrastructure outcomes in the reports, never states in the ledger. An
+   agent may record an unambiguous verified identity as `agent-resolved`;
+   `human-confirmed` is reserved for a choice the Human made. When the online
+   audit matches a reference's OpenReview record and differs from the cited
+   entry only in its year or venue name, a ledger identity verified from
+   OpenReview and resolved or confirmed is reported, not failed: the locked
+   checker cannot read the year or the venue abbreviation of some OpenReview
+   venues (COLM), and the review already decided them.
 4. **Claim support is bound to citation occurrences.** Every TeX citation
    occurrence is inventoried with its claim text and a fingerprint. Each claim
    evidence record carries the source identity and version, a verbatim passage
@@ -75,7 +80,9 @@ looking like a fabricated citation.
   `make release-check` runs `--profile release`.
 - Inventory and record support with `.agents/scripts/reference-evidence.py`
   (`inventory`, `packet`, `record`; `migrate` upgrades a v1 ledger), following
-  the `citation-support-review` skill.
+  the `citation-support-review` skill. Occurrence-level review is new in v2,
+  so every occurrence `migrate` writes starts `pending` and needs a fresh
+  Human confirmation before `make release-check`.
 - Optional checks with the locked dependencies in
   `.agents/scripts/reference-integrity/` (needs `uv`):
   `check-bibtex-format.py` (classic BibTeX syntax and required fields),

@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Deterministic normalization for duplicate bibliography identity checks."""
+"""Deterministic normalization for duplicate bibliography identity checks.
+
+Imported only by helpers that run in the locked reference environment, which
+provides bibtex_updater.
+"""
 from __future__ import annotations
 
 import re
 import unicodedata
 from typing import Any
 from urllib.parse import urlsplit
+
+from bibtex_updater.utils import decode_latex_accents
 
 LATEX_COMMAND_RE = re.compile(r"\\[a-zA-Z]+\*?")
 TOKEN_RE = re.compile(r"\w+", re.UNICODE)
@@ -31,7 +37,8 @@ def normalize_doi(value: Any) -> str:
 def normalize_title(value: Any) -> str:
     if not isinstance(value, str):
         return ""
-    text = unicodedata.normalize("NFKC", value).replace("~", " ")
+    # An accent written as a LaTeX command and as Unicode is the same title.
+    text = unicodedata.normalize("NFKC", decode_latex_accents(value)).replace("~", " ")
     text = LATEX_COMMAND_RE.sub(
         lambda match: "" if match.group()[1:].rstrip("*").casefold() in FORMATTING_COMMANDS
         else f" {match.group()[1:].rstrip('*')} ",
