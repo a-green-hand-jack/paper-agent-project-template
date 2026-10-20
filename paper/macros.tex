@@ -1,21 +1,28 @@
-% Project-specific, paper-facing interfaces.
+% Paper-facing interface macros. Each one is listed, with its meaning, control
+% cue and source, in .agents/memory/project/paper-interfaces.md. Reported
+% numbers reach the text only through these macros. Call a macro without
+% arguments with braces (\MethodName{}), so the following space survives.
 % Reusable display helpers live in paper/style/paper-harness.sty.
-% Update every active consumer when an interface meaning changes.
 
 % Interface: PaperTODO
-% Meaning: an explicit Draft-only placeholder that remains compilable.
-% Control: free implementation; Release must reject active uses.
+% Meaning: a visible placeholder that keeps the paper compilable.
+% Control: free; make release-check rejects active uses.
 \providecommand{\PaperTODO}[1]{\textbf{[TODO: #1]}}
 
+% Interface: PaperNote
+% Meaning: a note between authors; shown only in the main build.
+% Control: free; make release-check rejects active uses.
+\providecommand{\PaperNote}[1]{\ifPaperNotes\textcolor{red}{[Note: #1]}\fi}
+
+% Interface: PaperIdentity
+% Meaning: declares, in authors.tex, a string the blind build must not contain.
+% Control: locked; typesets nothing.
+\providecommand{\PaperIdentity}[1]{}
+
 % Interface: PaperTitle
-% Meaning: the canonical title shared by publication variants.
+% Meaning: the canonical title shared by every build.
 % Control: bounded wording; a positioning change requires Human review.
 \providecommand{\PaperTitle}{TODO Paper Title}
-
-% Interface: PaperAuthors
-% Meaning: the canonical visible author line for non-anonymous variants.
-% Control: locked identity; anonymous variants hide rather than redefine it.
-\providecommand{\PaperAuthors}{TODO Authors}
 
 % Interface: MethodName
 % Meaning: the approved paper-facing name of the proposed method or system.
@@ -41,6 +48,3 @@
 % Meaning: the uncertainty paired with \MainResult under the same protocol.
 % Control: bounded value; uncertainty type or aggregation changes require Human review.
 \providecommand{\MainResultUncertainty}{\PaperTODO{main-result uncertainty}}
-
-% Reviewed generated numeric macros may override or add result interfaces.
-\InputIfFileExists{generated/results-macros.tex}{}{}

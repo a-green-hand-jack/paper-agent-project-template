@@ -1,164 +1,168 @@
+"""overleaf-sync.sh against a local bare repository that stands in for Overleaf."""
 from __future__ import annotations
 
-import json
-import shutil
+import os
 import subprocess
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / ".agents/tools/overleaf-sync.py"
+TOOL = ROOT / ".agents/scripts/overleaf-sync.sh"
+ENV = {key: value for key, value in os.environ.items()
+       if not key.startswith("GIT_") and key != "OVERLEAF_BRANCH"}
+ENV.update({
+    "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1",
+    "GIT_AUTHOR_NAME": "Test", "GIT_AUTHOR_EMAIL": "test@example.org",
+    "GIT_COMMITTER_NAME": "Test", "GIT_COMMITTER_EMAIL": "test@example.org",
+})
 
 
-def run(command: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(command, cwd=cwd, text=True, capture_output=True, check=False)
-    if check and result.returncode != 0:
-        raise AssertionError(
-            f"command failed: {command}\nstdout={result.stdout}\nstderr={result.stderr}"
-        )
-    return result
+def git(cwd: Path, *args: str) -> str:
+    return subprocess.run(["git", *args], cwd=cwd, env=ENV, check=True,
+                          capture_output=True, text=True).stdout.strip()
 
 
-def git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
-    return run(["git", *args], root, check=check)
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
 
 
-def commit(root: Path, message: str) -> None:
-    git(root, "add", "-A")
-    git(root, "commit", "-m", message)
-
-
-class OverleafSyncTests(unittest.TestCase):
+class OverleafSync(unittest.TestCase):
     def setUp(self) -> None:
-        self.tmp = tempfile.TemporaryDirectory()
-        base = Path(self.tmp.name)
+        self.directory = tempfile.TemporaryDirectory()
+        base = Path(self.directory.name)
+        self.overleaf = base / "overleaf.git"
+        git(base, "init", "--quiet", "--bare", "--initial-branch=master", str(self.overleaf))
+        editor = base / "editor"
+        git(base, "clone", "--quiet", str(self.overleaf), str(editor))
+        write(editor / "main.tex", "Overleaf starter\n")
+        git(editor, "add", ".")
+        git(editor, "commit", "--quiet", "-m", "Overleaf starter")
+        git(editor, "push", "--quiet", "origin", "HEAD:master")
+        self.editor = editor
+        self.starter = git(self.overleaf, "rev-parse", "master")
         self.repo = base / "repo"
-        self.remote = base / "overleaf.git"
-        self.seed = base / "seed"
-        self.repo.mkdir()
-        git(self.repo, "init", "-b", "main")
-        git(self.repo, "config", "user.name", "Test User")
-        git(self.repo, "config", "user.email", "test@example.com")
-        (self.repo / "paper").mkdir()
-        (self.repo / ".agents/tools").mkdir(parents=True)
-        shutil.copy2(TOOL, self.repo / ".agents/tools/overleaf-sync.py")
-        (self.repo / "paper/main.tex").write_text("canonical\n", encoding="utf-8")
-        (self.repo / "paper/refs.bib").write_text("refs\n", encoding="utf-8")
-        (self.repo / "AGENTS.md").write_text("governance\n", encoding="utf-8")
-        (self.repo / ".agents/overleaf-sync.json").write_text(
-            json.dumps(
-                {
-                    "schema_version": "paper-overleaf-sync-v1",
-                    "source_prefix": "paper",
-                    "remote": {"name": "overleaf", "url": str(self.remote), "branch": "main"},
-                }
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-        commit(self.repo, "canonical paper")
-
-        git(base, "init", "--bare", self.remote.name)
-        self.seed.mkdir()
-        git(self.seed, "init", "-b", "main")
-        git(self.seed, "config", "user.name", "Overleaf User")
-        git(self.seed, "config", "user.email", "overleaf@example.com")
-        (self.seed / "main.tex").write_text("initial overleaf\n", encoding="utf-8")
-        commit(self.seed, "initial overleaf")
-        git(self.seed, "remote", "add", "origin", str(self.remote))
-        git(self.seed, "push", "origin", "main")
-        git(self.repo, "remote", "add", "overleaf", str(self.remote))
+        git(base, "init", "--quiet", "--initial-branch=dev", str(self.repo))
+        write(self.repo / "README.md", "A root file that never reaches Overleaf.\n")
+        write(self.repo / "paper/main.tex", "Paper v1\n")
+        write(self.repo / "paper/sections/intro.tex", "Intro v1\n")
+        self.commit("paper v1")
+        git(self.repo, "remote", "add", "overleaf", str(self.overleaf))
 
     def tearDown(self) -> None:
-        self.tmp.cleanup()
+        self.directory.cleanup()
 
-    def tool(self, *args: str, check: bool = False) -> subprocess.CompletedProcess[str]:
-        return run(
-            [sys.executable, str(TOOL), "--root", str(self.repo), *args],
-            self.repo,
-            check=check,
-        )
+    def commit(self, message: str) -> str:
+        git(self.repo, "add", ".")
+        git(self.repo, "commit", "--quiet", "-m", message)
+        return git(self.repo, "rev-parse", "HEAD")
 
-    def test_configured_repository_passes_static_validation(self) -> None:
-        result = self.tool("validate")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("source=paper/", result.stdout)
-        config = json.loads(
-            (self.repo / ".agents/overleaf-sync.json").read_text(encoding="utf-8")
-        )
-        self.assertEqual(config["source_prefix"], "paper")
-        remote = config["remote"]
-        self.assertIsInstance(remote, dict)
-        url = remote["url"]
-        self.assertIsInstance(url, str)
-        self.assertTrue(url)
-        self.assertNotIn("token=", url.lower())
-        self.assertNotIn("password=", url.lower())
-        self.assertNotRegex(url, r"://[^/@]+:[^/@]+@")
+    def sync(self, *args: str, expect: int = 0) -> str:
+        result = subprocess.run(["bash", str(TOOL), *args], cwd=self.repo, env=ENV,
+                                capture_output=True, text=True, check=False)
+        output = result.stdout + result.stderr
+        self.assertEqual(result.returncode, expect, output)
+        return output
 
-    def test_bootstrap_exports_only_paper_and_preserves_remote_history(self) -> None:
-        result = self.tool("push", "--bootstrap")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        git(self.repo, "fetch", "overleaf", "main")
-        files = git(self.repo, "ls-tree", "-r", "--name-only", "overleaf/main").stdout.splitlines()
-        self.assertEqual(files, ["main.tex", "refs.bib"])
-        self.assertNotIn("AGENTS.md", files)
-        self.assertEqual(git(self.repo, "rev-list", "--count", "overleaf/main").stdout.strip(), "3")
+    def overleaf_edit(self, name: str, text: str) -> None:
+        git(self.editor, "pull", "--quiet", "--ff-only", "origin", "master")
+        write(self.editor / name, text)
+        git(self.editor, "commit", "--quiet", "-am", "Overleaf edit")
+        git(self.editor, "push", "--quiet", "origin", "HEAD:master")
 
-    def test_validate_allows_clean_checkout_without_local_remote(self) -> None:
-        git(self.repo, "remote", "remove", "overleaf")
-        result = self.tool("validate")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    def overleaf_tree(self) -> str:
+        return git(self.overleaf, "rev-parse", "master^{tree}")
 
-    def test_remote_edit_blocks_push_and_can_be_pulled_on_sync_branch(self) -> None:
-        self.tool("push", "--bootstrap", check=True)
-        git(self.seed, "pull", "--ff-only", "origin", "main")
-        (self.seed / "main.tex").write_text("edited on overleaf\n", encoding="utf-8")
-        commit(self.seed, "edit on overleaf")
-        git(self.seed, "push", "origin", "main")
+    def paper_tree(self) -> str:
+        return git(self.repo, "rev-parse", "HEAD:paper")
 
-        blocked = self.tool("push")
-        self.assertNotEqual(blocked.returncode, 0)
-        self.assertIn("contains changes not acknowledged", blocked.stderr)
+    def test_push_pull_merge_and_push_again(self) -> None:
+        self.assertIn("STATE unrelated", self.sync("status"))
+        self.assertIn("Overleaf holds edits that HEAD does not have (state unrelated)", self.sync("push", expect=1))
 
-        git(self.repo, "switch", "-c", "sync/overleaf-test")
-        pulled = self.tool("pull")
-        self.assertEqual(pulled.returncode, 0, pulled.stdout + pulled.stderr)
-        self.assertEqual(
-            (self.repo / "paper/main.tex").read_text(encoding="utf-8"),
-            "edited on overleaf\n",
-        )
-        self.assertEqual((self.repo / "AGENTS.md").read_text(encoding="utf-8"), "governance\n")
+        output = self.sync("push", "--replace")
+        self.assertIn("OK pushed HEAD:paper to overleaf/master", output)
+        self.assertEqual(self.overleaf_tree(), self.paper_tree())
+        self.assertEqual(git(self.overleaf, "rev-parse", "master^"), self.starter)
+        self.assertEqual(git(self.overleaf, "ls-tree", "--name-only", "master").split(), ["main.tex", "sections"])
+        self.assertIn(f"Paper-Source-Commit: {git(self.repo, 'rev-parse', 'HEAD')}",
+                      git(self.overleaf, "log", "-1", "--format=%B", "master"))
+        self.assertIn("STATE in-sync", self.sync("status"))
+        shared = git(self.repo, "rev-parse", "HEAD")
 
-    def test_push_allows_canonical_case_branch(self) -> None:
-        git(self.repo, "switch", "-c", "case/arxiv-test")
-        result = self.tool("push", "--bootstrap")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        git(self.repo, "fetch", "overleaf", "main")
-        files = git(self.repo, "ls-tree", "-r", "--name-only", "overleaf/main").stdout.splitlines()
-        self.assertEqual(files, ["main.tex", "refs.bib"])
+        self.overleaf_edit("main.tex", "Paper v1, edited on Overleaf\n")
+        write(self.repo / "paper/sections/intro.tex", "Intro v2, edited in Git\n")
+        self.commit("intro v2")
+        self.assertIn("STATE diverged", self.sync("status"))
+        self.assertIn("state diverged", self.sync("push", expect=1))
 
-    def test_push_refuses_feature_branch(self) -> None:
-        git(self.repo, "switch", "-c", "feat/test")
-        refused = self.tool("push")
-        self.assertNotEqual(refused.returncode, 0)
-        self.assertIn("canonical branch", refused.stderr)
+        head_before = git(self.repo, "rev-parse", "HEAD")
+        tip = git(self.overleaf, "rev-parse", "master")
+        output = self.sync("pull")
+        branch = f"sync/overleaf-{tip[:12]}"
+        self.assertIn(f"OK {branch} holds Overleaf's paper/", output)
+        self.assertEqual(git(self.repo, "rev-parse", f"{branch}:paper"), self.overleaf_tree())
+        self.assertEqual(git(self.repo, "rev-parse", f"{branch}^"), shared)
+        self.assertEqual(git(self.repo, "rev-parse", f"{branch}:README.md"), git(self.repo, "rev-parse", f"{shared}:README.md"))
+        self.assertIn(f"Overleaf-Commit: {tip}", git(self.repo, "log", "-1", "--format=%B", branch))
+        self.assertEqual(git(self.repo, "rev-parse", "HEAD"), head_before)
+        self.assertEqual(git(self.repo, "status", "--porcelain"), "")
+        self.assertIn("already holds Overleaf's edits", self.sync("pull"))
 
-    def test_pull_refuses_default_branch(self) -> None:
-        refused = self.tool("pull")
-        self.assertNotEqual(refused.returncode, 0)
-        self.assertIn("dedicated sync/overleaf-* branch", refused.stderr)
+        git(self.repo, "merge", "--quiet", "--no-edit", branch)
+        self.assertEqual((self.repo / "paper/main.tex").read_text(), "Paper v1, edited on Overleaf\n")
+        self.assertEqual((self.repo / "paper/sections/intro.tex").read_text(), "Intro v2, edited in Git\n")
+        self.assertIn("STATE overleaf-behind", self.sync("status"))
+        self.sync("push")
+        self.assertEqual(self.overleaf_tree(), self.paper_tree())
 
-    def test_configuration_rejects_embedded_credentials(self) -> None:
-        config_path = self.repo / ".agents/overleaf-sync.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        config["remote"]["url"] = "https://user:secret@example.com/repo.git"
-        config_path.write_text(json.dumps(config) + "\n", encoding="utf-8")
-        result = self.tool("validate")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("must not contain embedded credentials", result.stderr)
+    def test_rewrapped_commit_with_the_same_tree_is_in_sync(self) -> None:
+        self.sync("push", "--replace")
+        tip = git(self.overleaf, "rev-parse", "master")
+        rewrapped = git(self.overleaf, "commit-tree", f"{tip}^{{tree}}", "-p", f"{tip}^", "-m", "Overleaf's own commit")
+        git(self.overleaf, "update-ref", "refs/heads/master", rewrapped)
+        self.assertIn("STATE in-sync", self.sync("status"))
+        self.assertIn("OK nothing to push", self.sync("push"))
+
+    def test_pull_when_only_overleaf_changed(self) -> None:
+        self.sync("push", "--replace")
+        self.overleaf_edit("sections/intro.tex", "Intro, edited on Overleaf\n")
+        self.assertIn("STATE overleaf-ahead", self.sync("status"))
+        self.sync("pull")
+        tip = git(self.overleaf, "rev-parse", "master")
+        git(self.repo, "merge", "--quiet", "--ff-only", f"sync/overleaf-{tip[:12]}")
+        self.assertEqual(self.paper_tree(), self.overleaf_tree())
+        self.assertIn("STATE in-sync", self.sync("status"))
+
+    def test_uncommitted_paper_changes_are_reported_not_pushed(self) -> None:
+        self.sync("push", "--replace")
+        write(self.repo / "paper/main.tex", "Uncommitted\n")
+        output = self.sync("push")
+        self.assertIn("NOTE uncommitted changes in paper/", output)
+        self.assertEqual(self.overleaf_tree(), self.paper_tree())
+
+    def test_refuses_a_token_in_the_remote_url(self) -> None:
+        git(self.repo, "remote", "set-url", "overleaf", "https://git:s3cret-token@git.overleaf.com/0000")
+        output = self.sync("status", expect=1)
+        self.assertIn("holds a password or token", output)
+        self.assertNotIn("s3cret-token", output)
+
+    def test_never_uses_the_repository_root(self) -> None:
+        for tree in (".", "./", "/", "paper/../.."):
+            with self.subTest(tree=tree):
+                self.assertIn("never its root", self.sync("push", "--tree", tree, expect=1))
+
+    def test_a_second_tree_syncs_to_its_own_remote(self) -> None:
+        write(self.repo / "poster/poster.tex", "Poster\n")
+        self.commit("poster")
+        base = Path(self.directory.name)
+        poster = base / "poster.git"
+        git(base, "init", "--quiet", "--bare", "--initial-branch=main", str(poster))
+        git(self.repo, "remote", "add", "overleaf-poster", str(poster))
+        self.assertIn("cannot fetch branch 'main'", self.sync("push", "--remote", "overleaf-poster", "--tree", "poster", expect=1))
+        git(self.repo, "push", "--quiet", "overleaf-poster", f"{git(self.repo, 'commit-tree', 'HEAD:poster', '-m', 'start')}:refs/heads/main")
+        self.assertIn("STATE in-sync", self.sync("status", "--remote", "overleaf-poster", "--tree", "poster"))
 
 
 if __name__ == "__main__":

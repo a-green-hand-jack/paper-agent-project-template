@@ -1,0 +1,117 @@
+name: Paper checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - main
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: paper-check-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout the validated head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install TeX, PDF text tools and PyYAML
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            cm-super \
+            latexmk \
+            poppler-utils \
+            python3-yaml \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            tex-gyre \
+            texlive-plain-generic \
+            texlive-pictures \
+            texlive-science \
+            texlive-bibtex-extra
+
+      - name: Initialize worktree state
+        run: bash .agents/scripts/setup-worktree.sh
+
+      - name: Build main and blind and run every check
+        run: make check
+
+      - name: Build the submission form
+        run: make submission
+
+      - name: Upload the build logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: paper-build-logs-${{ github.run_id }}
+          path: |
+            .project/build/logs/
+            .project/build/aux/*/*.log
+            .project/build/aux/*/*.blg
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Confirm the checks left the tracked tree unchanged
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)" || { git status --porcelain; exit 1; }
+
+  paper-only:
+    name: paper-only
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout the validated head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Copy paper/ alone into an empty directory
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/paper-only"
+          cp -a paper "$RUNNER_TEMP/paper-only/paper"
+          test ! -e "$RUNNER_TEMP/paper-only/.agents"
+          test ! -e "$RUNNER_TEMP/paper-only/.project"
+
+      - name: Install TeX
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            cm-super \
+            latexmk \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            tex-gyre \
+            texlive-plain-generic \
+            texlive-pictures \
+            texlive-science \
+            texlive-bibtex-extra
+
+      - name: Build every form with only paper/ present
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/paper-only/paper"
+          for job in main blind submission; do
+            make "$job"
+            test -s "build/$job.pdf"
+          done

@@ -9,9 +9,9 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CHECKER = ROOT / ".agents/tools/check-reference-integrity.py"
-METADATA = ROOT / ".agents/tools/check-reference-metadata.py"
-FORMAT = ROOT / ".agents/tools/check-bibtex-format.py"
+CHECKER = ROOT / ".agents/scripts/check-reference-integrity.py"
+METADATA = ROOT / ".agents/scripts/check-reference-metadata.py"
+FORMAT = ROOT / ".agents/scripts/check-bibtex-format.py"
 
 
 def write(path: Path, text: str) -> None:
@@ -20,17 +20,12 @@ def write(path: Path, text: str) -> None:
 
 
 def policy() -> str:
-    return """# Publication
-<!-- REFERENCE-INTEGRITY:START -->
-```json
-{
+    return """{
   "schema_version": "paper-reference-integrity-policy-v1",
   "enforcement": "enforced",
-  "ledger": "references/ledger.json",
+  "ledger": ".agents/references/ledger.json",
   "bibliography": "paper/refs.bib"
 }
-```
-<!-- REFERENCE-INTEGRITY:END -->
 """
 
 
@@ -81,10 +76,9 @@ def fixture(
     claims: list[dict[str, str]] | None = None,
     usages: list[dict[str, str]] | None = None,
 ) -> None:
-    write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
-    write(root / "PUBLICATION.md", policy())
-    write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n" + bib)
-    write(root / "references/ledger.json", ledger(records, claims, usages))
+    write(root / ".agents/references/policy.json", policy())
+    write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n" + bib)
+    write(root / ".agents/references/ledger.json", ledger(records, claims, usages))
 
 
 def run_checker(root: Path, profile: str = "draft") -> subprocess.CompletedProcess[str]:
@@ -110,24 +104,44 @@ class ReferenceIntegrityTests(unittest.TestCase):
             self.assertIn("SKIP reference_integrity policy not enabled", result.stdout)
 
     def test_activation_marker_prevents_policy_deletion_or_disable(self) -> None:
-        for publication in ("", policy().replace('"enforced"', '"disabled"')):
-            with self.subTest(publication=bool(publication)), tempfile.TemporaryDirectory() as directory:
+        for policy_text in (None, policy().replace('"enforced"', '"disabled"')):
+            with self.subTest(deleted=policy_text is None), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
-                write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
-                write(root / "PUBLICATION.md", publication)
-                write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n")
+                if policy_text is not None:
+                    write(root / ".agents/references/policy.json", policy_text)
+                write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n")
                 result = run_checker(root)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("activation marker", result.stdout)
 
-    def test_adopted_state_prevents_deleting_both_marker_and_policy(self) -> None:
+    def test_enforced_policy_requires_the_activation_marker(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
+            write(root / ".agents/references/policy.json", policy())
             write(root / "paper/refs.bib", "")
             result = run_checker(root, "release")
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("requires the protected PUBLICATION.md policy", result.stdout)
+            self.assertIn("requires '% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json'", result.stdout)
+
+    def test_policy_bibliography_origin_must_be_known(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / ".agents/references/policy.json",
+                  policy().replace('"bibliography": "paper/refs.bib"',
+                                   '"bibliography": "paper/refs.bib", "bibliography_origin": "found-online"'))
+            write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n")
+            result = run_checker(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("bibliography_origin must be one of agent-curated, supplied-fixed", result.stdout)
+
+    def test_marker_naming_the_old_ledger_path_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / ".agents/references/policy.json", policy())
+            write(root / "paper/refs.bib", "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n")
+            result = run_checker(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("activation marker must read", result.stdout)
 
     def test_draft_degrades_when_no_ledger_exists(self) -> None:
         """A supplied bibliography that was never migrated is a legitimate state.
@@ -140,11 +154,10 @@ class ReferenceIntegrityTests(unittest.TestCase):
         """
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
-            write(root / "PUBLICATION.md", policy())
+            write(root / ".agents/references/policy.json", policy())
             write(
                 root / "paper/refs.bib",
-                "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n"
+                "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n"
                 "@article{real2024, title={Real}, year={2024}}\n",
             )
             write(root / "paper/sections/02_intro.tex", "As shown \\cite{real2024}.\n")
@@ -156,11 +169,10 @@ class ReferenceIntegrityTests(unittest.TestCase):
     def test_ledgerless_draft_still_rejects_an_invented_citation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
-            write(root / "PUBLICATION.md", policy())
+            write(root / ".agents/references/policy.json", policy())
             write(
                 root / "paper/refs.bib",
-                "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n"
+                "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n"
                 "@article{real2024, title={Real}, year={2024}}\n",
             )
             write(root / "paper/sections/02_intro.tex", "As shown \\cite{invented2024}.\n")
@@ -172,11 +184,10 @@ class ReferenceIntegrityTests(unittest.TestCase):
     def test_release_still_requires_a_ledger(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root / ".agents/template-sync.json", '{"reference_integrity":{"adopted":true}}\n')
-            write(root / "PUBLICATION.md", policy())
+            write(root / ".agents/references/policy.json", policy())
             write(
                 root / "paper/refs.bib",
-                "% REFERENCE_INTEGRITY_REQUIRED: references/ledger.json\n",
+                "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n",
             )
             result = run_checker(root, "release")
             self.assertNotEqual(result.returncode, 0)
@@ -186,9 +197,9 @@ class ReferenceIntegrityTests(unittest.TestCase):
             with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 fixture(root, "", [])
-                publication = (root / "PUBLICATION.md").read_text(encoding="utf-8")
-                canonical = "paper/refs.bib" if field == "bibliography" else "references/ledger.json"
-                write(root / "PUBLICATION.md", publication.replace(canonical, replacement))
+                publication = (root / ".agents/references/policy.json").read_text(encoding="utf-8")
+                canonical = "paper/refs.bib" if field == "bibliography" else ".agents/references/ledger.json"
+                write(root / ".agents/references/policy.json", publication.replace(canonical, replacement))
                 result = run_checker(root)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(f"policy {field} must be", result.stdout)
@@ -197,7 +208,7 @@ class ReferenceIntegrityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             write(
-                root / "PUBLICATION.md",
+                root / ".agents/references/policy.json",
                 policy().replace('"paper/refs.bib"', '"../outside.bib"'),
             )
             result = run_checker(root)
@@ -248,7 +259,7 @@ class ReferenceIntegrityTests(unittest.TestCase):
             self.assertIn("lacks a reviewed citation_usages record", missing.stdout)
 
             write(
-                root / "references/ledger.json",
+                root / ".agents/references/ledger.json",
                 ledger(
                     [reference("real")],
                     usages=[{
@@ -404,9 +415,9 @@ class ReferenceMetadataTests(unittest.TestCase):
         )
 
     def add_lock(self, root: Path) -> None:
-        write(root / ".agents/dependencies/reference-integrity/uv.lock", "fixture lock\n")
-        write(root / ".agents/tools/check-reference-integrity.py", CHECKER.read_text(encoding="utf-8"))
-        write(root / ".agents/tools/_reference_env.py", (ROOT / ".agents/tools/_reference_env.py").read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/reference-integrity/uv.lock", "fixture lock\n")
+        write(root / ".agents/scripts/check-reference-integrity.py", CHECKER.read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/_reference_env.py", (ROOT / ".agents/scripts/_reference_env.py").read_text(encoding="utf-8"))
 
     def test_policy_absent_skips_without_uv(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -414,7 +425,7 @@ class ReferenceMetadataTests(unittest.TestCase):
             self.add_lock(root)
             result = self.run_metadata(root, "definitely-missing-uv")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "skipped")
 
     def test_missing_uv_is_infrastructure_error_not_verification(self) -> None:
@@ -424,7 +435,7 @@ class ReferenceMetadataTests(unittest.TestCase):
             fixture(root, "@article{unknown, title={A}}\n", [reference("unknown", status="unverified")])
             result = self.run_metadata(root, "definitely-missing-uv")
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "infrastructure_error")
             self.assertFalse(summary["approves_claim_support"])
 
@@ -452,7 +463,7 @@ target.write_text(json.dumps({
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "passed")
             self.assertFalse(summary["approves_claim_support"])
 
@@ -479,7 +490,7 @@ raise SystemExit(4)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
             self.assertIn("not evidence of fabrication", result.stdout)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "unverified")
 
     def test_api_error_is_infrastructure_error_even_with_zero_exit(self) -> None:
@@ -503,7 +514,7 @@ target.write_text(json.dumps({
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "infrastructure_error")
 
     def test_rate_limit_is_advisory_not_a_reference_failure(self) -> None:
@@ -530,7 +541,7 @@ raise SystemExit(4)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("CI not blocked", result.stdout)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "rate_limited")
             self.assertTrue(summary["rate_limit_degraded"])
 
@@ -557,7 +568,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "reference_problem")
             self.assertTrue(summary["rate_limit_degraded"])
 
@@ -584,7 +595,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "unverified")
             self.assertFalse(summary["rate_limit_degraded"])
 
@@ -611,7 +622,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "rate_limited")
             self.assertTrue(summary["rate_limit_degraded"])
 
@@ -644,7 +655,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "infrastructure_error")
             self.assertTrue(summary["rate_limit_degraded"])
 
@@ -672,7 +683,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "rate_limited")
             self.assertTrue(summary["rate_limit_degraded"])
 
@@ -698,7 +709,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "infrastructure_error")
             self.assertTrue(summary["rate_limit_degraded"])
 
@@ -724,7 +735,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "infrastructure_error")
 
     def test_upstream_request_timeout_is_advisory(self) -> None:
@@ -749,7 +760,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "provider_unavailable")
 
     def test_provider_network_failures_are_advisory_without_claiming_rate_limit(self) -> None:
@@ -782,7 +793,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "provider_unavailable")
             self.assertEqual(summary["rate_limited_services"], ["dblp"])
 
@@ -809,7 +820,7 @@ raise SystemExit(4)
             runner.chmod(0o755)
             result = self.run_metadata(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
             self.assertEqual(summary["outcome"], "provider_unavailable")
             self.assertFalse(summary["rate_limit_degraded"])
 
@@ -837,7 +848,7 @@ raise SystemExit(4)
                 runner.chmod(0o755)
                 result = self.run_metadata(root, str(runner))
                 self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-                summary = json.loads((root / "dist/reference-integrity/run.json").read_text())
+                summary = json.loads((root / ".project/build/reference-integrity/run.json").read_text())
                 self.assertEqual(summary["outcome"], "infrastructure_error")
 
 
@@ -851,9 +862,9 @@ class BibtexFormatTests(unittest.TestCase):
         )
 
     def add_tools(self, root: Path) -> None:
-        write(root / ".agents/dependencies/reference-integrity/uv.lock", "fixture lock\n")
-        write(root / ".agents/tools/check-reference-integrity.py", CHECKER.read_text(encoding="utf-8"))
-        write(root / ".agents/tools/_validate-bibtex-with-pybtex.py", "# fixture helper\n")
+        write(root / ".agents/scripts/reference-integrity/uv.lock", "fixture lock\n")
+        write(root / ".agents/scripts/check-reference-integrity.py", CHECKER.read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/_validate-bibtex-with-pybtex.py", "# fixture helper\n")
 
     def test_empty_bibliography_skips_without_uv(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -862,7 +873,7 @@ class BibtexFormatTests(unittest.TestCase):
             fixture(root, "", [])
             result = self.run_format(root, "definitely-missing-uv")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/format-run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/format-run.json").read_text())
             self.assertEqual(summary["outcome"], "skipped")
             self.assertFalse(summary["rewrites_bibliography"])
 
@@ -883,7 +894,7 @@ class BibtexFormatTests(unittest.TestCase):
             runner.chmod(0o755)
             result = self.run_format(root, str(runner))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/format-run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/format-run.json").read_text())
             self.assertEqual(summary["outcome"], "passed")
 
     def test_pybtex_format_problem_is_not_infrastructure_error(self) -> None:
@@ -905,7 +916,7 @@ class BibtexFormatTests(unittest.TestCase):
             runner.chmod(0o755)
             result = self.run_format(root, str(runner))
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-            summary = json.loads((root / "dist/reference-integrity/format-run.json").read_text())
+            summary = json.loads((root / ".project/build/reference-integrity/format-run.json").read_text())
             self.assertEqual(summary["outcome"], "format_problem")
 
     def test_contradictory_pybtex_report_is_infrastructure_error(self) -> None:
@@ -933,7 +944,7 @@ class BibtexFormatTests(unittest.TestCase):
             root = Path(directory)
             self.add_tools(root)
             fixture(root, "@article{real, title={T}}\n", [reference("real")])
-            stale = root / "dist/reference-integrity/format.json"
+            stale = root / ".project/build/reference-integrity/format.json"
             write(
                 stale,
                 json.dumps({

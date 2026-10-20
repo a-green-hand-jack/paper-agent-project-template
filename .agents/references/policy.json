@@ -1,0 +1,7 @@
+{
+  "schema_version": "paper-reference-integrity-policy-v1",
+  "enforcement": "enforced",
+  "ledger": ".agents/references/ledger.json",
+  "bibliography": "paper/refs.bib",
+  "bibliography_origin": "agent-curated"
+}
