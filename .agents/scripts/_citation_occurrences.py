@@ -40,35 +40,30 @@ def _collapse_whitespace(text: str) -> str:
 def _sentence_window(active: str, start: int, end: int) -> tuple[str, bool]:
     """Return the enclosing sentence around [start, end) in the active text.
 
-    Expands to the previous and next sentence boundary, capping each side at
-    MAX_SENTENCE_WINDOW characters and trimming at whitespace. Returns
+    Expands to the previous and next sentence boundary. A side longer than
+    MAX_SENTENCE_WINDOW characters is cut at the cap, moved to the nearest
+    whitespace inside it, and reported as truncated. Returns
     (window_text, truncated).
     """
     before = active[:start]
     after = active[end:]
     hard_before = [match.start() for match in SENTENCE_HARD_END_RE.finditer(before)]
     left = (hard_before[-1] + 1) if hard_before else 0
-    soft_before = before.rfind(" ", max(left, start - MAX_SENTENCE_WINDOW))
-    if soft_before > left:
-        left = soft_before + 1
-    if start - left > MAX_SENTENCE_WINDOW:
-        left = before.rfind(" ", start - MAX_SENTENCE_WINDOW)
-        if left < 0:
-            left = start - MAX_SENTENCE_WINDOW
+    left_truncated = start - left > MAX_SENTENCE_WINDOW
+    if left_truncated:
+        cap = start - MAX_SENTENCE_WINDOW
+        left = before.find(" ", cap) + 1 or cap
 
-    hard_after = [match.end() for match in SENTENCE_HARD_END_RE.finditer(after)]
-    right = end
-    if hard_after:
-        right = end + hard_after[0]
-    if right - end > MAX_SENTENCE_WINDOW:
-        right = end + MAX_SENTENCE_WINDOW
-        right = max(end, after.rfind(" ", 0, right))
-        if right <= end:
-            right = end + MAX_SENTENCE_WINDOW
+    hard_after = SENTENCE_HARD_END_RE.search(after)
+    right = end + hard_after.end() if hard_after else end
+    right_truncated = right - end > MAX_SENTENCE_WINDOW
+    if right_truncated:
+        cap = end + MAX_SENTENCE_WINDOW
+        space = active.rfind(" ", end, cap)
+        right = space if space > end else cap
 
     window = active[left:right]
-    truncated = start - left >= MAX_SENTENCE_WINDOW or right - end >= MAX_SENTENCE_WINDOW
-    return _collapse_whitespace(window), truncated
+    return _collapse_whitespace(window), left_truncated or right_truncated
 
 
 def claim_fingerprint(claim_text: str) -> str:

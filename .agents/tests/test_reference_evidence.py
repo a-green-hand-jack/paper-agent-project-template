@@ -10,6 +10,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / ".agents/scripts/reference-evidence.py"
 CHECKER = ROOT / ".agents/scripts/check-reference-integrity.py"
+sys.path.insert(0, str(CLI.parent))
+
+import _citation_occurrences as scanner  # noqa: E402
 
 
 def write(path: Path, text: str) -> None:
@@ -121,6 +124,40 @@ def inventory_cache(root: Path) -> Path:
     return root / ".project/build/reference-support/testrun" / "inventory.json"
 
 
+def window(text: str, command: str = "\\cite") -> tuple[str, bool]:
+    start = text.index(command)
+    return scanner._sentence_window(text, start, text.index("}", start) + 1)
+
+
+class SentenceWindowTests(unittest.TestCase):
+    def test_claim_text_starts_at_the_sentence_start(self) -> None:
+        text = "Intro sentence one is here. Agents expose tools and sandboxes \\citep{a,b}. Next sentence follows here."
+        self.assertEqual(window(text), ("Agents expose tools and sandboxes \\citep{a,b}.", False))
+        text = "Intro. Agents expose \\citep{a} tools and sandboxes. Next."
+        self.assertEqual(window(text), ("Agents expose \\citep{a} tools and sandboxes.", False))
+
+    def test_long_sentence_is_cut_at_a_word_boundary_and_marked_truncated(self) -> None:
+        cap = scanner.MAX_SENTENCE_WINDOW
+        words = " ".join(f"w{index:03d}" for index in range(300))
+        claim, truncated = window(f"Intro. {words} \\cite{{k}}. After.")
+        self.assertTrue(truncated)
+        self.assertTrue(claim.endswith("w299 \\cite{k}."))
+        self.assertRegex(claim, r"^w\d{3} ")
+        self.assertLessEqual(len(claim.split(" \\cite")[0]), cap)
+        self.assertGreater(len(claim.split(" \\cite")[0]), cap - 10)
+
+        claim, truncated = window(f"Before. \\cite{{k}} {words}. After.")
+        self.assertTrue(truncated)
+        self.assertTrue(claim.startswith("\\cite{k} w000 "))
+        self.assertRegex(claim, r" w\d{3}$")
+        self.assertLessEqual(len(claim.split("} ", 1)[1]), cap)
+
+    def test_fingerprint_follows_the_claim_not_the_citation(self) -> None:
+        first = window("Intro. Agents expose tools \\citep{k1}. Next.")[0]
+        second = window("Intro. Agents expose sandboxes \\citep{k1}. Next.")[0]
+        self.assertNotEqual(scanner.claim_fingerprint(first), scanner.claim_fingerprint(second))
+
+
 class CliInventoryTests(unittest.TestCase):
     def test_inventory_detects_occurrences_with_claim_and_fingerprint(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -161,6 +198,30 @@ class CliInventoryTests(unittest.TestCase):
             after = json.loads(ledger.read_text(encoding="utf-8"))["citation_occurrences"]
             self.assertEqual(sorted(item["occurrence_id"] for item in after),
                              sorted(item["occurrence_id"] for item in before))
+
+
+    def test_changed_claim_keeps_its_evidence_as_stale(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root, teX="Intro. Agents expose tools \\citep{k1}. Next.\n", usages=[usage("k1"), usage("k2")])
+            self.assertEqual(run(root, "inventory").returncode, 0)
+            ledger = root / ".agents/references/ledger.json"
+            old_id = json.loads(ledger.read_text(encoding="utf-8"))["citation_occurrences"][0]["occurrence_id"]
+            recorded = run(root, "record", "--occurrence-id", old_id, "--key", "k1", "--verdict", "supported",
+                           "--state", "human-confirmed", "--approval", "Human approved.",
+                           "--passage-text", "Agents expose tools.", "--locator", "p. 1")
+            self.assertEqual(recorded.returncode, 0, recorded.stdout + recorded.stderr)
+
+            write(root / "paper/sections/02_intro.tex", "Intro. Agents expose tools and sandboxes \\citep{k1}. Next.\n")
+            self.assertEqual(run(root, "inventory").returncode, 0)
+            data = json.loads(ledger.read_text(encoding="utf-8"))
+            new_id = data["citation_occurrences"][0]["occurrence_id"]
+            self.assertNotEqual(new_id, old_id)
+            self.assertEqual([item["occurrence_id"] for item in data["claim_evidence"]], [new_id])
+            draft = run_checker(root)
+            self.assertEqual(draft.returncode, 0, draft.stdout + draft.stderr)
+            self.assertIn("is stale: claim fingerprint changed", draft.stdout)
+            self.assertNotEqual(run_checker(root, "release").returncode, 0)
 
 
 class CliResolveTests(unittest.TestCase):
@@ -420,6 +481,51 @@ class MigrateTests(unittest.TestCase):
             self.assertEqual(len(migrated["claim_evidence"]), 1)
             self.assertEqual(migrated["claim_evidence"][0]["assessment"]["verdict"], "source-unavailable")
             self.assertEqual(migrated["claim_evidence"][0]["review_state"], "human-confirmed")
+
+    def test_migrated_draft_clean_v1_ledger_passes_draft(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / ".agents/references/policy.json", policy())
+            write(
+                root / "paper/refs.bib",
+                "% REFERENCE_INTEGRITY_REQUIRED: .agents/references/ledger.json\n"
+                "@article{demo2020, title={A Demonstration Paper}, author={Doe, Jane}, "
+                "journal={Journal of Examples}, year={2020}}\n",
+            )
+            write(root / "paper/sections/02_intro.tex", "Prior work shows that examples are useful \\citep{demo2020}.\n")
+            demo = reference("demo2020")
+            demo["identifiers"] = {"doi": "10.1000/demo"}
+            demo["human_review"] = {"state": "human-confirmed", "rationale": "Reviewed fixture."}
+            v1 = {
+                "schema_version": "paper-reference-ledger-v1",
+                "references": [demo],
+                "citation_usages": [{**usage("demo2020"), "manuscript_location": "paper/sections/02_intro.tex:1"}],
+                "claim_evidence": [
+                    {
+                        "citation_key": "demo2020",
+                        "manuscript_claim": "Prior work shows that examples are useful.",
+                        "manuscript_location": "paper/sections/02_intro.tex:1",
+                        "source_locator": "https://doi.org/10.1000/demo",
+                        "evidence_excerpt_or_rationale": "The source shows that examples are useful.",
+                        "human_review_state": "human-confirmed",
+                    }
+                ],
+            }
+            write(root / ".agents/references/ledger.json", json.dumps(v1, indent=2) + "\n")
+            self.assertEqual(run_checker(root).returncode, 0)
+
+            result = run(root, "migrate")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            draft = run_checker(root)
+            self.assertEqual(draft.returncode, 0, draft.stdout + draft.stderr)
+            migrated = json.loads((root / ".agents/references/ledger.json").read_text(encoding="utf-8"))
+            identity = migrated["claim_evidence"][0]["source_identity"]
+            self.assertEqual(identity["doi"], "10.1000/demo")
+            self.assertTrue(identity["source_hash"].startswith("sha256:"))
+            # Occurrence-level review is new in v2: a migrated occurrence starts
+            # pending and needs a fresh Human confirmation before a release.
+            self.assertEqual(migrated["citation_occurrences"][0]["review_state"], "pending")
+            self.assertNotEqual(run_checker(root, "release").returncode, 0)
 
 
 class CheckerV2Tests(unittest.TestCase):
