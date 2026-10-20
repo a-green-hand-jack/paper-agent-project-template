@@ -2,24 +2,30 @@
 # Apply the mechanical part of an upgrade to a newer release of the template this
 # repository follows, by the rules of template-upgrade step 5:
 #
-#   upgrade-template.sh [--check] TARGET_TAG
+#   upgrade-template.sh [--check] [--resolved PATH]... TARGET_TAG
 #
 # It reads the followed template and its version from the registry (step 1),
 # fetches both tags into .project/build/template-upgrade/<name>.git (offline when
 # both are there) and, for each path changed between them, uses the target
 # release's registry (the source release's for a removed path):
 #   - scope template: skipped; project-owned: left alone;
+#   - `upgrade: review` (a Human document the paper owns once it has started):
+#     never changed; the release's diff is printed for review;
 #   - shared: replaced above its `## In this repository` section when check 1
-#     passes, or whole when it has no section; added when new; removed when
-#     removed and unchanged here;
+#     passes; without a section, replaced whole when unchanged here and
+#     otherwise three-way merged with the source tag as base; added when new;
+#     removed when removed and unchanged here;
 #   - the registry: merged entry by entry; template.version (template.upstream.version
 #     in a derived template) is set to TARGET_TAG when nothing conflicts.
-# A local edit is a conflict: it is never overwritten, it is reported, and a
-# three-way merge proposal is written under the clone's proposals/ directory.
-# assets/, .project/ and .env are never touched. It prints what it applied,
-# skipped, refused and left for manual steps, including the upgrade section of
-# each release it crosses (RELEASE_NOTES.md at TARGET_TAG). --check prints the
-# same plan and changes nothing outside .project/build/template-upgrade/.
+# A local edit that the release's change overlaps, or an edit above the section,
+# is a conflict: it is never overwritten, it is reported, and a three-way merge
+# proposal is written under the clone's proposals/ directory. --resolved PATH
+# accepts PATH (the registry too) as resolved by hand once it has no conflict
+# markers left. assets/, .project/ and .env are never touched. It prints what it
+# applied, skipped, refused, left for review and for manual steps, including the
+# upgrade section of each release it crosses (RELEASE_NOTES.md at TARGET_TAG).
+# --check prints the same plan and changes nothing outside
+# .project/build/template-upgrade/.
 # Exit 0: done or planned without conflicts; 1: a conflict; 2: an error.
 #
 # A repository that does not have this script yet runs the target release's copy:
@@ -38,6 +44,7 @@ REGISTRY = ".agents/content-registry.yaml"
 SECTION = "## In this repository"
 NEVER = ("assets/", ".project/")
 SHARED = ("shared", "shared_with_adaptation")
+MARKERS = re.compile(rb"^(?:<{7}|>{7})(?: |$)", re.M)
 
 
 class Failure(Exception):
@@ -111,9 +118,13 @@ def parse_registry(text: str) -> dict:
             "default": default.group(1) if default else "project"}
 
 
-def scope_in(block: dict) -> str:
-    match = re.search(r"^\s+scope:\s*(\S+)", "".join(block["body"]), re.M)
+def field(block: dict, name: str) -> str:
+    match = re.search(rf"^\s+{name}:\s*(\S+)", "".join(block["body"]), re.M)
     return match.group(1) if match else ""
+
+
+def scope_in(block: dict) -> str:
+    return field(block, "scope")
 
 
 def glob_pattern(pattern: str) -> re.Pattern:
@@ -122,10 +133,10 @@ def glob_pattern(pattern: str) -> re.Pattern:
     return re.compile("".join(table.get(part, re.escape(part)) for part in parts))
 
 
-def scope_of(path: str, registry: dict) -> str:
+def entry_of(path: str, registry: dict) -> dict:
     """Most specific path wins: an exact path, then a glob, then the longest
     directory; otherwise default_scope."""
-    best = (0, 0, registry["default"])
+    best = (0, 0, {"path": "", "pre": [], "body": [f"  scope: {registry['default']}\n"]})
     for block in registry["blocks"]:
         pattern = block["path"]
         if pattern.endswith("/"):
@@ -135,7 +146,7 @@ def scope_of(path: str, registry: dict) -> str:
         else:
             rank, matches = 3, path == pattern
         if matches and (rank, len(pattern)) > best[:2]:
-            best = (rank, len(pattern), scope_in(block))
+            best = (rank, len(pattern), block)
     return best[2]
 
 
@@ -146,9 +157,10 @@ def split_head(head: list[str]) -> tuple[list[str], list[str], list[str]]:
     return head[:start], head[start:end], head[end:]
 
 
-def merge_registry(source: dict, target: dict, local: dict, source_text: str, report) -> list[str]:
+def merge_registry(source: dict, target: dict, local: dict, source_text: str, report, conflict) -> list[str]:
     """Apply the entry changes between the two releases to the local registry,
-    entry by entry; scope template entries are never taken."""
+    entry by entry; scope template entries are never taken. A conflict keeps
+    the local text and goes to conflict()."""
     head = local["head"]
     outside = lambda registry: [split_head(registry["head"])[i] for i in (0, 2)]
     if outside(source) != outside(target) and outside(local) != outside(target):
@@ -157,7 +169,7 @@ def merge_registry(source: dict, target: dict, local: dict, source_text: str, re
             head = before + split_head(local["head"])[1] + after
             report.applied(f"{REGISTRY}: header as in {target['tag']}")
         else:
-            report.refused(f"{REGISTRY}: header changed here and in {target['tag']}; merge it by hand")
+            conflict(f"{REGISTRY}: header changed here and in {target['tag']}; merge it by hand")
     blocks = [dict(block) for block in local["blocks"]]
     index = {block["path"]: block for block in blocks}
     before = {block["path"]: block for block in source["blocks"]}
@@ -179,15 +191,15 @@ def merge_registry(source: dict, target: dict, local: dict, source_text: str, re
                 index[path] = block
                 report.applied(f"{REGISTRY}: entry {path} added")
             elif mine["body"] != new["body"]:
-                report.refused(f"{REGISTRY}: entry {path} is new in {target['tag']} and differs here")
+                conflict(f"{REGISTRY}: entry {path} is new in {target['tag']} and differs here")
         elif old["body"] != new["body"]:
             if mine is None:
-                report.refused(f"{REGISTRY}: entry {path} changed in {target['tag']} and is missing here")
+                conflict(f"{REGISTRY}: entry {path} changed in {target['tag']} and is missing here")
             elif mine["body"] == old["body"]:
                 mine["body"] = list(new["body"])
                 report.applied(f"{REGISTRY}: entry {path} as in {target['tag']}")
             elif mine["body"] != new["body"]:
-                report.refused(f"{REGISTRY}: entry {path} changed here and in {target['tag']}")
+                conflict(f"{REGISTRY}: entry {path} changed here and in {target['tag']}")
     for path, old in before.items():
         if path in after or path not in index:
             continue
@@ -202,7 +214,7 @@ def merge_registry(source: dict, target: dict, local: dict, source_text: str, re
             del index[path]
             report.applied(f"{REGISTRY}: entry {path} removed")
         elif scope_in(old) != "template":
-            report.refused(f"{REGISTRY}: entry {path} removed in {target['tag']} and changed here")
+            conflict(f"{REGISTRY}: entry {path} removed in {target['tag']} and changed here")
     return head + [line for block in blocks for line in block["pre"] + block["body"]] + local["tail"]
 
 
@@ -269,17 +281,18 @@ def reconcile(source: tuple, target: tuple, section: str) -> list[str]:
 
 class Report:
     def __init__(self) -> None:
-        self.lists = {"applied": [], "skipped": [], "refused": [], "manual": []}
+        self.lists = {"applied": [], "skipped": [], "refused": [], "review": [], "manual": []}
 
     def __getattr__(self, name):
-        if name in ("applied", "skipped", "refused", "manual"):
+        if name in self.lists:
             return self.lists[name].append
         raise AttributeError(name)
 
 
 class Upgrade:
-    def __init__(self, root: Path, clone: Path, source: str, target: str, check: bool) -> None:
+    def __init__(self, root: Path, clone: Path, source: str, target: str, check: bool, resolved: set[str]) -> None:
         self.root, self.clone, self.source, self.target, self.check = root, clone, source, target, check
+        self.resolved = resolved
         self.proposals = clone.parent / "proposals"
         self.report = Report()
 
@@ -333,6 +346,15 @@ class Upgrade:
             raise Failure(f"git merge-file failed: {result.stderr.decode(errors='replace').strip()}")
         return result.stdout.decode(), result.returncode == 0
 
+    def conflict(self, path: str, message: str) -> None:
+        """Refuse, unless --resolved names PATH and it has no conflict markers."""
+        if path not in self.resolved:
+            return self.report.refused(message)
+        state = self.local(path)
+        if state and MARKERS.search(state[1]):
+            return self.report.refused(f"{path}: --resolved, but conflict markers remain")
+        self.report.applied(f"{message.split('; merge proposal')[0]}: resolved here (--resolved)")
+
     def propose(self, path: str, text: str, clean: bool) -> str:
         proposal = self.proposals / path
         proposal.parent.mkdir(parents=True, exist_ok=True)
@@ -341,10 +363,13 @@ class Upgrade:
         return f"; merge proposal{'' if clean else ' with conflict markers'}: {shown}"
 
     def path(self, old_mode: str, new_mode: str, old_sha: str, new_sha: str, status: str, path: str,
-             scope: str) -> None:
-        report, state = self.report, self.local(path)
+             entry: dict) -> None:
+        report, state, scope = self.report, self.local(path), scope_in(entry)
         if scope == "template":
             return report.skipped(f"{path}: scope template")
+        if field(entry, "upgrade") == "review":
+            diff = git("diff", self.source, self.target, "--", path, cwd=self.clone)
+            return report.review((f"{path}: the paper's own (upgrade: review); the release's change:", diff))
         if scope not in SHARED:
             return report.skipped(f"{path}: project-owned ({scope})")
         if "160000" in (old_mode, new_mode) or (state and state[0] == "other"):
@@ -356,7 +381,7 @@ class Upgrade:
                 return report.applied(f"{path}: added")
             if self.same(state, new_mode, data):
                 return report.applied(f"{path}: already as in {self.target}")
-            return report.refused(f"{path}: added in {self.target}, but a different file is here")
+            return self.conflict(path, f"{path}: added in {self.target}, but a different file is here")
         if status == "D":
             data = self.blob(old_sha)
             if state is None:
@@ -364,10 +389,10 @@ class Upgrade:
             if self.same(state, old_mode, data):
                 self.remove(path)
                 return report.applied(f"{path}: removed")
-            return report.refused(f"{path}: removed in {self.target}, changed here")
+            return self.conflict(path, f"{path}: removed in {self.target}, changed here")
         before, after = self.blob(old_sha), self.blob(new_sha)
         if state is None:
-            return report.refused(f"{path}: changed in {self.target}, missing here")
+            return self.conflict(path, f"{path}: changed in {self.target}, missing here")
         if self.same(state, new_mode, after):
             return report.applied(f"{path}: already as in {self.target}")
         if self.same(state, old_mode, before):
@@ -376,15 +401,27 @@ class Upgrade:
         try:
             here, base, theirs = (data.decode("utf-8") for data in (state[1], before, after))
         except UnicodeDecodeError:
-            return report.refused(f"{path}: changed here (not text)")
+            return self.conflict(path, f"{path}: changed here (not text)")
         if "120000" in (state[0], new_mode):
-            return report.refused(f"{path}: changed here (a link)")
+            return self.conflict(path, f"{path}: changed here (a link)")
         mine, source, target = parts(here), parts(base), parts(theirs)
         if mine[1] is None:
             merged, clean = self.merge(here, base, theirs)
-            if clean and merged == here:
-                return report.applied(f"{path}: already has the change of {self.target}")
-            return report.refused(f"{path}: changed here{self.propose(path, merged, clean)}")
+            if not clean:
+                return self.conflict(path, f"{path}: changed here and in {self.target}"
+                                           f"{self.propose(path, merged, clean)}")
+            if merged == here:
+                report.applied(f"{path}: already has the change of {self.target}")
+            else:
+                self.write(path, new_mode, merged.encode())
+                report.applied(f"{path}: merged with the local text (three-way, no overlap)")
+            if path.endswith(".md"):
+                report.review((f"{path}: adapted here without a {SECTION} section; move the local text into"
+                               f" one as additions keyed to their steps (template-upgrade step 5) and drop"
+                               f" what the release covers, so that check 1 applies next time; the local"
+                               f" text: git -C {self.clone.relative_to(self.root)} show {self.target}:{path}"
+                               f" | diff - {path}", ""))
+            return
         if mine[0] == source[0]:  # check 1
             section = target[1] if mine[1] == source[1] else mine[1]
             self.write(path, new_mode, (target[0] + ("\n" + section if section else "")).encode())
@@ -394,8 +431,8 @@ class Upgrade:
         else:
             merged, clean = self.merge(mine[0], source[0], target[0])
             if not (clean and merged == mine[0]):
-                return report.refused(f"{path}: edited above {SECTION} (check 1)"
-                                      f"{self.propose(path, merged + chr(10) + mine[1], clean)}")
+                return self.conflict(path, f"{path}: edited above {SECTION} (check 1)"
+                                           f"{self.propose(path, merged + chr(10) + mine[1], clean)}")
             report.applied(f"{path}: already has the change of {self.target} above {SECTION}")
         reasons = reconcile(source, target, mine[1]) if mine[1] != target[1] else []
         if reasons:
@@ -441,10 +478,18 @@ def fetch(clone: Path, repository: str, tags: tuple[str, ...]) -> None:
 
 
 def main(arguments: list[str]) -> int:
-    check = "--check" in arguments
-    rest = [argument for argument in arguments if argument != "--check"]
+    check, resolved, rest = False, set(), []
+    arguments = list(arguments)
+    while arguments:
+        argument = arguments.pop(0)
+        if argument == "--check":
+            check = True
+        elif argument == "--resolved" and arguments and not arguments[0].startswith("-"):
+            resolved.add(os.path.normpath(arguments.pop(0)))
+        else:
+            rest.append(argument)
     if len(rest) != 1 or rest[0].startswith("-"):
-        print("usage: upgrade-template.sh [--check] TARGET_TAG", file=sys.stderr)
+        print("usage: upgrade-template.sh [--check] [--resolved PATH]... TARGET_TAG", file=sys.stderr)
         return 2
     target = rest[0]
     root = Path(git("rev-parse", "--show-toplevel", cwd=Path.cwd()).strip())
@@ -457,7 +502,7 @@ def main(arguments: list[str]) -> int:
     name = re.sub(r"\.git$", "", repository.rstrip("/").rsplit("/", 1)[-1])
     clone = root / ".project/build/template-upgrade" / f"{name}.git"
     fetch(clone, repository, (source, target))
-    upgrade = Upgrade(root, clone, source, target, check)
+    upgrade = Upgrade(root, clone, source, target, check, resolved)
     shutil.rmtree(upgrade.proposals, ignore_errors=True)
     report = upgrade.report
 
@@ -475,11 +520,11 @@ def main(arguments: list[str]) -> int:
         if path.startswith(NEVER) or path == ".env":
             report.manual(f"{path}: changed in {target}; this command never touches it, compare it by hand")
             continue
-        scope = scope_of(path, registries["before" if status == "D" else "after"])
-        upgrade.path(old_mode, new_mode, old_sha, new_sha, status[0], path, scope)
+        entry = entry_of(path, registries["before" if status == "D" else "after"])
+        upgrade.path(old_mode, new_mode, old_sha, new_sha, status[0], path, entry)
 
     merged = merge_registry(registries["before"], registries["after"], parse_registry(registry_text),
-                            source_registry, report)
+                            source_registry, report, lambda message: upgrade.conflict(REGISTRY, message))
     if not report.lists["refused"]:
         number = followed_template("".join(merged))["line"]
         merged[number] = re.sub(r"(version:\s*)\S+", lambda m: m.group(1) + target, merged[number], count=1)
@@ -496,10 +541,12 @@ def main(arguments: list[str]) -> int:
           + (" (--check: nothing changed)" if check else ""))
     print(f"clone: {clone.relative_to(root)}")
     for title, key in (("Applied", "applied"), ("Skipped", "skipped"), ("Refused (conflicts)", "refused"),
-                       ("Manual", "manual")):
+                       ("Review (left to the paper; never conflicts)", "review"), ("Manual", "manual")):
         print(f"\n{title}: {len(report.lists[key])}")
-        for line in report.lists[key]:
+        for item in report.lists[key]:
+            line, diff = item if key == "review" else (item, "")
             print(f"  {line}")
+            print("".join(f"    {text}\n" for text in diff.splitlines()), end="")
     print("\nReleases crossed:")
     for tag, steps_text in crossed:
         if steps_text is None:
@@ -511,7 +558,8 @@ def main(arguments: list[str]) -> int:
     light = not refused and not report.lists["manual"] and crossed and all(s is None for _, s in crossed)
     print(f"\nLight path: {'yes' if light else 'no'}")
     if refused:
-        print(f"{followed['key']} stays {source}: resolve each conflict above, then run the command again.")
+        print(f"{followed['key']} stays {source}: resolve each conflict above, then run the command again,"
+              " with --resolved PATH for each file resolved by hand.")
         return 1
     print(f"{followed['key']}: {source} -> {target}" + (" (planned)" if check else ""))
     return 0

@@ -32,6 +32,11 @@ classes:
   template:
     meaning: Content that defines this template itself.
     rule: Keep in the template repository only.
+upgrade:
+  review: >-
+    An entry with `upgrade: review` is a Human document that the paper owns
+    once it has started; upgrade-template.sh never changes it and prints the
+    release's diff for it to review, never as a conflict.
 entries:
   # Human plane and build entry
   - path: AGENTS.md
@@ -43,12 +48,15 @@ entries:
     note: Recreate as a relative symlink to AGENTS.md; never duplicate its content.
   - path: README.md
     scope: shared_with_adaptation
+    upgrade: review
     note: Rewrite for the paper (what it is, how to build it); keep the directory table and the build commands.
   - path: PAPER.md
     scope: shared_with_adaptation
+    upgrade: review
     note: The Human contract with the locked, bounded, free and unresolved cues; a paper fills it, from its brief through paper-brief-ingest.
   - path: DEV.md
     scope: shared_with_adaptation
+    upgrade: review
     note: Development process of a paper; keep the Issue, build, Overleaf and release sections and adapt names.
   - path: RELEASE_NOTES.md
     scope: template
