@@ -143,3 +143,29 @@ report with its evidence.
   follows `template` (this template) and upgrades from its `RELEASE_NOTES.md`.
 - Step 6 (Run setup, diagnostics): also run `make check`; the paper builds and
   their checks replace product runs.
+- Steps 2 to 5 (Fetch, Classify, Present, Apply), in a paper:
+  `bash .agents/scripts/upgrade-template.sh --check <TARGET_TAG>` fetches both
+  tags into `.project/build/template-upgrade/` and prints the plan: what step
+  5 applies, what it skips (`scope: template`, project-owned paths, and
+  `assets/`, `.project/` and `.env`, which it never touches), each local
+  conflict with a three-way merge proposal under
+  `.project/build/template-upgrade/proposals/`, each section to reconcile, and
+  the upgrade section of every release it crosses. Without `--check` it
+  applies the plan, never overwrites a conflict, and sets `template.version`
+  to the target when nothing conflicts; it exits 1 on a conflict. Run it again
+  after resolving one: a file that already holds the target's change counts as
+  applied. A paper without the command yet runs the target release's copy
+  once:
+
+  ```bash
+  clone=.project/build/template-upgrade/paper-agent-project-template.git
+  [ -d "$clone" ] || git clone -q --bare https://github.com/a-green-hand-jack/paper-agent-project-template "$clone"
+  bash <(git -C "$clone" show <TARGET_TAG>:.agents/scripts/upgrade-template.sh) <TARGET_TAG>
+  ```
+
+- The light path: when every release crossed is marked **Command only.** and
+  `--check` reports no conflict and no manual step (`Light path: yes`), the
+  upgrade is one Issue, one Herdr worktree, the command, `make check` and a
+  PR. It needs no migration map and no full-procedure session, and its
+  dispatch can use the low tier. Otherwise the full procedure applies, and
+  the command's plan is the start of its migration map.

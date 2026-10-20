@@ -148,6 +148,9 @@ entries:
   - path: .agents/scripts/migrate-project.rules
     scope: shared_with_adaptation
     note: Teardown rules for the .project/ entries setup-project.sh creates (build is dropped); a paper adds a line for each entry it creates.
+  - path: .agents/scripts/upgrade-template.sh
+    scope: shared
+    note: Applies a template release's mechanical changes by template-upgrade step 5 and prints the rest; replaced whole on upgrade.
   - path: .agents/scripts/reference-integrity/
     scope: shared
     note: Locked dependencies of the optional reference checks (bibtex-updater, pybtex) and their licence inventory.
@@ -156,7 +159,7 @@ entries:
     note: Unit tests of the shared scripts; a paper adds tests only for its own scripts.
   - path: .agents/tests/test_adoption_states.py
     scope: template
-    note: Builds the adoption states this template documents from its shipped files and checks them against the newest RELEASE_NOTES.md entry; a paper made from the template deletes it.
+    note: Builds the adoption states this template documents from its shipped files, checks them against the newest RELEASE_NOTES.md entry and upgrades a fresh paper from v0.4.1 to them; a paper made from the template deletes it.
   - path: .project/
     scope: project
     note: Worktree-local state is never copied into a new repository template.
