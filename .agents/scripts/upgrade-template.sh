@@ -4,28 +4,33 @@
 #
 #   upgrade-template.sh [--check] [--resolved PATH]... TARGET_TAG
 #
-# It reads the followed template and its version from the registry (step 1),
-# fetches both tags into .project/build/template-upgrade/<name>.git (offline when
-# both are there) and, for each path changed between them, uses the target
-# release's registry (the source release's for a removed path):
+# It reads the followed template and its version from the registry (step 1:
+# template.upstream when present, otherwise template), fetches both tags into
+# .project/state/template-upgrade/<name>.git (offline once both are there) and,
+# for each path changed between them, uses the target release's registry (the
+# source release's for a removed path):
 #   - scope template: skipped; project-owned: left alone;
-#   - `upgrade: review` (a Human document the paper owns once it has started):
-#     never changed; the release's diff is printed for review;
+#   - `upgrade: review` (a file the project owns once it has started): never
+#     changed; the release's diff is printed for review;
+#   - `optional: true` and left out here: a local decision, kept; a new optional
+#     path is left for a manual decision;
 #   - shared: replaced above its `## In this repository` section when check 1
 #     passes; without a section, replaced whole when unchanged here and
 #     otherwise three-way merged with the source tag as base; added when new;
 #     removed when removed and unchanged here;
-#   - the registry: merged entry by entry; template.version (template.upstream.version
-#     in a derived template) is set to TARGET_TAG when nothing conflicts.
+#   - the registry: merged key by key and entry by entry. The `writing:` block
+#     is the project's own and never changes; the followed version
+#     (template.version, or template.upstream.version in a derived template) is
+#     set to TARGET_TAG only when nothing conflicts.
 # A local edit that the release's change overlaps, or an edit above the section,
 # is a conflict: it is never overwritten, it is reported, and a three-way merge
 # proposal is written under the clone's proposals/ directory. --resolved PATH
 # accepts PATH (the registry too) as resolved by hand once it has no conflict
 # markers left. assets/, .project/ and .env are never touched. It prints what it
 # applied, skipped, refused, left for review and for manual steps, including the
-# upgrade section of each release it crosses (RELEASE_NOTES.md at TARGET_TAG).
-# --check prints the same plan and changes nothing outside
-# .project/build/template-upgrade/.
+# upgrade section of each release it crosses (RELEASE_NOTES.md at TARGET_TAG),
+# and whether the light path applies. --check prints the same plan and changes
+# nothing outside .project/state/template-upgrade/.
 # Exit 0: done or planned without conflicts; 1: a conflict; 2: an error.
 #
 # A repository that does not have this script yet runs the target release's copy:
@@ -42,8 +47,10 @@ from pathlib import Path
 
 REGISTRY = ".agents/content-registry.yaml"
 SECTION = "## In this repository"
+STATE = ".project/state/template-upgrade"
 NEVER = ("assets/", ".project/")
 SHARED = ("shared", "shared_with_adaptation")
+OWN_KEYS = ("writing",)
 MARKERS = re.compile(rb"^(?:<{7}|>{7})(?: |$)", re.M)
 
 
@@ -150,26 +157,95 @@ def entry_of(path: str, registry: dict) -> dict:
     return best[2]
 
 
-def split_head(head: list[str]) -> tuple[list[str], list[str], list[str]]:
-    """The header before the template: block, the block, and the rest."""
-    start = next((i for i, line in enumerate(head) if line.rstrip() == "template:"), len(head))
-    end = next((i for i in range(start + 1, len(head)) if head[i].strip() and not head[i][0].isspace()), len(head))
-    return head[:start], head[start:end], head[end:]
+def head_keys(head: list[str]) -> tuple[list[str], dict[str, list[str]]]:
+    """The top-level keys of the head (which ends with `entries:`) in order,
+    each with its indented lines and the blank and comment lines before it."""
+    order: list[str] = []
+    blocks: dict[str, list[str]] = {}
+    pending: list[str] = []
+    key = None
+    for line in head:
+        match = re.match(r"^([A-Za-z_][\w-]*):", line)
+        if match:
+            key = match.group(1)
+            order.append(key)
+            blocks[key] = pending + [line]
+            pending = []
+        elif key is not None and line[:1].isspace() and line.strip():
+            blocks[key] += pending + [line]
+            pending = []
+        else:
+            pending.append(line)
+    return order, blocks
+
+
+OWN_LINE = re.compile(r"^(\s+(?:repository|version):)")
+
+
+def without_versions(lines: list[str]) -> list[str]:
+    """The template block without the values this repository records."""
+    return [OWN_LINE.match(line).group(1) if OWN_LINE.match(line) else line for line in lines]
+
+
+def merge_head(source: list[str], target: list[str], local: list[str], tag: str, report, conflict) -> list[str]:
+    """Merge the top-level keys before `entries:`. `writing:` is the project's
+    own; `template:` is compared without its repository and version values,
+    which keep their local values; every other key is taken from the target
+    when it is unchanged here, and is a conflict when both sides changed it."""
+    (_, before), (order, after), (mine_order, mine) = head_keys(source), head_keys(target), head_keys(local)
+    result = dict(mine)
+    keys = list(mine_order)
+    for position, key in enumerate(order):
+        if key in OWN_KEYS:
+            continue
+        old, new, here = before.get(key), after[key], mine.get(key)
+        if key == "template":
+            if here is None or old is None or without_versions(old) == without_versions(new):
+                continue
+            if without_versions(here) == without_versions(old):
+                own = {}
+                for line in here:
+                    if OWN_LINE.match(line):
+                        own.setdefault(OWN_LINE.match(line).group(1), []).append(line)
+                result[key] = [(own.get(OWN_LINE.match(line).group(1)) or [line]).pop(0)
+                               if OWN_LINE.match(line) else line for line in new]
+                report.applied(f"{REGISTRY}: template block as in {tag}")
+            elif without_versions(here) != without_versions(new):
+                report.manual(f"{REGISTRY}: the template block changed in {tag} and differs here; carry the"
+                              " change over by hand, keeping this repository's own lines")
+            continue
+        if here is None:
+            if old is None:
+                anchor = next((k for k in reversed(order[:position]) if k in keys), None)
+                keys.insert(keys.index(anchor) + 1 if anchor is not None else 0, key)
+                result[key] = new
+                report.applied(f"{REGISTRY}: {key} added")
+            elif old != new:
+                conflict(f"{REGISTRY}: {key} changed in {tag} and is missing here")
+        elif old is None:
+            if here != new:
+                conflict(f"{REGISTRY}: {key} is new in {tag} and differs here")
+        elif here == old and old != new:
+            result[key] = new
+            report.applied(f"{REGISTRY}: {key} as in {tag}")
+        elif here != old and here != new and old != new:
+            conflict(f"{REGISTRY}: {key} changed here and in {tag}; merge it by hand")
+    for key, old in before.items():
+        if key in after or key in OWN_KEYS or key not in mine or key == "entries":
+            continue
+        if mine[key] == old:
+            keys.remove(key)
+            report.applied(f"{REGISTRY}: {key} removed")
+        else:
+            conflict(f"{REGISTRY}: {key} removed in {tag} and changed here")
+    return [line for key in keys for line in result[key]]
 
 
 def merge_registry(source: dict, target: dict, local: dict, source_text: str, report, conflict) -> list[str]:
-    """Apply the entry changes between the two releases to the local registry,
-    entry by entry; scope template entries are never taken. A conflict keeps
-    the local text and goes to conflict()."""
-    head = local["head"]
-    outside = lambda registry: [split_head(registry["head"])[i] for i in (0, 2)]
-    if outside(source) != outside(target) and outside(local) != outside(target):
-        if outside(local) == outside(source):
-            before, _, after = split_head(target["head"])
-            head = before + split_head(local["head"])[1] + after
-            report.applied(f"{REGISTRY}: header as in {target['tag']}")
-        else:
-            conflict(f"{REGISTRY}: header changed here and in {target['tag']}; merge it by hand")
+    """Apply the changes between the two releases to the local registry, the
+    head key by key and the entries one by one; scope template entries are
+    never taken. A conflict keeps the local text and goes to conflict()."""
+    head = merge_head(source["head"], target["head"], local["head"], target["tag"], report, conflict)
     blocks = [dict(block) for block in local["blocks"]]
     index = {block["path"]: block for block in blocks}
     before = {block["path"]: block for block in source["blocks"]}
@@ -232,6 +308,15 @@ def parts(text: str) -> tuple[str, str | None]:
         above.pop()
     section = "".join(line + "\n" for line in lines[at:]) or None
     return "".join(line + "\n" for line in above), section
+
+
+def sectioned(path: str, entry: dict) -> bool:
+    """A file a project adapts in a trailing section (template-adoption step 5):
+    the SKILL.md of a skill, or a memory record, registered shared_with_adaptation."""
+    if scope_in(entry) != "shared_with_adaptation":
+        return False
+    return (entry["path"].startswith(".agents/skills/") and path == entry["path"] + "SKILL.md") or (
+        entry["path"] == path and path.startswith(".agents/memory/"))
 
 
 def slots(text: str) -> set[str]:
@@ -369,9 +454,16 @@ class Upgrade:
             return report.skipped(f"{path}: scope template")
         if field(entry, "upgrade") == "review":
             diff = git("diff", self.source, self.target, "--", path, cwd=self.clone)
-            return report.review((f"{path}: the paper's own (upgrade: review); the release's change:", diff))
+            return report.review((f"{path}: the project's own (upgrade: review); the release's change:", diff))
         if scope not in SHARED:
             return report.skipped(f"{path}: project-owned ({scope})")
+        if field(entry, "optional") == "true" and state is None:
+            if status == "A":
+                return report.manual(f"{path}: new optional content in {self.target}; adopt it with"
+                                     f" git -C {self.clone.relative_to(self.root)} show {self.target}:{path}"
+                                     " or leave it out (template-adoption step 3)")
+            if status == "M":
+                return report.skipped(f"{path}: optional and left out here (a local decision)")
         if "160000" in (old_mode, new_mode) or (state and state[0] == "other"):
             return report.manual(f"{path}: not a file here or in the template; compare it by hand")
         if status == "A":
@@ -415,7 +507,7 @@ class Upgrade:
             else:
                 self.write(path, new_mode, merged.encode())
                 report.applied(f"{path}: merged with the local text (three-way, no overlap)")
-            if path.endswith(".md"):
+            if sectioned(path, entry):
                 report.review((f"{path}: adapted here without a {SECTION} section; move the local text into"
                                f" one as additions keyed to their steps (template-upgrade step 5) and drop"
                                f" what the release covers, so that check 1 applies next time; the local"
@@ -454,7 +546,7 @@ def crossed_releases(notes: str, source: str, target: str) -> tuple[list[tuple[s
         f"RELEASE_NOTES.md at {target} has no `## {source}` entry; every older entry is listed"]
     crossed = []
     for tag, entry in entries[tags.index(target):]:
-        if tag == source or not re.match(r"v\d", tag):
+        if tag == source or (tag != target and not re.match(r"v\d", tag)):
             break
         match = re.search(r"^### Upgrading\b.*?\n(.*?)(?=^### |\Z)", entry, re.M | re.S)
         if not match:
@@ -500,7 +592,7 @@ def main(arguments: list[str]) -> int:
         print(f"{followed['key']} is already {target}")
         return 0
     name = re.sub(r"\.git$", "", repository.rstrip("/").rsplit("/", 1)[-1])
-    clone = root / ".project/build/template-upgrade" / f"{name}.git"
+    clone = root / STATE / f"{name}.git"
     fetch(clone, repository, (source, target))
     upgrade = Upgrade(root, clone, source, target, check, resolved)
     shutil.rmtree(upgrade.proposals, ignore_errors=True)
@@ -541,7 +633,7 @@ def main(arguments: list[str]) -> int:
           + (" (--check: nothing changed)" if check else ""))
     print(f"clone: {clone.relative_to(root)}")
     for title, key in (("Applied", "applied"), ("Skipped", "skipped"), ("Refused (conflicts)", "refused"),
-                       ("Review (left to the paper; never conflicts)", "review"), ("Manual", "manual")):
+                       ("Review (left to the project; never conflicts)", "review"), ("Manual", "manual")):
         print(f"\n{title}: {len(report.lists[key])}")
         for item in report.lists[key]:
             line, diff = item if key == "review" else (item, "")

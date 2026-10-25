@@ -27,7 +27,7 @@ CALLER_VARIABLES = ("PAGE_BUDGET", "BUILD_DIR", "MAKEFLAGS", "MAKELEVEL", "MFLAG
 ENTRIES = 100
 # The release a paper is upgraded from with upgrade-template.sh.
 UPGRADE_SOURCE = "v0.4.1"
-CLONE = ".project/build/template-upgrade/paper-agent-project-template.git"
+CLONE = ".project/state/template-upgrade/paper-agent-project-template.git"
 
 # A stand-in for a venue's official kit, with the kind of text real kits carry
 # about authors; no real kit's text.
@@ -330,16 +330,19 @@ class UpgradeStateTests(unittest.TestCase):
 
     def test_the_upgrade_reaches_a_fresh_paper_of_this_release(self) -> None:
         """Every path equals a paper started from this tree, except the
-        project-owned paper files and the Human documents marked
-        `upgrade: review`, which keep the paper's own text."""
+        project-owned paper files, the Human documents marked `upgrade: review`,
+        which keep the paper's own text, and optional content that is new in
+        this release, which the command leaves to a manual adoption."""
         self.assertEqual(self.upgrade.returncode, 0, self.upgrade.stdout + self.upgrade.stderr)
         upgraded, expected = tree(self.paper), tree(self.expected)
         registry = yaml.safe_load((ROOT / ".agents/content-registry.yaml").read_text(encoding="utf-8"))
         owned = {entry["path"] for entry in registry["entries"] if entry.get("upgrade") == "review"}
+        optional = tuple(entry["path"] for entry in registry["entries"] if entry.get("optional"))
         differing = {path for path in upgraded.keys() | expected.keys() if upgraded.get(path) != expected.get(path)}
         for path in sorted(differing):
             with self.subTest(path=path):
-                self.assertTrue(path.startswith("paper/") or path in owned, self.upgrade.stdout)
+                new_optional = path not in upgraded and path.startswith(optional)
+                self.assertTrue(path.startswith("paper/") or path in owned or new_optional, self.upgrade.stdout)
                 self.assertEqual(upgraded.get(path), self.before.get(path))
 
     @unittest.skipIf(shutil.which("latexmk") is None or shutil.which("pdftotext") is None, "make check builds the paper")

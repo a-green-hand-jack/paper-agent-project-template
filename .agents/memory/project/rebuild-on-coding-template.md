@@ -1,7 +1,7 @@
 ---
 name: rebuild-on-coding-template
 date: 2026-10-20
-source: Issue #156, the maintainer's decisions D1 to D8 on it, and dev at de691d9 (v0.3.1 and #153)
+source: Issue #156, the maintainer's decisions D1 to D8 on it, and dev at de691d9 (v0.3.1 and #153); Issue #185 (upstream v0.1.19)
 scope: project
 applies_to: this template repository's v0.4.0 layout, and the downstreams that move to it from template-sync
 status: active
@@ -127,6 +127,22 @@ New `.agents/` paths: `content-registry.yaml`, `memory/`, `references/` and
 | `memory/project/harvest-*.md` | rejected | The coding template's own records. |
 | `memory/ENTRY_TEMPLATE.md`, `knowledge/ENTRY_TEMPLATE.md` | adopted | Unchanged. |
 | `memory/**/AGENTS.md`, `knowledge/**/AGENTS.md` | adapted | Same rules, indexes rewritten for this repository. |
+
+### Upstream v0.1.19 (Issue #185)
+
+The upgrade from `v0.1.13` to `v0.1.19` crossed six releases. The command
+applied the shared files; these are the decisions it left to this repository.
+
+| Upstream content | Class | Reason |
+| --- | --- | --- |
+| `scripts/upgrade-template.sh` | adopted | Byte-identical to the release; the local copy's differences (state under `.project/build/`, any `.md` file as a sectioned file) are gone, and its clone and proposals now live in `.project/state/template-upgrade/`. |
+| `scripts/probe-credentials.sh`, `skills/shared/credential-setup/`, `knowledge/shared/credential-inventory.md` | adopted | They go with `llm-credentials`. This repository keeps no root `credentials.yaml`, because nothing it ships calls an LLM provider; the probe skips. |
+| `memory/shared/host-files-owned-by-running-user.md`, `look-at-the-artifact-before-concluding.md`, `provider-cost-routing.md`, `screen-with-scriptable-fakes.md`, `speed-and-parallelism-by-measurement.md`, `skills/shared/agent-communication/` | adopted | `shared`. |
+| `memory/shared/serve-the-coding-agent.md` | rejected | Optional. A paper keeps no run records or usage accounting to name in its five slots. |
+| `memory/shared/docker-objects-prefixed-and-removed.md`, `skills/shared/long-running-supervision/` and the product release skeleton (`pyproject.toml`, `Dockerfile`, `install.sh`, `.dockerignore`) | rejected | Unchanged from v0.1.13; the command keeps a rejected `optional: true` path out. |
+| `.github/workflows/template-check.yml` | adopted | `issue-workflow` `<CI>` is `yes`; `<LOCAL_CHECK>` is `make check` plus the steps the workflow adds. |
+| `writing:` registry block | left out | The block is the repository's own; none is declared, so each file keeps its language. |
+| `memory/project/harvest-*.md`, `template-work-runs-on-pi-deepseek.md`, `skills/template-harvest/`, `tests/test_template_*.py`, `RELEASE_NOTES.md` | rejected | The coding template's own records, tests and history (`scope: template` or project-owned there). |
 
 ### Product plane: `paper/`
 

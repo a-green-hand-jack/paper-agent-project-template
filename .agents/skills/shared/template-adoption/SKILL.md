@@ -33,11 +33,24 @@ example assets or project-specific memory and knowledge.
    each record has a destination and front matter.
    If the repository calls LLM providers, from its own code, agent CLIs or
    third-party tools it runs, map the shared `llm-credentials` and
-   `third-party-llm-compat-patches` memory records and the
-   `gpt5-strict-backend-requests` knowledge record together: adapt the
-   credential parameters, locate any local edits to third-party tools and move
-   them into the repository as patches, and keep the knowledge record's date and
-   refresh condition. Skip them when the project calls no LLM.
+   `third-party-llm-compat-patches` memory records, the `credential-setup`
+   skill and the `credential-inventory` and `gpt5-strict-backend-requests`
+   knowledge records together: adapt the credential parameters, locate any
+   local edits to third-party tools and move them into the repository as
+   patches, and keep the knowledge records' dates and refresh conditions. Map the credentials the project uses into a
+   `credentials.yaml` (names only; a first draft can list the variable names in
+   `.env.example`) and the device's inventory rows they need. Skip them when
+   the project calls no LLM.
+   Map the optional content the registry marks `optional: true` as adopted or
+   rejected; a rejected path is left out, and `template-upgrade` keeps it out.
+   Decide `.github/workflows/template-check.yml` with the `issue-workflow`
+   `<CI>` slot: adopted when it is `yes`, rejected when it is `no`. Either way
+   fill `<LOCAL_CHECK>` with the `DEV.md` check commands; CI only marks the PR.
+   Map the writing conventions (`issue-workflow`, "Writing conventions"): write
+   the maintainer's working language and Issue opening sections in the
+   registry's `writing:` block, or leave the block out when nothing is
+   declared. Map the template's Issue and PR forms as adopted, or adapted to the
+   declared sections in the repository's own forms.
    Map the optional product release skeleton (`pyproject.toml`, `Dockerfile`,
    `install.sh`, `.dockerignore`) as adopted, adapted, preserved or a local
    conflict; never overwrite an existing product build entrypoint.
@@ -104,13 +117,19 @@ example assets or project-specific memory and knowledge.
    migrates each one, one `NAME|ACTION|WHY` line per entry: `copy`, `drop` with
    the reason it may be left behind, or `login` for a link to the canonical
    checkout's login directory (`llm-credentials`; the link is dropped and a real
-   copy blocks). The template ships neither file, so `template-upgrade` keeps
+   copy blocks). `NAME` may be a shell wildcard for a class of entries, such as
+   `plan-*.md|copy|`; it cannot contain `/`, be a `login`, or match an entry the
+   template handles, and an exact name beats a wildcard. The template ships neither file, so `template-upgrade` keeps
    both. Rewrite the other
    `shared_with_adaptation` files (`AGENTS.md`, the registry, product skeletons)
    for the repository.
 6. Run the target repository's setup, diagnostics, CLI entrypoints and relevant
    seam checks. Confirm that product payloads do not include `.agents/`, secrets
-   or worktree-local state.
+   or worktree-local state. In a repository that had only `main`, `dev` is
+   created by the maintainer with `init-branches.sh` after the adoption merges;
+   until then `diagnose-environment.sh` reports the three branch-model checks
+   (local `dev`, `origin/dev`, GitHub default branch) as expected warnings,
+   and they do not fail the adoption.
 7. Report adopted files, adapted files, preserved files, validation evidence and
    unresolved decisions. Leave commit and PR publication to the user's workflow.
 
@@ -130,16 +149,18 @@ and the coding template in `template.upstream`.
   [`one-source-three-builds`](../../../memory/shared/one-source-three-builds.md),
   and any `template-sync` state to this skill (`RELEASE_NOTES.md` explains the
   move from `template-sync`). A paper made from this template records only this
-  template and removes the `upstream` block.
+  template and removes the `upstream` block. The optional content of the
+  coding template is mapped as follows: `llm-credentials`,
+  `third-party-llm-compat-patches`, `credential-setup`, `credential-inventory`
+  and `gpt5-strict-backend-requests` are adopted together for the optional
+  `image-to-editable-ppt` CLI, without a `credentials.yaml`; the product
+  release skeleton, `docker-objects-prefixed-and-removed`,
+  `run-settings-from-config` and `serve-the-coding-agent` are rejected, because
+  a paper starts no container, has no product run and keeps no run records or
+  usage accounting; `template-check.yml` is adopted (`<CI>` is `yes`) with
+  `<LOCAL_CHECK>` set to the `DEV.md` check commands; the registry has no
+  `writing:` block, and the Issue and PR forms are adopted as shipped.
 - Step 6 (Run the target repository's setup): the acceptance commands are
   `bash .agents/scripts/setup-worktree.sh`,
   `bash .agents/scripts/diagnose-environment.sh`, `make pdf`, `make blind`,
   `make submission` and `make check`, with `git status --short` empty afterwards.
-  A repository that adopts from `main` has no `dev` until the maintainer runs
-  `bash .agents/scripts/init-branches.sh` after the merge, so until then
-  `diagnose-environment.sh` exits 1 on its three branch-model lines, and only
-  on them: `FAIL local dev branch`, `FAIL origin/dev branch` and
-  `FAIL GitHub default branch: main` (the last one only where `gh` is
-  authenticated; otherwise that line is a `skip`). This is expected; every
-  other line must pass. Creating `dev` or changing the default branch is the
-  maintainer's step, not the Issue session's.

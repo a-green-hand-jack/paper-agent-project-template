@@ -170,10 +170,10 @@ class UpgradeTemplateTests(unittest.TestCase):
                      "shared/edited.txt: merged with the local text (three-way, no overlap)",
                      "shared/overlap.txt: changed here and in v3; merge proposal with conflict markers:",
                      "Refused (conflicts): 1",
-                     "README.md: the paper's own (upgrade: review); the release's change:",
+                     "README.md: the project's own (upgrade: review); the release's change:",
                      "    +Start here, then run init.",
-                     "DEV.md: the paper's own (upgrade: review)",
-                     ".agents/tools/AGENTS.md: adapted here without a ## In this repository section;",
+                     "DEV.md: the project's own (upgrade: review)",
+                     ".agents/tools/AGENTS.md: merged with the local text (three-way, no overlap)",
                      "assets/README.md: changed in v3; this command never touches it",
                      "shared/skill.md: reconcile its ## In this repository section (step 1",
                      "v3: command only",
@@ -204,7 +204,7 @@ class UpgradeTemplateTests(unittest.TestCase):
         self.assertNotIn("TEMPLATE.md", registry)
         self.assertEqual(self.version(root), "v1")
 
-        proposal = root / ".project/build/template-upgrade/proposals/shared/overlap.txt"
+        proposal = root / ".project/state/template-upgrade/proposals/shared/overlap.txt"
         self.assertEqual(proposal.read_text(encoding="utf-8"), "<<<<<<< here\ny\n=======\nz\n>>>>>>> v3\n")
         shutil.copyfile(proposal, root / "shared/overlap.txt")
         result = self.upgrade(root, "--resolved", "shared/overlap.txt", "v3")
@@ -229,7 +229,7 @@ class UpgradeTemplateTests(unittest.TestCase):
         result = self.upgrade(root, "v3")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Refused (conflicts): 0", result.stdout)
-        self.assertIn("Review (left to the paper; never conflicts): 3", result.stdout)
+        self.assertIn("Review (left to the project; never conflicts): 2", result.stdout)
         read = lambda name: (root / name).read_text(encoding="utf-8")
         self.assertEqual((read("README.md"), read("DEV.md")), (OWN_README, OWN_DEV))
         self.assertEqual(read(".agents/tools/AGENTS.md"), INDEX.format(rules="Rules, revised.") + LOCAL_INDEX_LINE)
@@ -246,7 +246,7 @@ class UpgradeTemplateTests(unittest.TestCase):
         result = self.upgrade(root, "v3")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Light path: yes", result.stdout)
-        self.assertIn("README.md: the paper's own (upgrade: review)", result.stdout)
+        self.assertIn("README.md: the project's own (upgrade: review)", result.stdout)
         self.assertEqual((root / "shared/edited.txt").read_text(encoding="utf-8"), "a\nb\nC\n")
         self.assertEqual((root / "shared/skill.md").read_text(encoding="utf-8"), SKILL["v3"])
         self.assertEqual(self.version(root), "v3")

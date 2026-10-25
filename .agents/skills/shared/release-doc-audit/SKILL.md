@@ -27,7 +27,7 @@ one (`v0.4.0`).
 1. Confirm the target release identity and version record:
 
    ```bash
-   test -n "${TARGET_TAG:?set TARGET_TAG, for example v0.1.13}"
+   test -n "${TARGET_TAG:?set TARGET_TAG, for example v0.1.15}"
    RELEASE_HEADING="${RELEASE_HEADING:-^## ${TARGET_TAG//./\\.}([[:space:]]|\$)}"
    grep -nE "$RELEASE_HEADING" RELEASE_NOTES.md
    sed -n '/^template:/,/^[^[:space:]]/p' .agents/content-registry.yaml
@@ -58,6 +58,31 @@ one (`v0.4.0`).
    to the target tag or use an explicit placeholder, and must distinguish the
    template repository's release notes from a downstream project's own release
    notes.
+
+   A template that other repositories upgrade from (this template, or a
+   derived template) also checks the upgrade section of the release entry:
+   `### Upgrading ...` must start with `**Command only.**` or list numbered
+   manual steps, because `upgrade-template.sh` prints it for every release it
+   crosses (`template-upgrade`, "Light path"). Before the release heading
+   exists, pass `Unreleased` instead of the tag. A project that is not a
+   template skips this check.
+
+   ```bash
+   python3 - "$TARGET_TAG" <<'PY'
+   import re, sys
+   tag = sys.argv[1]
+   notes = open("RELEASE_NOTES.md", encoding="utf-8").read()
+   entry = next((e for e in re.split(r"^## ", notes, flags=re.M)[1:] if e.split(None, 1)[0] == tag), None)
+   if entry is None:
+       raise SystemExit(f"RELEASE_NOTES.md has no `## {tag}` entry")
+   section = re.search(r"^### Upgrading\b[^\n]*\n(.*?)(?=^### |\Z)", entry, re.M | re.S)
+   body = section.group(1).strip() if section else ""
+   if not body.startswith("**Command only.**") and not re.search(r"^\d+\. ", body, re.M):
+       raise SystemExit(f"`## {tag}`: the `### Upgrading ...` section must start with"
+                        " **Command only.** or list numbered manual steps")
+   print(f"{tag}: upgrade section marked")
+   PY
+   ```
 
 4. Verify every path named by a skill or document exists, and verify every
    registry entry points to an existing path. For a quick registry-path check:
@@ -97,12 +122,10 @@ the coding-template tag it follows. A paper made from it tags paper releases
 heading per release in its own `RELEASE_NOTES.md`.
 
 - Step 3 (Check release instructions), for this template's own releases: the
-  `## <tag>` entry has an "Adoption states" table naming, per adoption state,
-  the `make release-check` steps expected to fail, and its
-  `### Upgrading a paper from <previous tag>` section says what a paper on the
-  previous release must do: it starts with **Command only.** when
-  `upgrade-template.sh` alone completes the upgrade, or lists the manual steps
-  that remain. Run
+  upgrade-section check above applies to every `## <tag>` entry, whose section
+  is `### Upgrading a paper from <previous tag>`. The entry also has an
+  "Adoption states" table naming, per adoption state, the `make release-check`
+  steps expected to fail. Run
   `python3 -m unittest discover -s .agents/tests -p 'test_adoption_states.py'`;
   it builds each state from the release candidate and checks the table, checks
   that every entry after v0.4.0 marks its upgrade section one way or the
