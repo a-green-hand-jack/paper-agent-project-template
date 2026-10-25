@@ -13,8 +13,16 @@ Inherited from `coding-agent-project-template`, replaced whole by
 - `setup-worktree.sh`, `teardown-worktree.sh`, `migrate-assets.sh` — set up,
   migrate and retire a worktree's `.project/` state.
 - `diagnose-environment.sh`, `inspect-state.sh` — read-only diagnostics.
+- `probe-credentials.sh` — `--check` reads the device inventory and the
+  project's `credentials.yaml` and prints a status line per credential; it
+  skips here, where no `credentials.yaml` is kept.
 - `init-branches.sh` — create `dev` and make it the default branch.
 - `new-agent-prompt.sh` — the hand-off prompt for an Issue session.
+- `upgrade-template.sh` — `[--check] [--resolved PATH]... TARGET_TAG`: the
+  mechanical part of `template-upgrade` from the registry's followed version
+  (`template.upstream.version` here), with conflicts refused and reported and
+  the `upgrade: review` documents left for review; its clone and merge
+  proposals stay in `.project/state/template-upgrade/`.
 
 This repository's own:
 
@@ -33,11 +41,6 @@ This repository's own:
   structure, indexes, registry entries and vendored-file hashes.
 - `overleaf-sync.sh` — `status`, `push` and `pull` between `paper/` and an
   Overleaf project.
-- `upgrade-template.sh` — `[--check] [--resolved PATH]... TARGET_TAG`: the
-  mechanical part of `template-upgrade` (step 5) from the registry's
-  `template.version`, with conflicts refused and reported and the
-  `upgrade: review` documents left for review; its clone and merge proposals
-  stay in `.project/build/template-upgrade/`.
 - `check-reference-integrity.py`, `reference-evidence.py` — the offline
   reference gate and the citation-support records; `check-bibtex-format.py`,
   `check-reference-metadata.py`, `check-reference-corrections.py` — the optional

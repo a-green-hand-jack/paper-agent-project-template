@@ -61,13 +61,21 @@ behavior only in development material.
 - Before writing a visible Issue, PR, push or release, check the repository's
   visibility. Public or private, never write credentials, private data,
   machine-local absolute paths or unredacted logs.
+- Write Issues, PRs, comments and the Human documents in the working language
+  declared by `writing.language` in `.agents/content-registry.yaml`, and open an
+  Issue body with the sections of `writing.issue_sections`; with no declaration
+  keep each file's own language. Shared template text (above a
+  `## In this repository` section) keeps the template's language; do not
+  translate it.
 
 ## Context and state
 
 Every worktree first runs `.agents/scripts/setup-worktree.sh`. All local state
 goes in that worktree's `.project/`. An external asset has an `assets/` link
 and an entry in `assets/MANIFEST.yaml`. Credentials are injected only by path
-or runtime environment, and never written into Git, logs or the manifest.
+or runtime environment, and never written into Git, logs or the manifest; a
+project that calls LLM providers lists the credentials it needs, by name only,
+in a root `credentials.yaml` (`llm-credentials`).
 
 ## Evidence
 

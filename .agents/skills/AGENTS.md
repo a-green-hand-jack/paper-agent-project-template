@@ -13,10 +13,15 @@ Never load the whole family.
 
 Inherited from `coding-agent-project-template`:
 
+- `shared/agent-communication/` — route a handoff or follow-up between Herdr
+  panes and agent sessions through each agent's native transport.
 - `shared/asset-lifecycle/` — keep external assets, including result tables
   and figure data from code repositories, linked and in the manifest.
 - `shared/cli-first-operations/` — operate through the public entry points
   (`make`, `.agents/scripts/`), never through ad hoc wrappers.
+- `shared/credential-setup/` — the steps that apply `llm-credentials`: link
+  the device's shared file, log in once per canonical checkout, keep values out
+  of every output.
 - `shared/issue-workflow/` — Issue worktrees, dispatch by difficulty, merge
   and close-out.
 - `shared/project-memory-governance/` — classify, register and clean memory,

@@ -1,7 +1,7 @@
 ---
 name: llm-credentials
 date: 2026-10-15
-source: Issue #23 (policy); Issue #27 (per-canonical-checkout decision by the template maintainer); Issue #31 (safe re-login); Issue #59 (no credentials in command-line arguments)
+source: Issue #23 (policy); Issue #27 (per-canonical-checkout decision by the template maintainer); Issue #31 (safe re-login); Issue #59 (no credentials in command-line arguments); Issue #70 (inventory, probes and credentials.yaml); Issue #87 (steps moved to credential-setup, formats to credential-inventory)
 scope: shared
 applies_to: repositories whose code, tools or agents call LLM providers with API keys, tokens or OAuth logins
 status: active
@@ -11,8 +11,16 @@ superseded_by: null
 
 # Manage LLM credentials across projects
 
+The steps that apply these decisions are in
+[`../../skills/shared/credential-setup/SKILL.md`](../../skills/shared/credential-setup/SKILL.md);
+the formats of `inventory.yaml` and `credentials.yaml` and what
+`probe-credentials.sh` checks are in
+[`../../knowledge/shared/credential-inventory.md`](../../knowledge/shared/credential-inventory.md).
+
 Related: [`third-party-llm-compat-patches.md`](third-party-llm-compat-patches.md)
-(compatibility changes to third-party LLM tools) and
+(compatibility changes to third-party LLM tools),
+[`provider-cost-routing.md`](provider-cost-routing.md) (which source, provider
+and model a check uses) and
 [`../../knowledge/shared/gpt5-strict-backend-requests.md`](../../knowledge/shared/gpt5-strict-backend-requests.md)
 (request shapes strict backends reject). Read them together when a project
 calls an LLM provider or relay.
@@ -28,9 +36,8 @@ calls an LLM provider or relay.
 2. **Refreshing, non-shareable logins are made once per project, in the
    canonical checkout's `.project/`.** This covers the Codex ChatGPT login
    (`auth.json`), the Claude Code interactive login and OAuth logins of other
-   agent CLIs. Each project logs in itself, for example
-   `CODEX_HOME=<login dir> codex login --device-auth`, into a Git-ignored
-   directory `CREDENTIAL_DIR` under the canonical checkout's `.project/`. The
+   agent CLIs. Each project logs in itself, into a Git-ignored directory
+   `CREDENTIAL_DIR` under the canonical checkout's `.project/`. The
    project's worktrees link to that directory and never log in again. Never
    link, copy, snapshot-restore or lend a login to another project.
 3. **The project stays self-contained.** Code, configuration and documentation
@@ -46,6 +53,16 @@ calls an LLM provider or relay.
    environment) or through the tool's own environment or configuration channel
    (for git headers, `GIT_CONFIG_COUNT`, `GIT_CONFIG_KEY_<n>` and
    `GIT_CONFIG_VALUE_<n>` instead of `git -c http.extraHeader=...`).
+5. **Every credential is known by name, never by value.** Each device keeps an
+   `inventory.yaml` beside the shared file, mode 0600, with one row per variable
+   of the shared file and its empty placeholders marked. A project keeps a
+   tracked `credentials.yaml` that names the rows it needs. A read-only probe
+   reads a value in its own process and prints only a status line.
+6. **Account-bound settings that are not secret belong to the inventory row.**
+   Its `endpoint` and `scope` are authoritative. A project overrides them on one
+   machine only in the ignored `CREDENTIAL_DIR/overrides.env` and names the
+   override in `credentials.yaml`. A knowledge record about a provider cites the
+   inventory row by variable name and does not repeat its endpoint or scope.
 
 ## Why
 
@@ -62,14 +79,23 @@ Adopters that passed keys as `docker run -e KEY=<value>` or a header through
 arguments are world-readable in `ps` while a process's environment is readable
 only by its owner and root.
 
+A shared file of bare `KEY=value` lines left agents unable to say what a
+device holds without reading it. Two empty placeholders were taken for usable
+keys; one key worked only on its account's own endpoint, one could generate but
+not list models, and a used-up monthly budget answered `401 api_key_expired`,
+indistinguishable from a broken key. Those facts, and which tool reads a key
+under which name, ended up in Issue comments. Facts about a credential belong to
+the credential, once per device, so that every project reads the same ones.
+
 The worktrees of one project are one consumer. Each reads the same login through
 its link, so a refresh made in one session is seen by all of them. A login per
 worktree would need a new login for every worktree and would be lost with it.
 
 ## Apply
 
-Each project fills two parameters in the `## In this repository` section at the
-end of this record (see `template-adoption` step 5):
+Each project fills two parameters, and writes its own additions to a step of
+`credential-setup`, in the `## In this repository` section at the end of this
+record (see `template-adoption` step 5):
 
 - `SHARED_CREDENTIAL_FILE`: the device's shared file, taken from user-level
   configuration. If the device has none, the project runs without it.
@@ -77,41 +103,7 @@ end of this record (see `template-adoption` step 5):
   checkout's `.project/` that holds the symlink to the shared file and the
   project's own logins. This project uses `credentials`.
 
-Then, in the canonical checkout:
-
-1. Link `CREDENTIAL_DIR/<name>` to `SHARED_CREDENTIAL_FILE`; reference only the
-   link from project code and configuration. `.env.example` names the link or
-   the variables, never a value.
-2. Log in each refreshing CLI once with its home pointed into `CREDENTIAL_DIR`.
-   When a login stops working, log in again in the canonical checkout; do not
-   restore an older copy.
-3. Before logging in again, check that the login file in the credential home (for
-   example `auth.json`) is a regular file and not a symlink. If it is a link,
-   stop and report; do not log in through it, because the CLI may write the new
-   login into the file the link points to, which another consumer owns. Rename
-   the failed login in place (for example to `auth.json.failed`) instead of
-   deleting or overwriting it, so the evidence of what went wrong is kept.
-   Agents never create, edit, copy or restore login files. They report the
-   failure and the exact login command, and the maintainer logs in interactively.
-   This check rests on the CLI writing through a link. A CLI that replaces a link
-   atomically (writes a new file and renames it over the path) would instead
-   swap the link for a regular file and leave the target untouched; if a login
-   shows that, the premise is wrong for that CLI and this point needs revising.
-4. Start sandboxes and subprocesses with the selected variables only, passed by
-   name or through the tool's own channel; check that no credential value
-   appears in a command line, a script's argument list or a logged command.
-5. Before writing a tracked file, commit, Issue, PR or log, check that it holds
-   no credential value and no path outside the project.
-
-In each worktree of the project, the same `CREDENTIAL_DIR` is a link to the
-canonical checkout's directory. `setup-worktree.sh` creates that link when the
-canonical checkout has the directory. A worktree never holds a login of its own,
-never logs in, and never restores a login from a snapshot. `migrate-assets.sh`
-(used by worktree teardown) drops the link and never copies a login; a real copy
-of a login inside a worktree blocks the migration until someone checks it by hand.
-A project whose setup hook links further login directories into `.project/` (the
-home of another agent CLI, a proxy's tokens) gives each one a `login` rule in
-`.agents/scripts/migrate-project.rules`, so teardown treats it the same way.
+Then follow `credential-setup` in the canonical checkout and in each worktree.
 
 ## In this repository
 
@@ -123,11 +115,20 @@ home of another agent CLI, a proxy's tokens) gives each one a `login` rule in
 The online reference audits (`.agents/scripts/_reference_env.py`) read the
 link `.project/credentials/.env` to the shared file, in a worktree through the
 `.project/credentials` link, and export only `BIBTEX_CHECK_MAILTO`,
-`OPENALEX_API_KEY` and `S2_API_KEY` from it (Apply step 4). A root `.env` with
-only those keys stays a fallback and wins over the link.
+`OPENALEX_API_KEY` and `S2_API_KEY` from it (`credential-setup` step 4). A root
+`.env` with only those keys stays a fallback and wins over the link.
 
 No script, build or check of this repository calls an LLM provider. The one
 shipped tool that can is the optional CLI fallback of `image-to-editable-ppt`
 (`editppt`), which reads `OPENAI_API_KEY`, `OPENAI_BASE_URL` and
-`PADDLE_OCR_TOKEN` from the environment; Apply step 4 governs how they reach
-it, and the skill's own section keeps its configuration inside `.project/`.
+`PADDLE_OCR_TOKEN` from the environment; `credential-setup` step 4 governs how
+they reach it, and the skill's own section keeps its configuration inside
+`.project/`.
+
+The credential inventory (decisions 5 and 6) is not adopted for use here: this
+repository keeps no root `credentials.yaml`, because nothing it ships calls an
+LLM provider and the reference audits take three optional keys by name from
+`.env.example`. `probe-credentials.sh --check` therefore skips, and the device's
+`inventory.yaml` still names the shared file's variables for the projects that
+do call providers. A paper that calls one adds `credentials.yaml` then
+(`credential-inventory` gives the format).

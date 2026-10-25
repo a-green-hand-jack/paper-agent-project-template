@@ -4,6 +4,104 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
+## v0.4.6
+
+Moves the coding template this one follows from `v0.1.13` to `v0.1.19`, and
+inherits its upgrade command as it is (#185).
+
+### Changed
+
+- `template.upstream.version` is `v0.1.19`; this template's own version line is
+  not part of the change. The six releases crossed add the upgrade command and
+  its light path (v0.1.14), the Issue session rule "a small real run is enough"
+  and `actions/checkout@v5` (v0.1.15), the credential inventory (v0.1.16 and
+  v0.1.17), wildcard rules for `migrate-project.rules`, the `<LOCAL_CHECK>`
+  slot and phased sub-Issues (v0.1.18), and hook review, the implementation and
+  delivery gates, `agent-communication` and the Herdr close-out recovery
+  (v0.1.19).
+- `.agents/scripts/upgrade-template.sh` is the upstream copy, byte for byte.
+  This template's own copy (#177, #182) is gone, and so are its differences:
+  the clone and the merge proposals live in `.project/state/template-upgrade/`
+  (they were in `.project/build/template-upgrade/`); an `optional: true` path
+  a repository left out stays out, and a new one is left for a manual
+  decision; the registry is merged key by key, with `entry_fields:` replacing
+  the top-level `upgrade:` key; a Markdown file adapted without a
+  `## In this repository` section is merged three ways, and "Review" no longer
+  proposes a section for it; the headings say "project", not "paper".
+- Shared content added: the skills `agent-communication` and (optional)
+  `credential-setup`, the knowledge record `credential-inventory` (optional),
+  `probe-credentials.sh`, and the memory records
+  `host-files-owned-by-running-user`, `look-at-the-artifact-before-concluding`,
+  `provider-cost-routing`, `screen-with-scriptable-fakes` and
+  `speed-and-parallelism-by-measurement`. `issue-workflow`,
+  `worktree-lifecycle`, `asset-lifecycle`, `llm-credentials`, the three
+  `issue-*` records and four scripts are replaced above their local sections.
+- Decisions for this repository, in the sections they belong to and in
+  `rebuild-on-coding-template`: `<CI>` stays `yes` and `<LOCAL_CHECK>` is
+  `make check` with the workflow's two script steps; there is no `writing:`
+  block; there is no `credentials.yaml`, so `probe-credentials.sh --check`
+  skips; `serve-the-coding-agent`, `docker-objects-prefixed-and-removed`,
+  `long-running-supervision` and the product release skeleton stay rejected.
+- `template-adoption`: the inherited text now says that the three branch-model
+  diagnostics warn while a repository adopts from a branch other than `main`;
+  this template's paragraph that called them an expected failure is gone.
+  `test_agent_content.py` checks the new behavior.
+- `test_upgrade_template.py` and `test_adoption_states.py` follow the upstream
+  command: its wording, its state directory, and new optional content, which an
+  upgraded paper adopts by hand and a fresh paper already has.
+
+### Adoption states
+
+Unchanged from v0.4.2. `make check` passes in every state below, and
+`make release-check` fails only on the steps named, for the reasons v0.4.2
+gives.
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.5
+
+1. Run this release's own copy of the command once, as `template-upgrade`
+   shows under "In this repository": `--check` first, then without it, then
+   `make check`. It replaces the skills, records and scripts above their
+   `## In this repository` sections, merges the registry, removes the registry's
+   top-level `upgrade:` key (`entry_fields:` replaces it) and sets
+   `template.version`. Later runs keep their clone in
+   `.project/state/template-upgrade/`; `.project/build/template-upgrade/` can
+   be deleted.
+2. The command lists two new optional items as manual: `credential-setup` and
+   `credential-inventory`. A paper that adopted `llm-credentials` adopts both
+   with the `git show` the command prints, because `llm-credentials` now points
+   to them for its steps and formats; a paper that left out `llm-credentials`
+   leaves both out. The inventory needs no `credentials.yaml` in a paper that
+   calls no LLM provider, and `probe-credentials.sh --check` then skips.
+3. In the paper's own `issue-workflow` section, rename `<POST_MERGE_CHECK>` to
+   `<LOCAL_CHECK>` and fill it with the `DEV.md` check commands whatever
+   `<CI>` is; add the new slots (`<AGENT_KINDS>`, `<PROVIDER_ARGS>`,
+   `<MODEL_SELECTION>`, `<EXCLUDED_MODELS>`, `<FALLBACK_AGENT>`,
+   `<WORKSPACE_PREFIX>`, `<MERGE_METHOD>`, `<PRE_MERGE_GATE>`). Move an
+   addition keyed to "Phased work" step 3 or 4 to step 4 or 5, and a "resolve
+   conflicts in the dev checkout" addition to the PR's own worktree. Check that
+   no addition overrides the hook review, the implementation and delivery
+   gates, the PR readiness gate or the Close-out recovery through Herdr's own
+   reopen and remove commands. A `gh pr checks` merge gate becomes
+   `<LOCAL_CHECK>`, with CI only noted.
+4. In the `llm-credentials` section, write an addition that was keyed to an
+   old Apply step as an addition to the same step of `credential-setup`
+   (steps 1 to 5 keep their numbers).
+5. In the `template-adoption` section, delete a paragraph that calls the three
+   branch-model diagnostics an expected failure; they are warnings now. The
+   `release-doc-audit` section's step 3 addition can drop what the new
+   upgrade-section check covers. The command also lists `asset-lifecycle` for
+   reconciliation because the new text has a second numbered list; its step 2
+   is unchanged.
+6. If a `migrate-project.rules` line has a `NAME` with `*`, `?` or `[`, read
+   `migrate-assets.sh`'s header once: such a `NAME` is a wildcard now.
+
 ## v0.4.5 — 2026-10-21
 
 Lets `upgrade-template.sh` complete the light path in a real paper: it no

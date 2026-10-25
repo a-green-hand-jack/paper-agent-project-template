@@ -11,10 +11,15 @@ stays `UNKNOWN`.
 
 Inherited from `coding-agent-project-template`:
 
+- [`credential-inventory.md`](credential-inventory.md) — the formats of the
+  device `inventory.yaml` and the project's `credentials.yaml`, and what
+  `probe-credentials.sh --check` and its probes check and print. Kept with
+  `llm-credentials`; this repository keeps no `credentials.yaml`.
 - [`gpt5-strict-backend-requests.md`](gpt5-strict-backend-requests.md) — the
   three GPT-5.x request shapes strict Responses backends reject, what to send
-  instead, and that a relay can hide the rejections. Kept with the two LLM
-  memory records it belongs to; no tool here sends such requests.
+  instead, that a relay can hide the rejections, and which common clients
+  produce them. Kept with the two LLM memory records it belongs to; no tool
+  here sends such requests.
 
 Papers:
 

@@ -72,17 +72,18 @@ class AgentContentChecks(unittest.TestCase):
         result = run(ROOT)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_adoption_names_the_diagnostics_that_fail_before_dev_exists(self) -> None:
-        # The inherited diagnostics fail until the maintainer creates dev after
-        # an adoption merges; template-adoption must name exactly those lines.
+    def test_adoption_diagnostics_only_warn_before_dev_exists(self) -> None:
+        # While an adoption branch has no dev anywhere, the inherited diagnostics
+        # warn about the three branch-model checks and do not fail
+        # (template-adoption step 6); this section must not say they fail.
         script = (ROOT / ".agents/scripts/diagnose-environment.sh").read_text(encoding="utf-8")
-        branch_checks = re.findall(r"FAIL ([^'(:]+?)(?::[^'(]*)? \(run \.agents/scripts/init-branches\.sh\)", script)
+        branch_checks = re.findall(r"branch_problem ['\"]([^'\":]+)", script)
         self.assertEqual(branch_checks, ["local dev branch", "origin/dev branch", "GitHub default branch"])
+        self.assertIn("branch_level=warn", script)
         skill = (ROOT / ".agents/skills/shared/template-adoption/SKILL.md").read_text(encoding="utf-8")
-        section = skill.split("\n## In this repository\n", 1)[1]
-        for name in branch_checks:
-            with self.subTest(check=name):
-                self.assertIn(f"`FAIL {name}", section)
+        shared, section = skill.split("\n## In this repository\n", 1)
+        self.assertIn("expected warnings", shared)
+        self.assertNotIn("FAIL local dev branch", section)
 
     def test_fixture_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
