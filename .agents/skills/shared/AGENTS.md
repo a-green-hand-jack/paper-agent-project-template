@@ -8,6 +8,17 @@ adaptations only in a trailing `## In this repository` section (see
 exactly `## In this repository`, not even in an example.
 Update the content registry when adding, renaming or retiring a shared skill.
 
+`issue-workflow/` owns acceptance write responsibility; `agent-communication/`
+owns transport, receipts, receive-time classification, recoverable terminal
+summaries and message cadence. Its `references/acceptance-scenarios.md` reviews
+their boundary; scenario review does not prove a real exchange.
+
+`development-writing/` owns the common principles for Issues, PRs, comments
+and commits, with neutral examples in `references/four-cases.md`.
+`release-doc-audit/` owns release narratives, rendered review and consistency
+checks, with release types in `references/release-types.md`. Concrete project
+history and examples stay outside these shared packages.
+
 ## Vendored third-party skills
 
 A third-party skill is vendored only under a licence that allows it, or with

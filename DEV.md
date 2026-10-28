@@ -27,9 +27,12 @@ open an Issue when a small change grows or raises a design question. Small
 changes are not committed or pushed automatically either; run the applicable
 checks and report the evidence.
 
-An Issue's branch starts from `dev` and is named `fix/issue-<N>-<slug>`,
+An Issue's branch starts from its declared target (default `dev`) and is named `fix/issue-<N>-<slug>`,
 `feat/issue-<N>-<slug>`, `docs/issue-<N>-<slug>` or `chore/issue-<N>-<slug>`.
-It returns to `dev` through a PR; `main` holds only released states. Overleaf
+Simple Issues return to `dev` through a PR. When a parent task needs combined
+acceptance, `issue-workflow` records the parent integration branch, child PR
+targets and the final PR to `dev`; child merges do not close the parent's
+acceptance duties. `main` holds only released states. Overleaf
 edits arrive on a `sync/overleaf-<commit>` branch made by
 `overleaf-sync.sh pull`.
 
@@ -39,18 +42,86 @@ on the way. A step only the maintainer can take is written as a concrete
 blocker that says what the maintainer must do. Build and release evidence goes
 into the Issue or PR; an agent's own summary does not replace it.
 
-Start an Issue with Herdr's native worktree command, from `dev`, and a
+Start an Issue with Herdr's native worktree command, from its declared target, and a
 separate agent session in a new pane; never switch branches in the current
 agent window. The new session first runs setup. The parent session can
 generate the first prompt, with the Issue link, branch, reading scope and
 acceptance:
 
 ```bash
-bash .agents/scripts/new-agent-prompt.sh 123 feat/issue-123-example
+bash .agents/scripts/new-agent-prompt.sh 123 feat/issue-123-example dev \
+  .project/state/coordinator-handoff.md
 ```
 
 If Herdr is unavailable, report the blocker instead of implementing in the
 current window. The `issue-workflow` skill covers start, merge and close-out.
+
+Use [`development-writing`](.agents/skills/shared/development-writing/SKILL.md)
+for Issues, PRs, comments and commits: explain the concrete change, keep current
+descriptions aligned with the final scope, and identify the version and
+conditions behind evidence. Existing Issue fields and PR sections remain the
+entry points; advisory prompts add no new required fields. The registry has no
+`writing:` declaration, so each file keeps its own language. Release narratives
+use `release-doc-audit` and retain this template's own release history.
+
+## Session identity and delivery
+
+Follow `issue-workflow` for caller identity and dispatch. Before controlling
+Herdr, match the tool process's allowlisted Herdr variables and native thread
+against live workspace, pane, agent and Git common-directory/worktree identity.
+For a new Codex dispatch, check the installed CLI supports `--no-daemon` before
+isolated startup, then have the worker independently verify its identity and
+explicitly acknowledge scope. Missing or stale context requires authorized
+read-only diagnosis; it does not authorize guessed IDs or shared service changes.
+The current `issue-workflow` adaptation retains this project's agent defaults;
+an explicitly authorized per-Issue dispatch records its actual agent, provider,
+model, effort and startup mode in Dispatch.
+
+Keep the task key, role, attempt and actual returned IDs with the claiming
+coordinator's address, allowed contacts/events and recovery duties in the local
+handoff file under `.project/state/`. Pass that file as the fourth argument
+above; keep private addresses out of Issues, PRs and tracked content.
+[`agent-communication`](.agents/skills/shared/agent-communication/SKILL.md)
+owns transport preflight and the distinct submitted, acknowledged and completed
+states. Check actual native queue reachability separately from startup or
+successful submission. Inspect a target's live status and styled input before
+deciding to send; a blocked target or real draft stops sending.
+
+Workers promptly report failures, blockers and responsibility transfers to
+their authorized coordinator. Combine implementation/acceptance, PR-created
+and exact-head evidence at the same checkpoint/version; keep routine progress
+local. A pure ACK ends its receipt chain. Unacknowledged events keep an owner,
+recovery pointer and bounded next action rather than repeated polling or
+heartbeats. These events do not grant commit, merge or publication permission.
+
+At each active checkpoint, first read the current summary and receipts, then
+classify received events before queries, replies or dispatch. Fold duplicates,
+covered earlier milestones and terminal events with no new duties into local
+records without repeated checks or completion reports. A matching head does
+not cover a new failure: retain changed risks and unfulfilled duties once,
+with evidence, owner and next action. Genuine new user instructions retain
+their authority; old authorization quoted in an event is not fresh approval.
+This is a session workflow, not a queue filter or background consumer.
+
+## Acceptance write responsibility
+
+Before checks read a shared checkout, record the exact inputs, acceptance
+owner, all writers, protected paths and allowed log/artifact outputs in
+`.project/state/`. Include a saved diff/content identity for uncommitted work;
+HEAD alone does not identify it. Every writer explicitly pauses those inputs,
+and the acceptance owner acknowledges the fixed version before checking.
+Neither the owner nor writers edit protected inputs during that interval.
+For this paper, the existing commands are `make check`, diagnostics and state
+inspection; build/check outputs remain under `.project/`. A separately immutable
+snapshot records its source and isolation instead of freezing the checkout.
+
+After checks exit, the acceptance owner records results and explicitly returns
+write responsibility; the receiver acknowledges taking it back before editing,
+committing or changing branches. New requests, drift, restart and elapsed time
+do not release the pause. A change requires ending or invalidating the old
+acceptance and stopping or isolating its checks before transfer and rechecking.
+Keep live handoff receipts separate from scenario reviews of duplicates, stale
+inputs and failed transports; one does not establish the other.
 
 ## Worktree lifecycle
 
@@ -66,7 +137,19 @@ state directories, checks tools and the asset manifest, and runs
 `.agents/scripts/setup-project.sh`, which creates `.project/build/` and
 reports the TeX tools. Never reuse another worktree's `.project/`.
 
-After the PR merges, do not delete the directory directly. First run:
+After the PR merges, do not delete the directory directly.
+
+Reconcile background acceptance, audits and promised follow-ups first. Retain
+the worktree while duties remain, or explicitly transfer them under existing
+authorization and obtain the successor's acknowledgement. Keep the current or
+terminal summary beside receipts in `.project/state/`: exact version, covered
+events and evidence, remaining duties/owners, risks, pending receipts, user-report
+status and recovery locations. After checks and owned processes have exited,
+the coordinator migrates and verifies that state and records its recovery
+destination before managed removal. Merge or idle status alone proves none of
+these duties complete.
+
+Then run:
 
 ```bash
 bash .agents/scripts/teardown-worktree.sh --migrate-to <canonical checkout>
@@ -310,7 +393,7 @@ coding template it follows in `template.upstream`:
 | Repository | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.5) | the coding template and the tag it follows (v0.1.13) |
+| this template | itself, its release (v0.4.5) | the coding template and the tag it follows (v0.1.25) |
 | a paper made from this template | this template, the adopted tag | none |
 
 A repository follows `template.upstream` when it has that field, and

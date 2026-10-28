@@ -11,7 +11,7 @@ template:
   # (README.md, "Start a paper").
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.19
+    version: v0.1.25
 default_scope: project
 matching: Most specific path wins; explicit entries override directory defaults.
 classes:
@@ -140,6 +140,9 @@ entries:
   - path: .agents/knowledge/shared/
     scope: shared
     note: Reusable sourced facts with a refresh condition; recheck before relying on them.
+  - path: .agents/knowledge/shared/agent-session-messaging.md
+    scope: shared
+    note: Dated native messaging/naming facts, Codex bootstrap and Herdr stale or missing caller-context observations; separates isolation, queue reachability and recovery evidence. Refresh before relying on changed client behavior.
   - path: .agents/knowledge/project/
     scope: project
     note: Facts owned by the destination, such as a workshop's rules.
@@ -183,13 +186,16 @@ entries:
   # Inherited skills (coding-agent-project-template)
   - path: .agents/skills/shared/worktree-lifecycle/
     scope: shared_with_adaptation
-    note: Adapt Herdr workspace names, setup commands, stop and monitor commands and repository state paths; retirement stops the worktree's own processes, migrates state and assets, verifies them, and only then removes the worktree; here .project/build/ is rebuildable and dropped at teardown.
+    note: Adapt Herdr workspace names and project commands; retire only after background acceptance and outstanding obligations are fulfilled or explicitly transferred with acknowledgement, then stop owned processes, migrate and verify state/assets, and remove the worktree; here .project/build/ is rebuildable and dropped at teardown.
   - path: .agents/skills/shared/issue-workflow/
     scope: shared_with_adaptation
-    note: Fill the adaptation slots for base branch, repository, agent kinds and their model families, agent kind and prefix, provider and model arguments, model selection and fallback order, dispatch tier models, effort arguments, excluded models, fallback agent, workspace label prefix, CI, product gate, archive and run commands, and the monitor and stop commands close-out uses; here the gate is make check.
+    note: Fill dispatch/lifecycle slots and task/role/attempt mappings, coordinator reporting boundaries and Codex caller identity/isolation checks. Protect acceptance inputs with writer pause and explicit return, reconcile covered events and preserve recovery summaries through migration. Simple Issues target dev; declared parent integration records child targets, final dev PR and acceptance duties; here the local gate includes make check and the DEV.md commands.
+  - path: .agents/skills/shared/development-writing/
+    scope: shared_with_adaptation
+    note: Common reader and evidence principles plus Issue, PR, comment and commit guidance; neutral examples in references. Uses writing.language by default for commits; any project-specific commit language or convention goes only in the trailing adaptation section. Historical project cases are not part of this shared package.
   - path: .agents/skills/shared/agent-communication/
     scope: shared
-    note: Route confirmed handoffs and follow-up messages through each agent's native transport; adapt only the destination's target resolution and state receipt paths.
+    note: Classify received backlog before queries or sends; retain covered outcomes, terminal summaries and late risks in existing event/receipt state. Resolve native capabilities before transport; distinguish submitted, acknowledged and completed. Keep pending ownership and bounded recovery. Message cadence combines milestones and prevents repeated completion reports and ACK loops; references and provider-free fixtures remain separate from live receiver evidence. Herdr is a conditional fallback, never receipt proof by itself.
   - path: .agents/skills/shared/project-memory-governance/
     scope: shared
     note: Generic classification, registration and cleanup procedure.
@@ -207,7 +213,7 @@ entries:
     note: This repository follows template.upstream; a paper follows this template and upgrades from its RELEASE_NOTES.md.
   - path: .agents/skills/shared/release-doc-audit/
     scope: shared_with_adaptation
-    note: Set RELEASE_HEADING to the destination's release-notes layout; the audit runs against the destination tree and target tag.
+    note: Write and visually review standalone release narratives; adapt audience/type, repository URL, publication surface/image hosting, release-note ownership and RELEASE_HEADING. Keep paper release identity, adoption-state checks and version/registry/path/upgrade audits; project history and examples stay outside shared packages.
   - path: .agents/skills/shared/asset-lifecycle/
     scope: shared_with_adaptation
     note: Adapt asset classes and storage roots; here result tables, figure data and reported numbers from code repositories.
@@ -318,6 +324,9 @@ entries:
   - path: .agents/memory/shared/product-state-root.md
     scope: shared_with_adaptation
     note: Fill STATE_MARKER, STATE_ENV and DEFAULT_ROOT; here the paper's build directory.
+  - path: .agents/memory/shared/project-positioning-before-layout.md
+    scope: shared
+    note: Establish users, deliverables, concepts and non-goals before mapping paths and reading directory contracts; product concepts govern layout, and adaptation cannot authorize a conflict.
   - path: .agents/memory/shared/provider-cost-routing.md
     scope: shared
     note: Ordinary tests and mechanical work use the cheapest token source and model that can judge them; a cheap run is still a real provider-backed run and never replaces a capability check; agent, provider, model and effort are explicit and recorded with what the run proves.

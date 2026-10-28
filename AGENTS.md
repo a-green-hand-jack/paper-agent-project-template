@@ -39,12 +39,16 @@ behavior only in development material.
 - Small changes in `dev` are not committed or pushed automatically either; run
   the applicable checks and report the evidence.
 - To start an Issue, do not switch branches in the current agent window.
-  Create the Issue worktree from `dev` with Herdr's native worktree command,
+  Create the Issue worktree from its declared target (default `dev`) with
+  Herdr's native worktree command,
   start a separate agent session in a new pane, run
   `bash .agents/scripts/setup-worktree.sh`, then generate the handoff prompt
   with `bash .agents/scripts/new-agent-prompt.sh <issue-number>`. If Herdr is
   unavailable, report the blocker; do not fall back to implementing in the
   current window.
+- Simple Issues start from and return to `dev`. A parent task that needs
+  combined acceptance may explicitly declare a parent integration branch,
+  child PR targets and the final PR to `dev` through `issue-workflow`.
 - Remove unnecessary rules before adding new ones.
 - Write no special cases for a particular role, task or benchmark.
 - Write no long comments or documents that repeat the code.

@@ -11,6 +11,9 @@ stays `UNKNOWN`.
 
 Inherited from `coding-agent-project-template`:
 
+- [`agent-session-messaging.md`](agent-session-messaging.md) — dated native
+  messaging, caller-identity and isolation capabilities; distinguish queue
+  submission, receiver acknowledgement and recovery evidence.
 - [`credential-inventory.md`](credential-inventory.md) — the formats of the
   device `inventory.yaml` and the project's `credentials.yaml`, and what
   `probe-credentials.sh --check` and its probes check and print. Kept with
