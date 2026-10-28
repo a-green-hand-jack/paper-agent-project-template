@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-[[ -n "${1:-}" ]] || { echo "usage: $0 ISSUE_NUMBER [BRANCH]" >&2; exit 2; }
+[[ -n "${1:-}" && $# -le 4 ]] || { echo "usage: $0 ISSUE_NUMBER [BRANCH] [TARGET_BASE] [COORDINATOR_HANDOFF]" >&2; exit 2; }
 issue=$1
 branch=${2:-}
+target_base=${3:-dev}
+coordinator_handoff=${4:-}
+if [[ -n "$coordinator_handoff" && ( ! -f "$coordinator_handoff" || ! -r "$coordinator_handoff" || ! -s "$coordinator_handoff" ) ]]; then
+  echo 'COORDINATOR_HANDOFF must be a readable, nonempty local file' >&2
+  exit 2
+fi
 if ! command -v gh >/dev/null 2>&1; then
   echo 'gh is required to load the Issue details' >&2
   exit 1
@@ -32,7 +38,8 @@ cat <<PROMPT
 Work on Issue #$number: $title
 
 Issue: $url
-Branch: $branch (create it from dev through Herdr's native worktree command)
+Branch: $branch (create it from $target_base through Herdr's native worktree command)
+PR target: $target_base (a parent integration target must be declared in the Issue)
 
 Start in the new worktree and run:
   bash .agents/scripts/setup-worktree.sh
@@ -43,7 +50,25 @@ Read AGENTS.md, .agents/AGENTS.md, the Issue, and the directly relevant
 receiving a handoff. Keep product, development and human documentation planes
 separate, and preserve unrelated changes.
 
+Confirm the handoff's identity mapping: stable project-issue-number task key,
+role and attempt; returned workspace/tab/pane IDs and actual labels; Herdr agent
+name and native session/thread ID. Align names where supported, keep Herdr's
+returned worktree path, and record an ID mapping when native naming is unavailable.
+Validate each complete Herdr agent name, including role/attempt suffix, against
+[a-z][a-z0-9_-]{0,31} (32 characters maximum) and live uniqueness before start/rename.
+Do not invent naming flags or rename sessions outside this Issue.
+
 Working rules for this session:
+- Before implementation, apply issue-workflow's Codex caller identity and
+  isolation check. Compare your own allowlisted HERDR identity variables,
+  repository/common Git dir and native thread with Herdr-returned identities;
+  record actual startup mode/model/provider/effort, then explicitly ACK scope.
+  For applicable Codex dispatches verify supported --no-daemon isolation.
+  Missing/stale context permits only authorized read-only diagnosis until
+  resolved; never fake variables or restart shared services as a default fix.
+  Missing native thread permits only the preflighted communication fallback;
+  test actual queue receipt separately, including after bootstrap. Startup,
+  corrected environment, submitted message and receiver ACK are distinct facts.
 - Before the first agent run, inspect every Herdr hook that will run (including
   SessionStart) and record a per-hook receipt under .project/state/. Approve
   only known, necessary hooks; stop on an unknown, changed, or uninspectable
@@ -80,12 +105,15 @@ Working rules for this session:
   reported for a separate Issue.
 - Other worktrees are not your concern. Parallel worktrees may change the same
   files; at merge the coordinator that claimed this Issue resolves conflicts
-  with the current dev in this worktree, itself or through you. Complete the
+  with the current $target_base in this worktree, itself or through you. Complete the
   Issue fully and do not narrow the change to avoid conflicts.
-- Merge implies close-out. Approval to merge the PR covers its close-out: right
-  after the verified merge the coordinator migrates .project/ and removes this
-  worktree without asking again, so archive results that cannot be rebuilt
-  before the merge.
+- Merge implies close-out. Approval to merge the PR covers its close-out: after
+  the verified merge, reconcile background acceptance, pending audits and
+  promised follow-ups. Keep this worktree while it still owns those duties,
+  or explicitly transfer them under authorization with acknowledgement. Then
+  migrate .project/ and remove it without asking again. Archive results that
+  cannot be rebuilt before the merge. A child integration merge does not
+  complete the parent's final delivery to dev.
 - Keep your own working files (plans, PR body drafts and messages to the
   coordinator) in .project/state/, not in the root of .project/. Close-out
   copies .project/state/ without further rules; a file in the root of
@@ -95,6 +123,49 @@ Working rules for this session:
   and record the transport, target session/thread and confirmation result. A
   successful pane write alone is not receipt confirmation; after a stall,
   inspect status and preserve the exact evidence before retrying.
+- ACK this handoff's scope and reporting authorization before implementation.
+  Proactively send implementation/acceptance results, PR-created, head-updated,
+  blockers or acceptance failures, and responsibility/close-out changes to the
+  claiming coordinator before ending the affected turn. Each event carries an
+  event ID, task/role/attempt, Issue/PR (or none), exact head/run (or base plus
+  saved diff for uncommitted work), evidence, pending duties/owners and requested
+  action. Follow issue-workflow's delivery reporting and agent-communication's
+  receipt/recovery rules; a local final reply or idle state is not receipt.
+  Record submitted and explicit ACK separately. Missing ACK stays pending with
+  an owner, recovery entry and bounded retry/next checkpoint. On resume check
+  prior receipts and the current/terminal summary before necessary GitHub checks;
+  duplicates or old heads never replace
+  current acceptance. Without delivery authorization report ready-for-review
+  and wait; notifications grant no commit/push/PR/merge/release permission.
+- Protect acceptance inputs using issue-workflow's Acceptance write
+  responsibility section. Before either session tests a shared checkout, record
+  the exact version (including uncommitted inputs), owner, writers, protected
+  paths and allowed outputs. Require explicit pause ACKs before starting and
+  explicit return before resuming writes. New edits, drift, restart or timeout
+  never silently release responsibility; end/invalidate and stop or isolate the
+  old run before transfer. An independently immutable snapshot records its
+  provenance and isolation instead of freezing the development checkout.
+- Apply agent-communication's message cadence: critical handoffs, failures and
+  changes affecting the receiver's next action go promptly; combine results at
+  the same checkpoint/version, and keep routine progress local. ACKs need no
+  ACK; return a duplicate receipt only for a still-pending confirmation duty.
+  Keep independent work moving; no fixed-time polling or heartbeats. Pending
+  handoffs block their dependent actions, not unrelated work.
+- Classify received backlog before queries, replies or dispatch using
+  agent-communication's receive-time classification. Recover the current or
+  migrated terminal summary and fold already-delivered duplicates, superseded
+  milestones and terminal no-new-information events locally: zero new GitHub
+  queries, dispatches, tests, messages/ACKs or user completion reports. Different
+  event IDs can cover the same outcome. Retain conflicting same-ID content,
+  late risks and untransferred duties with owners; reconcile each actual increment
+  once. Genuine new user instructions are not events to deduplicate; old event
+  authorization is not fresh approval. Preserve the summary/evidence through
+  migration, add no waiting window or consumer, and record forced client replies
+  as runtime limits rather than claiming the underlying queue was changed.
+- Use .agents/skills/shared/development-writing/SKILL.md for Issues, PRs,
+  comments and commit messages. Keep current bodies aligned with agreed scope
+  and final behavior; retain important decisions in comments and identify the
+  head/run behind evidence. Writing guidance never authorizes sending or committing.
 PROMPT
 if [[ -n "$language" ]]; then
   cat <<PROMPT
@@ -103,6 +174,23 @@ if [[ -n "$language" ]]; then
   repository" section or printed by its scripts, keeps its language.
 PROMPT
   [[ -z "$sections" ]] || printf '  An Issue body starts with: %s.\n' "$sections"
+  printf '  Commit messages use %s unless development-writing has a project-specific override.\n' "$language"
+fi
+if [[ -n "$coordinator_handoff" ]]; then
+  printf '\nLocal coordinator mapping and reporting boundary:\n\n'
+  cat -- "$coordinator_handoff"
+  printf '\n'
+else
+  cat <<'PROMPT'
+
+Before dispatch, append the local coordinator mapping and reporting boundary:
+claimant name from Dispatch; resolved pane and native session/thread (or the
+unresolved-address reason and conditional fallback); task/role/attempt;
+authorized contact/events and delivery constraints; pending owner, recovery
+entry, bounded retry/next checkpoint and permitted escalation route.
+Keep machine-private addresses in .project/state/, not public Issue/PR text.
+Do not infer cross-session authorization from discovering a coordinator name.
+PROMPT
 fi
 if [[ -n "$dispatch" ]]; then
   cat <<PROMPT

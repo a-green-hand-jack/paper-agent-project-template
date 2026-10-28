@@ -14,7 +14,8 @@ Never load the whole family.
 Inherited from `coding-agent-project-template`:
 
 - `shared/agent-communication/` — route a handoff or follow-up between Herdr
-  panes and agent sessions through each agent's native transport.
+  panes and agent sessions through native capabilities; distinguish receipts,
+  reconcile covered events and preserve pending duties without ACK loops.
 - `shared/asset-lifecycle/` — keep external assets, including result tables
   and figure data from code repositories, linked and in the manifest.
 - `shared/cli-first-operations/` — operate through the public entry points
@@ -22,19 +23,22 @@ Inherited from `coding-agent-project-template`:
 - `shared/credential-setup/` — the steps that apply `llm-credentials`: link
   the device's shared file, log in once per canonical checkout, keep values out
   of every output.
+- `shared/development-writing/` — reader decisions and current evidence for
+  Issues, PRs, comments and commits, with neutral examples in references.
 - `shared/issue-workflow/` — Issue worktrees, dispatch by difficulty, merge
-  and close-out.
+  and close-out; task identity, declared targets, protected acceptance inputs
+  and coordinator reconciliation.
 - `shared/project-memory-governance/` — classify, register and clean memory,
   knowledge and skills.
-- `shared/release-doc-audit/` — audit documentation and version references
-  before a tag.
+- `shared/release-doc-audit/` — prepare and visually review release narratives,
+  then audit documentation, version references and upgrade instructions.
 - `shared/template-adoption/` — bring an existing paper repository onto this
-  template.
+  template, establishing its concepts and directory contracts before migration.
 - `shared/template-feedback/` — report a template defect to this template or
   upstream.
 - `shared/template-upgrade/` — upgrade a paper to a newer template release.
 - `shared/worktree-lifecycle/` — create, set up, migrate and retire a
-  worktree.
+  worktree after its acceptance and outstanding responsibilities are settled.
 
 Paper workflow (this template's own):
 

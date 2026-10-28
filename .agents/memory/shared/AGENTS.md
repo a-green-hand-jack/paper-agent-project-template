@@ -12,6 +12,9 @@ the record's own text never contains that heading line.
 
 Inherited from `coding-agent-project-template`:
 
+- [`project-positioning-before-layout.md`](project-positioning-before-layout.md)
+  — establish users, deliverables, concepts and non-goals before mapping paths;
+  directory contracts and product ownership govern the migration.
 - [`host-files-owned-by-running-user.md`](host-files-owned-by-running-user.md)
   — files, logs, caches and mounted output left on the host belong to the
   running user; no `sudo` for project files; cleanup that meets foreign-owned
@@ -22,8 +25,9 @@ Inherited from `coding-agent-project-template`:
   related defects and does not narrow its change to avoid conflicts.
 - [`issue-close-out.md`](issue-close-out.md) — close out an Issue's worktree
   right after its PR merges; the claiming coordinator resolves conflicts with
-  `dev` in the PR's worktree, the merge approval covers the close-out, and live
-  runs in the dev checkout or containers mounting the worktree stop it.
+  the declared target in the PR's worktree, the merge approval covers close-out,
+  and outstanding acceptance, audits, live runs or mounting containers retain
+  the worktree until their duties are settled.
 - [`issue-dispatch-by-difficulty.md`](issue-dispatch-by-difficulty.md) — dispatch
   each Issue agent with an explicit model and effort for its difficulty tier, and
   record it in the Issue.
