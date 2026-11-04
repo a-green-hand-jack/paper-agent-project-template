@@ -4,25 +4,38 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
-## v0.4.6
+## v0.4.6 — 2026-11-04
 
 Moves the coding template this one follows from `v0.1.13` to `v0.1.26`
 (`v0.1.19` in #185, `v0.1.25` in #187, `v0.1.26` in #189), inherits its upgrade
 command as it is, and moves the development plane to the v0.1.26 layout:
 six categories with `shared/` and `project/` groups, and a schema 2 registry
-that is the only catalog of their content.
+that is the only catalog of their content. This release sets this template's
+own `template.version` to `v0.4.6` (#191).
 
 ### Changed
 
-- `template.upstream.version` is `v0.1.26`; this template's own version line is
-  not part of the change. The six releases crossed add the upgrade command and
-  its light path (v0.1.14), the Issue session rule "a small real run is enough"
-  and `actions/checkout@v5` (v0.1.15), the credential inventory (v0.1.16 and
-  v0.1.17), wildcard rules for `migrate-project.rules`, the `<LOCAL_CHECK>`
-  slot and phased sub-Issues (v0.1.18), and hook review, the implementation and
-  delivery gates, `agent-communication` and the Herdr close-out recovery
-  (v0.1.19).
-- `.agents/scripts/upgrade-template.sh` is the upstream copy, byte for byte.
+- `template.upstream.version` is `v0.1.26` and `template.version` is `v0.4.6`.
+  The thirteen coding-template releases crossed (v0.1.14 to v0.1.26) add, up to
+  v0.1.19 (#185), the upgrade command and its light path (v0.1.14), the Issue
+  session rule "a small real run is enough" and `actions/checkout@v5`
+  (v0.1.15), the credential inventory (v0.1.16 and v0.1.17), wildcard rules for
+  `migrate-project.rules`, the `<LOCAL_CHECK>` slot and phased sub-Issues
+  (v0.1.18), and hook review, the implementation and delivery gates,
+  `agent-communication` and the Herdr close-out recovery (v0.1.19). Up to
+  v0.1.25 (#187) they add handoffs that carry the coordinator and task
+  identity, delivery events, protected acceptance inputs with an explicit
+  pause and return, and receive-time reconciliation of covered outcomes and new
+  duties; an optional, explicitly declared parent integration branch (ordinary
+  Issues still target `dev`); and the `development-writing` skill, the
+  release-type guidance in `release-doc-audit`, the knowledge record
+  `agent-session-messaging` and the memory record
+  `project-positioning-before-layout`. The Issue and PR templates gained
+  advisory writing and acceptance text; no field became required. v0.1.26
+  (#189) is the layout change described below.
+- `.agents/scripts/shared/upgrade-template.sh` (it was `.agents/scripts/upgrade-template.sh`
+  until v0.4.5) is the coding template's v0.1.26 copy, byte for byte, as is its
+  sibling `content_registry.py`; the old flat path no longer exists.
   This template's own copy (#177, #182) is gone, and so are its differences:
   the clone and the merge proposals live in `.project/state/template-upgrade/`
   (they were in `.project/build/template-upgrade/`); an `optional: true` path

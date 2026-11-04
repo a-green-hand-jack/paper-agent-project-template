@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.4.5
+  version: v0.4.6
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.26
