@@ -1,280 +1,124 @@
-# Developing the paper
+# 论文开发
 
-## Boundaries
+## 边界
 
-`paper/` is the product plane, `.agents/` the agent development plane, and the
-root documents (`README.md`, `PAPER.md`, this file, `RELEASE_NOTES.md`) the
-Human plane. Each topic is written out in one authoritative place, and other
-places link to it. Run state, logs, screenshots and build output go to the
-current worktree's `.project/`, never into tracked files or an unknown global
-directory.
+`paper/` 是产品面，`.agents/` 是 Agent 开发面，根目录文档（`README.md`、`PAPER.md`、本文件、`RELEASE_NOTES.md`）是 Human 面。每个主题只在一个权威位置详述，其他位置链接到它。运行状态、日志、截图和构建输出放在当前 worktree 的 `.project/`，不得放入跟踪文件或未知的全局目录。
 
-`paper/` is self-contained: a copy of `paper/` alone builds, it reads nothing
-under `.agents/`, and a build writes to `.project/build/` (or, in a copy of
-`paper/` alone, to its `build/`), never back into `paper/` or the root.
+`paper/` 是自包含的：单独复制即可构建，不读取 `.agents/`；构建写入 `.project/build/`（单独复制 `paper/` 时写入其 `build/`），不写回 `paper/` 或根目录。
 
-## Issues, branches and PRs
+## Issue、分支与 PR
 
-A larger unit of work starts with an Issue that settles the problem, scope,
-acceptance and risks before anything changes: drafting or rewriting a section,
-changing a claim, result, interface macro, venue or build, anything a control
-cue in `PAPER.md` protects, and tooling or CI changes. Small fixes are made
-directly in the `dev` checkout, without an Issue, worktree or PR: typos,
-wording inside one paragraph that changes no claim, comments, memory or index
-updates, a single-file fix without a design decision, and running existing
-commands for acceptance. When unsure, treat the work as larger, and stop to
-open an Issue when a small change grows or raises a design question. Small
-changes are not committed or pushed automatically either; run the applicable
-checks and report the evidence.
+较大的工作先通过 Issue 确定问题、范围、验收和风险，再开始修改：包括起草或重写章节、修改主张、结果、接口宏、投稿场所或构建、`PAPER.md` 控制提示保护的内容，以及工具或 CI 变更。小修正可直接在 `dev` checkout 完成，无须 Issue、worktree 或 PR：错字、不改变主张的单段措辞、注释、记忆或索引更新、无需设计决策的单文件修复，以及运行现有验收命令。不确定时按较大工作处理；小改动扩大或引出设计问题时应停下来创建 Issue。小改动也不会自动提交或推送；应运行适用检查并报告证据。
 
-An Issue's branch starts from its declared target (default `dev`) and is named `fix/issue-<N>-<slug>`,
-`feat/issue-<N>-<slug>`, `docs/issue-<N>-<slug>` or `chore/issue-<N>-<slug>`.
-Simple Issues return to `dev` through a PR. When a parent task needs combined
-acceptance, `issue-workflow` records the parent integration branch, child PR
-targets and the final PR to `dev`; child merges do not close the parent's
-acceptance duties. `main` holds only released states. Overleaf
-edits arrive on a `sync/overleaf-<commit>` branch made by
-`overleaf-sync.sh pull`.
+Issue 分支从其声明的目标（默认为 `dev`）开始，命名为 `fix/issue-<N>-<slug>`、`feat/issue-<N>-<slug>`、`docs/issue-<N>-<slug>` 或 `chore/issue-<N>-<slug>`。简单 Issue 通过 PR 返回 `dev`。父任务需要联合验收时，`issue-workflow` 记录父集成分支、子 PR 目标和最终到 `dev` 的 PR；合并子任务不结束父任务的验收职责。`main` 只保存发布状态。Overleaf 编辑通过 `overleaf-sync.sh pull` 创建的 `sync/overleaf-<commit>` 分支进入仓库。
 
-The PR description says what changed and why, gives the command and result of
-every check the acceptance and CI require, and lists the related defects fixed
-on the way. A step only the maintainer can take is written as a concrete
-blocker that says what the maintainer must do. Build and release evidence goes
-into the Issue or PR; an agent's own summary does not replace it.
+PR 描述说明修改内容和原因，列出验收及 CI 要求的每项检查命令与结果，以及过程中修复的相关缺陷。只有维护者能完成的步骤应写成具体阻塞，说明维护者需要做什么。构建和发布证据放在 Issue 或 PR 中；Agent 自己的摘要不能代替它。
 
-Start an Issue with Herdr's native worktree command, from its declared target, and a
-separate agent session in a new pane; never switch branches in the current
-agent window. The new session first runs setup. The parent session can
-generate the first prompt, with the Issue link, branch, reading scope and
-acceptance:
+从声明的目标使用 Herdr 原生 worktree 命令开始 Issue，并在新 pane 中启动独立 Agent 会话；不要在当前 Agent 窗口切换分支。新会话首先运行 setup。父会话可以生成首个提示，其中包含 Issue 链接、分支、阅读范围和验收要求：
 
 ```bash
 bash .agents/scripts/shared/new-agent-prompt.sh 123 feat/issue-123-example dev \
   .project/state/coordinator-handoff.md
 ```
 
-If Herdr is unavailable, report the blocker instead of implementing in the
-current window. The `issue-workflow` skill covers start, merge and close-out.
+如果 Herdr 不可用，应报告阻塞，不要在当前窗口中实现。`issue-workflow` 技能涵盖开始、合并与收尾。
 
-Use [`development-writing`](.agents/skills/shared/development-writing/SKILL.md)
-for Issues, PRs, comments and commits: explain the concrete change, keep current
-descriptions aligned with the final scope, and identify the version and
-conditions behind evidence. Existing Issue fields and PR sections remain the
-entry points; advisory prompts add no new required fields. The registry has no
-`writing:` declaration, so each file keeps its own language. Release narratives
-use `release-doc-audit` and retain this template's own release history.
+Issue、PR、评论和提交使用 [`development-writing`](.agents/skills/shared/development-writing/SKILL.md)：解释具体变更，使当前描述与最终范围一致，并说明证据对应的版本和条件。既有 Issue 字段和 PR 小节仍是入口；建议性提示不增加新的必填字段。registry 没有 `writing:` 声明，因此每个文件保持自身语言。发布叙事使用 `release-doc-audit` 并保留本模板自身的发布历史。
 
-## Session identity and delivery
+## 会话身份与交付
 
-Follow `issue-workflow` for caller identity and dispatch. Before controlling
-Herdr, match the tool process's allowlisted Herdr variables and native thread
-against live workspace, pane, agent and Git common-directory/worktree identity.
-For a new Codex dispatch, check the installed CLI supports `--no-daemon` before
-isolated startup, then have the worker independently verify its identity and
-explicitly acknowledge scope. Missing or stale context requires authorized
-read-only diagnosis; it does not authorize guessed IDs or shared service changes.
-The current `issue-workflow` adaptation retains this project's agent defaults;
-an explicitly authorized per-Issue dispatch records its actual agent, provider,
-model, effort and startup mode in Dispatch.
+遵循 `issue-workflow` 处理调用者身份和派发。控制 Herdr 前，将工具进程允许的 Herdr 变量和原生线程与实时 workspace、pane、Agent 和 Git 公共目录/worktree 身份匹配。新的 Codex 派发应先检查已安装 CLI 支持 `--no-daemon`，再隔离启动；随后由 worker 独立验证身份并明确确认范围。上下文缺失或过期时只能进行已授权的只读诊断，不得猜测 ID 或修改共享服务。当前 `issue-workflow` 的适配保留本项目的 Agent 默认值；每次获得明确授权的 Issue 派发都在 Dispatch 中记录实际 Agent、provider、模型、思考强度和启动模式。
 
-Keep the task key, role, attempt and actual returned IDs with the claiming
-coordinator's address, allowed contacts/events and recovery duties in the local
-handoff file under `.project/state/`. Pass that file as the fourth argument
-above; keep private addresses out of Issues, PRs and tracked content.
-[`agent-communication`](.agents/skills/shared/agent-communication/SKILL.md)
-owns transport preflight and the distinct submitted, acknowledged and completed
-states. Check actual native queue reachability separately from startup or
-successful submission. Inspect a target's live status and styled input before
-deciding to send; a blocked target or real draft stops sending.
+将任务键、角色、尝试次数和实际返回的 ID，与领取任务的协调者地址、允许的联系人/事件及恢复职责一起放入 `.project/state/` 的本地交接文件。将该文件作为上面命令的第四个参数；私人地址不得写入 Issue、PR 或跟踪内容。[`agent-communication`](.agents/skills/shared/agent-communication/SKILL.md) 负责传输预检及区分已提交、已确认和已完成状态。原生队列的实际可达性应与启动或提交成功分开检查。发送前检查目标的实时状态和输入；目标阻塞或存在实际草稿时停止发送。
 
-Workers promptly report failures, blockers and responsibility transfers to
-their authorized coordinator. Combine implementation/acceptance, PR-created
-and exact-head evidence at the same checkpoint/version; keep routine progress
-local. A pure ACK ends its receipt chain. Unacknowledged events keep an owner,
-recovery pointer and bounded next action rather than repeated polling or
-heartbeats. These events do not grant commit, merge or publication permission.
+Worker 应及时向获授权的协调者报告失败、阻塞和职责转移。在同一检查点和版本上汇总实现/验收、PR 创建和确切 head 证据；日常进度留在本地。纯 ACK 结束其回执链。未确认事件保留负责人、恢复指针和有界下一步，不要重复轮询或发送心跳。这些事件不授予提交、合并或发布权限。
 
-At each active checkpoint, first read the current summary and receipts, then
-classify received events before queries, replies or dispatch. Fold duplicates,
-covered earlier milestones and terminal events with no new duties into local
-records without repeated checks or completion reports. A matching head does
-not cover a new failure: retain changed risks and unfulfilled duties once,
-with evidence, owner and next action. Genuine new user instructions retain
-their authority; old authorization quoted in an event is not fresh approval.
-This is a session workflow, not a queue filter or background consumer.
+每个活动检查点先读取当前摘要和回执，再在查询、回复或派发前分类收到的事件。将重复事件、已覆盖的早期里程碑及没有新职责的终态事件归入本地记录，不重复检查或报告完成。head 匹配不代表覆盖了新失败：变化的风险和未完成职责应各保留一次，并附证据、负责人和下一步。真正的新用户指令仍有其效力；事件中引用的旧授权不构成新的批准。这是会话工作流，而不是队列过滤器或后台消费者。
 
-## Acceptance write responsibility
+## 验收期间的写入责任
 
-Before checks read a shared checkout, record the exact inputs, acceptance
-owner, all writers, protected paths and allowed log/artifact outputs in
-`.project/state/`. Include a saved diff/content identity for uncommitted work;
-HEAD alone does not identify it. Every writer explicitly pauses those inputs,
-and the acceptance owner acknowledges the fixed version before checking.
-Neither the owner nor writers edit protected inputs during that interval.
-For this paper, the existing commands are `make check`, diagnostics and state
-inspection; build/check outputs remain under `.project/`. A separately immutable
-snapshot records its source and isolation instead of freezing the checkout.
+在检查读取共享 checkout 之前，在 `.project/state/` 中记录确切输入、验收负责人、所有写入者、受保护路径及允许的日志/产物输出。未提交工作须保存 diff/内容身份；仅有 HEAD 不足以识别它。所有写入者明确暂停修改这些输入，验收负责人确认固定版本后再检查。在此期间负责人和写入者均不得编辑受保护输入。本论文使用的现有命令是 `make check`、诊断和状态检查；构建/检查输出保留在 `.project/`。单独的不可变快照则记录其来源和隔离方式，不必冻结 checkout。
 
-After checks exit, the acceptance owner records results and explicitly returns
-write responsibility; the receiver acknowledges taking it back before editing,
-committing or changing branches. New requests, drift, restart and elapsed time
-do not release the pause. A change requires ending or invalidating the old
-acceptance and stopping or isolating its checks before transfer and rechecking.
-Keep live handoff receipts separate from scenario reviews of duplicates, stale
-inputs and failed transports; one does not establish the other.
+检查退出后，验收负责人记录结果并明确交还写入责任；接收方确认接回后才能编辑、提交或切换分支。新请求、漂移、重启或时间流逝都不会解除暂停。发生变更须先结束或使旧验收失效，停止或隔离其检查，再转移责任并重新检查。实时交接回执应与重复事件、过期输入和传输失败的场景评审分开；两者互不证明。
 
-## Worktree lifecycle
+## Worktree 生命周期
 
-Each worktree is a separate unit of work with its own state. After creating
-one, run in it:
+每个 worktree 是具有独立状态的工作单元。创建后在其中运行：
 
 ```bash
 bash .agents/scripts/shared/setup-worktree.sh
 ```
 
-Setup writes `.project/home` and `.project/worktree.env`, creates the local
-state directories, checks tools and the asset manifest, and runs
-`.agents/scripts/project/setup-project.sh`, which creates `.project/build/` and
-reports the TeX tools. Never reuse another worktree's `.project/`.
+Setup 写入 `.project/home` 和 `.project/worktree.env`，创建本地状态目录，检查工具和资产清单，并运行 `.agents/scripts/project/setup-project.sh`，后者创建 `.project/build/` 并报告 TeX 工具。不要复用其他 worktree 的 `.project/`。
 
-After the PR merges, do not delete the directory directly.
+PR 合并后不要直接删除目录。先核对后台验收、审计和承诺的后续事项。职责未完成时保留 worktree，或在既有授权下明确转移并取得接任者确认。在 `.project/state/` 将当前或终态摘要与回执放在一起：确切版本、已覆盖事件和证据、剩余职责/负责人、风险、待收回执、用户报告状态和恢复位置。检查和所属进程退出后，协调者迁移并验证状态、记录恢复目的地，然后才进行受管移除。仅凭合并或空闲状态不能证明这些职责已完成。
 
-Reconcile background acceptance, audits and promised follow-ups first. Retain
-the worktree while duties remain, or explicitly transfer them under existing
-authorization and obtain the successor's acknowledgement. Keep the current or
-terminal summary beside receipts in `.project/state/`: exact version, covered
-events and evidence, remaining duties/owners, risks, pending receipts, user-report
-status and recovery locations. After checks and owned processes have exited,
-the coordinator migrates and verifies that state and records its recovery
-destination before managed removal. Merge or idle status alone proves none of
-these duties complete.
-
-Then run:
+然后运行：
 
 ```bash
 bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkout>
 ```
 
-It checks ignored state, copies what should be kept and writes a migration
-record; it never deletes the worktree. `.agents/scripts/project/migrate-project.rules`
-says that `.project/build/` is dropped, because `make` rebuilds it. Destroy the
-worktree and branch with the worktree manager only after the assets are
-migrated and no unique copy remains in it.
+该命令检查被忽略的状态、复制应保留的内容并写入迁移记录；它不会删除 worktree。`.agents/scripts/project/migrate-project.rules` 规定丢弃可由 `make` 重建的 `.project/build/`。只有资产迁移完成且其中不再有唯一副本后，才使用 worktree 管理器销毁 worktree 和分支。
 
-## Builds and checks
+## 构建与检查
 
-The root `Makefile` is the only build entry; `README.md` lists its targets.
-Two variables adjust it:
+根目录 `Makefile` 是唯一构建入口；`README.md` 列出其目标。两个变量可调整构建：
 
-- `TEXBIN=<TeX Live bin directory>` puts that directory first on `PATH`, for a
-  machine where another `latexmk` comes first. Never write a machine path into
-  a tracked file.
-- `PAGE_BUDGET=<pages>` is the venue's main-text limit, measured on `blind`
-  up to `\label{PaperMainTextEnd}`. Set it in the `Makefile` once the venue is
-  known; `PAGE_BUDGET=none` declares a release with no page limit, such as an
-  arXiv version. `make check` reports the count, and `make release-check`
-  fails without a budget or over it.
+- `TEXBIN=<TeX Live bin directory>` 将该目录放到 `PATH` 最前，以应对其他 `latexmk` 排在前面的机器。不要将机器路径写入跟踪文件。
+- `PAGE_BUDGET=<pages>` 是投稿场所的正文页数上限，在 `blind` 上计算至 `\label{PaperMainTextEnd}`。确定投稿场所后在 `Makefile` 中设置；`PAGE_BUDGET=none` 表示发布没有页数限制，例如 arXiv 版本。`make check` 报告页数，`make release-check` 在没有预算或超出预算时失败。
 
-`make check` runs, in order: the `main` and `blind` builds and their log
-checks (undefined references or citations, missing files, multiply defined
-labels), the page count of `blind`, the PDF text-layer check that underscores
-survive (T1 encoding), the offline reference gate, the interface-macro check,
-the development registry check (`check-development.sh`), the skill, memory and
-knowledge structure check, and the unit tests of `.agents/tests/shared/` and
-`.agents/tests/project/`. Build logs are in `.project/build/logs/<build>.log`.
+`make check` 按顺序执行：`main` 和 `blind` 构建及其日志检查（未定义的引用或引文、缺失文件、重复定义的标签）、`blind` 页数、PDF 文本层下划线保留检查（T1 编码）、离线参考文献门槛、接口宏检查、开发 registry 检查（`check-development.sh`）、技能/记忆/知识结构检查，以及 `.agents/tests/shared/` 和 `.agents/tests/project/` 的单元测试。构建日志位于 `.project/build/logs/<build>.log`。
 
-A passing `make check` does not show that the pages look right. Before calling
-a build done, render the affected pages and look at them
-([`post-build-visual-inspection`](.agents/memory/shared/post-build-visual-inspection.md));
-renders and screenshots go to `.project/build/inspect/`.
+通过 `make check` 不代表页面视觉效果正确。宣布构建完成前，应渲染并查看受影响页面（[`post-build-visual-inspection`](.agents/memory/shared/post-build-visual-inspection.md)）；渲染结果和截图放入 `.project/build/inspect/`。
 
-Requirements:
+依赖：
 
-- TeX Live with `latexmk`, `pdflatex` and `bibtex`, and the packages the paper
-  and its venue kit load;
-- `pdftotext` and `pdfinfo` (poppler-utils) for the PDF checks;
-- Python 3 with PyYAML for the scripts;
-- optionally `uv`, for the online reference audits that use the locked
-  dependencies in `.agents/scripts/shared/reference-integrity/`.
+- 带 `latexmk`、`pdflatex`、`bibtex` 及论文和投稿套件所需宏包的 TeX Live；
+- 用于 PDF 检查的 `pdftotext` 和 `pdfinfo`（poppler-utils）；
+- 用于脚本的 Python 3 和 PyYAML；
+- 可选的 `uv`，供使用 `.agents/scripts/shared/reference-integrity/` 中锁定依赖的在线参考文献审计使用。
 
-`bash .agents/scripts/shared/setup-worktree.sh` reports what is missing.
+`bash .agents/scripts/shared/setup-worktree.sh` 会报告缺失项。
 
-A paper has no Python package, container or installer, so this template has
-no `pyproject.toml`, `Dockerfile`, `.dockerignore` or `install.sh`, and
-`diagnose-environment.sh` reports them as optional files that are absent. Do
-not add them for the paper. A tool that needs its own environment installs it
-under `.project/`.
+论文没有 Python 包、容器或安装器，因此本模板没有 `pyproject.toml`、`Dockerfile`、`.dockerignore` 或 `install.sh`，`diagnose-environment.sh` 会将其报告为缺失的可选文件。不要为论文添加它们。需要独立环境的工具将环境安装在 `.project/` 下。
 
-## Evidence
+## 证据
 
-Results come from code repositories. Register every result table, figure data
-file and reported number in `assets/MANIFEST.yaml`: its source repository,
-commit, run or config identifier, checksum and regeneration command. A number
-reaches the text only through an interface macro in `paper/macros.tex`, and
-`.agents/memory/project/paper-interfaces.md` gives each macro's meaning,
-control cue and manifest id. A planned result is registered `planned` and is
-never written as an observation. Large payloads (raw logs, checkpoints,
-datasets) stay in their code repository or managed storage; link them
-locally through `.project/assets.links`, never in Git.
+结果来自代码仓库。将每张结果表、每个图数据文件和每个报告的数字登记在 `assets/MANIFEST.yaml`：源仓库、提交、运行或配置标识、校验和及重新生成命令。数字只能通过 `paper/macros.tex` 的接口宏进入正文；`.agents/memory/project/paper-interfaces.md` 为每个宏记录含义、控制提示和 manifest ID。计划中的结果登记为 `planned`，绝不写成观察结果。大型文件（原始日志、checkpoint、数据集）保留在其代码仓库或受管存储中；通过 `.project/assets.links` 本地链接，绝不放入 Git。
 
-Figure sources:
+图的来源：
 
-- `paper/figures/` holds the exported files LaTeX includes, preferably vector
-  PDF, so the paper compiles from `paper/` alone.
-- A script that plots from data lives in the code repository with its
-  manifest entry, or next to its output in `paper/figures/` when it belongs to
-  the manuscript.
-- An editable source that cannot be rebuilt (a drawing, a slide, a selected
-  generated draft) is an asset: registered in the manifest and kept in managed
-  storage or `.project/artifacts/<topic>/`, not in `paper/`.
-- Scratch renders and rejected drafts go to `.project/build/figures/`.
+- `paper/figures/` 保存 LaTeX 引用的导出文件，最好使用矢量 PDF，使 `paper/` 单独即可编译。
+- 根据数据绘图的脚本位于代码仓库及其 manifest 条目中；若属于论文，也可与输出一起放在 `paper/figures/`。
+- 不可重建的可编辑源文件（绘图、幻灯片或选定的生成草稿）属于资产：登记在 manifest，保存在受管存储或 `.project/artifacts/<topic>/`，不放入 `paper/`。
+- 临时渲染和被拒草稿放入 `.project/build/figures/`。
 
-`figure-router` and `scientific-figure-workflow` apply this policy.
+`figure-router` 和 `scientific-figure-workflow` 应用此策略。
 
-## Reference audits
+## 参考文献审计
 
-The offline reference gate runs in `make check` (Draft) and
-`make release-check` (Release). The online audits, the metadata audit
-(`check_reference_metadata.py`) and the correction candidates
-(`check_reference_corrections.py`), run in three tiers:
+离线参考文献门槛在 `make check`（Draft）和 `make release-check`（Release）中运行。在线审计包括元数据审计（`check_reference_metadata.py`）和更正候选项（`check_reference_corrections.py`），分三级运行：
 
-| When | What runs | Gate |
+| 时机 | 运行范围 | 门槛 |
 | --- | --- | --- |
-| every pull request and push (`references` job) | the entries new or changed against the base commit, or whose ledger fingerprint no longer matches | required; usually seconds |
-| a pull request into `main`, a push to `main`, and `make release-check` | the full metadata audit of every entry (CI also runs the correction audit) | required |
-| weekly and on `workflow_dispatch` (`references-full` job) | the full audit, both audits in parallel, with the cache kept between runs | reports; blocks no merge |
+| 每次 PR 和推送（`references` job） | 相对于基准提交新增或变更的条目，以及台账指纹不再匹配的条目 | 必须通过；通常只需数秒 |
+| 向 `main` 的 PR、推送到 `main`，以及 `make release-check` | 所有条目的完整元数据审计（CI 还运行更正审计） | 必须通过 |
+| 每周及 `workflow_dispatch`（`references-full` job） | 两项完整审计并行运行，缓存跨运行保留 | 报告结果；不阻塞合并 |
 
-A verified entry's fingerprint is recorded in the ledger
-(`verification.bibtex_fingerprint`) by
-`python3 .agents/scripts/shared/check_reference_metadata.py --record`. Run it once
-with the full scope after adopting the tiers and commit the ledger. A provider
-outage, rate limit or bot challenge is an infrastructure outcome that names
-the entries it left open, never a failed entry. The rules are in
-[`reference-integrity`](.agents/memory/shared/reference-integrity.md) and the
-services, keys and caches in
-[`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md).
+已验证条目的指纹通过 `python3 .agents/scripts/shared/check_reference_metadata.py --record` 记录在台账（`verification.bibtex_fingerprint`）。采用分级机制后，对完整范围运行一次并提交台账。provider 故障、限流或机器人验证属于基础设施结果，应列出因此未完成的条目，不能算作条目失败。规则见 [`reference-integrity`](.agents/memory/shared/reference-integrity.md)，服务、密钥和缓存见 [`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md)。
 
-Locally the audits take `BIBTEX_CHECK_MAILTO`, `OPENALEX_API_KEY` and
-`S2_API_KEY` from the environment first. The preferred file source is the
-device's shared credential file: link the canonical checkout's
-`.project/credentials/.env` to it, and each worktree reaches it through the
-`.project/credentials` link that `setup-worktree.sh` creates. Only these three
-keys are exported from it; every other key is skipped. A project-only root `.env`
-holding just these keys remains the fallback and wins over the shared file.
+本地审计优先从环境读取 `BIBTEX_CHECK_MAILTO`、`OPENALEX_API_KEY` 和 `S2_API_KEY`。首选文件来源是设备的共享凭据文件：将规范 checkout 的 `.project/credentials/.env` 链接到该文件，每个 worktree 再通过 `setup-worktree.sh` 创建的 `.project/credentials` 链接访问。只导出这三个键，跳过其他键。仅含这三个键的项目专用根目录 `.env` 仍是后备来源，且优先于共享文件。
 
 ## Overleaf
 
-Overleaf mirrors `paper/` on `dev`, and only `paper/`
-([`overleaf-paper-tree-only`](.agents/memory/shared/overleaf-paper-tree-only.md)).
-Add the remote once per checkout, with no token in its URL, and keep the token
-in a Git credential helper:
+Overleaf 镜像 `dev` 上的 `paper/`，且只镜像 `paper/`（[`overleaf-paper-tree-only`](.agents/memory/shared/overleaf-paper-tree-only.md)）。每个 checkout 添加一次 remote，URL 中不含 token；token 存在 Git credential helper 中：
 
 ```bash
 git remote add overleaf https://git.overleaf.com/<project-id>
 ```
 
-The branch is found from the remote's `HEAD`; `--branch`, `OVERLEAF_BRANCH` or
-`git config remote.overleaf.overleafBranch` override it. Then:
+分支从 remote 的 `HEAD` 查找；`--branch`、`OVERLEAF_BRANCH` 或 `git config remote.overleaf.overleafBranch` 可覆盖。然后：
 
 ```bash
 bash .agents/scripts/shared/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
@@ -282,67 +126,30 @@ bash .agents/scripts/shared/overleaf-sync.sh pull     # Overleaf edits -> branch
 bash .agents/scripts/shared/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
 ```
 
-- Before editing, run `status`
-  ([`sync-overleaf-before-editing`](.agents/memory/shared/sync-overleaf-before-editing.md)).
-  When Overleaf holds edits that `dev` lacks, `pull` puts them on a branch
-  built from the last state both sides shared; merge it into `dev` through a
-  PR, then `push`.
-- `push` commits `HEAD:paper` on top of the Overleaf tip and pushes without
-  force. It refuses while Overleaf holds edits that `HEAD` lacks, and after
-  pushing it fetches again and checks that the trees are equal.
-  `push --replace` overwrites those edits; use it only for the first
-  publication to a project that shares no state with `paper/`, or when the
-  Human says so.
-- Trees are compared, not commits, because Overleaf rewrites the commits it
-  receives.
-- A real Overleaf run needs the maintainer's project and credentials; the unit
-  tests use a local bare repository in its place.
+- 编辑前运行 `status`（[`sync-overleaf-before-editing`](.agents/memory/shared/sync-overleaf-before-editing.md)）。如果 Overleaf 有 `dev` 缺少的编辑，`pull` 将其放到从双方最后共同状态创建的分支；通过 PR 合并到 `dev` 后再 `push`。
+- `push` 在 Overleaf tip 之上提交 `HEAD:paper` 并非强制推送。如果 Overleaf 包含 `HEAD` 缺少的编辑，命令会拒绝执行；推送后重新 fetch 并检查文件树相等。`push --replace` 会覆盖这些编辑；只在首次发布到与 `paper/` 没有共同状态的项目，或 Human 明确允许时使用。
+- 比较的是文件树而非提交，因为 Overleaf 会重写收到的提交。
+- 实际运行 Overleaf 需要维护者的项目及凭据；单元测试以本地裸仓库代替。
 
-## Optional second product: `poster/`
+## 可选的第二产品：`poster/`
 
-A conference poster is a second product tree, `poster/`, beside `paper/`. It
-is self-contained like `paper/`, builds into `.project/build/poster/`, takes
-its content and its copy of `macros.tex` only from the paper, and has its own
-Overleaf project on another remote (`--remote overleaf-poster --tree poster`).
-The `poster-build` skill describes it. The template ships no `poster/`.
+会议海报是与 `paper/` 并列的第二个产品树 `poster/`。它与 `paper/` 一样自包含，构建到 `.project/build/poster/`，内容及其 `macros.tex` 副本只来自论文，并使用另一个 remote 上的独立 Overleaf 项目（`--remote overleaf-poster --tree poster`）。`poster-build` 技能对此有说明。模板本身不提供 `poster/`。
 
-## Memory and knowledge
+## 记忆与知识
 
-`.agents/memory/` holds durable decisions and `.agents/knowledge/` dated facts
-with a source and a refresh condition. The `AGENTS.md` of each directory holds
-its rules and an index generated from the registry; each record is its own
-Markdown file under `shared/` or `project/` with the front matter of the
-directory's `entry-template.md`. A venue record starts from
-`.agents/knowledge/shared/venue-template.md`. Scope, status, replacements and
-the refresh condition live in `.agents/content-registry.yaml`, not in the front
-matter. When a record is added or moved, register it there and run
-`bash .agents/scripts/shared/check-development.sh --write-indexes`.
-`make check` checks the registry, layout and indexes, each record's front
-matter and sections, and the registry entry of every skill.
+`.agents/memory/` 保存持久决策，`.agents/knowledge/` 保存带来源和刷新条件的时效性事实。每个目录的 `AGENTS.md` 保存规则和从 registry 生成的索引；每条记录是 `shared/` 或 `project/` 下独立的 Markdown 文件，front matter 遵循该目录的 `entry-template.md`。投稿场所记录从 `.agents/knowledge/shared/venue-template.md` 开始。范围、状态、替代关系和刷新条件放在 `.agents/content-registry.yaml`，而非 front matter。新增或移动记录时，在 registry 登记并运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`。`make check` 检查 registry、布局和索引、每条记录的 front matter 和小节，以及每个技能的 registry 条目。
 
-A paper fills the starter records in `.agents/memory/project/` (`brief.md`,
-`experiments.md`, `paper-interfaces.md`, `publication.md`) and adds one record
-per durable decision.
+论文需要填写 `.agents/memory/project/` 中的初始记录（`brief.md`、`experiments.md`、`paper-interfaces.md`、`publication.md`），并为每项持久决策增加一条记录。
 
-## Branch model and visibility
+## 分支模型与可见性
 
-`dev` is the integration branch and `main` the release branch. The first setup
-of a new repository creates and pushes `dev` and makes it the GitHub default
-branch, when the GitHub CLI is available; `bash .agents/scripts/shared/init-branches.sh`
-does the same explicitly. The diagnostics report what is missing and how to
-fix it.
+`dev` 是集成分支，`main` 是发布分支。新仓库的首次 setup 在 GitHub CLI 可用时创建并推送 `dev`，并将其设为 GitHub 默认分支；`bash .agents/scripts/shared/init-branches.sh` 也可显式完成此操作。诊断命令报告缺失内容及修复方法。
 
-Prefer a **Private** paper repository until the paper is public. Before making
-it public, check credentials, private data, Issues, PRs, logs and machine
-paths. This template repository is public: feedback to it holds only generic,
-de-identified reproduction steps and says whether the paper repository is
-private or public; name a paper repository only when it is public and its
-maintainer agrees.
+论文公开前建议使用 **Private** 仓库。公开前检查凭据、私人数据、Issue、PR、日志和机器路径。本模板仓库公开：向其反馈时只提供通用、去标识化的复现步骤，并说明论文仓库是私有还是公开；只有论文仓库公开且维护者同意时才指明其名称。
 
-## Verification
+## 验证
 
-Tests check real risks, past defects and seams; do not add tests for
-coverage. A paper change is verified by its public entry points, the builds:
+测试应覆盖真实风险、历史缺陷和接口边界，不为覆盖率添加测试。论文变更通过公开入口——构建——验证：
 
 ```bash
 bash .agents/scripts/shared/diagnose-environment.sh
@@ -350,85 +157,36 @@ bash .agents/scripts/shared/inspect-state.sh
 make check
 ```
 
-`make check` runs every unit test; run one file with
-`python3 -m unittest discover -s .agents/tests/<shared|project> -p 'test_<name>.py'`.
-After a change to the development plane, also run
-`bash .agents/scripts/shared/check-shells.sh`; regenerate the registry's
-indexes with `bash .agents/scripts/shared/check-development.sh --write-indexes`. A
-passing unit test does not replace `make check`, and neither replaces looking
-at the pages.
+`make check` 运行所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s .agents/tests/<shared|project> -p 'test_<name>.py'`。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
 
-## Releases
+## 发布
 
-A paper release (a venue submission, an arXiv version, a camera-ready
-version):
+论文发布（投稿版本、arXiv 版本、终稿版本）：
 
-1. On `dev`, set `PAGE_BUDGET` for the release, run `make check` and
-   `make release-check`, and look at the `blind` and `submission` pages.
-2. Run `release-review`, which prepares the release for the Human's approval,
-   and `release-doc-audit` on the release candidate.
-3. Open a PR from `dev` to `main`. After it merges, tag `main`, for example
-   `submit-<venue>-<yyyy>`, `arxiv-v1` or `camera-ready`, and push the tag.
-4. Add a `## <tag>` entry to `RELEASE_NOTES.md`: what was released, from which
-   build, and the check results.
+1. 在 `dev` 为该版本设置 `PAGE_BUDGET`，运行 `make check` 和 `make release-check`，并查看 `blind` 和 `submission` 页面。
+2. 运行 `release-review`，为 Human 批准准备发布；对候选版本运行 `release-doc-audit`。
+3. 创建从 `dev` 到 `main` 的 PR。合并后在 `main` 上创建并推送标签，例如 `submit-<venue>-<yyyy>`、`arxiv-v1` 或 `camera-ready`。
+4. 在 `RELEASE_NOTES.md` 中添加 `## <tag>` 条目，记录发布内容、所用构建及检查结果。
 
-This template's own releases are `v<major>.<minor>.<patch>` tags on `main`,
-each with a `## <tag>` heading in `RELEASE_NOTES.md`. Before a template
-release, run `release-doc-audit` and `make check`; `main` requires the CI jobs
-`structure`, `check`, `paper-only` and `references`. The release entry has an
-"Adoption states" table: for each state a paper reaches by following README
-"Start a paper" (a fresh paper, an existing bibliography with no ledger or a
-migrated one, a venue kit), the `make release-check` steps expected to fail
-there. `make check` runs `.agents/tests/project/test_adoption_states.py`, which
-builds each state from the shipped files, runs `make check` and
-`make release-check` on it and compares the failures with that table, and
-runs the online metadata audit on a bibliography of realistic size; a release
-needs it passing. Its upgrade section, `### Upgrading a paper from <previous
-tag>`, starts with **Command only.** when `upgrade-template.sh` alone completes
-the upgrade, or lists the manual steps that remain; the same test checks every
-entry after v0.4.0 and upgrades a fresh paper at v0.4.1 to the release
-candidate with the candidate's own command.
+本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit` 和 `make check`；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。`make check` 运行 `.agents/tests/project/test_adoption_states.py`，从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
 
-## Relationship with the templates
+## 与模板的关系
 
-This repository is a derived template of `coding-agent-project-template`: a
-template built on that one, from which papers are made. Its registry,
-`.agents/content-registry.yaml`, records this template in `template` and the
-coding template it follows in `template.upstream`:
+本仓库是 `coding-agent-project-template` 的派生模板：在其基础上构建，并供论文使用。它的 registry `.agents/content-registry.yaml` 在 `template` 中记录本模板，在 `template.upstream` 中记录其遵循的 coding template：
 
-| Repository | `template.repository` / `template.version` | `template.upstream` |
+| 仓库 | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
-| `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.6) | the coding template and the tag it follows (v0.1.26) |
-| a paper made from this template | this template, the adopted tag | none |
+| `coding-agent-project-template` | 自身及其当前版本 | 无 |
+| 本模板 | 自身及其发布版本（v0.4.6） | coding template 及其所遵循的标签（v0.1.26） |
+| 由本模板创建的论文 | 本模板及采用的标签 | 无 |
 
-A repository follows `template.upstream` when it has that field, and
-`template` otherwise.
+仓库有 `template.upstream` 字段时遵循该字段，否则遵循 `template`。
 
-- This template takes coding-template releases through `template-upgrade`,
-  which moves `template.upstream.version`. Inherited files stay verbatim, with
-  this template's adaptation only in their trailing `## In this repository`
-  sections.
-- A paper takes this template's releases through `template-upgrade`, reading
-  `RELEASE_NOTES.md` at the target tag. It continues the
-  `## In this repository` sections this template wrote.
-  `bash .agents/scripts/shared/upgrade-template.sh [--check] <TARGET_TAG>` applies
-  the procedure's mechanical part (step 5) and prints the rest; when it
-  reports no conflict and every release it crosses is **Command only.**, the
-  upgrade takes the light path that `template-upgrade` defines in its
-  `## In this repository` section.
-- A defect or gap a paper finds goes to this template through
-  `template-feedback`. This template forwards a defect in inherited content to
-  the coding template and links the two Issues.
-- The migration from the pre-v0.4.0 layout is recorded in
-  `.agents/memory/project/rebuild-on-coding-template.md`, and the steps for a
-  paper that used `template-sync` are in the v0.4.0 entry of
-  `RELEASE_NOTES.md`.
+- 本模板通过 `template-upgrade` 接收 coding template 发布，更新 `template.upstream.version`。继承文件保持原文，本模板的适配只放在末尾的 `## In this repository` 小节。
+- 论文通过 `template-upgrade` 接收本模板发布，阅读目标标签的 `RELEASE_NOTES.md`，并延续本模板编写的 `## In this repository` 小节。`bash .agents/scripts/shared/upgrade-template.sh [--check] <TARGET_TAG>` 执行流程的机械部分（步骤 5）并输出其余步骤；如果没有冲突且跨过的每个版本都标记 **Command only.**，则采用 `template-upgrade` 的 `## In this repository` 小节定义的轻量路径。
+- 论文发现的缺陷或缺口通过 `template-feedback` 反馈给本模板。本模板将继承内容中的缺陷转发给 coding template，并链接两个 Issue。
+- 从 v0.4.0 之前布局的迁移记录在 `.agents/memory/project/rebuild-on-coding-template.md`，使用过 `template-sync` 的论文的迁移步骤在 `RELEASE_NOTES.md` 的 v0.4.0 条目中。
 
-## Operations
+## 操作
 
-Setup, builds, checks, Overleaf sync and releases go through the `make`
-targets and `.agents/scripts/`, never through private functions, ad hoc
-wrappers or a second set of scripts (`cli-first-operations`). A paper has no
-long-running product runs; experiments run, and are supervised, in their code
-repositories.
+Setup、构建、检查、Overleaf 同步和发布通过 `make` 目标和 `.agents/scripts/` 完成，不使用私有函数、临时包装器或第二套脚本（`cli-first-operations`）。论文没有长时间运行的产品任务；实验在各自代码仓库中运行和监督。
