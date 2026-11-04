@@ -33,7 +33,9 @@ own `template.version` to `v0.4.6` (#191).
   `project-positioning-before-layout`. The Issue and PR templates gained
   advisory writing and acceptance text; no field became required. v0.1.26
   (#189) is the layout change described below.
-- `.agents/scripts/upgrade-template.sh` is the upstream copy, byte for byte.
+- `.agents/scripts/shared/upgrade-template.sh` (it was `.agents/scripts/upgrade-template.sh`
+  until v0.4.5) is the coding template's v0.1.26 copy, byte for byte, as is its
+  sibling `content_registry.py`; the old flat path no longer exists.
   This template's own copy (#177, #182) is gone, and so are its differences:
   the clone and the merge proposals live in `.project/state/template-upgrade/`
   (they were in `.project/build/template-upgrade/`); an `optional: true` path
