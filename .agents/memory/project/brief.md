@@ -11,7 +11,7 @@ applies_to: this paper
 
 This record holds the Human-authored brief the paper starts from. A brief
 written in a separate brief repository is ingested here with
-`paper-brief-ingest`, which also copies its decided fields into `PAPER.md`; a
+`paper-foundation`, which also copies its decided fields into `PAPER.md`; a
 brief can also be written here directly. Fill only what is decided: a field left
 empty or `TODO` stays `unresolved` in `PAPER.md`, and the agent never invents
 one. Mark as locked only the high-impact commitments that must not change
@@ -100,7 +100,7 @@ runs, URLs, or `none yet`):
 ## Template usage note
 
 Write this paper in a repository made from the `paper-agent-project-template`
-GitHub template. Ingest this brief with `paper-brief-ingest`
-(`python3 .agents/skills/shared/paper-brief-ingest/scripts/paper_brief.py ingest --brief <path>`),
+GitHub template. Ingest this brief with `paper-foundation`
+(`python3 .agents/skills/shared/paper-foundation/sources/paper-brief-ingest/scripts/paper_brief.py ingest --brief <path>`),
 then draft under the declared operating mode; `README.md` and `DEV.md` of the
 paper repository describe the workflow.

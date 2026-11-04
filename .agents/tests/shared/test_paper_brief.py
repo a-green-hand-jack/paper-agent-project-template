@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-TOOL = ROOT / ".agents/skills/shared/paper-brief-ingest/scripts/paper_brief.py"
+TOOL = ROOT / ".agents/skills/shared/paper-foundation/sources/paper-brief-ingest/scripts/paper_brief.py"
 TEMPLATE_ORIGINS = (
     "git@github.com:a-green-hand-jack/paper-agent-project-template.git",
     "https://github.com/a-green-hand-jack/agent-writing-harness",

@@ -28,13 +28,14 @@ jobs:
           # test_adoption_states.py upgrades a paper from the v0.4.1 tag.
           fetch-depth: 0
 
-      - name: Install TeX, PDF text tools and PyYAML
+      - name: Install TeX, PDF text tools and development checker dependencies
         run: |
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             cm-super \
             latexmk \
             poppler-utils \
+            python3-markdown-it \
             python3-yaml \
             texlive-latex-base \
             texlive-latex-recommended \

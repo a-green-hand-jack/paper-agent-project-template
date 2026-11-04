@@ -30,6 +30,14 @@ applies_to: repositories whose product calls a non-deterministic external bounda
 6. **The fake is a sieve, not acceptance.** It stays out of the product tree and
    the image, does not replace a real container, protocol or OCI run, and never
    counts as completion evidence.
+7. **Detect unexpected exits from the fake boundary.** For fake-only tests,
+   enumerate the project-controlled subprocess, library and network entrypoints
+   under test; default-deny unexpected calls and record each attempt before
+   raising. Assert the recorded attempts at teardown as well: product code may
+   catch the exception. Keep an explicitly selected integration test separate
+   and permit its named real boundaries under the user's authorization.
+   PATH shims or environment variables cover only the calls routed through them;
+   they are not OS isolation and do not protect unlisted libraries or endpoints.
 
 ## Why
 
@@ -55,7 +63,7 @@ boundary behaves that way.
 3. Before a real run, run the scenarios once. A failure found there is cheaper
    than the same failure in the real run.
 4. Take completion evidence from the real run's receipts and artifacts, as in
-   [`long-running-supervision`](../../skills/shared/long-running-supervision/SKILL.md).
+   [`long-running-supervision`](https://github.com/a-green-hand-jack/coding-agent-project-template/blob/v0.1.28/.agents/skills/shared/long-running-supervision/SKILL.md).
    A passing fake run is a reason to start the real run, not a result.
 5. Before committing a scenario, request record or Issue text, check that it
    holds no credential value, account or machine-local path. See

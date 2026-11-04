@@ -2,10 +2,10 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.4.6
+  version: v0.4.7
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.26
+    version: v0.1.30
 default_scope: project
 matching: "Most specific path wins; explicit entries override directory defaults."
 classes: {
@@ -995,13 +995,31 @@ migrations: [
       "to": [
         {
           "id": "content-5e1742dff7120958",
+          "path": ".agents/memory/project/template-dispatch-decisions.md"
+        }
+      ],
+      "action": "rename",
+      "reason": "Rename dispatch decision while preserving its stable identity and historical source.",
+      "source_commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971",
+      "verification": "check-development.sh; normalized test discovery; real-release upgrade fixtures"
+    },
+    {
+      "from": [
+        {
+          "id": "content-5e1742dff7120958",
           "path": ".agents/memory/project/template-work-runs-on-codex.md"
         }
       ],
-      "action": "keep",
-      "reason": "Retain authoritative content and history at its stable path.",
-      "source_commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971",
-      "verification": "check-development.sh; normalized test discovery; real-release upgrade fixtures"
+      "to": [
+        {
+          "id": "content-5e1742dff7120958",
+          "path": ".agents/memory/project/template-dispatch-decisions.md"
+        }
+      ],
+      "action": "rename",
+      "reason": "Describe the current confirmed dispatch decision without implying a Codex default.",
+      "source_commit": "09039873a40daf330ecfd1f8fac70676f75f87c5",
+      "verification": "check-development.sh; old-release upgrade and idempotence fixtures"
     },
     {
       "from": [
@@ -3093,7 +3111,7 @@ migrations: [
         },
         {
           "id": "content-5e1742dff7120958",
-          "path": ".agents/memory/project/template-work-runs-on-codex.md"
+          "path": ".agents/memory/project/template-dispatch-decisions.md"
         }
       ],
       "action": "extract",
@@ -3658,6 +3676,24 @@ migrations: [
       "reason": "Resolve legacy classification to independent registered units; preserve the original record as historical provenance. Empty defaults retire only classification, never state.",
       "source_commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971",
       "verification": "Every legacy registration has an explicit disposition; check-development.sh validates coverage and target IDs."
+    },
+    {
+      "from": [
+        {
+          "id": "content-5e1742dff7120958",
+          "path": ".agents/memory/project/template-work-runs-on-codex.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-5e1742dff7120958",
+          "path": ".agents/memory/project/template-dispatch-decisions.md"
+        }
+      ],
+      "action": "keep",
+      "reason": "Retain authoritative content and history at its stable path.",
+      "source_commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971",
+      "verification": "check-development.sh; normalized test discovery; real-release upgrade fixtures"
     },
     {
       "from": [
@@ -4252,6 +4288,4110 @@ migrations: [
       "reason": "Template-only test; project group, scope template.",
       "source_commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04",
       "verification": "bash .agents/scripts/shared/check-development.sh; make check"
+    },
+    {
+      "from": [
+        {
+          "id": "content-64efce3c980def01",
+          "path": ".agents/skills/shared/academic-voice/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-64efce3c980def01",
+          "path": ".agents/skills/shared/paper-writing/sources/academic-voice/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-64efce3c980def01",
+          "path": ".agents/skills/shared/academic-voice/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-64efce3c980def01",
+          "path": ".agents/skills/shared/paper-writing/sources/academic-voice/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-64efce3c980def01",
+          "path": ".agents/skills/shared/academic-voice/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-64efce3c980def01",
+          "path": ".agents/skills/shared/paper-writing/sources/academic-voice/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/better-usage/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/paper-writing/sources/better-usage/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/better-usage/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/paper-writing/sources/better-usage/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/better-usage/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/paper-writing/sources/better-usage/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/better-usage/references/compatibility-examples.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-391e1b802e3a98ff",
+          "path": ".agents/skills/shared/paper-writing/sources/better-usage/references/compatibility-examples.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b74c6c93fecefd4d",
+          "path": ".agents/skills/shared/citation-support-review/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b74c6c93fecefd4d",
+          "path": ".agents/skills/shared/paper-references/sources/citation-support-review/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-7b975c257972cfcc",
+          "path": ".agents/skills/shared/control-review/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-7b975c257972cfcc",
+          "path": ".agents/skills/shared/paper-foundation/sources/control-review/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6af4c8ab94dfaec9",
+          "path": ".agents/skills/shared/decision-packet/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6af4c8ab94dfaec9",
+          "path": ".agents/skills/shared/paper-foundation/sources/decision-packet/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-fa336503f869688d",
+          "path": ".agents/skills/shared/figure-router/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-fa336503f869688d",
+          "path": ".agents/skills/shared/paper-figures/sources/figure-router/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/framework_hero.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/framework_hero.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/framework_hero.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/framework_hero.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/graphical_model_hero.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/graphical_model_hero.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/graphical_model_hero.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/graphical_model_hero.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/matrix_layout_hero.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/matrix_layout_hero.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/matrix_layout_hero.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/matrix_layout_hero.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/pipeline_hero.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/pipeline_hero.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/tensor_framework_hero.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/tensor_framework_hero.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/examples/hero_tikz/tensor_framework_hero.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/examples/hero_tikz/tensor_framework_hero.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/paperfig/__init__.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/paperfig/__init__.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/paperfig/archetypes.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/paperfig/archetypes.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/paperfig/paperfig.mplstyle"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/paperfig/paperfig.mplstyle"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/paperfig/scientific.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/paperfig/scientific.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/paperfig/style.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/paperfig/style.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/pyproject.toml"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/pyproject.toml"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/references/caption-and-quality.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/references/caption-and-quality.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/references/figure-cookbook.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/references/figure-cookbook.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/references/figure-critique.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/references/figure-critique.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/references/framework-figures.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/references/framework-figures.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/requirements.txt"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/requirements.txt"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/scripts/_smoke_test.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/scripts/_smoke_test.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/scripts/_style.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/scripts/_style.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/icarus-figures/scripts/critique.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6a4d5701e814aed2",
+          "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/scripts/critique.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/__init__.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/__init__.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/cli.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/cli.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/__init__.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/__init__.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/_input_normalization.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/_input_normalization.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/_page_artifacts.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/_page_artifacts.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/build_pptx_from_manifest.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/build_pptx_from_manifest.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/configure_image_backend.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/configure_image_backend.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/deck_run_state.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/deck_run_state.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/deck_text_hints.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/deck_text_hints.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/finalize_deck_run.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/finalize_deck_run.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/formula_renderer.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/formula_renderer.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/image_gen.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/image_gen.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/main.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/main.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/make_page_contact_sheet.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/make_page_contact_sheet.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/native_tables.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/native_tables.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/paddle_text_hints.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/paddle_text_hints.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/page_job_status.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/page_job_status.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/page_text_metrics.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/page_text_metrics.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/path_geometry.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/path_geometry.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/prepare_deck_run.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/prepare_deck_run.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/process_asset_sheet.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/process_asset_sheet.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/record_imagegen_result.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/record_imagegen_result.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/record_page_dispatch.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/record_page_dispatch.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/record_page_result.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/record_page_result.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/remove_chroma_key.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/remove_chroma_key.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/reset_page_job.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/reset_page_job.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/runtime_env.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/runtime_env.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/split_alpha_components.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/split_alpha_components.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/text_hints.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/text_hints.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/editppt/runtime/validate_pptx.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/editppt/runtime/validate_pptx.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/cli/pyproject.toml"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/cli/pyproject.toml"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/prompts/page-worker.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/prompts/page-worker.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/references/cli-helper.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/references/cli-helper.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/references/manifest-schema.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/references/manifest-schema.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/references/page-decision-tree.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/references/page-decision-tree.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/image-to-editable-ppt/scripts/build-page-worker-prompt.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-be03ff66bf8ae033",
+          "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/scripts/build-page-worker-prompt.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ed9f04bc8916c1c7",
+          "path": ".agents/skills/shared/lieflat-less-ai-tone/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ed9f04bc8916c1c7",
+          "path": ".agents/skills/shared/paper-writing/sources/lieflat-less-ai-tone/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ed9f04bc8916c1c7",
+          "path": ".agents/skills/shared/lieflat-less-ai-tone/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ed9f04bc8916c1c7",
+          "path": ".agents/skills/shared/paper-writing/sources/lieflat-less-ai-tone/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ed9f04bc8916c1c7",
+          "path": ".agents/skills/shared/lieflat-less-ai-tone/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ed9f04bc8916c1c7",
+          "path": ".agents/skills/shared/paper-writing/sources/lieflat-less-ai-tone/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-48c2e4f51a6608fd",
+          "path": ".agents/skills/shared/manuscript-consistency-review/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-48c2e4f51a6608fd",
+          "path": ".agents/skills/shared/paper-review/sources/manuscript-consistency-review/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-acd903a868b58cc0",
+          "path": ".agents/skills/shared/openreview-review-collector/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-acd903a868b58cc0",
+          "path": ".agents/skills/shared/paper-review/sources/openreview-review-collector/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-acd903a868b58cc0",
+          "path": ".agents/skills/shared/openreview-review-collector/scripts/openreview-cdp-extract.mjs"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-acd903a868b58cc0",
+          "path": ".agents/skills/shared/paper-review/sources/openreview-review-collector/scripts/openreview-cdp-extract.mjs"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-367f52325ba4f1e3",
+          "path": ".agents/skills/shared/paper-brief-ingest/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-367f52325ba4f1e3",
+          "path": ".agents/skills/shared/paper-foundation/sources/paper-brief-ingest/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-367f52325ba4f1e3",
+          "path": ".agents/skills/shared/paper-brief-ingest/scripts/paper_brief.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-367f52325ba4f1e3",
+          "path": ".agents/skills/shared/paper-foundation/sources/paper-brief-ingest/scripts/paper_brief.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-9adf5d592634e8cb",
+          "path": ".agents/skills/shared/paper-interface-maintenance/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-9adf5d592634e8cb",
+          "path": ".agents/skills/shared/paper-foundation/sources/paper-interface-maintenance/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-78c4bcb4b1067400",
+          "path": ".agents/skills/shared/paper-orientation/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-78c4bcb4b1067400",
+          "path": ".agents/skills/shared/paper-foundation/sources/paper-orientation/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c075556e2c07b59d",
+          "path": ".agents/skills/shared/poster-build/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c075556e2c07b59d",
+          "path": ".agents/skills/shared/paper-publication/sources/poster-build/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/requirements.txt"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/requirements.txt"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/scripts/extract-pdf-annotations.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/scripts/extract-pdf-annotations.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/scripts/generate_report_pdf.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/scripts/generate_report_pdf.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/templates/output_template.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/templates/output_template.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/proofread/templates/report_latex.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c0e62ed7f9f8488f",
+          "path": ".agents/skills/shared/paper-writing/sources/proofread/templates/report_latex.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cd078be1c73cbfdc",
+          "path": ".agents/skills/shared/publication-planning/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cd078be1c73cbfdc",
+          "path": ".agents/skills/shared/paper-publication/sources/publication-planning/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-79ec0e6021571a83",
+          "path": ".agents/skills/shared/reference-repair/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-79ec0e6021571a83",
+          "path": ".agents/skills/shared/paper-references/sources/reference-repair/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-50d8d6040f28a9bd",
+          "path": ".agents/skills/shared/release-review/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-50d8d6040f28a9bd",
+          "path": ".agents/skills/shared/paper-publication/sources/release-review/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4b52c1c3a7230dea",
+          "path": ".agents/skills/shared/scientific-english-editor/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4b52c1c3a7230dea",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-english-editor/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4b52c1c3a7230dea",
+          "path": ".agents/skills/shared/scientific-english-editor/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4b52c1c3a7230dea",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-english-editor/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4b52c1c3a7230dea",
+          "path": ".agents/skills/shared/scientific-english-editor/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4b52c1c3a7230dea",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-english-editor/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-3accc615e4856f9f",
+          "path": ".agents/skills/shared/scientific-figure-workflow/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-3accc615e4856f9f",
+          "path": ".agents/skills/shared/paper-figures/sources/scientific-figure-workflow/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-3accc615e4856f9f",
+          "path": ".agents/skills/shared/scientific-figure-workflow/references/github-candidates.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-3accc615e4856f9f",
+          "path": ".agents/skills/shared/paper-figures/sources/scientific-figure-workflow/references/github-candidates.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/SOURCES.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/SOURCES.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/abstract.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/abstract.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/discussion.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/discussion.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/figures.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/figures.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/introduction.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/introduction.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/methods.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/methods.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/paper-structure.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/paper-structure.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/results.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/results.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/scientific-writing/references/revision.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8ac3817a4bec13ff",
+          "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/references/revision.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/chart_selection.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/chart_selection.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/data_profiling.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/data_profiling.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/journal_specs.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/journal_specs.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/plot_recipes.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/plot_recipes.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/publication_checklist.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/publication_checklist.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/visual_review.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/visual_review.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/references/viz_pitfalls.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/references/viz_pitfalls.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/requirements.txt"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/requirements.txt"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/scripts/check_figure.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/scripts/check_figure.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/scripts/export_figure.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/scripts/export_figure.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/scripts/layout_tools.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/scripts/layout_tools.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/scripts/profile_data.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/scripts/profile_data.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/scripts/setup_style.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/scripts/setup_style.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/scipilot-figure-skill/scripts/visual_qa.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4165be43d08b2e4f",
+          "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/scripts/visual_qa.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4c0ba287215bfe29",
+          "path": ".agents/skills/shared/section-writing/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4c0ba287215bfe29",
+          "path": ".agents/skills/shared/paper-writing/sources/section-writing/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4c0ba287215bfe29",
+          "path": ".agents/skills/shared/section-writing/references/paper-writing-guide.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4c0ba287215bfe29",
+          "path": ".agents/skills/shared/paper-writing/sources/section-writing/references/paper-writing-guide.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-919c812fe749a4d1",
+          "path": ".agents/skills/shared/style-alignment/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-919c812fe749a4d1",
+          "path": ".agents/skills/shared/paper-writing/sources/style-alignment/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-919c812fe749a4d1",
+          "path": ".agents/skills/shared/style-alignment/references/writing-style.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-919c812fe749a4d1",
+          "path": ".agents/skills/shared/paper-writing/sources/style-alignment/references/writing-style.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/data-pipeline.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/data-pipeline.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/data-visualization.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/data-visualization.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/dot-to-tikz.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/dot-to-tikz.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/drawio-modes.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/drawio-modes.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/figure-diff.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/figure-diff.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/figure-spec.schema.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/figure-spec.schema.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/geometry-math.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/geometry-math.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/layered-architecture.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/layered-architecture.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/lessons.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/lessons.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/pdf-overlap-checker.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/pdf-overlap-checker.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/sequence-diagram.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/sequence-diagram.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/step1-instructions.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/step1-instructions.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/three-column-mapping.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/three-column-mapping.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-colors.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-colors.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-design-linter.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-design-linter.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-global-rules.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-global-rules.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-path-router.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-path-router.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/COMPOSITION-RULES.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/COMPOSITION-RULES.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/README.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/README.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/attention-heatmap.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/attention-heatmap.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/bar-chart.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/bar-chart.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/color-legend.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/color-legend.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/confusion-matrix.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/confusion-matrix.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/embedded-graph.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/embedded-graph.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/example-skeleton-B-horizontal.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/example-skeleton-B-horizontal.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/example-skeleton-C-centralhero.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/example-skeleton-C-centralhero.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/example-skeleton-D-vertical-sidepanel.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/example-skeleton-D-vertical-sidepanel.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/example-skeleton-E-multimodal-fusion.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/example-skeleton-E-multimodal-fusion.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/example-skeleton-F-multiphase-multisub.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/example-skeleton-F-multiphase-multisub.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/example-skeleton-G-federated-vertical.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/example-skeleton-G-federated-vertical.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/feedback-loop.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/feedback-loop.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/formula-box.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/formula-box.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/gaussian-curve.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/gaussian-curve.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/hyperparams-table.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/hyperparams-table.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/image-strip.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/image-strip.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/layer-stack.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/layer-stack.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/line-chart.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/line-chart.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/metrics-card.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/metrics-card.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/mini-spectrogram.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/mini-spectrogram.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/multi-zone-palette.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/multi-zone-palette.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/pipeline-stages.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/pipeline-stages.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/attention-heatmap.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/attention-heatmap.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/bar-chart.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/bar-chart.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/color-legend.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/color-legend.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/confusion-matrix.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/confusion-matrix.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/embedded-graph.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/embedded-graph.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-B-horizontal.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-B-horizontal.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-C-centralhero.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-C-centralhero.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-D-vertical-sidepanel.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-D-vertical-sidepanel.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-E-multimodal-fusion.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-E-multimodal-fusion.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-F-multiphase-multisub.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-F-multiphase-multisub.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-G-federated-vertical.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/example-skeleton-G-federated-vertical.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/feedback-loop.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/feedback-loop.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/formula-box.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/formula-box.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/gaussian-curve.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/gaussian-curve.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/hyperparams-table.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/hyperparams-table.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/image-strip.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/image-strip.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/layer-stack.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/layer-stack.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/line-chart.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/line-chart.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/metrics-card.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/metrics-card.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/mini-spectrogram.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/mini-spectrogram.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/multi-zone-palette.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/multi-zone-palette.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/pipeline-stages.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/pipeline-stages.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/radar-chart.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/radar-chart.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/scatter-plot.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/scatter-plot.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/stage-container.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/stage-container.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/summary-bar.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/summary-bar.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/previews/vector-arrows.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/previews/vector-arrows.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/radar-chart.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/radar-chart.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/scatter-plot.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/scatter-plot.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/stage-container.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/stage-container.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/summary-bar.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/summary-bar.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-snippets/vector-arrows.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-snippets/vector-arrows.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-template.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-template.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/tikz-validator.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/tikz-validator.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/visual-patterns.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/visual-patterns.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/thesis-figure-skill/references/visual-review-checklist.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-af7e28380a85b874",
+          "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/references/visual-review-checklist.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/LICENSE"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/LICENSE"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/PROVENANCE.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/PROVENANCE.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/by-construction.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/by-construction.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/examples/README.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/examples/README.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/examples/pipeline-absolute-coords-BAD.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/examples/pipeline-absolute-coords-BAD.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/examples/pipeline-by-construction-GOOD.tex"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/examples/pipeline-by-construction-GOOD.tex"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/examples/proof-edit-safety-hero-widen.png"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/examples/proof-edit-safety-hero-widen.png"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/hard-constraints.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/hard-constraints.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/tikz-figure-code/references/lint.sh"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d545c1d0d87718f9",
+          "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/references/lint.sh"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b9eb51196b81ce9d",
+          "path": ".agents/skills/shared/writing-reference-finder/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b9eb51196b81ce9d",
+          "path": ".agents/skills/shared/paper-writing/sources/writing-reference-finder/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b9eb51196b81ce9d",
+          "path": ".agents/skills/shared/writing-reference-finder/references/search-playbook.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b9eb51196b81ce9d",
+          "path": ".agents/skills/shared/paper-writing/sources/writing-reference-finder/references/search-playbook.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-54341f03187c2b74",
+          "path": ".agents/skills/shared/writing-router/SKILL.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-54341f03187c2b74",
+          "path": ".agents/skills/shared/paper-writing/sources/writing-router/reference.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Consolidate paper skill source as a resource without discarding its identity.",
+      "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
+      "verification": "check-development and downstream upgrade tests"
     }
   ]
 entries:
@@ -4563,13 +8703,14 @@ entries:
     scope: shared_with_adaptation
     owner: template-maintainers
     summary: "Prefix project Docker objects and remove expired owned objects without force."
-    status: active
+    status: rejected
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/shared/docker-objects-prefixed-and-removed.md"}
     updated: 2026-10-18
     adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
     optional: true
     supersedes: []
     superseded_by: []
+    adoption: "Not adopted: a paper starts no product containers or coding-agent runtime."
   - path: .agents/memory/shared/host-files-owned-by-running-user.md
     id: content-b7107b9f21d07c44
     kind: memory
@@ -4597,7 +8738,7 @@ entries:
     kind: memory
     scope: shared
     owner: template-maintainers
-    summary: "Record agent, provider, model and effort selected by difficulty and cost."
+    summary: "Confirm each dispatch selection and record provider, model, effort and reason."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/shared/issue-dispatch-by-difficulty.md"}
     updated: 2026-10-15
@@ -4608,7 +8749,7 @@ entries:
     kind: memory
     scope: shared
     owner: template-maintainers
-    summary: "Implement each Issue in its own verified Herdr worktree and independent agent session."
+    summary: "Choose direct development or a confirmed Herdr dispatch and keep issue ownership clear."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/shared/issue-in-herdr-worktree.md"}
     updated: 2026-10-13
@@ -4713,13 +8854,14 @@ entries:
     scope: shared_with_adaptation
     owner: template-maintainers
     summary: "Adapt guidance, commands, isolation, trace and accounting to the project."
-    status: active
+    status: rejected
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/shared/serve-the-coding-agent.md"}
     updated: 2026-10-24
     adaptation: "Fill GUIDANCE, COMMANDS, ISOLATION, TRACE and ACCOUNTING for where the project's instructions and acceptance criteria live, which commands the coding agent calls, what keeps each run apart, where the run records are read, and where usage is recorded and the budget stops a run; the five pillars (guidance, tools, parallelism, trace, cost) are a review lens, not a feature list, and the parallelism part links speed-and-parallelism-by-measurement instead of repeating it; unnecessary for a project not built on a coding agent."
     optional: true
     supersedes: []
     superseded_by: []
+    adoption: "Not adopted: a paper starts no product containers or coding-agent runtime."
   - path: .agents/memory/shared/speed-and-parallelism-by-measurement.md
     id: content-773ed08a0eb2fb12
     kind: memory
@@ -5475,9 +9617,9 @@ entries:
     updated: 2026-10-28
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/academic-voice/
+  - path: .agents/skills/shared/paper-writing/sources/academic-voice/
     id: content-64efce3c980def01
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, msimchowitz/writing-skills@214981f; PROVENANCE.md."
@@ -5486,9 +9628,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/better-usage/
+  - path: .agents/skills/shared/paper-writing/sources/better-usage/
     id: content-391e1b802e3a98ff
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, msimchowitz/writing-skills@214981f; PROVENANCE.md."
@@ -5497,9 +9639,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/citation-support-review/
+  - path: .agents/skills/shared/paper-references/sources/citation-support-review/
     id: content-b74c6c93fecefd4d
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Occurrence-level citation support at Draft, Review and Release strength."
@@ -5508,9 +9650,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/control-review/
+  - path: .agents/skills/shared/paper-foundation/sources/control-review/
     id: content-7b975c257972cfcc
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Review before changing anything a control cue protects."
@@ -5519,9 +9661,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/decision-packet/
+  - path: .agents/skills/shared/paper-foundation/sources/decision-packet/
     id: content-6af4c8ab94dfaec9
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Prepare a Human decision and record it as a project memory record."
@@ -5530,9 +9672,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/figure-router/
+  - path: .agents/skills/shared/paper-figures/sources/figure-router/
     id: content-fa336503f869688d
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "House router for figure work, harvested from downstream papers and generalized."
@@ -5541,9 +9683,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/icarus-figures/
+  - path: .agents/skills/shared/paper-figures/sources/icarus-figures/
     id: content-6a4d5701e814aed2
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, TAO-QKV/Icarus-Figures@0bcaa40; front matter patched to parse, recorded in PROVENANCE.md."
@@ -5552,9 +9694,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/image-to-editable-ppt/
+  - path: .agents/skills/shared/paper-figures/sources/image-to-editable-ppt/
     id: content-be03ff66bf8ae033
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, ningzimu/image-to-editable-ppt-skill@b7be494; patched to remove the fallback that read another tool's login, recorded in PROVENANCE.md."
@@ -5563,9 +9705,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/lieflat-less-ai-tone/
+  - path: .agents/skills/shared/paper-writing/sources/lieflat-less-ai-tone/
     id: content-ed9f04bc8916c1c7
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, larashero3-dotcom/writing-dna-skill@d5145ef; standalone since the Writing DNA suite was retired; PROVENANCE.md."
@@ -5574,9 +9716,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/manuscript-consistency-review/
+  - path: .agents/skills/shared/paper-review/sources/manuscript-consistency-review/
     id: content-48c2e4f51a6608fd
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Findings-only review of a version the Human names."
@@ -5585,9 +9727,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/openreview-review-collector/
+  - path: .agents/skills/shared/paper-review/sources/openreview-review-collector/
     id: content-acd903a868b58cc0
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "House skill harvested from downstream papers; collects reviews into a dossier and a revision queue."
@@ -5596,9 +9738,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-brief-ingest/
+  - path: .agents/skills/shared/paper-foundation/sources/paper-brief-ingest/
     id: content-367f52325ba4f1e3
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Validates a brief and fills PAPER.md; carries scripts/paper_brief.py, which refuses to ingest into the template itself."
@@ -5607,9 +9749,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-interface-maintenance/
+  - path: .agents/skills/shared/paper-foundation/sources/paper-interface-maintenance/
     id: content-9adf5d592634e8cb
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Interface macros, the paper-interfaces record and manifest entries change together."
@@ -5618,9 +9760,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-orientation/
+  - path: .agents/skills/shared/paper-foundation/sources/paper-orientation/
     id: content-78c4bcb4b1067400
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Session start and context recovery for a paper repository."
@@ -5629,9 +9771,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/poster-build/
+  - path: .agents/skills/shared/paper-publication/sources/poster-build/
     id: content-c075556e2c07b59d
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "House skill for the optional poster/ product tree, harvested from a downstream paper and generalized."
@@ -5640,9 +9782,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/proofread/
+  - path: .agents/skills/shared/paper-writing/sources/proofread/
     id: content-c0e62ed7f9f8488f
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, JakobThumm/proofreading@cf2f0d7; PROVENANCE.md."
@@ -5651,9 +9793,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/publication-planning/
+  - path: .agents/skills/shared/paper-publication/sources/publication-planning/
     id: content-cd078be1c73cbfdc
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Venue, page budget, builds and every Overleaf status, pull or push request."
@@ -5662,9 +9804,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/reference-repair/
+  - path: .agents/skills/shared/paper-references/sources/reference-repair/
     id: content-79ec0e6021571a83
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Repair BibTeX identity, metadata, duplicates and versions."
@@ -5673,9 +9815,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/release-review/
+  - path: .agents/skills/shared/paper-publication/sources/release-review/
     id: content-50d8d6040f28a9bd
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "make release-check, the release PR from dev to main and the tag."
@@ -5684,9 +9826,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/scientific-english-editor/
+  - path: .agents/skills/shared/paper-writing/sources/scientific-english-editor/
     id: content-4b52c1c3a7230dea
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, SailRain/scientific-english-editor-skill@2b5ed82; PROVENANCE.md."
@@ -5695,9 +9837,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/scientific-figure-workflow/
+  - path: .agents/skills/shared/paper-figures/sources/scientific-figure-workflow/
     id: content-3accc615e4856f9f
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "House figure workflow, harvested from downstream papers and generalized; names no image provider."
@@ -5706,9 +9848,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/scientific-writing/
+  - path: .agents/skills/shared/paper-writing/sources/scientific-writing/
     id: content-8ac3817a4bec13ff
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored from a-green-hand-jack/research-skills@26226c9 with the maintainer's permission (no licence file upstream); PROVENANCE.md and SOURCES.md."
@@ -5717,9 +9859,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/scipilot-figure-skill/
+  - path: .agents/skills/shared/paper-figures/sources/scipilot-figure-skill/
     id: content-4165be43d08b2e4f
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, Haojae/scipilot-figure-skill@43098dd; PROVENANCE.md."
@@ -5728,9 +9870,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/section-writing/
+  - path: .agents/skills/shared/paper-writing/sources/section-writing/
     id: content-4c0ba287215bfe29
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Section drafting and revision; its references hold the paper-writing guide."
@@ -5739,9 +9881,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/style-alignment/
+  - path: .agents/skills/shared/paper-writing/sources/style-alignment/
     id: content-919c812fe749a4d1
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Positioning, narrative and writing policy; its references hold the writing-style guide."
@@ -5750,9 +9892,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/thesis-figure-skill/
+  - path: .agents/skills/shared/paper-figures/sources/thesis-figure-skill/
     id: content-af7e28380a85b874
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, 0xE1337/thesis-figure-skill@ffe6d07; PROVENANCE.md."
@@ -5761,9 +9903,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/tikz-figure-code/
+  - path: .agents/skills/shared/paper-figures/sources/tikz-figure-code/
     id: content-d545c1d0d87718f9
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "Vendored, MIT, 0xE1337/thesis-figure-skill@ffe6d07; PROVENANCE.md."
@@ -5772,9 +9914,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/writing-reference-finder/
+  - path: .agents/skills/shared/paper-writing/sources/writing-reference-finder/
     id: content-b9eb51196b81ce9d
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "House skill harvested from downstream papers; exemplars are never citations."
@@ -5783,9 +9925,9 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/writing-router/
+  - path: .agents/skills/shared/paper-writing/sources/writing-router/
     id: content-54341f03187c2b74
-    kind: skill
+    kind: code
     scope: shared
     owner: paper-template-maintainers
     summary: "House router for prose tasks, harvested from downstream papers and generalized."
@@ -6561,6 +10703,128 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
+  - path: .agents/skills/shared/paper-foundation/
+    id: paper-skill-paper-foundation
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Paper context, brief, control decisions and stable interfaces."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-writing/
+    id: paper-skill-paper-writing
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Paper writing, structure, language and proofreading."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-figures/
+    id: paper-skill-paper-figures
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Scientific data figures and editable diagrams."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-references/
+    id: paper-skill-paper-references
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Manuscript citation identity and claim support."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-review/
+    id: paper-skill-paper-review
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Manuscript consistency and peer-review triage."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-publication/
+    id: paper-skill-paper-publication
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Paper publication, Overleaf and posters."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/
+    id: paper-exemplar-records
+    kind: code
+    scope: project
+    owner: project-maintainers
+    summary: "Paper-specific writing, figure and poster exemplar records."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+    optional: true
+  - path: .agents/references/exemplars/AGENTS.md
+    id: paper-exemplar-agents-md
+    kind: governance
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/writing/.gitkeep
+    id: paper-exemplar-writing--gitkeep
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/figures/.gitkeep
+    id: paper-exemplar-figures--gitkeep
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/posters/.gitkeep
+    id: paper-exemplar-posters--gitkeep
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
   - path: .agents/memory/project/paper-run-boundary.md
     id: content-87453f37a4a46350
     kind: memory
@@ -6640,7 +10904,7 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/memory/project/template-work-runs-on-codex.md
+  - path: .agents/memory/project/template-dispatch-decisions.md
     id: content-5e1742dff7120958
     kind: memory
     scope: template
@@ -6844,6 +11108,18 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_issue_195_upgrade.py
+    id: paper-test-issue-195
+    kind: code
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Exercise upgrades preserving local paper content and evidence."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+    language: python
 omitted: []
 local_legacy_inventory: {
     "version": "v0.1.25",

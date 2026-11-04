@@ -359,6 +359,8 @@ class UpgradeStateTests(unittest.TestCase):
         second = run(*[part for path in resolved for part in ("--resolved", path)], cls.target)
         cls.index_only = []
         for path in refused_paths(second.stdout):
+            if not (cls.paper / path).is_file():
+                raise AssertionError(f"upgrade refused a non-file path {path!r}:\n{second.stdout}\n{second.stderr}")
             release = git("show", f"{cls.target}:{path}", cwd=template).stdout.decode()
             if outside_index((cls.paper / path).read_text(encoding="utf-8")) == outside_index(release):
                 cls.index_only.append(path)
