@@ -8,26 +8,26 @@
 
 ## Issue、分支与 PR
 
-较大的工作先通过 Issue 确定问题、范围、验收和风险，再开始修改：包括起草或重写章节、修改主张、结果、接口宏、投稿场所或构建、`PAPER.md` 控制提示保护的内容，以及工具或 CI 变更。小修正可直接在 `dev` checkout 完成，无须 Issue、worktree 或 PR：错字、不改变主张的单段措辞、注释、记忆或索引更新、无需设计决策的单文件修复，以及运行现有验收命令。不确定时按较大工作处理；小改动扩大或引出设计问题时应停下来创建 Issue。小改动也不会自动提交或推送；应运行适用检查并报告证据。
+默认直接在现有 `dev` checkout 工作，先检查并保留无关改动和运行中的任务。按任务风险及 Human 要求决定是否需要 Issue、审阅和 PR；运行适用检查并报告证据。提交和推送仍需明确授权。
 
 Issue 分支从其声明的目标（默认为 `dev`）开始，命名为 `fix/issue-<N>-<slug>`、`feat/issue-<N>-<slug>`、`docs/issue-<N>-<slug>` 或 `chore/issue-<N>-<slug>`。简单 Issue 通过 PR 返回 `dev`。父任务需要联合验收时，`issue-workflow` 记录父集成分支、子 PR 目标和最终到 `dev` 的 PR；合并子任务不结束父任务的验收职责。`main` 只保存发布状态。Overleaf 编辑通过 `overleaf-sync.sh pull` 创建的 `sync/overleaf-<commit>` 分支进入仓库。
 
 PR 描述说明修改内容和原因，列出验收及 CI 要求的每项检查命令与结果，以及过程中修复的相关缺陷。只有维护者能完成的步骤应写成具体阻塞，说明维护者需要做什么。构建和发布证据放在 Issue 或 PR 中；Agent 自己的摘要不能代替它。
 
-从声明的目标使用 Herdr 原生 worktree 命令开始 Issue，并在新 pane 中启动独立 Agent 会话；不要在当前 Agent 窗口切换分支。新会话首先运行 setup。父会话可以生成首个提示，其中包含 Issue 链接、分支、阅读范围和验收要求：
+需要派遣 Herdr worktree 时，事先询问 Human 是否派遣，并确认本次 coding agent、具体模型和 thinking level；不得自动选择或静默 fallback。经确认后使用 Herdr 原生命令创建，新会话首先运行 setup。交接提示包含 Issue 链接、分支、阅读范围和验收要求：
 
 ```bash
 bash .agents/scripts/shared/new-agent-prompt.sh 123 feat/issue-123-example dev \
   .project/state/coordinator-handoff.md
 ```
 
-如果 Herdr 不可用，应报告阻塞，不要在当前窗口中实现。`issue-workflow` 技能涵盖开始、合并与收尾。
+需要经授权的隔离工作而 Herdr 不可用时报告阻塞，不以原始 Git 创建替代 worktree。`issue-workflow` 技能涵盖开始、合并与收尾。
 
 Issue、PR、评论和提交使用 [`development-writing`](.agents/skills/shared/development-writing/SKILL.md)：解释具体变更，使当前描述与最终范围一致，并说明证据对应的版本和条件。既有 Issue 字段和 PR 小节仍是入口；建议性提示不增加新的必填字段。registry 没有 `writing:` 声明，因此每个文件保持自身语言。发布叙事使用 `release-doc-audit` 并保留本模板自身的发布历史。
 
 ## 会话身份与交付
 
-遵循 `issue-workflow` 处理调用者身份和派发。控制 Herdr 前，将工具进程允许的 Herdr 变量和原生线程与实时 workspace、pane、Agent 和 Git 公共目录/worktree 身份匹配。新的 Codex 派发应先检查已安装 CLI 支持 `--no-daemon`，再隔离启动；随后由 worker 独立验证身份并明确确认范围。上下文缺失或过期时只能进行已授权的只读诊断，不得猜测 ID 或修改共享服务。当前 `issue-workflow` 的适配保留本项目的 Agent 默认值；每次获得明确授权的 Issue 派发都在 Dispatch 中记录实际 Agent、provider、模型、思考强度和启动模式。
+遵循 `issue-workflow` 处理调用者身份和派发。控制 Herdr 前，将工具进程允许的 Herdr 变量和原生线程与实时 workspace、pane、Agent 和 Git 公共目录/worktree 身份匹配。新的 Codex 派发应先检查已安装 CLI 支持 `--no-daemon`，再隔离启动；随后由 worker 独立验证身份并明确确认范围。上下文缺失或过期时只能进行已授权的只读诊断，不得猜测 ID 或修改共享服务。每次派遣前确认 agent、具体模型和 thinking level，并在 Dispatch 中记录实际选择及启动模式。
 
 将任务键、角色、尝试次数和实际返回的 ID，与领取任务的协调者地址、允许的联系人/事件及恢复职责一起放入 `.project/state/` 的本地交接文件。将该文件作为上面命令的第四个参数；私人地址不得写入 Issue、PR 或跟踪内容。[`agent-communication`](.agents/skills/shared/agent-communication/SKILL.md) 负责传输预检及区分已提交、已确认和已完成状态。原生队列的实际可达性应与启动或提交成功分开检查。发送前检查目标的实时状态和输入；目标阻塞或存在实际草稿时停止发送。
 
@@ -76,7 +76,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 
 - 带 `latexmk`、`pdflatex`、`bibtex` 及论文和投稿套件所需宏包的 TeX Live；
 - 用于 PDF 检查的 `pdftotext` 和 `pdfinfo`（poppler-utils）；
-- 用于脚本的 Python 3 和 PyYAML；
+- 用于脚本的 Python 3、PyYAML 和 markdown-it-py；开发面检查以隔离模式运行，依赖须在该模式下可用；
 - 可选的 `uv`，供使用 `.agents/scripts/shared/reference-integrity/` 中锁定依赖的在线参考文献审计使用。
 
 `bash .agents/scripts/shared/setup-worktree.sh` 会报告缺失项。
@@ -94,7 +94,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 - 不可重建的可编辑源文件（绘图、幻灯片或选定的生成草稿）属于资产：登记在 manifest，保存在受管存储或 `.project/artifacts/<topic>/`，不放入 `paper/`。
 - 临时渲染和被拒草稿放入 `.project/build/figures/`。
 
-`figure-router` 和 `scientific-figure-workflow` 应用此策略。
+`paper-figures` 应用此策略。
 
 ## 参考文献审计
 
@@ -133,7 +133,7 @@ bash .agents/scripts/shared/overleaf-sync.sh push     # HEAD:paper -> Overleaf, 
 
 ## 可选的第二产品：`poster/`
 
-会议海报是与 `paper/` 并列的第二个产品树 `poster/`。它与 `paper/` 一样自包含，构建到 `.project/build/poster/`，内容及其 `macros.tex` 副本只来自论文，并使用另一个 remote 上的独立 Overleaf 项目（`--remote overleaf-poster --tree poster`）。`poster-build` 技能对此有说明。模板本身不提供 `poster/`。
+会议海报是与 `paper/` 并列的第二个产品树 `poster/`。它与 `paper/` 一样自包含，构建到 `.project/build/poster/`，内容及其 `macros.tex` 副本只来自论文，并使用另一个 remote 上的独立 Overleaf 项目（`--remote overleaf-poster --tree poster`）。`paper-publication` 技能对此有说明。模板本身不提供 `poster/`。
 
 ## 记忆与知识
 
@@ -164,13 +164,35 @@ make check
 论文发布（投稿版本、arXiv 版本、终稿版本）：
 
 1. 在 `dev` 为该版本设置 `PAGE_BUDGET`，运行 `make check` 和 `make release-check`，并查看 `blind` 和 `submission` 页面。
-2. 运行 `release-review`，为 Human 批准准备发布；对候选版本运行 `release-doc-audit`。
+2. 运行 `paper-publication`，为 Human 批准准备发布；对候选版本运行 `release-doc-audit`。
 3. 创建从 `dev` 到 `main` 的 PR。合并后在 `main` 上创建并推送标签，例如 `submit-<venue>-<yyyy>`、`arxiv-v1` 或 `camera-ready`。
 4. 在 `RELEASE_NOTES.md` 中添加 `## <tag>` 条目，记录发布内容、所用构建及检查结果。
 
 本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit` 和 `make check`；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。`make check` 运行 `.agents/tests/project/test_adoption_states.py`，从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
 
 ## 与模板的关系
+
+### 开发中：v0.4.6 之后的迁移草案
+
+以下是 #195 的未发布变更，不是新的发布标签。准备发布时，将最终核验过的步骤
+写入新版本的 `RELEASE_NOTES.md`，不要改写 v0.4.6 的历史记录。
+跟随的 coding template 为 v0.1.30；本模板暂时保留三类必要差异：升级命令保留本地
+模板专有登记和额外开发根目录，并按路径组件处理“移动目录同时重命名文件”；
+registry 检查器给重复身份列出路径；可选凭据
+资料及未采用的长运行技能使用不会指向缺失本地文件的说明。后续升级上游时需要
+重新核对这些差异，不能只依赖版本号。
+
+1. 在论文中保存已有改动、引用台账和范例记录；运行目标版本的完整
+   `.agents/scripts/shared/upgrade-template.sh --check <目标标签>`，检查逐路径
+   迁移及冲突。六个 `paper-*` 技能入口取代旧的论文平级入口；原资料和脚本移到
+   各入口的 `sources/` 中。核对项目自己的调用及本地适配，不要覆盖它们。
+2. 按预检应用迁移；对冲突逐项保留项目内容并人工解决，然后仅为已审阅的路径
+   使用 `--resolved <路径>` 重跑。已有 `paper/refs.bib`、
+   `.agents/references/ledger.json` 和 `policy.json` 保持原位置与内容。
+   这次保留台账路径以兼容现有论文；新增的 `exemplars/` 区分写作、图表与海报
+   范例，已有的项目知识记录不强制移动。范例不自动成为论文引用。
+3. 更新论文自己的命令、技能调用和文档；运行 `make check`、开发面与 Shell 检查，
+   再运行一次升级，确认没有非预期变更。实际编译并检查受影响的论文页面。
 
 本仓库是 `coding-agent-project-template` 的派生模板：在其基础上构建，并供论文使用。它的 registry `.agents/content-registry.yaml` 在 `template` 中记录本模板，在 `template.upstream` 中记录其遵循的 coding template：
 

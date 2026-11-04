@@ -169,6 +169,20 @@ class AgentContentChecks(unittest.TestCase):
             self.assertIn("references/guide.md no longer matches its upstream SHA-256", result.stdout)
             self.assertIn("extra.py is in the package but not in the file table", result.stdout)
 
+    def test_nested_vendor_is_checked_without_a_second_skill_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root)
+            vendor = root / ".agents/skills/shared/house/sources/vendor"
+            write(vendor / "reference.md", UPSTREAM_REFERENCE)
+            write(vendor / "PROVENANCE.md",
+                  "# Provenance\n\n| File | Upstream path | SHA-256 | Status |\n"
+                  "| --- | --- | --- | --- |\n"
+                  f"| `reference.md` | `guide.md` | {sha(UPSTREAM_REFERENCE)} | unchanged |\n")
+            self.assertEqual(run(root).returncode, 0, run(root).stdout)
+            write(vendor / "reference.md", "Changed after vendoring.\n")
+            self.check_fails(root, "reference.md no longer matches its upstream SHA-256")
+
     def test_record_needs_keys_sections_and_an_index_link(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -1,18 +1,20 @@
 ---
 name: issue-workflow
-description: Coordinate an Issue's scope, dependencies, dispatch, review, integration and close-out through isolated Herdr worktrees; use a declared parent integration branch when children need joint acceptance.
+description: Coordinate Issue work directly in dev or through confirmed Herdr dispatch, with explicit ownership, integration and close-out.
 ---
 
 # Issue workflow
 
-Use this skill when a coordinating agent session (a *coordinator*, running in
-the primary checkout of the integration branch, the *dev checkout*) claims,
-starts, merges or retires the work of one Issue. Each Issue is implemented by a
-separate agent session in its own Herdr worktree; the maintainer talks to that
-session directly in its pane. That session opens the PR; the coordinator that
-claimed the Issue merges it after review on GitHub and then closes the worktree
-out when its outstanding responsibilities are complete. Commit, push, PR and
-merge actions still require the authorization specified by the project and task.
+Use this skill to scope, implement, coordinate and deliver Issue work. The
+maintainer and coordinator may work directly in the dev checkout or dispatch an
+isolated Herdr worktree according to the task and checkout state; size alone
+never mandates isolation. Issue, review and PR needs are decided independently.
+Check live runs, concurrent writers and existing edits before modifying dev;
+preserve other people's work. Commit, push, PR and merge require authorization.
+A dispatched issue agent owns its assigned scope and delivery; the coordinator
+in dev owns integration of PRs and conflicts. A related new Issue can be assigned
+to the same existing agent and worktree with explicit scope, ownership and
+delivery; reuse alone does not trigger a new dispatch or confirmation.
 
 Before sending an Issue handoff or follow-up, read the shared
 [`agent-communication`](../agent-communication/SKILL.md) skill. It separates
@@ -20,17 +22,19 @@ the pane, agent session and conversation/thread, selects Codex's native queue
 when its thread is known, and defines the confirmation and stalled-send
 evidence required by this workflow.
 
-Run **start** (which first claims the Issue) when an Issue is ready to
-implement, **merge** when its PR is approved, and **close-out** right after a
-verified merge. The approval to merge covers the close-out, so do not wait or ask
-again (exceptions are listed under Close-out).
+First establish scope, ownership, blockers and acceptance. Direct dev work follows
+[Choosing where to work](#choosing-where-to-work) without requiring Herdr, a
+branch, Dispatch fields, a worker or PR. Run **Start** only when dispatching a
+worktree, **Merge** only for an authorized PR, and **Close-out** only for an
+existing worktree after verified delivery. Merge approval covers its close-out
+subject to the listed exceptions; direct work has no worktree to retire.
 
 ## Several coordinators
 
 The dev checkout may host several coordinators at once, each in its own Herdr
 pane; their number is not limited. Each claims one Issue, with its sub-Issues,
-and runs it to the end: it dispatches the worktrees and sessions, follows their
-progress, reviews and merges the PRs and closes the worktrees out. Throughout
+and owns it to the end: directly or through any authorized dispatch, review,
+integration and worktree close-out that actually apply. Throughout
 this skill, *the coordinator* is the one that claimed the Issue at hand.
 
 - One claimant per Issue. A coordinator acts only on the worktrees, sessions,
@@ -47,6 +51,11 @@ this skill, *the coordinator* is the one that claimed the Issue at hand.
   [Shared boundaries](#shared-boundaries).
 
 ### Claim
+
+For direct dev work, identify the responsible owner and check for conflicting
+claims through the available Issue and checkout state; no Herdr name or Dispatch
+section is required. Resolve an existing claim before editing. The following
+steps apply when coordinating a Herdr dispatch.
 
 1. Have a name others can find in Herdr. If
    `herdr agent get "$HERDR_PANE_ID" | jq -r .result.agent.name` prints `null`,
@@ -85,33 +94,19 @@ herdr worktree list --workspace "$HERDR_WORKSPACE_ID" \
 prompt, send keys to, rename, focus or close another coordinator's agent or its
 Issue sessions.
 
-## When this flow is not needed
+## Choosing where to work
 
-`AGENTS.md` separates larger units of work from small changes. Larger units (a
-new feature, a cross-file or architectural change, isolation and credentials,
-public behavior, a long experiment that changes the product, a change that needs
-review) use this flow: an Issue, a Herdr worktree and a PR. A *small change*
-needs no Issue, worktree or PR; a coordinator makes it directly in the dev
-checkout, on `<BASE>`. A change is small only when it is one of these:
-
-- documentation or comments;
-- memory records and their index entries;
-- a spelling fix;
-- a fix confined to one file that needs no design decision;
-- running an existing command as acceptance, without changing product code.
-
-When unsure, treat the change as larger and use [Start](#start). When a small
-change grows or raises a design question, stop: open an Issue for it, continue
-under Start, and tell the maintainer which uncommitted edits in the dev checkout
-belong to it.
-
-A small change is not committed or pushed automatically either: only when the
-maintainer asks. Run the applicable checks and report the evidence, with the
-commands and their output. Before editing, run the dev live-run check (Shared
-boundaries): while a run is live, nothing the run executes is edited in place
-(`long-running-supervision`), so that change waits or becomes an Issue. The
-shared dev checkout rules apply as well; the other shared boundaries concern
-Herdr worktrees and do not.
+Direct work in dev is a normal path for an Issue or another authorized task.
+Inspect the branch, status, live runs and concurrent work before editing; do not
+stage, overwrite or remove unrelated changes. Agree on scope and acceptance
+appropriate to risk. Use a worktree when isolation or parallelism is useful,
+not simply because a change spans files. When a running process consumes the
+checkout, observe `long-running-supervision` before changing its inputs. Run
+appropriate checks and report evidence; no path automatically authorizes Git
+delivery. When dispatching, follow Start and the maintainer confirmation below.
+In the canonical dev checkout, keep `.project/state/current-recovery.md` as a
+concise pointer to active duties and existing evidence, preserving concurrent
+owners' entries. It is a navigation index, not a second event or receipt store.
 
 ## Adaptation slots
 
@@ -127,20 +122,20 @@ project-neutral.
 | --- | --- | --- |
 | `<BASE>` | Repository integration branch; default source and PR target for simple Issues and final target for a parent integration PR. A declared parent may give children a different target (below). | `dev` |
 | `<REPO>` | `owner/name` that owns the Issues and PRs. Pass `--repo <REPO>` to every `gh` call when the clone has no unambiguous default repository. | this repository |
-| `<AGENT_KINDS>` | Herdr agent kinds this project dispatches, in preference order, and the model family each may use: Codex its OpenAI/Codex family, Claude Code its Anthropic family, Pi the family of the provider configured for it. The first usable one is `<AGENT_KIND>`. `herdr agent start --help` lists the installed kinds. | `codex`, `claude`, `pi` |
-| `<AGENT_KIND>` | Herdr agent kind for the Issue session: the first usable kind in `<AGENT_KINDS>`. | project choice |
+| `<AGENT_KINDS>` | Herdr agent kinds this project dispatches, in preference order, and the model family each may use: Codex its OpenAI/Codex family, Claude Code its Anthropic family, Pi the family of the provider configured for it. The maintainer confirms the concrete kind for each dispatch. `herdr agent start --help` lists the installed kinds. | `codex`, `claude`, `pi` |
+| `<AGENT_KIND>` | Herdr agent kind explicitly confirmed by the maintainer for this dispatch. | project choice |
 | `<AGENT_ARGS>` | Arguments after `--` for the agent CLI other than provider, model and effort, such as its permission mode. Take them from that CLI's own `--help` and use only what the maintainer authorized. | none |
 | `<PROVIDER_ARGS>` | The agent CLI's arguments that select the provider, written with `{provider}`; empty when the provider follows from the model. | none |
 | `<MODEL_ARGS>` | The agent CLI's arguments that set the model and reasoning effort, written with `{model}` and `{effort}`. Map the tier efforts onto the values the CLI accepts; where it has no higher level, use its highest. | project choice |
-| `<MODEL_SELECTION>` | How a tier's model slot resolves to a concrete model for the chosen agent kind at dispatch time: the series and its version order, how the CLI lists what the account may currently use, what makes a candidate unusable, and the fallback order (see Dispatch by difficulty). | the tier slot's value as written |
+| `<MODEL_SELECTION>` | How to recommend a concrete model: current series order, authoritative availability sources and candidates to propose when unavailable; the maintainer confirms the final choice. | the tier slot's value as written |
 | `<MODEL_LOW>`, `<MODEL_MID>`, `<MODEL_HIGH>` | Models for the dispatch tiers (see Dispatch by difficulty), as the agent CLI names them: a model name, an alias, or a series whose newest usable member is resolved at dispatch time. | project choice |
 | `<EXCLUDED_MODELS>` | Models and providers never dispatched unless the maintainer asks for one by name. | none |
-| `<FALLBACK_AGENT>` | Agent kind used only when the primary agent or its provider is unavailable, with its own `<AGENT_ARGS>`, `<PROVIDER_ARGS>`, `<MODEL_ARGS>` and tier models. | none |
+| `<FALLBACK_AGENT>` | Alternative agent to propose when the selected one is unavailable; it never starts without maintainer confirmation. | none |
 | `<AGENT_PREFIX>` | Short lower-case project prefix. It forms the stable task key `<AGENT_PREFIX>-issue-<N>`; agent names add role/attempt only as needed and must fit the live-name limits below. | project choice |
 | `<WORKSPACE_PREFIX>` | Display form of the same project prefix, optionally upper-case; preserve its mapping to the stable task key, not a second task identity. Workspace labels append the Issue number and short topic. | `<AGENT_PREFIX>` |
 | `<MERGE_METHOD>` | `gh pr merge` method flag. Close-out's ancestry check assumes a merge commit. | `--merge` |
 | `<CI>` | Whether the project adopts the template's optional `.github/workflows/template-check.yml`. `yes`: adopted; its result is read and noted on the PR, never waited for and never a condition (see Merge). `no`: that workflow is left out (`template-adoption` step 3). | project fact |
-| `<LOCAL_CHECK>` | The verification commands from `DEV.md`, always filled whatever `<CI>` is. They are the merge gate, run locally; when `<CI>` is `yes` they are the same steps the workflow runs. | `DEV.md` verification strategy |
+| `<LOCAL_CHECK>` | The verification commands from `DEV.md`, always filled whatever `<CI>` is. They are the local merge gate; record any differences from hosted CI. | `DEV.md` verification strategy |
 | `<PRE_MERGE_GATE>` | Optional read-only product command that must pass before merging, for example `<cmd> archive --check`. | none |
 | `<ARCHIVE_CMD>` | Product command that archives and registers non-rebuildable results before a worktree is retired. | none |
 | `<MONITOR_CMD>`, `<STOP_CMD>` | Product commands that list live runs started in a checkout (the dev checkout or a worktree) and stop one. Close-out stops every run the worktree started through `<STOP_CMD>`, and never through a generic process killer. | none |
@@ -244,10 +239,11 @@ with one sub-Issue per phase, so that progress is checked off phase by phase.
    recorded as blocked-by for implementation (step 3), with acceptance-only
    waits identified separately in the acceptance plan.
 2. Each phase is a sub-Issue with its own scope and acceptance, linked to the
-   parent with GitHub's sub-issue relation. It goes through [Start](#start),
-   [Merge](#merge) and [Close-out](#close-out) like any Issue, and its PR says
-   `Closes #<C>` and names the parent. A sub-Issue says who it belongs to
-   (sub-issue); blocked-by says what comes first.
+   parent with GitHub's sub-issue relation. Choose direct work, reuse or a
+   confirmed dispatch for each; apply [Start](#start), [Merge](#merge) and
+   [Close-out](#close-out) only when their worktree/PR exists. A PR says
+   `Closes #<C>` and names the parent. A sub-Issue says who it belongs to;
+   blocked-by says what comes first.
 3. Before splitting, decide for every two sub-Issues which relation holds, and
    record and dispatch it as the table says:
 
@@ -258,9 +254,9 @@ with one sub-Issue per phase, so that progress is checked off phase by phase.
    | Synchronous: both must land together, because `<BASE>` breaks if either merges alone (an interface changed with all its callers). | Keep one sub-Issue/PR, or explicitly declare the parent integration branch and joint acceptance below. | Never deliver a partial set to `<BASE>`; the parent gate covers the complete set. |
    | Asynchronous: B can implement against A's fixed interface, but integrated acceptance needs A's merged behavior. | Fix the interface in the parent or an interface sub-Issue first. Keep implementation blockers distinct from acceptance dependencies in the parent and child acceptance plans. | Start only the independently implementable scope; after A merges, sync the current target, resolve conflicts and run the integrated acceptance. Never report B fully complete before that. |
 
-4. The coordinator that claimed the parent claims every sub-Issue and dispatches
-   its worktree. A sub-Issue starts when it has no open blocker
-   ([Start](#start) step 1); it does not wait in arrival order
+4. The coordinator that claimed the parent claims every sub-Issue and chooses
+   direct work, an existing session or a confirmed worktree dispatch. A sub-Issue starts when it has no open blocker
+   (check blocked-by as in [Start](#start)); it does not wait in arrival order
    ([Independent Issues run in parallel](#independent-issues-run-in-parallel)).
    Every sub-Issue starts from its latest declared PR target: normally `<BASE>`,
    or the parent's integration branch below, never an arbitrary sibling branch.
@@ -298,10 +294,10 @@ PR's base, the final integration-to-`<BASE>` PR, joint acceptance and its owner,
 and responsibility for archiving, dependency notifications and cleanup. These
 records grant no commit, push, merge or cross-session permissions.
 
-Create the parent integration worktree through Herdr's native `worktree create`
-from `<BASE>`; use its returned workspace and path. Create each child's isolated
-worktree from the latest integration head using Start, with that branch as its
-declared target. No new scheduler is involved. Child PRs merge into the declared
+When a parent integration worktree is needed, create it with Herdr from
+`<BASE>` and use its returned workspace and path. For each child, choose direct
+work, reuse of an existing authorized session, or a newly confirmed dispatch;
+record its declared target. No new scheduler is involved. Child PRs merge into the declared
 integration branch; they do not deliver the parent to `<BASE>`. Recheck the latest
 integration head after each merge and notify authorized dependent workers with
 the exact head, scope and remaining acceptance dependencies.
@@ -310,10 +306,11 @@ In Start and Merge below, `<TARGET_BASE>` means the Issue's recorded PR target,
 defaulting to `<BASE>`; `<target>` is its verified checkout, normally `<dev>` or
 the parent's Herdr worktree. Locate it from Herdr and Git, not a guessed path.
 Keep shared `<dev>` on `<BASE>`; do not switch it to the integration branch.
-Resolve conflicts and check each PR against its current target in its own
-worktree. The parent owner then syncs current `<BASE>` in the parent worktree,
-verifies joint acceptance on the latest head and delivers the final PR to
-`<BASE>`. A child may close after its own declared deliverable is accepted in
+The coordinator in dev owns the integration and conflict decisions, preserving
+concurrent work. A parent integration branch is a separate target; before
+changing it, determine an authorized workflow that keeps dev on `<BASE>` and
+respects the target checkout owner. Verify joint acceptance on the integrated
+head and deliver the final PR to `<BASE>`. A child may close after its own declared deliverable is accepted in
 integration; the parent stays open through final acceptance and delivery.
 Retire children only after their obligations end; retire the parent integration
 worktree/branch only after final delivery and the same close-out gate.
@@ -378,8 +375,8 @@ next checkpoint; this workflow adds no always-on awareness or daemon.
 
 ### Coordination and waits
 
-The Issue worker owns implementation, conflict fixes, evidence and reporting in
-its own worktree. The claimant owns dependency re-evaluation, review, integration
+The Issue worker owns its assigned implementation, evidence and reporting in
+its own worktree; the coordinator owns cross-Issue integration and conflict fixes. The claimant owns dependency re-evaluation, review, integration
 and delivery, including after a PR merges. After an upstream delivery or changed
 scope, read current heads and blockers, identify affected dependents, send an
 authorized notification through `agent-communication`, obtain acknowledgement,
@@ -403,6 +400,18 @@ owner, every relevant writer, commands, protected source and inputs, and allowed
 output/log paths. For uncommitted work, save the diff and checksum, including
 staged changes and the content/identity of any untracked or ignored inputs the
 run consumes. HEAD or a clean tree alone does not identify those inputs.
+
+When a portable aggregate input manifest is useful, agree on the checkout-relative
+path base and a deterministic byte representation before hashing. One option is
+UTF-8 JSON with escaped control characters, fixed keys, no insignificant spaces,
+and entries sorted by the UTF-8 bytes of their relative paths (independent of
+locale). Record each entry's path, type, relevant executable mode, and regular
+file content digest or exact symlink target; include untracked or ignored inputs
+that the run actually consumes. Explicitly reject unsupported filename encodings
+or special types unless the parties agree how to represent them. Compare entries
+on a mismatch. Reuse an existing shared canonical format, or compare individual
+files directly, when no aggregate is needed. A digest identifies inputs; it is
+not a lock and cannot establish that no write occurred during acceptance.
 
 1. **Pause and acknowledge.** Request each relevant writer to pause mutations of
    those paths, including edits, formatting, generated inputs, checkout, pull,
@@ -474,14 +483,15 @@ distinguishes rule/fixture coverage from a real authorized handoff.
 - Initialize the dev checkout once with `bash .agents/scripts/shared/setup-worktree.sh`
   so `.project/home` exists and diagnostics pass there.
 - The dev checkout is shared by every coordinator:
-  - `<BASE>` there moves only by `git pull --ff-only`. Never merge, rebase or
-    reset in it, and never leave half-done state there (an unfinished merge,
-    uncommitted conflict resolution); conflicts are resolved in the PR's
-    worktree ([Merge](#merge)).
+  - The coordinator resolves integration conflicts in dev, after checking for
+    unrelated changes, other writers and live runs. Never overwrite or stash
+    another owner's work. Do not start an integration unless its boundary and
+    authorization permit completion; communicate any interruption and preserve
+    the conflict state until safely resolved or aborted.
   - Uncommitted edits and local commits you did not make belong to another
     coordinator or the maintainer: do not stage, stash, reset, check out or
     commit them.
-  - When the maintainer asks to commit a small change, `git add` only the files
+  - When the maintainer asks to commit a change, `git add` only the files
     you changed (never `git add -A` or `git add .`), commit, and push at once, so
     the shared `<BASE>` never carries an unpushed commit of yours. A push refused
     because `origin/<BASE>` moved is reported, not forced.
@@ -594,6 +604,10 @@ set, source, or requested side effect changes.
 
 ## Start
 
+This section applies only after choosing a new Herdr dispatch. Direct dev work
+does not run these worktree/branch/session steps; establish scope, owner,
+blockers, acceptance and safe checkout state using the available interfaces.
+
 Input: Issue number `<N>` and a branch `<branch>` named per `DEV.md`
 (`<type>/issue-<N>-<slug>`, with `<type>` one of `fix`, `feat`, `docs`, `chore`).
 
@@ -633,10 +647,13 @@ Input: Issue number `<N>` and a branch `<branch>` named per `DEV.md`
    `git -C <target> pull --ff-only`. An unpublished parent branch is usable
    locally only with a recorded authoritative head; PRs require an authorized
    push. Do not pretend an absent remote target is synchronized.
-2. Choose the tier and then the agent kind, provider, model and effort in the
-   order [Dispatch by difficulty](#dispatch-by-difficulty) gives, and make sure
-   the Issue body has a matching Dispatch section; write or correct it now if it
-   does not.
+2. Before creating the worktree, obtain the maintainer's explicit choice of
+   coding agent, concrete model and thinking level for this dispatch. Recommend
+   based on difficulty, current capabilities and cost; do not infer an answer.
+   If any item is missing, ask and wait. Choices already explicitly supplied for
+   this dispatch need no repeated question. Record the confirmed values and
+   provider in Dispatch. Unavailability or any later change to agent, model or
+   level requires confirmation of the affected choice before re-dispatch.
 3. Create the worktree with Herdr's native command. Omit `--path` and keep the
    default location:
 
@@ -725,14 +742,14 @@ Input: Issue number `<N>` and a branch `<branch>` named per `DEV.md`
    paths local. Add the session name and `<branch>` to the Issue's Dispatch section. Report
    `<ws>`, the agent name, `<branch>` and `<worktree>` to the maintainer, who
    switches to that workspace (or uses `herdr agent focus <name>` on request).
-   From here the coordinator does not edit that worktree, except to resolve a
-   conflict at [Merge](#merge) while the Issue session is idle.
+   From here the coordinator does not edit that worktree; cross-Issue
+   integration is handled in dev at [Merge](#merge).
 
 ### Independent Issues run in parallel
 
-An Issue with no open blocker is started now, whether or not other Issues are
-running: each goes through Start in its own worktree and session, by its own
-coordinator or, for the sub-Issues of one Issue, by its coordinator. Do not queue
+An Issue with no open blocker can start while other Issues are running. Choose
+direct dev work, reuse of an existing session, or a newly confirmed dispatch;
+assign its scope and owner explicitly. Do not queue
 Issues by arrival order. What waits is an Issue that has an open blocker (see
 [Phased work](#phased-work) for the relations and how they are recorded). This
 changes when sessions start, never the checks each one runs
@@ -761,58 +778,17 @@ other real behavior only it exercises. The `reason` line then says so (see
 
 ### Agent, provider, model and effort
 
-Choose in this order, and pass every value explicitly in Start step 4:
-
-1. **Agent kind.** `<AGENT_KINDS>` lists the kinds this project dispatches, in
-   preference order, and the model family each may use; the first usable one is
-   `<AGENT_KIND>`. An agent runs only the family its own CLI and configuration
-   allow — Codex its OpenAI/Codex models, Claude Code its Anthropic models, Pi
-   the models of the provider configured for it. Never tell one CLI to run
-   another's model.
-2. **Provider and model.** Resolve the tier's model at dispatch time (below),
-   then take the provider the account may use for it, passed through
-   `<PROVIDER_ARGS>` and `<MODEL_ARGS>`. Do not dispatch a model or provider in
-   `<EXCLUDED_MODELS>`, or one the account cannot use, unless the maintainer
-   asks for it by name.
-3. **Effort.** Take the tier's effort and map it onto the values the CLI
-   accepts; where it has no higher level, use its highest.
-
-A tier slot (`<MODEL_LOW>`, `<MODEL_MID>`, `<MODEL_HIGH>`) holds a model name, an
-alias or a series. Resolve it before starting the agent, following
-`<MODEL_SELECTION>`:
-
-- list the models the agent CLI and the account currently offer (the CLI's own
-  `--help`, model or status command);
-- discard every candidate that is unusable now: retired, not entitled or out of
-  quota for this account, unable to do what the Issue needs, or excluded;
-- take the newest member of the tier's series among what remains;
-- when the series has no usable member, take the next entry `<MODEL_SELECTION>`
-  documents; if none is left, use `<FALLBACK_AGENT>`.
-
-Record the resolved string in the Dispatch section, not the series, and never
-leave an old resolved string bound in a slot or in this skill. A substitution is
-a re-dispatch and keeps its line.
-
-Worked example for Claude Code (`<AGENT_KIND>` `claude`), whose `--help` lists
-the model aliases and the effort levels `low`, `medium`, `high`, `xhigh` and
-`max`; the provider follows from the alias, so `<PROVIDER_ARGS>` is empty:
-
-```text
-<MODEL_ARGS>  --model {model} --effort {effort}
-<MODEL_LOW>   haiku
-<MODEL_MID>   sonnet
-<MODEL_HIGH>  opus
-```
-
-A routine Issue then starts with `-- <AGENT_ARGS> --model sonnet --effort high`.
-
-A project can keep a series in the tier slots instead of one model. With Pi
-(`<AGENT_KIND>` `pi`), which runs the models of the provider configured for it,
-`<PROVIDER_ARGS>` might be `--provider {provider}` and `<MODEL_ARGS>`
-`--model {model} --thinking {effort}`; a project whose `<MODEL_LOW>`,
-`<MODEL_MID>` and `<MODEL_HIGH>` hold the `deepseek-v4.1-flash` series dispatches
-the newest usable member of that series at that moment, records the resolved
-string, and falls back through `<MODEL_SELECTION>` when no member is usable.
+Use tiers, `<MODEL_SELECTION>` and cost routing to recommend a compatible agent,
+provider, model and effort. Before proposing, check the installed CLI's current
+capabilities and an authorized source for account availability and quota; do not
+read or print credentials. Unknown availability stays unknown: report it rather
+than assuming access. Resolve the model to the concrete identifier the CLI uses.
+The maintainer explicitly confirms agent, concrete model and thinking level for
+each new worktree dispatch before creation; no automatic default, series
+selection or fallback replaces that answer. Pass the confirmed values explicitly.
+If the choice cannot be used, ask for an alternative and wait. Reusing the same
+session and worktree for a related Issue does not itself require reconfirmation.
+An agent, model or level change or a re-dispatch requires confirmation again.
 
 Record the dispatch in the Issue body as the last section, in this form. The
 coordinator line is written when the Issue is claimed ([Claim](#claim)). A
@@ -840,15 +816,9 @@ The Issue forms in `.github/ISSUE_TEMPLATE/` have no Dispatch field on purpose:
 whoever files the Issue cannot judge the dispatch, and the coordinator writes
 the section.
 
-**Fallback.** Use `<FALLBACK_AGENT>` only when the primary agent or its provider
-is unavailable: out of quota, logged out, in an outage, or with no usable model
-left in the tier's series. Not for difficulty or preference. Keep the tier and
-take the fallback's provider and model for it. If `<FALLBACK_AGENT>` is not
-defined, report the blocker to the maintainer.
-
-**Re-dispatch.** Any later change of agent, provider, model or effort, including
-a fallback, updates the agent, provider, model, effort and session lines and
-appends one line that keeps the history:
+**Fallback and re-dispatch.** An unavailable agent or model is a blocker until
+the maintainer confirms an alternative. Record every changed selection and
+reason in Dispatch; never substitute silently:
 
 ```markdown
 - re-dispatched: <previous agent, provider, model, effort> → <new ones>: <reason>
@@ -896,11 +866,10 @@ together.
   is related to it is fixed in the same worktree, verified, and listed in the
   PR. That is part of the Issue, not an unrequested feature. Only an unrelated,
   larger problem is reported for a separate Issue.
-- **Other worktrees are not its concern.** Parallel worktrees are expected to
-  change the same files. At [Merge](#merge) the coordinator resolves this PR's
-  conflicts with the current `<TARGET_BASE>` in this worktree, itself or through this
-  session. The session completes its Issue fully and does not narrow its change
-  to avoid conflicts.
+- **Own the assigned Issue.** The coordinator handles multi-PR integration
+  and conflicts in dev; do not take that duty by default. Report related new
+  findings; the same session and worktree may take an explicitly scoped follow-up
+  Issue without another dispatch. Preserve acceptance and delivery ownership.
 - **Merge implies close-out.** The approval to merge the PR covers its
   [Close-out](#close-out): right after the verified merge, the coordinator
   checks outstanding responsibilities, then migrates `.project/` and removes
@@ -1029,9 +998,8 @@ evidence back to the Issue session or maintainer.
 
 The coordinator merges the PRs of the Issue it claimed into `<TARGET_BASE>`. PRs of
 several coordinators may be open at once and conflict, for example when each
-appends to the same index. Each coordinator resolves the conflicts between its
-own PR and the `<TARGET_BASE>` of that moment, in that PR's own worktree; the dev
-checkout is only pulled.
+appends to the same index. The responsible coordinator integrates PRs and resolves conflicts in the dev
+checkout, protecting concurrent work and live runs.
 
 Handle one PR at a time and re-check the next one after each merge. Another
 coordinator may merge in between: when `gh pr merge` refuses or `<TARGET_BASE>` has
@@ -1050,7 +1018,12 @@ moved, go back to step 2.
    visible on the PR or the Issue; without it, do not merge and report.
    `mergeable` `UNKNOWN` means GitHub is still computing it; query again.
 
-   The gate is `<LOCAL_CHECK>`, not CI. Locate `<worktree>` as in Close-out
+   The gate is `<LOCAL_CHECK>`, not CI. If no issue worktree exists, inspect
+   the PR's exact latest head in an already authorized, safe checkout or an
+   independently immutable snapshot, protect its inputs as specified in
+   [Acceptance write responsibility](#acceptance-write-responsibility), and
+   run the same gate there. Do not create an unauthorized worktree merely for
+   review. When an issue worktree exists, locate `<worktree>` as in Close-out
    step 1, confirm it is at the PR's latest commit
    (`git -C <worktree> fetch origin` and compare `git -C <worktree> rev-parse HEAD`
    with `gh pr view <PR> --repo <REPO> --json headRefOid --jq .headRefOid`;
@@ -1067,51 +1040,40 @@ moved, go back to step 2.
      wait for it to finish.
 
    `<LOCAL_CHECK>` all passing and the maintainer's approval are enough to
-   merge; if it fails, do not merge, and the Issue session fixes it. A CI
+   merge; if it fails, do not merge, and the responsible implementer fixes it. A CI
    failure with a passing `<LOCAL_CHECK>` does not block: say so in the PR
    comment and in the report to the maintainer, who decides whether to open an
    Issue to look into the difference. A new head after a push needs this step
    again.
-3. Run the pre-merge gate when `<PRE_MERGE_GATE>` is defined. Locate `<worktree>`
-   as in Close-out step 1, then `(cd <worktree> && <PRE_MERGE_GATE>)`.
+3. Run `<PRE_MERGE_GATE>` when defined against the same protected checkout or
+   immutable snapshot used for the PR head. If a worktree exists, locate it as
+   in Close-out step 1 and run `(cd <worktree> && <PRE_MERGE_GATE>)`.
    - Passing: continue.
-   - Failing: **do not merge.** Report the output. Fixing it is implementation
-     work for the Issue session: ask the maintainer to have that session fix it
-     and push to the PR branch, then re-check from step 2.
+   - Failing: **do not merge.** Report the output. Arrange a fix with the
+     responsible implementer under current authorization, then re-check the
+     resulting PR head from step 2.
    - Continue past a failing gate only on the maintainer's explicit decision. Record
      what was deferred; Close-out handles it.
    - A gate command that itself errors (missing tool, missing worktree) is a
      failure to report, not a pass.
 4. Merge. When `mergeable` is `MERGEABLE`, run
-   `gh pr merge <PR> --repo <REPO> <MERGE_METHOD>` without `--delete-branch`;
-   Close-out deletes the branch. Then do step 5 and Close-out before the next PR.
+   `gh pr merge <PR> --repo <REPO> <MERGE_METHOD>` without `--delete-branch`.
+   Then do step 5; Close-out removes a branch only when an associated worktree
+   exists and its safeguards pass. Otherwise handle branch retirement separately
+   under the applicable authorization before the next PR.
 
-   When `mergeable` is `CONFLICTING`, merge the current `<TARGET_BASE>` into the PR
-   branch in `<worktree>` (located as in Close-out step 1), never in the dev
-   checkout. The coordinator does it itself only while the Issue session is
-   `idle` or `done` (`herdr agent get <AGENT_NAME>` from the current attempt's
-   recorded mapping); otherwise, or
-   by choice, it hands the work to the Issue session as described in
-   [Messages to a running Issue session](#messages-to-a-running-issue-session),
-   with the rules of this step as constraints. When `<MONITOR_CMD>` is defined,
-   run it in `<worktree>` first; a live run there goes to the maintainer and the
-   merge waits.
+   When `mergeable` is `CONFLICTING`, the coordinator handles integration in
+   dev, not by assigning the conflict to the issue agent. First verify repository,
+   branch, current remote heads, live runs, concurrent writers and unrelated
+   changes; stop if their state makes the operation unsafe. Under the user's Git
+   delivery authorization, merge the exact PR head into the current target in
+   dev and resolve conflicts while preserving both changes. Ask the maintainer
+   when a substantive choice is unresolved. Run `<LOCAL_CHECK>` on the integrated
+   result, complete authorized delivery, and verify the target and Issue/PR state.
+   If a local integration cannot close the PR automatically, reconcile the PR
+   and Issue explicitly under the same authorization. Never claim the old PR head
+   itself passed integrated checks. Do not change a worker's checkout as a shortcut.
 
-   ```bash
-   git -C <worktree> status --porcelain
-   git -C <worktree> fetch origin
-   git -C <worktree> merge origin/<TARGET_BASE>
-   ```
-
-   The first command must print nothing. Resolve per file, `git add`, then
-   `git commit`; `git -C <worktree> merge --abort` backs out. Keep both sides of
-   a mechanical conflict (both appended index lines). For a semantic conflict,
-   where the two sides decided the same thing differently, do not choose: list
-   both sides for the maintainer and resolve as they decide. Run
-   `<LOCAL_CHECK>` in `<worktree>`. Commit the merge and
-   `git -C <worktree> push origin <branch>` only after the maintainer confirms,
-   then re-check from step 2: the new head needs `<LOCAL_CHECK>` and its PR
-   comment again before `gh pr merge`.
 5. Verify the merged `<TARGET_BASE>`: run the target live-run check,
    `git -C <target> pull --ff-only`, then `<LOCAL_CHECK>` in `<target>`. Re-evaluate
    dependent implementation and acceptance waits on this exact head as in
@@ -1125,7 +1087,8 @@ moved, go back to step 2.
    gh run list --repo <REPO> --branch <TARGET_BASE> --commit "$sha"
    ```
 
-6. Close out the PR's worktree (below) right away.
+6. If the PR has a worktree, close it out (below) right away. Otherwise record
+   the integration result and remaining duties without inventing a worktree.
 
 ## Close-out
 
@@ -1202,7 +1165,7 @@ workspace, normally the dev checkout's.
    Stop and report if `<dev>` is not on `<BASE>`, local changes block the pull, or
    local `<BASE>` has diverged from `origin/<BASE>`. Do not merge, rebase or reset
    to force it (see the shared dev checkout rules). Conflicts between a PR and
-   `<TARGET_BASE>` belong to Merge, in the PR's worktree, not here.
+   `<TARGET_BASE>` belong to the coordinator in dev at Merge, not here.
 5. Reconcile obligations before stopping what this worktree started. `idle` or
    `done` only describes the foreground agent, not background acceptance or
    unfinished promises. Compare the wait records, Issue/PR commitments, project
@@ -1362,13 +1325,12 @@ permission configuration or `AGENTS.md`.
 | --- | --- |
 | `<BASE>` | `dev` |
 | `<REPO>` | `a-green-hand-jack/paper-agent-project-template` (a paper made from this template sets its own repository) |
-| `<AGENT_KINDS>` | `claude` (Claude Code, its Anthropic family) |
-| `<AGENT_KIND>` | `claude` |
+| `<AGENT_KINDS>` | the coding agents available for this dispatch, confirmed by the Human |
+| `<AGENT_KIND>` | the Human's choice for this dispatch |
 | `<AGENT_ARGS>` | none (the permission mode comes from the maintainer's settings) |
 | `<PROVIDER_ARGS>` | none (the provider follows from the model) |
-| `<MODEL_ARGS>` | `--model {model} --effort {effort}` |
-| `<MODEL_SELECTION>` | the tier slot's value as written; Claude Code resolves each alias to the newest model of its series |
-| `<MODEL_LOW>`, `<MODEL_MID>`, `<MODEL_HIGH>` | `haiku`, `sonnet`, `opus` |
+| `<MODEL_ARGS>` | the confirmed agent's supported model and effort arguments |
+| `<MODEL_SELECTION>` | concrete model and thinking level explicitly confirmed by the Human for this dispatch |
 | `<EXCLUDED_MODELS>` | none |
 | `<FALLBACK_AGENT>` | none |
 | `<AGENT_PREFIX>` | `paper` |
@@ -1389,3 +1351,7 @@ paragraph. No local addition changes the hook review before an agent starts,
 the implementation and delivery gates, the PR readiness gate, or the Close-out
 steps; a closed workspace whose worktree still exists is recovered through
 Herdr's own reopen and remove commands, as the skill says.
+
+Work directly in `dev` by default. Before any new Herdr worktree dispatch,
+ask whether to dispatch and confirm the agent, concrete model and thinking
+level; do not select or fall back automatically.

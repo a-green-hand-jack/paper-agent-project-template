@@ -25,33 +25,25 @@ behavior only in development material.
 
 ## How to work
 
-- A larger unit of work goes through an Issue first, which settles its scope,
-  design and acceptance before anything changes. Larger means: drafting or
-  rewriting a section; changing a claim, a result, an interface macro, the
-  venue or the builds; anything a control cue protects; cross-file, tooling or
-  CI changes; anything that needs review. Small fixes can be made directly in
-  the `dev` checkout without an Issue, worktree or PR: typos, wording inside
-  one paragraph that changes no claim, comments, memory or index updates, a
-  single-file fix without a design decision, and running existing commands for
-  acceptance without changing the paper. When unsure, treat the work as
-  larger; stop and open an Issue when a small change grows or raises a design
-  question.
-- Small changes in `dev` are not committed or pushed automatically either; run
-  the applicable checks and report the evidence.
-- To start an Issue, do not switch branches in the current agent window.
-  Create the Issue worktree from its declared target (default `dev`) with
-  Herdr's native worktree command,
-  start a separate agent session in a new pane, run
-  `bash .agents/scripts/shared/setup-worktree.sh`, then generate the handoff prompt
-  with `bash .agents/scripts/shared/new-agent-prompt.sh <issue-number>`. If Herdr is
-  unavailable, report the blocker; do not fall back to implementing in the
-  current window.
-- Simple Issues start from and return to `dev`. A parent task that needs
-  combined acceptance may explicitly declare a parent integration branch,
-  child PR targets and the final PR to `dev` through `issue-workflow`.
+- Work directly in the existing `dev` checkout unless the Human specifies
+  otherwise. Check and preserve unrelated changes and running tasks; choose
+  Issues, review and PRs according to the task and its risks. Run applicable
+  checks; committing or pushing still requires explicit authorization.
+- Before dispatching a Herdr worktree, ask the Human whether to dispatch and
+  confirm the coding agent, concrete model and thinking level. Do not dispatch
+  or silently change those choices without confirmation. Use Herdr's native
+  worktree command if dispatch is authorized; do not replace it with raw Git.
+- The coordinator handles integration in `dev`. Related work may reuse an
+  existing session and worktree with explicit scope and ownership.
+- Continue authorized work through implementation and verification; investigate
+  and resolve related issues instead of stopping at known unfinished work.
+  Report concrete blockers and continue independent work when possible.
 - Remove unnecessary rules before adding new ones.
 - Write no special cases for a particular role, task or benchmark.
-- Write no long comments or documents that repeat the code.
+- Do not add explanatory code comments by default. Record durable decisions,
+  sourced facts and repeatable procedures in memory, knowledge and skills;
+  keep required language/tool directives and licence notices. Do not remove
+  existing comments solely for this rule.
 - Do not replace project memory with an agent's private memory.
 - Check `.agents/content-registry.yaml` first to tell shared content from
   project content.
@@ -116,23 +108,12 @@ Skills are at `.agents/skills/shared/<name>/SKILL.md`.
 
 | Task | Owner skill |
 | --- | --- |
-| a new session, or unclear paper context | `paper-orientation` |
-| start a paper from a Human-provided brief | `paper-brief-ingest` |
-| before changing a central claim, story choice, experiment condition, limitation, result interpretation or stable interface | `control-review` |
-| a Human choice among high-impact alternatives, and recording it | `decision-packet` |
-| draft or substantially revise a section, including result statements from `experiments.md` | `section-writing` |
-| positioning, narrative architecture, section responsibility, writing policy | `style-alignment` |
-| prose editing: structure, grammar, word choice, register, AI tone, proofreading | `writing-router` |
-| writing exemplars to learn from (never citations) | `writing-reference-finder` |
-| a recurring name, term, symbol, result, claim form, figure, table or interface macro | `paper-interface-maintenance` |
-| findings-only consistency review of a version the Human marks ready | `manuscript-consistency-review` |
-| citation discovery, claim support, evidence passages | `citation-support-review` |
-| BibTeX identity, metadata, duplicate or version repair | `reference-repair` |
-| venue, deadline, page budget, anonymity, what each build removes, and every Overleaf status, pull or push | `publication-planning` |
-| figures: plots, diagrams, TikZ, redrawing, making a figure editable | `figure-router` |
-| the conference poster (`poster/`) | `poster-build` |
-| reviews and rebuttal | `openreview-review-collector` to collect and triage, then `decision-packet` for what changes and `section-writing` for each revision |
-| a release: submission, arXiv or camera-ready | `release-review` |
+| paper context, brief, control decisions and stable interfaces | `paper-foundation` |
+| scientific writing, editing, proofreading and writing exemplars | `paper-writing` |
+| citation discovery, claim support and bibliographic repair | `paper-references` |
+| scientific data figures, diagrams and editable figure reconstruction | `paper-figures` |
+| manuscript consistency and peer-review triage | `paper-review` |
+| venue, builds, Overleaf, release preparation and posters | `paper-publication` |
 | result tables, figure data and numbers from code repositories | `asset-lifecycle` |
 | Issue start, merge and close-out | `issue-workflow` |
 | worktree setup, migration and teardown | `worktree-lifecycle` |

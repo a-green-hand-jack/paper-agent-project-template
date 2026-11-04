@@ -1,7 +1,7 @@
 ---
 name: issue-close-out
 date: 2026-10-13
-source: Issue #18, harvested from downstream adopters of this template; Issues #34 and #40; Issue #87 (steps left to issue-workflow); Issue #89 (several coordinators)
+source: Issue #18, harvested from downstream adopters of this template; Issues #34 and #40; Issue #87 (steps left to issue-workflow); Issue #89 (several coordinators); Issue #137 (maintainer workflow revision)
 applies_to: repositories that manage Issue worktrees with Herdr, develop from a dev integration branch and merge PRs back into it
 ---
 
@@ -9,23 +9,9 @@ applies_to: repositories that manage Issue worktrees with Herdr, develop from a 
 
 ## Decision
 
-The coordinator that claimed the Issue merges its PR after the maintainer has
-approved it on GitHub. When the PR conflicts with its current declared target
-(normally `dev`, optionally a parent's integration branch), that
-coordinator resolves the conflict in the PR's own worktree, itself or through the
-Issue session, and pushes before merging; the shared dev checkout is only
-fast-forwarded with `git pull --ff-only`. Mechanical conflicts keep both sides;
-semantic ones go to the maintainer. The maintainer's approval to merge covers the
-close-out: after the merge is verified and remaining responsibilities are
-fulfilled or explicitly transferred under authorization with acknowledgement,
-the coordinator retires the worktree and its branches and reports without
-asking again. Idle and merged are not evidence that background acceptance,
-pending audits or promised follow-ups are complete.
-
-Results that cannot be rebuilt are archived before the merge rather than left in
-the migration directory. A live run in the dev checkout holds back a pull or
-merge there, and a live task in the worktree, including a container that mounts
-it, holds back its close-out; both go to the maintainer.
+Complete or explicitly transfer remaining duties before retiring an isolated
+worktree. The current workflow and lifecycle skill own integration, protection,
+archive and migration procedures; a merged PR or idle agent is not sufficient.
 
 ## Why
 
@@ -40,10 +26,9 @@ failed; a worktree's own monitor command does not see a container that mounts th
 worktree, so removing it would remove data the container still refers to
 (Issue #40).
 
-The maintainer works with several coordinator sessions in the dev checkout at
-once, each claiming one Issue (Issue #89). Resolving conflicts in that shared
-checkout let one coordinator's half-done merge break another's pull, so each
-coordinator resolves its own PR's conflicts with `dev` in that PR's worktree.
+Several coordinators may share dev. Issue #137 changed integration ownership:
+the coordinator handles the final combined state in dev while protecting
+concurrent work; the issue agent is not automatically given cross-Issue duties.
 
 ## Apply
 

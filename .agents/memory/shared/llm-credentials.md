@@ -7,11 +7,11 @@ applies_to: repositories whose code, tools or agents call LLM providers with API
 
 # Manage LLM credentials across projects
 
-The steps that apply these decisions are in
-[`../../skills/shared/credential-setup/SKILL.md`](../../skills/shared/credential-setup/SKILL.md);
-the formats of `inventory.yaml` and `credentials.yaml` and what
-`probe-credentials.sh` checks are in
-[`../../knowledge/shared/credential-inventory.md`](../../knowledge/shared/credential-inventory.md).
+When adopted, the steps that apply these decisions are in
+`.agents/skills/shared/credential-setup/SKILL.md`; the formats of
+`inventory.yaml` and `credentials.yaml` and what `probe-credentials.sh`
+checks are in `.agents/knowledge/shared/credential-inventory.md`. An adopter
+that uses these decisions adopts those optional resources together.
 
 Related: [`third-party-llm-compat-patches.md`](third-party-llm-compat-patches.md)
 (compatibility changes to third-party LLM tools),

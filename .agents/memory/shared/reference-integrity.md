@@ -77,7 +77,7 @@ looking like a fabricated citation.
   audit of every entry, which needs `uv` and the network.
 - Inventory and record support with `.agents/scripts/shared/reference_evidence.py`
   (`inventory`, `packet`, `record`; `migrate` upgrades a v1 ledger), following
-  the `citation-support-review` skill. Occurrence-level review is new in v2,
+  the `paper-references` skill. Occurrence-level review is new in v2,
   so every occurrence `migrate` writes starts `pending` and needs a fresh
   Human confirmation before `make release-check`.
 - Optional checks with the locked dependencies in
@@ -103,5 +103,5 @@ looking like a fabricated citation.
   entry with a positive problem. Run it once after adopting the tiers, with
   the full scope, and commit the ledger; afterwards a changed entry loses its
   match and is queried again automatically.
-- Repair a reference with the `reference-repair` skill. Never copy an empty
+- Repair a reference with the `paper-references` skill. Never copy an empty
   template ledger over a populated one.

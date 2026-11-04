@@ -152,8 +152,8 @@ def check_skills(root: Path, entries: dict, report: Report) -> None:
         for stray in ("README.md", "AGENTS.md"):
             if (skill / stray).exists():
                 report.error(f"{shown}: the skill package holds {stray}; keep only the skill and its resources")
-        if (skill / "PROVENANCE.md").is_file():
-            hashed += check_provenance(skill, root, report)
+    for provenance in sorted(skills_root.rglob("PROVENANCE.md")):
+        hashed += check_provenance(provenance.parent, root, report)
     print(f"CHECKED {count} skills, {hashed} vendored files hashed against their provenance")
 
 
