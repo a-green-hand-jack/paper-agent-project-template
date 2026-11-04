@@ -36,7 +36,7 @@ Do not load unrelated venue entries until a concrete venue is active.
    `refresh_after` before treating deadlines, page limits, anonymity or
    operational rules as current. When the entry is missing or due for refresh,
    read the official pages and write or refresh it from
-   `.agents/knowledge/VENUE_TEMPLATE.md` through `project-memory-governance`,
+   `.agents/knowledge/shared/venue-template.md` through `project-memory-governance`,
    with its sources and a refresh condition.
 3. Treat official deadlines and limits as hard constraints. Derive internal
    writing, experiment, review and approval buffers without labeling them
@@ -71,7 +71,7 @@ configuration, without a token in its URL, and its credentials only in Git's
 credential helper; never write the Overleaf URL, project id or a token into a
 tracked file.
 
-1. Start with `bash .agents/scripts/overleaf-sync.sh status`, and before the
+1. Start with `bash .agents/scripts/shared/overleaf-sync.sh status`, and before the
    first edit of a session follow `sync-overleaf-before-editing.md`.
 2. When Overleaf holds edits (`overleaf-ahead` or `diverged`), run
    `overleaf-sync.sh pull`: it puts them on a `sync/overleaf-<commit>` branch

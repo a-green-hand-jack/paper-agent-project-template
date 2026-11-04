@@ -2,11 +2,7 @@
 name: tex-engine-from-texbin
 date: 2026-10-20
 source: Issue #156 §2; downstream paper repositories where a wrapper earlier on PATH launched an unavailable container instead of TeX, or a Makefile hard-coded one machine's TeX Live path
-scope: shared
 applies_to: repositories that build LaTeX on more than one machine or in CI
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # The build takes its TeX binaries from an overridable TEXBIN

@@ -2,11 +2,7 @@
 name: publication
 date: 2026-10-20
 source: the template's publication contract (PUBLICATION.md before v0.4.0), moved into a record by Issue #156
-scope: project
 applies_to: this paper's venue, builds, Overleaf project and releases
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Publication plan
@@ -49,7 +45,7 @@ which budget binds and which tag holds each delivered version.
 - Human review is needed before adding a build, changing what a build shows
   (identity, acknowledgements, appendix), accepting a difference between two
   delivered versions, and creating a release tag.
-- Overleaf mirrors `paper/` on `dev`: `.agents/scripts/overleaf-sync.sh`
+- Overleaf mirrors `paper/` on `dev`: `.agents/scripts/shared/overleaf-sync.sh`
   (`status` before the first edit of a session, `pull` onto a branch for a PR,
   `push` after a merge). Record the Overleaf project here by its remote name
   only; the project URL and the token stay in the local Git configuration and

@@ -2,12 +2,7 @@
 name: venue-iclr-2027
 date: 2026-10-20
 source: https://iclr.cc/Conferences/2027/AuthorGuidelines and https://iclr.cc/Conferences/2027/Dates, read 2026-10-20; the official style-file archive, downloaded and hashed 2026-10-20
-scope: shared
 applies_to: papers that target ICLR 2027
-status: active
-refresh_after: 2026-12-16 (final decisions), and when the camera-ready instructions arrive (announced for mid-February 2027)
-supersedes: null
-superseded_by: null
 ---
 
 # ICLR 2027: submission facts

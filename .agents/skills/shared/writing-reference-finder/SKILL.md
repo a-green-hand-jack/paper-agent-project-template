@@ -43,7 +43,7 @@ adds an entry to `paper/refs.bib` and never supports a scientific claim.
   committed: the papers are third-party copyrighted material.
 - A card the Human wants to keep with the repository becomes a dated, sourced
   knowledge record under `.agents/knowledge/project/`, with the front matter
-  of `.agents/knowledge/ENTRY_TEMPLATE.md`; the award label and its source are
+  of `.agents/knowledge/entry-template.md`; the award label and its source are
   facts that can change.
 - Nothing goes under `paper/`. `.agents/references/ledger.json` changes only
   when `citation-support-review` decides that a manuscript claim cites the

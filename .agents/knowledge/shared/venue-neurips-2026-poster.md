@@ -2,12 +2,7 @@
 name: venue-neurips-2026-poster
 date: 2026-10-20
 source: https://neurips.cc/Conferences/2026/PosterInstructions, read 2026-10-20
-scope: shared
 applies_to: posters for NeurIPS 2026, its workshops and its satellite locations
-status: active
-refresh_after: before ordering a print, and before 2026-11-04 (the first order deadline)
-supersedes: null
-superseded_by: null
 ---
 
 # NeurIPS 2026: poster facts

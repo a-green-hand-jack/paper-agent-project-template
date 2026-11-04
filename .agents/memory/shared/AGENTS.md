@@ -2,93 +2,33 @@
 
 This directory contains durable decisions that are neutral enough to reuse
 across projects. Every record is a separate Markdown file with the fields in
-[`../ENTRY_TEMPLATE.md`](../ENTRY_TEMPLATE.md), `scope: shared`, and an active
-or superseded status. A record that names parameters for the destination is
+[`../entry-template.md`](../entry-template.md), registry-owned lifecycle and scope. A record that names parameters for the destination is
 registered `shared_with_adaptation`; the destination writes their values in a
 trailing `## In this repository` section (see `template-adoption` step 5), and
 the record's own text never contains that heading line.
 
-## Index
-
-Inherited from `coding-agent-project-template`:
-
-- [`project-positioning-before-layout.md`](project-positioning-before-layout.md)
-  — establish users, deliverables, concepts and non-goals before mapping paths;
-  directory contracts and product ownership govern the migration.
-- [`host-files-owned-by-running-user.md`](host-files-owned-by-running-user.md)
-  — files, logs, caches and mounted output left on the host belong to the
-  running user; no `sudo` for project files; cleanup that meets foreign-owned
-  files stops and reports.
-- [`issue-in-herdr-worktree.md`](issue-in-herdr-worktree.md) — implement each
-  Issue in its own Herdr worktree and agent session, dispatched by the
-  coordinator that claimed the Issue; the session verifies to completion, fixes
-  related defects and does not narrow its change to avoid conflicts.
-- [`issue-close-out.md`](issue-close-out.md) — close out an Issue's worktree
-  right after its PR merges; the claiming coordinator resolves conflicts with
-  the declared target in the PR's worktree, the merge approval covers close-out,
-  and outstanding acceptance, audits, live runs or mounting containers retain
-  the worktree until their duties are settled.
-- [`issue-dispatch-by-difficulty.md`](issue-dispatch-by-difficulty.md) — dispatch
-  each Issue agent with an explicit model and effort for its difficulty tier, and
-  record it in the Issue.
-- [`look-at-the-artifact-before-concluding.md`](look-at-the-artifact-before-concluding.md)
-  — before reporting a generated or evaluated result, look at the artifacts
-  yourself next to their references; automatic checks and cross-checks are
-  leads, not acceptance evidence; when they disagree, suspect the metric, and
-  say what was looked at.
-- [`llm-credentials.md`](llm-credentials.md) — share stable LLM credentials
-  through one device file; log refreshing logins in once per canonical checkout,
-  whose worktrees link to them; never pass a credential as a command-line
-  argument. Here only the optional `image-to-editable-ppt` CLI uses one, and no
-  `credentials.yaml` is kept. Steps in `credential-setup`, formats in
-  `credential-inventory`.
-- [`product-state-root.md`](product-state-root.md) — commands find the
-  worktree's state root from an argument, a variable, the setup marker
-  (stopping at the repository boundary), then a default; here the paper's build
-  directory.
-- [`provider-cost-routing.md`](provider-cost-routing.md) — ordinary tests and
-  mechanical work use the cheapest token source and model that can judge them;
-  a cheap run is still a real provider-backed run and never replaces a
-  capability check; choose agent, provider, model and effort explicitly and
-  record them with what the run proves.
-- [`resolve-real-paths-before-moving.md`](resolve-real-paths-before-moving.md)
-  — before moving, replacing or symlinking a directory, prove source and
-  destination are two different places and data sets, and let a person choose
-  which copy to delete; the checks are in `asset-lifecycle`.
-- [`screen-with-scriptable-fakes.md`](screen-with-scriptable-fakes.md) — screen
-  boundary failure paths before a real run with one scriptable fake (scenarios
-  as data, requests recorded with credentials masked by key name, upstream and
-  agent-executor boundaries); it is a sieve, not acceptance.
-- [`speed-and-parallelism-by-measurement.md`](speed-and-parallelism-by-measurement.md)
-  — speed is a quality: independent work runs in parallel and only a real
-  dependency queues; concurrency is set from measured resources and provider
-  health, reported apart from wall clock and cost; remove repeated work, never a
-  check or a spending limit.
-- [`third-party-llm-compat-patches.md`](third-party-llm-compat-patches.md) —
-  changes to third-party LLM tools live in the repository; check one captured
-  request body before a batch; no retry-without-the-parameter fallbacks.
-
-Papers:
-
-- [`one-source-three-builds.md`](one-source-three-builds.md) — `main`,
-  `submission` and `blind` come from one source in a fixed order, each removing
-  a layer; notes vanish from the later forms.
-- [`results-through-interface-macros.md`](results-through-interface-macros.md)
-  — reported numbers reach the text only through interface macros with a
-  manifest source; planned results are never observations.
-- [`reference-integrity.md`](reference-integrity.md) — bibliographic identity
-  and claim support are separate, occurrence-level obligations.
-- [`page-budget-on-blind-build.md`](page-budget-on-blind-build.md) — measure
-  the page budget on the anonymous build, keep a margin, report an overage.
-- [`post-build-visual-inspection.md`](post-build-visual-inspection.md) — look
-  at the rendered pages before calling a build done.
-- [`official-venue-kit-unmodified.md`](official-venue-kit-unmodified.md) — use
-  the venue's official kit unmodified; a migration changes typesetting only.
-- [`tex-engine-from-texbin.md`](tex-engine-from-texbin.md) — TeX binaries come
-  from an overridable `TEXBIN`; build leftovers stay out of tracked trees.
-- [`overleaf-paper-tree-only.md`](overleaf-paper-tree-only.md) — Overleaf
-  receives `HEAD:paper` as a fast-forward, checked by tree, never the root.
-- [`sync-overleaf-before-editing.md`](sync-overleaf-before-editing.md) — take
-  in Overleaf edits before writing, and deliver to both sides together.
-- [`skill-frontmatter-validity.md`](skill-frontmatter-validity.md) — every
-  `SKILL.md` front matter parses; re-check after every skill change.
+<!-- registry-index:start -->
+- [host-files-owned-by-running-user.md](host-files-owned-by-running-user.md) — Keep host artifacts owned by the running user and stop at foreign ownership.
+- [issue-close-out.md](issue-close-out.md) — Complete or transfer outstanding duties before migrating and retiring an Issue worktree.
+- [issue-dispatch-by-difficulty.md](issue-dispatch-by-difficulty.md) — Record agent, provider, model and effort selected by difficulty and cost.
+- [issue-in-herdr-worktree.md](issue-in-herdr-worktree.md) — Implement each Issue in its own verified Herdr worktree and independent agent session.
+- [llm-credentials.md](llm-credentials.md) — Keep stable shared credentials and project-owned refreshing logins behind local paths.
+- [look-at-the-artifact-before-concluding.md](look-at-the-artifact-before-concluding.md) — Inspect referenced artifacts before concluding from automated metrics.
+- [official-venue-kit-unmodified.md](official-venue-kit-unmodified.md) — Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only.
+- [one-source-three-builds.md](one-source-three-builds.md) — main, submission and blind from one source in a fixed order, each removing a layer.
+- [overleaf-paper-tree-only.md](overleaf-paper-tree-only.md) — Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force.
+- [page-budget-on-blind-build.md](page-budget-on-blind-build.md) — Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
+- [post-build-visual-inspection.md](post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
+- [product-state-root.md](product-state-root.md) — Resolve worktree-local product state from the project marker.
+- [project-positioning-before-layout.md](project-positioning-before-layout.md) — Establish users, deliverables and domain concepts before choosing paths.
+- [provider-cost-routing.md](provider-cost-routing.md) — Use the cheapest capable provider/model and record why each real run is needed.
+- [reference-integrity.md](reference-integrity.md) — Identity and claim support are separate, occurrence-level obligations.
+- [resolve-real-paths-before-moving.md](resolve-real-paths-before-moving.md) — Prove source and destination differ before moving or replacing assets.
+- [results-through-interface-macros.md](results-through-interface-macros.md) — Reported numbers only through interface macros with a manifest source; planned results are never observations.
+- [screen-with-scriptable-fakes.md](screen-with-scriptable-fakes.md) — Screen boundary failures with data-driven fakes before applicable real acceptance.
+- [skill-frontmatter-validity.md](skill-frontmatter-validity.md) — Every SKILL.md front matter parses; make check re-parses them.
+- [speed-and-parallelism-by-measurement.md](speed-and-parallelism-by-measurement.md) — Measure concurrency, remove repeated work and retain every required check.
+- [sync-overleaf-before-editing.md](sync-overleaf-before-editing.md) — Take in Overleaf edits before writing and deliver to both sides together.
+- [tex-engine-from-texbin.md](tex-engine-from-texbin.md) — TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
+- [third-party-llm-compat-patches.md](third-party-llm-compat-patches.md) — Fill PATCH_DIR for the project's patches or wrappers of third-party LLM tools; they run on every run and state that metrics, prompts and reasoning effort are unchanged.
+<!-- registry-index:end -->

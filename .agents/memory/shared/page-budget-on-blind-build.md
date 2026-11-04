@@ -2,11 +2,7 @@
 name: page-budget-on-blind-build
 date: 2026-10-20
 source: Issue #156 §6; downstream paper repositories that measured the page budget on the wrong build and cut text against it
-scope: shared
 applies_to: paper repositories that submit to a venue with a main-text page limit
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Measure the page budget on the anonymous build, and report an overage

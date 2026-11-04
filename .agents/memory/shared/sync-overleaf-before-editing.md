@@ -2,11 +2,7 @@
 name: sync-overleaf-before-editing
 date: 2026-10-20
 source: Issue #156 §4; downstream paper repositories whose collaborators edit in Overleaf between agent turns, including a change delivered to Overleaf only
-scope: shared
 applies_to: repositories whose paper is edited both in Git and in an Overleaf project
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Take in Overleaf edits before writing, and deliver to both sides together
@@ -39,7 +35,7 @@ approve.
 
 ## Apply
 
-- Start a paper session with `bash .agents/scripts/overleaf-sync.sh status`; act
+- Start a paper session with `bash .agents/scripts/shared/overleaf-sync.sh status`; act
   on its `STATE` line.
 - Keep Overleaf's compiler and TeX Live version matched to the local build, so
   that both sides typeset the same pages.

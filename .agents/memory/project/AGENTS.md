@@ -1,32 +1,25 @@
 # Project memory rules and index
 
-This directory contains decisions owned by this repository. Every record is a
-separate Markdown file with the fields in
-[`../ENTRY_TEMPLATE.md`](../ENTRY_TEMPLATE.md), `scope: project`, and an active
-or superseded status. A paper records its own decisions here, one topic per
-file; a decision replaced later is marked superseded and names its successor.
+This directory contains decisions owned by this template repository. Every
+record is a separate Markdown file with the fields in
+[`../entry-template.md`](../entry-template.md), registry-owned lifecycle and scope.
 
-## Index
+<!-- registry-index:start -->
+- [brief.md](brief.md) — Starter record a paper fills from its brief.
+- [experiments.md](experiments.md) — Starter record of the paper's evidence questions.
+- [paper-interfaces.md](paper-interfaces.md) — Starter record of the paper's interface macros; make check reads it.
+- [paper-run-boundary.md](paper-run-boundary.md) — The boundary between this template and paper-run (#152).
+- [protected-case-branches.md](protected-case-branches.md) — This template's protected case branches and trackers (DEC-0014); a paper records its own.
+- [publication.md](publication.md) — Starter record of the paper's venue, kit, budget, Overleaf and release tags.
+- [rebuild-on-coding-template.md](rebuild-on-coding-template.md) — This template's v0.4.0 migration map; a paper made from the template deletes it.
+- [repository-identity.md](repository-identity.md) — This template's name, description and branches.
+<!-- registry-index:end -->
 
-The paper's records (starters that a paper made from this template fills):
+## In this repository
 
-- [`brief.md`](brief.md) — the Human-authored brief the paper starts from.
-- [`experiments.md`](experiments.md) — the evidence questions, their
-  conditions and interpretation boundaries, linked to manifest entries.
-- [`paper-interfaces.md`](paper-interfaces.md) — each interface macro's
-  meaning, control cue and source.
-- [`publication.md`](publication.md) — venue, kit, page budget, builds,
-  Overleaf and release tags.
-
-This template's own records (`scope: template` in the registry; a paper made
-from the template deletes them):
-
-- [`rebuild-on-coding-template.md`](rebuild-on-coding-template.md) — the
-  v0.4.0 rebuild on coding-agent-project-template: the per-path migration map
-  and where each earlier decision went.
-- [`protected-case-branches.md`](protected-case-branches.md) — the case
-  branches, case Issues and verification trackers are protected evidence.
-- [`repository-identity.md`](repository-identity.md) — the repository's name,
-  description, positioning and branches.
-- [`paper-run-boundary.md`](paper-run-boundary.md) — the template is a
-  versioned foundation; paper-run owns the runtime.
+A paper records its own decisions here, one topic per file; a decision replaced
+later is marked superseded in the registry and names its successor. The four
+starters (`brief`, `experiments`, `paper-interfaces`, `publication`) are the
+paper's records that a paper made from this template fills. This template's
+own records are `scope: template` in the registry; a paper made from the
+template deletes them.

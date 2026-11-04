@@ -45,7 +45,7 @@ chat or in `.project/` notes is not recorded.
 
 1. Update the contract it changes: `PAPER.md` or the project record.
 2. Write the decision as its own record `.agents/memory/project/<topic>.md`
-   from `.agents/memory/ENTRY_TEMPLATE.md`: front matter (`name`, `date`,
+   from `.agents/memory/entry-template.md`: front matter (`name`, `date`,
    `source`, `scope: project`, `applies_to`, `status: active`, `supersedes`,
    `superseded_by`) and the sections Decision, Why and Apply. State what was
    chosen, the paper objects it affects, rejected alternatives when relevant,

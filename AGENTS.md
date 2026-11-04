@@ -42,8 +42,8 @@ behavior only in development material.
   Create the Issue worktree from its declared target (default `dev`) with
   Herdr's native worktree command,
   start a separate agent session in a new pane, run
-  `bash .agents/scripts/setup-worktree.sh`, then generate the handoff prompt
-  with `bash .agents/scripts/new-agent-prompt.sh <issue-number>`. If Herdr is
+  `bash .agents/scripts/shared/setup-worktree.sh`, then generate the handoff prompt
+  with `bash .agents/scripts/shared/new-agent-prompt.sh <issue-number>`. If Herdr is
   unavailable, report the blocker; do not fall back to implementing in the
   current window.
 - Simple Issues start from and return to `dev`. A parent task that needs
@@ -74,7 +74,7 @@ behavior only in development material.
 
 ## Context and state
 
-Every worktree first runs `.agents/scripts/setup-worktree.sh`. All local state
+Every worktree first runs `.agents/scripts/shared/setup-worktree.sh`. All local state
 goes in that worktree's `.project/`. An external asset has an `assets/` link
 and an entry in `assets/MANIFEST.yaml`. Credentials are injected only by path
 or runtime environment, and never written into Git, logs or the manifest; a
@@ -188,7 +188,7 @@ Human before changing a locked item, approving a release or submitting.
 - Keep negative or inconclusive evidence visible when it constrains a central
   claim.
 - `paper/` depends on nothing outside `paper/`.
-- Overleaf receives only `HEAD:paper`, through `.agents/scripts/overleaf-sync.sh`,
+- Overleaf receives only `HEAD:paper`, through `.agents/scripts/shared/overleaf-sync.sh`,
   never the repository root and never a forced push
   ([`overleaf-paper-tree-only`](.agents/memory/shared/overleaf-paper-tree-only.md)).
 - Build output, screenshots and logs go to `.project/`, never into `paper/` or
