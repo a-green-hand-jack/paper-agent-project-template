@@ -2,11 +2,7 @@
 name: one-source-three-builds
 date: 2026-10-20
 source: Issue #156 §2 and §7; downstream paper repositories that retired a copied-variant overlay for macro-switched builds
-scope: shared
 applies_to: paper repositories that build more than one publication form (working draft, named copy, anonymous review copy) from one LaTeX source
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # One source, three builds, in a fixed order

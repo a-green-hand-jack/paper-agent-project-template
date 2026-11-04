@@ -2,11 +2,7 @@
 name: protected-case-branches
 date: 2026-10-20
 source: DEC-0014 of this template's decision log (DECISIONS.md before v0.4.0), carried over by Issue #156
-scope: project
 applies_to: this template repository's case branches, case Issues and verification trackers
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Case branches and verification trackers are protected evidence

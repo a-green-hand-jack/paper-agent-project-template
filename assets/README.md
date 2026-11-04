@@ -23,5 +23,5 @@ assets/run-logs -> /managed/storage/run-logs
 
 Put local link mappings in the ignored `.project/assets.links` file, one
 `name=absolute/path` entry per line, then run
-`bash .agents/scripts/setup-worktree.sh` to create the links. Do not commit
+`bash .agents/scripts/shared/setup-worktree.sh` to create the links. Do not commit
 large binary payloads, credentials or unregistered paths.

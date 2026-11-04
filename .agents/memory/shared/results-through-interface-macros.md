@@ -2,11 +2,7 @@
 name: results-through-interface-macros
 date: 2026-10-20
 source: Issue #156 §5; downstream papers that could not tell which code repository, commit or run produced a reported number or figure
-scope: shared
 applies_to: paper repositories that report numbers, tables or figures produced by experiments in code repositories
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Reported results come through interface macros with a recorded source

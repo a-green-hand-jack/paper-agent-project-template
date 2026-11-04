@@ -4,6 +4,178 @@ This file records this template's own releases, one `## <tag>` heading each.
 A paper made from the template keeps its own release notes instead and does
 not copy this history.
 
+## v0.4.6 — 2026-11-04
+
+Moves the coding template this one follows from `v0.1.13` to `v0.1.26`
+(`v0.1.19` in #185, `v0.1.25` in #187, `v0.1.26` in #189), inherits its upgrade
+command as it is, and moves the development plane to the v0.1.26 layout:
+six categories with `shared/` and `project/` groups, and a schema 2 registry
+that is the only catalog of their content. This release sets this template's
+own `template.version` to `v0.4.6` (#191).
+
+### Changed
+
+- `template.upstream.version` is `v0.1.26` and `template.version` is `v0.4.6`.
+  The thirteen coding-template releases crossed (v0.1.14 to v0.1.26) add, up to
+  v0.1.19 (#185), the upgrade command and its light path (v0.1.14), the Issue
+  session rule "a small real run is enough" and `actions/checkout@v5`
+  (v0.1.15), the credential inventory (v0.1.16 and v0.1.17), wildcard rules for
+  `migrate-project.rules`, the `<LOCAL_CHECK>` slot and phased sub-Issues
+  (v0.1.18), and hook review, the implementation and delivery gates,
+  `agent-communication` and the Herdr close-out recovery (v0.1.19). Up to
+  v0.1.25 (#187) they add handoffs that carry the coordinator and task
+  identity, delivery events, protected acceptance inputs with an explicit
+  pause and return, and receive-time reconciliation of covered outcomes and new
+  duties; an optional, explicitly declared parent integration branch (ordinary
+  Issues still target `dev`); and the `development-writing` skill, the
+  release-type guidance in `release-doc-audit`, the knowledge record
+  `agent-session-messaging` and the memory record
+  `project-positioning-before-layout`. The Issue and PR templates gained
+  advisory writing and acceptance text; no field became required. v0.1.26
+  (#189) is the layout change described below.
+- `.agents/scripts/shared/upgrade-template.sh` (it was `.agents/scripts/upgrade-template.sh`
+  until v0.4.5) is the coding template's v0.1.26 copy, byte for byte, as is its
+  sibling `content_registry.py`; the old flat path no longer exists.
+  This template's own copy (#177, #182) is gone, and so are its differences:
+  the clone and the merge proposals live in `.project/state/template-upgrade/`
+  (they were in `.project/build/template-upgrade/`); an `optional: true` path
+  a repository left out stays out, and a new one is left for a manual
+  decision; the registry is merged key by key, with `entry_fields:` replacing
+  the top-level `upgrade:` key; a Markdown file adapted without a
+  `## In this repository` section is merged three ways, and "Review" no longer
+  proposes a section for it; the headings say "project", not "paper".
+- Shared content added: the skills `agent-communication` and (optional)
+  `credential-setup`, the knowledge record `credential-inventory` (optional),
+  `probe-credentials.sh`, and the memory records
+  `host-files-owned-by-running-user`, `look-at-the-artifact-before-concluding`,
+  `provider-cost-routing`, `screen-with-scriptable-fakes` and
+  `speed-and-parallelism-by-measurement`. `issue-workflow`,
+  `worktree-lifecycle`, `asset-lifecycle`, `llm-credentials`, the three
+  `issue-*` records and four scripts are replaced above their local sections.
+- Decisions for this repository, in the sections they belong to and in
+  `rebuild-on-coding-template`: `<CI>` stays `yes` and `<LOCAL_CHECK>` is
+  `make check` with the workflow's two script steps; there is no `writing:`
+  block; there is no `credentials.yaml`, so `probe-credentials.sh --check`
+  skips; `serve-the-coding-agent`, `docker-objects-prefixed-and-removed`,
+  `long-running-supervision` and the product release skeleton stay rejected.
+- `template-adoption`: the inherited text now says that the three branch-model
+  diagnostics warn while a repository adopts from a branch other than `main`;
+  this template's paragraph that called them an expected failure is gone.
+  `test_agent_content.py` checks the new behavior.
+- `test_upgrade_template.py` and `test_adoption_states.py` follow the upstream
+  command: its wording, its state directory, and new optional content, which an
+  upgraded paper adopts by hand and a fresh paper already has.
+
+- v0.1.26 layout (#189). Every script is in `.agents/scripts/shared/`: the
+  inherited ones and this template's own, whose Python modules now use
+  snake_case (`check_paper_build.py`, `check_paper_interfaces.py`,
+  `check_agent_content.py`, `check_reference_integrity.py`,
+  `reference_evidence.py`, `check_bibtex_format.py`,
+  `check_reference_metadata.py`, `check_reference_corrections.py`, and the
+  helpers `bib_identity.py`, `bounded_run.py`, `citation_occurrences.py`,
+  `reference_env.py`, `validate_bibtex_correction.py`,
+  `validate_bibtex_with_pybtex.py`), with the locked dependencies in
+  `shared/reference-integrity/`. `setup-project.sh` and
+  `migrate-project.rules` are in `.agents/scripts/project/`. The tests of the
+  shared scripts are in `.agents/tests/shared/`, and
+  `test_adoption_states.py` in `.agents/tests/project/`. `ENTRY_TEMPLATE.md`
+  is `entry-template.md`, and `VENUE_TEMPLATE.md` is
+  `.agents/knowledge/shared/venue-template.md`. The `paper-brief-ingest`
+  script is `scripts/paper_brief.py`. Every category and group has `AGENTS.md`
+  and a `CLAUDE.md` link; `.agents/references/` is a declared root entry.
+- The registry (schema 2) owns each unit's ID, scope, owner, summary, status,
+  replacements and refresh condition; memory and knowledge front matter keeps
+  only `name`, `date`, `source` and `applies_to`. The group `AGENTS.md` files
+  carry indexes generated from it (`check-development.sh --write-indexes`)
+  instead of hand-written lists, and this template's own text in them moved to
+  `## In this repository` sections. `make check` also runs
+  `check-development.sh`, and runs the tests of both groups (a group with no
+  tests is skipped). `check_agent_content.py` reads skill and record
+  registration from the registry.
+- Vendored skills and standard files keep their names through reasoned
+  `policy.naming_exceptions`. `long-running-supervision`,
+  `run-settings-from-config`, `USER.md` and `src/` are registered as rejected
+  here. The upstream command migrated this template's own skill packages,
+  records and notes to placeholders; the registry was corrected by hand and
+  records each move in `migrations`.
+
+### Adoption states
+
+Unchanged from v0.4.2. `make check` passes in every state below, and
+`make release-check` fails only on the steps named, for the reasons v0.4.2
+gives.
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.5
+
+1. Run this release's whole command directory once, as `template-upgrade`
+   shows under "In this repository" (`git archive` of
+   `.agents/scripts/shared` into `.project/state/template-upgrade/target-command/`;
+   the command needs its sibling `content_registry.py`, so never stream the
+   single file): `--check` first, then without it. It migrates the registry
+   to schema 2, moves the scripts, tests and record templates to their new
+   paths, replaces the skills, records and scripts above their
+   `## In this repository` sections, and moves registry fields out of the
+   records' front matter. Later runs keep their clone in
+   `.project/state/template-upgrade/`; `.project/build/template-upgrade/` can
+   be deleted.
+2. The command refuses `.agents/memory/project/AGENTS.md`: "Start a paper"
+   had the paper delete this template's index lines there, and this release
+   replaces the hand-written index with a generated one. Move any rule the
+   paper added there into a trailing `## In this repository` section of the
+   release's file
+   (`git -C .project/state/template-upgrade/paper-agent-project-template.git show v0.4.6:.agents/memory/project/AGENTS.md`)
+   and run the command again with `--resolved .agents/memory/project/AGENTS.md`.
+   The first run wrote the paper's own registry indexes into the group
+   `AGENTS.md` files, and this run reports such a file as a conflict when it
+   differs from the release only between the `registry-index` markers
+   (inherited from coding-agent-project-template v0.1.26). Check that with
+   `diff`, add `--resolved <path>` for each such file and run the command once
+   more; it then sets `template.version`. Run `make check`.
+3. Update the paper's own callers of the old paths (its `Makefile` additions,
+   workflows, scripts and notes, and `assets/README.md`, which the command
+   lists for a comparison by hand): `.agents/scripts/<name>` is now
+   `.agents/scripts/shared/<name>`, with the snake_case Python names above,
+   and `.agents/tests/<test>` is `.agents/tests/shared/<test>`. A script or
+   record of the paper's own that the command moved to a `project/` group keeps
+   its content; register it with a real summary in place of the command's
+   placeholder, and rename a Python module that is not snake_case or register a
+   reasoned naming exception, until `check-development.sh` passes.
+4. The command lists two new optional items as manual: `credential-setup` and
+   `credential-inventory`. A paper that adopted `llm-credentials` adopts both
+   with the `git show` the command prints, because `llm-credentials` now points
+   to them for its steps and formats; a paper that left out `llm-credentials`
+   leaves both out. The inventory needs no `credentials.yaml` in a paper that
+   calls no LLM provider, and `probe-credentials.sh --check` then skips.
+5. In the paper's own `issue-workflow` section, rename `<POST_MERGE_CHECK>` to
+   `<LOCAL_CHECK>` and fill it with the `DEV.md` check commands whatever
+   `<CI>` is; add the new slots (`<AGENT_KINDS>`, `<PROVIDER_ARGS>`,
+   `<MODEL_SELECTION>`, `<EXCLUDED_MODELS>`, `<FALLBACK_AGENT>`,
+   `<WORKSPACE_PREFIX>`, `<MERGE_METHOD>`, `<PRE_MERGE_GATE>`). Move an
+   addition keyed to "Phased work" step 3 or 4 to step 4 or 5, and a "resolve
+   conflicts in the dev checkout" addition to the PR's own worktree. Check that
+   no addition overrides the hook review, the implementation and delivery
+   gates, the PR readiness gate or the Close-out recovery through Herdr's own
+   reopen and remove commands. A `gh pr checks` merge gate becomes
+   `<LOCAL_CHECK>`, with CI only noted.
+6. In the `llm-credentials` section, write an addition that was keyed to an
+   old Apply step as an addition to the same step of `credential-setup`
+   (steps 1 to 5 keep their numbers).
+7. In the `template-adoption` section, delete a paragraph that calls the three
+   branch-model diagnostics an expected failure; they are warnings now. The
+   `release-doc-audit` section's step 3 addition can drop what the new
+   upgrade-section check covers. The command also lists `asset-lifecycle` for
+   reconciliation because the new text has a second numbered list; its step 2
+   is unchanged.
+8. If a `migrate-project.rules` line has a `NAME` with `*`, `?` or `[`, read
+   `migrate-assets.sh`'s header once: such a `NAME` is a wildcard now.
+
 ## v0.4.5 — 2026-10-21
 
 Lets `upgrade-template.sh` complete the light path in a real paper: it no

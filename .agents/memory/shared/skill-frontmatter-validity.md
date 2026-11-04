@@ -2,11 +2,7 @@
 name: skill-frontmatter-validity
 date: 2026-10-20
 source: Issue #156 §7; downstream paper repositories that inherited eight skills whose front matter did not parse, and a vendored skill that arrived invalid
-scope: shared
 applies_to: repositories that keep agent skills as SKILL.md files with YAML front matter
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Every SKILL.md front matter parses, checked after every skill change
@@ -39,7 +35,7 @@ easy to miss.
 
 ## Apply
 
-- `make check` runs `.agents/scripts/check-agent-content.py`, which parses every
+- `make check` runs `.agents/scripts/shared/check_agent_content.py`, which parses every
   `SKILL.md` under `.agents/skills/` recursively and checks `name` and
   `description`, together with the front matter of every memory and knowledge
   record.

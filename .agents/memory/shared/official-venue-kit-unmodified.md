@@ -2,11 +2,7 @@
 name: official-venue-kit-unmodified
 date: 2026-10-20
 source: Issue #156 §7; venue-template migrations in downstream paper repositories, including a running header lost with a newer system fancyhdr and false review banners
-scope: shared
 applies_to: paper repositories that move a paper onto a venue's official LaTeX kit
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Use the venue's official kit unmodified, and change typesetting only

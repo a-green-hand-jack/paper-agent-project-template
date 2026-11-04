@@ -1,6 +1,15 @@
 name: Bug
 description: Report an observed defect with evidence
 body:
+  - type: markdown
+    attributes:
+      value: >-
+        Follow `.agents/skills/shared/development-writing/SKILL.md` from the
+        repository root. Explain the trigger and consequence, the checked
+        version, command, conditions and redacted evidence. State the observable
+        acceptance result and when a real build or run is required in the
+        existing fields. Keep historical results distinct from current checks;
+        never include secrets or private machine paths.
   - type: textarea
     id: observed
     attributes:

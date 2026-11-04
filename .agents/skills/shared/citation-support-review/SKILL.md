@@ -160,30 +160,30 @@ reject or leave unresolved).
 
 ## Procedure
 
-Run `python3 .agents/scripts/reference-evidence.py` from the repository root.
+Run `python3 .agents/scripts/shared/reference_evidence.py` from the repository root.
 Its global options go before the command (`--offline` stops provider calls),
 and its runs, packets and caches go to `.project/build/reference-support/`.
 
 1. Identify the exact citation occurrence (file, line, command, keys) and the
    surrounding manuscript sentence. When the occurrence is not yet recorded,
-   run `reference-evidence.py inventory` and find it in the output. Do not pass
+   run `reference_evidence.py inventory` and find it in the output. Do not pass
    `--location`: a filtered inventory drops every other occurrence record from
    the ledger.
-2. Resolve a known citation with `reference-evidence.py resolve --key KEY` (or
+2. Resolve a known citation with `reference_evidence.py resolve --key KEY` (or
    `--doi`, `--arxiv`, `--url`, `--title`), or discover candidates for an
-   unknown need with `reference-evidence.py search "CLAIM" --context "..."`.
+   unknown need with `reference_evidence.py search "CLAIM" --context "..."`.
    Never insert a citation from title relevance or metadata existence alone.
 3. Retrieve evidence passages with
-   `reference-evidence.py passages --doi DOI --query "CLAIM" --limit 3` (or
+   `reference_evidence.py passages --doi DOI --query "CLAIM" --limit 3` (or
    `--arxiv`, `--paper-id`). Prefer exact Semantic Scholar snippets restricted
    to the resolved paper, then authoritative HTML, XML or source text, then
    abstract-only evidence, then on-demand Agent PDF reading. Provider misses
    remain visible and are not negative scientific evidence.
 4. Build the support packet with
-   `reference-evidence.py packet OCCURRENCE_ID --key KEY`, fill the claim
+   `reference_evidence.py packet OCCURRENCE_ID --key KEY`, fill the claim
    meaning from question 1, and compare the sentence against the passages once
    for Draft, or supportively and adversarially for Review.
-5. Record the result with `reference-evidence.py record --occurrence-id ID
+5. Record the result with `reference_evidence.py record --occurrence-id ID
    --key KEY --verdict VERDICT --passage-text "..." --locator "..." --origin
    ORIGIN`, giving the exact passage text and locator, the passage's actual
    origin (an origin the tool does not know is recorded as `agent-pdf`), the
@@ -191,7 +191,7 @@ and its runs, packets and caches go to `.project/build/reference-support/`.
    `provisional`). `record` rejects stale packets (claim fingerprint or
    citation set drift); re-inventory before recording.
 6. Run the offline gates after changes:
-   `python3 .agents/scripts/check-reference-integrity.py --profile draft`, and
+   `python3 .agents/scripts/shared/check_reference_integrity.py --profile draft`, and
    `--profile release` for Release. `make check` runs the draft profile and
    `make release-check` the release profile.
 

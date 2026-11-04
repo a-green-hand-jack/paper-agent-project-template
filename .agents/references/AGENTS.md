@@ -10,9 +10,9 @@
 
 The rules are in
 [`../memory/shared/reference-integrity.md`](../memory/shared/reference-integrity.md).
-Change the ledger through `.agents/scripts/reference-evidence.py` and the
+Change the ledger through `.agents/scripts/shared/reference_evidence.py` and the
 `citation-support-review` and `reference-repair` skills, never by copying an
-empty ledger over a populated one. `check-reference-metadata.py --record`
+empty ledger over a populated one. `check_reference_metadata.py --record`
 writes only `verification.bibtex_fingerprint`, the fingerprint of the entry it
 verified online. Online reports, caches and support packets
 are rebuildable and go under `.project/build/`, not here.

@@ -19,9 +19,18 @@ example assets or project-specific memory and knowledge.
 
 1. Record the target repository, current branch, clean/dirty state, remotes,
    default entrypoints, runtime state locations and asset locations.
-2. Read the target repository's agent instructions and contributor docs. Compare
-   them with the template release requested by the user (for example `v0.1.1`).
+2. Establish who the project serves, what it delivers, its core concepts and
+   non-goals before choosing directories. Read the implementation and user and
+   contributor docs, not only the root README. Read the AGENTS.md chain and
+   registry entries for every affected directory, including paths being moved
+   and their destinations. Compare these contracts with the requested template
+   release. Follow the shared `project-positioning-before-layout` decision.
 3. Produce a migration map before editing:
+   - map each existing path to its proposed destination, purpose and owner:
+     product, development, human documentation, runtime state or assets;
+   - organize product paths by its stable concepts, not experiment batches;
+     retain existing tests and domain layout unless an approved change needs
+     them moved; this template prescribes no domain directory taxonomy;
    - adopt unchanged: neutral rules and shared skills;
    - adapt: paths, commands, product docs, environment and evidence;
    - preserve: existing product code, domain docs, tests and project memory;
@@ -33,11 +42,24 @@ example assets or project-specific memory and knowledge.
    each record has a destination and front matter.
    If the repository calls LLM providers, from its own code, agent CLIs or
    third-party tools it runs, map the shared `llm-credentials` and
-   `third-party-llm-compat-patches` memory records and the
-   `gpt5-strict-backend-requests` knowledge record together: adapt the
-   credential parameters, locate any local edits to third-party tools and move
-   them into the repository as patches, and keep the knowledge record's date and
-   refresh condition. Skip them when the project calls no LLM.
+   `third-party-llm-compat-patches` memory records, the `credential-setup`
+   skill and the `credential-inventory` and `gpt5-strict-backend-requests`
+   knowledge records together: adapt the credential parameters, locate any
+   local edits to third-party tools and move them into the repository as
+   patches, and keep the knowledge records' dates and refresh conditions. Map the credentials the project uses into a
+   `credentials.yaml` (names only; a first draft can list the variable names in
+   `.env.example`) and the device's inventory rows they need. Skip them when
+   the project calls no LLM.
+   Map the optional content the registry marks `optional: true` as adopted or
+   rejected; a rejected path is left out, and `template-upgrade` keeps it out.
+   Decide `.github/workflows/template-check.yml` with the `issue-workflow`
+   `<CI>` slot: adopted when it is `yes`, rejected when it is `no`. Either way
+   fill `<LOCAL_CHECK>` with the `DEV.md` check commands; CI only marks the PR.
+   Map the writing conventions (`issue-workflow`, "Writing conventions"): write
+   the maintainer's working language and Issue opening sections in the
+   registry's `writing:` block, or leave the block out when nothing is
+   declared. Map the template's Issue and PR forms as adopted, or adapted to the
+   declared sections in the repository's own forms.
    Map the optional product release skeleton (`pyproject.toml`, `Dockerfile`,
    `install.sh`, `.dockerignore`) as adopted, adapted, preserved or a local
    conflict; never overwrite an existing product build entrypoint.
@@ -54,13 +76,20 @@ example assets or project-specific memory and knowledge.
    Map the target's product tree: `src/` by default, or the tree the repository
    already has (for example `paper/`), declared in `AGENTS.md` and `README.md`.
    A product tree is self-contained, never reads `.agents/`, and builds into
-   `.project/`; list any build output it writes elsewhere as an adaptation.
+   `.project/`. Treat existing output elsewhere as a conflict to resolve in the
+   map, not as permission to keep a contradictory layout through adaptation.
+   Map README to positioning and navigation, USER to usage, DEV to extension
+   and maintenance, and memory to decisions and reasons. Link these authorities
+   instead of copying their content into memory or product code.
    If the repository already carries an earlier adoption whose registry has no
    `template:` block, read the adopted tag from its developer docs or git history
    and backfill the block first, following `template-upgrade`
    ("Backfill a missing template record").
 4. Show the map and wait for the user's approval when the repository's local
-   rules or public behavior would change. Do not silently overwrite files.
+   rules or public behavior would change. Identify conflicting contracts and
+   the authority that can resolve them; stop the affected change until resolved.
+   An adaptation section cannot grant an exception to a governing contract.
+   Do not silently overwrite files.
 5. On an Issue branch, add or adapt the three planes, `CLAUDE.md -> AGENTS.md`,
    uniform `.agents/**/AGENTS.md` guidance, content registry, worktree setup,
    visible `.project/` state, asset manifest and GitHub templates as applicable.
@@ -73,7 +102,7 @@ example assets or project-specific memory and knowledge.
    `diagnose-environment.sh` fails with the fix when that happens.
    If the product resolves a state root of its own, follow the shared
    `product-state-root` memory record next to the setup hook
-   (`.agents/scripts/setup-project.sh`) so every command started in a worktree
+   (`.agents/scripts/project/setup-project.sh`) so every command started in a worktree
    finds that worktree's `.project/`.
 
    Copy shared skills and memory records registered `shared_with_adaptation`
@@ -91,7 +120,9 @@ example assets or project-specific memory and knowledge.
      naming the step and its first words so that a renumbered step is noticed
      at upgrade, for example "Start step 4 (Start the agent): also pass ...".
      A local rule that has to replace a template step is keyed the same way,
-     says "instead", and is reported through `template-feedback`.
+     says "instead", cites the explicit contract resolution that authorizes it,
+     and is reported through `template-feedback`. Writing the section itself
+     never authorizes replacing a rule.
    - When nothing needs adapting, the section says so in one line.
    - A derived template adapts the files it inherits the same way. A project
      made from a derived template copies such a file with the derived
@@ -99,23 +130,38 @@ example assets or project-specific memory and knowledge.
      additions.
 
    Adopt scripts unchanged and put project-specific setup in the
-   `.agents/scripts/setup-project.sh` hook. When that hook creates entries in
-   `.project/`, say in `.agents/scripts/migrate-project.rules` how teardown
+   `.agents/scripts/project/setup-project.sh` hook. When that hook creates entries in
+   `.project/`, say in `.agents/scripts/project/migrate-project.rules` how teardown
    migrates each one, one `NAME|ACTION|WHY` line per entry: `copy`, `drop` with
    the reason it may be left behind, or `login` for a link to the canonical
    checkout's login directory (`llm-credentials`; the link is dropped and a real
-   copy blocks). The template ships neither file, so `template-upgrade` keeps
+   copy blocks). `NAME` may be a shell wildcard for a class of entries, such as
+   `plan-*.md|copy|`; it cannot contain `/`, be a `login`, or match an entry the
+   template handles, and an exact name beats a wildcard. The template ships neither file, so `template-upgrade` keeps
    both. Rewrite the other
    `shared_with_adaptation` files (`AGENTS.md`, the registry, product skeletons)
    for the repository.
 6. Run the target repository's setup, diagnostics, CLI entrypoints and relevant
    seam checks. Confirm that product payloads do not include `.agents/`, secrets
-   or worktree-local state.
+   or worktree-local state. In a repository that had only `main`, `dev` is
+   created by the maintainer with `init-branches.sh` after the adoption merges;
+   until then `diagnose-environment.sh` reports the three branch-model checks
+   (local `dev`, `origin/dev`, GitHub default branch) as expected warnings,
+   and they do not fail the adoption.
 7. Report adopted files, adapted files, preserved files, validation evidence and
    unresolved decisions. Leave commit and PR publication to the user's workflow.
 
 The destination repository remains the authority for its product and project
 history; this template supplies a development control plane, not a new product.
+
+## Development catalog adoption
+
+Adopt the six shared/project category skeletons and their real relative CLAUDE
+links, but never template-only payloads. Register independent local documents or
+packages with stable IDs and explicit unknown history. Use the naming, metadata
+and many-to-many migration contract in `.agents/AGENTS.md`; preserve adoption or
+rejection decisions in the same registry. Regenerate group indexes after excluding
+template-only packages, then run check-development and recursive check-shells.
 
 ## In this repository
 
@@ -123,23 +169,28 @@ This repository is a derived template: its registry names itself in `template`
 and the coding template in `template.upstream`.
 
 - Step 3 (Produce a migration map): for a paper, the product tree is `paper/`,
-  built by the root `Makefile` into `.project/build/`. Map an existing paper's
+  built by the root `Makefile` into `.project/build/`. Map the paper's readers,
+  deliverables and existing directory contracts before moving paths; preserve
+  its domain layout and tests, with ownership explicit for product, development,
+  Human documentation, runtime state and assets. Map an existing paper's
   root documents (`EXPERIMENTS.md`, `PUBLICATION.md`, `DECISIONS.md`,
   `PAPER_INTERFACES.md`, `REFERENCES.md`, `BRIEF.md`) to the records in
   `.agents/memory/project/`, its publication variants to the three builds of
   [`one-source-three-builds`](../../../memory/shared/one-source-three-builds.md),
   and any `template-sync` state to this skill (`RELEASE_NOTES.md` explains the
   move from `template-sync`). A paper made from this template records only this
-  template and removes the `upstream` block.
+  template and removes the `upstream` block. The optional content of the
+  coding template is mapped as follows: `llm-credentials`,
+  `third-party-llm-compat-patches`, `credential-setup`, `credential-inventory`
+  and `gpt5-strict-backend-requests` are adopted together for the optional
+  `image-to-editable-ppt` CLI, without a `credentials.yaml`; the product
+  release skeleton, `docker-objects-prefixed-and-removed`,
+  `run-settings-from-config` and `serve-the-coding-agent` are rejected, because
+  a paper starts no container, has no product run and keeps no run records or
+  usage accounting; `template-check.yml` is adopted (`<CI>` is `yes`) with
+  `<LOCAL_CHECK>` set to the `DEV.md` check commands; the registry has no
+  `writing:` block, and the Issue and PR forms are adopted as shipped.
 - Step 6 (Run the target repository's setup): the acceptance commands are
-  `bash .agents/scripts/setup-worktree.sh`,
-  `bash .agents/scripts/diagnose-environment.sh`, `make pdf`, `make blind`,
+  `bash .agents/scripts/shared/setup-worktree.sh`,
+  `bash .agents/scripts/shared/diagnose-environment.sh`, `make pdf`, `make blind`,
   `make submission` and `make check`, with `git status --short` empty afterwards.
-  A repository that adopts from `main` has no `dev` until the maintainer runs
-  `bash .agents/scripts/init-branches.sh` after the merge, so until then
-  `diagnose-environment.sh` exits 1 on its three branch-model lines, and only
-  on them: `FAIL local dev branch`, `FAIL origin/dev branch` and
-  `FAIL GitHub default branch: main` (the last one only where `gh` is
-  authenticated; otherwise that line is a `skip`). This is expected; every
-  other line must pass. Creating `dev` or changing the default branch is the
-  maintainer's step, not the Issue session's.

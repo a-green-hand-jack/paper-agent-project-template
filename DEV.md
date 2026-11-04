@@ -27,9 +27,12 @@ open an Issue when a small change grows or raises a design question. Small
 changes are not committed or pushed automatically either; run the applicable
 checks and report the evidence.
 
-An Issue's branch starts from `dev` and is named `fix/issue-<N>-<slug>`,
+An Issue's branch starts from its declared target (default `dev`) and is named `fix/issue-<N>-<slug>`,
 `feat/issue-<N>-<slug>`, `docs/issue-<N>-<slug>` or `chore/issue-<N>-<slug>`.
-It returns to `dev` through a PR; `main` holds only released states. Overleaf
+Simple Issues return to `dev` through a PR. When a parent task needs combined
+acceptance, `issue-workflow` records the parent integration branch, child PR
+targets and the final PR to `dev`; child merges do not close the parent's
+acceptance duties. `main` holds only released states. Overleaf
 edits arrive on a `sync/overleaf-<commit>` branch made by
 `overleaf-sync.sh pull`.
 
@@ -39,18 +42,86 @@ on the way. A step only the maintainer can take is written as a concrete
 blocker that says what the maintainer must do. Build and release evidence goes
 into the Issue or PR; an agent's own summary does not replace it.
 
-Start an Issue with Herdr's native worktree command, from `dev`, and a
+Start an Issue with Herdr's native worktree command, from its declared target, and a
 separate agent session in a new pane; never switch branches in the current
 agent window. The new session first runs setup. The parent session can
 generate the first prompt, with the Issue link, branch, reading scope and
 acceptance:
 
 ```bash
-bash .agents/scripts/new-agent-prompt.sh 123 feat/issue-123-example
+bash .agents/scripts/shared/new-agent-prompt.sh 123 feat/issue-123-example dev \
+  .project/state/coordinator-handoff.md
 ```
 
 If Herdr is unavailable, report the blocker instead of implementing in the
 current window. The `issue-workflow` skill covers start, merge and close-out.
+
+Use [`development-writing`](.agents/skills/shared/development-writing/SKILL.md)
+for Issues, PRs, comments and commits: explain the concrete change, keep current
+descriptions aligned with the final scope, and identify the version and
+conditions behind evidence. Existing Issue fields and PR sections remain the
+entry points; advisory prompts add no new required fields. The registry has no
+`writing:` declaration, so each file keeps its own language. Release narratives
+use `release-doc-audit` and retain this template's own release history.
+
+## Session identity and delivery
+
+Follow `issue-workflow` for caller identity and dispatch. Before controlling
+Herdr, match the tool process's allowlisted Herdr variables and native thread
+against live workspace, pane, agent and Git common-directory/worktree identity.
+For a new Codex dispatch, check the installed CLI supports `--no-daemon` before
+isolated startup, then have the worker independently verify its identity and
+explicitly acknowledge scope. Missing or stale context requires authorized
+read-only diagnosis; it does not authorize guessed IDs or shared service changes.
+The current `issue-workflow` adaptation retains this project's agent defaults;
+an explicitly authorized per-Issue dispatch records its actual agent, provider,
+model, effort and startup mode in Dispatch.
+
+Keep the task key, role, attempt and actual returned IDs with the claiming
+coordinator's address, allowed contacts/events and recovery duties in the local
+handoff file under `.project/state/`. Pass that file as the fourth argument
+above; keep private addresses out of Issues, PRs and tracked content.
+[`agent-communication`](.agents/skills/shared/agent-communication/SKILL.md)
+owns transport preflight and the distinct submitted, acknowledged and completed
+states. Check actual native queue reachability separately from startup or
+successful submission. Inspect a target's live status and styled input before
+deciding to send; a blocked target or real draft stops sending.
+
+Workers promptly report failures, blockers and responsibility transfers to
+their authorized coordinator. Combine implementation/acceptance, PR-created
+and exact-head evidence at the same checkpoint/version; keep routine progress
+local. A pure ACK ends its receipt chain. Unacknowledged events keep an owner,
+recovery pointer and bounded next action rather than repeated polling or
+heartbeats. These events do not grant commit, merge or publication permission.
+
+At each active checkpoint, first read the current summary and receipts, then
+classify received events before queries, replies or dispatch. Fold duplicates,
+covered earlier milestones and terminal events with no new duties into local
+records without repeated checks or completion reports. A matching head does
+not cover a new failure: retain changed risks and unfulfilled duties once,
+with evidence, owner and next action. Genuine new user instructions retain
+their authority; old authorization quoted in an event is not fresh approval.
+This is a session workflow, not a queue filter or background consumer.
+
+## Acceptance write responsibility
+
+Before checks read a shared checkout, record the exact inputs, acceptance
+owner, all writers, protected paths and allowed log/artifact outputs in
+`.project/state/`. Include a saved diff/content identity for uncommitted work;
+HEAD alone does not identify it. Every writer explicitly pauses those inputs,
+and the acceptance owner acknowledges the fixed version before checking.
+Neither the owner nor writers edit protected inputs during that interval.
+For this paper, the existing commands are `make check`, diagnostics and state
+inspection; build/check outputs remain under `.project/`. A separately immutable
+snapshot records its source and isolation instead of freezing the checkout.
+
+After checks exit, the acceptance owner records results and explicitly returns
+write responsibility; the receiver acknowledges taking it back before editing,
+committing or changing branches. New requests, drift, restart and elapsed time
+do not release the pause. A change requires ending or invalidating the old
+acceptance and stopping or isolating its checks before transfer and rechecking.
+Keep live handoff receipts separate from scenario reviews of duplicates, stale
+inputs and failed transports; one does not establish the other.
 
 ## Worktree lifecycle
 
@@ -58,22 +129,34 @@ Each worktree is a separate unit of work with its own state. After creating
 one, run in it:
 
 ```bash
-bash .agents/scripts/setup-worktree.sh
+bash .agents/scripts/shared/setup-worktree.sh
 ```
 
 Setup writes `.project/home` and `.project/worktree.env`, creates the local
 state directories, checks tools and the asset manifest, and runs
-`.agents/scripts/setup-project.sh`, which creates `.project/build/` and
+`.agents/scripts/project/setup-project.sh`, which creates `.project/build/` and
 reports the TeX tools. Never reuse another worktree's `.project/`.
 
-After the PR merges, do not delete the directory directly. First run:
+After the PR merges, do not delete the directory directly.
+
+Reconcile background acceptance, audits and promised follow-ups first. Retain
+the worktree while duties remain, or explicitly transfer them under existing
+authorization and obtain the successor's acknowledgement. Keep the current or
+terminal summary beside receipts in `.project/state/`: exact version, covered
+events and evidence, remaining duties/owners, risks, pending receipts, user-report
+status and recovery locations. After checks and owned processes have exited,
+the coordinator migrates and verifies that state and records its recovery
+destination before managed removal. Merge or idle status alone proves none of
+these duties complete.
+
+Then run:
 
 ```bash
-bash .agents/scripts/teardown-worktree.sh --migrate-to <canonical checkout>
+bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkout>
 ```
 
 It checks ignored state, copies what should be kept and writes a migration
-record; it never deletes the worktree. `.agents/scripts/migrate-project.rules`
+record; it never deletes the worktree. `.agents/scripts/project/migrate-project.rules`
 says that `.project/build/` is dropped, because `make` rebuilds it. Destroy the
 worktree and branch with the worktree manager only after the assets are
 migrated and no unique copy remains in it.
@@ -96,8 +179,9 @@ Two variables adjust it:
 checks (undefined references or citations, missing files, multiply defined
 labels), the page count of `blind`, the PDF text-layer check that underscores
 survive (T1 encoding), the offline reference gate, the interface-macro check,
-the skill, memory and knowledge structure check, and the unit tests. Build
-logs are in `.project/build/logs/<build>.log`.
+the development registry check (`check-development.sh`), the skill, memory and
+knowledge structure check, and the unit tests of `.agents/tests/shared/` and
+`.agents/tests/project/`. Build logs are in `.project/build/logs/<build>.log`.
 
 A passing `make check` does not show that the pages look right. Before calling
 a build done, render the affected pages and look at them
@@ -111,9 +195,9 @@ Requirements:
 - `pdftotext` and `pdfinfo` (poppler-utils) for the PDF checks;
 - Python 3 with PyYAML for the scripts;
 - optionally `uv`, for the online reference audits that use the locked
-  dependencies in `.agents/scripts/reference-integrity/`.
+  dependencies in `.agents/scripts/shared/reference-integrity/`.
 
-`bash .agents/scripts/setup-worktree.sh` reports what is missing.
+`bash .agents/scripts/shared/setup-worktree.sh` reports what is missing.
 
 A paper has no Python package, container or installer, so this template has
 no `pyproject.toml`, `Dockerfile`, `.dockerignore` or `install.sh`, and
@@ -151,8 +235,8 @@ Figure sources:
 
 The offline reference gate runs in `make check` (Draft) and
 `make release-check` (Release). The online audits, the metadata audit
-(`check-reference-metadata.py`) and the correction candidates
-(`check-reference-corrections.py`), run in three tiers:
+(`check_reference_metadata.py`) and the correction candidates
+(`check_reference_corrections.py`), run in three tiers:
 
 | When | What runs | Gate |
 | --- | --- | --- |
@@ -162,7 +246,7 @@ The offline reference gate runs in `make check` (Draft) and
 
 A verified entry's fingerprint is recorded in the ledger
 (`verification.bibtex_fingerprint`) by
-`python3 .agents/scripts/check-reference-metadata.py --record`. Run it once
+`python3 .agents/scripts/shared/check_reference_metadata.py --record`. Run it once
 with the full scope after adopting the tiers and commit the ledger. A provider
 outage, rate limit or bot challenge is an infrastructure outcome that names
 the entries it left open, never a failed entry. The rules are in
@@ -193,9 +277,9 @@ The branch is found from the remote's `HEAD`; `--branch`, `OVERLEAF_BRANCH` or
 `git config remote.overleaf.overleafBranch` override it. Then:
 
 ```bash
-bash .agents/scripts/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
-bash .agents/scripts/overleaf-sync.sh pull     # Overleaf edits -> branch sync/overleaf-<commit>, for a PR into dev
-bash .agents/scripts/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
+bash .agents/scripts/shared/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
+bash .agents/scripts/shared/overleaf-sync.sh pull     # Overleaf edits -> branch sync/overleaf-<commit>, for a PR into dev
+bash .agents/scripts/shared/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
 ```
 
 - Before editing, run `status`
@@ -226,13 +310,15 @@ The `poster-build` skill describes it. The template ships no `poster/`.
 
 `.agents/memory/` holds durable decisions and `.agents/knowledge/` dated facts
 with a source and a refresh condition. The `AGENTS.md` of each directory holds
-only its rules and a short index; each record is its own Markdown file under
-`shared/` or `project/` with the front matter of the directory's
-`ENTRY_TEMPLATE.md`. A venue record starts from
-`.agents/knowledge/VENUE_TEMPLATE.md`. When a record is added or moved, update
-its index and `.agents/content-registry.yaml`. `make check` checks each
-record's front matter, sections and index link, and the registry entry of
-every skill.
+its rules and an index generated from the registry; each record is its own
+Markdown file under `shared/` or `project/` with the front matter of the
+directory's `entry-template.md`. A venue record starts from
+`.agents/knowledge/shared/venue-template.md`. Scope, status, replacements and
+the refresh condition live in `.agents/content-registry.yaml`, not in the front
+matter. When a record is added or moved, register it there and run
+`bash .agents/scripts/shared/check-development.sh --write-indexes`.
+`make check` checks the registry, layout and indexes, each record's front
+matter and sections, and the registry entry of every skill.
 
 A paper fills the starter records in `.agents/memory/project/` (`brief.md`,
 `experiments.md`, `paper-interfaces.md`, `publication.md`) and adds one record
@@ -242,7 +328,7 @@ per durable decision.
 
 `dev` is the integration branch and `main` the release branch. The first setup
 of a new repository creates and pushes `dev` and makes it the GitHub default
-branch, when the GitHub CLI is available; `bash .agents/scripts/init-branches.sh`
+branch, when the GitHub CLI is available; `bash .agents/scripts/shared/init-branches.sh`
 does the same explicitly. The diagnostics report what is missing and how to
 fix it.
 
@@ -259,13 +345,16 @@ Tests check real risks, past defects and seams; do not add tests for
 coverage. A paper change is verified by its public entry points, the builds:
 
 ```bash
-bash .agents/scripts/diagnose-environment.sh
-bash .agents/scripts/inspect-state.sh
+bash .agents/scripts/shared/diagnose-environment.sh
+bash .agents/scripts/shared/inspect-state.sh
 make check
 ```
 
 `make check` runs every unit test; run one file with
-`python3 -m unittest discover -s .agents/tests -p 'test_<name>.py'`. A
+`python3 -m unittest discover -s .agents/tests/<shared|project> -p 'test_<name>.py'`.
+After a change to the development plane, also run
+`bash .agents/scripts/shared/check-shells.sh`; regenerate the registry's
+indexes with `bash .agents/scripts/shared/check-development.sh --write-indexes`. A
 passing unit test does not replace `make check`, and neither replaces looking
 at the pages.
 
@@ -290,7 +379,7 @@ release, run `release-doc-audit` and `make check`; `main` requires the CI jobs
 "Adoption states" table: for each state a paper reaches by following README
 "Start a paper" (a fresh paper, an existing bibliography with no ledger or a
 migrated one, a venue kit), the `make release-check` steps expected to fail
-there. `make check` runs `.agents/tests/test_adoption_states.py`, which
+there. `make check` runs `.agents/tests/project/test_adoption_states.py`, which
 builds each state from the shipped files, runs `make check` and
 `make release-check` on it and compares the failures with that table, and
 runs the online metadata audit on a bibliography of realistic size; a release
@@ -310,7 +399,7 @@ coding template it follows in `template.upstream`:
 | Repository | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.5) | the coding template and the tag it follows (v0.1.13) |
+| this template | itself, its release (v0.4.6) | the coding template and the tag it follows (v0.1.26) |
 | a paper made from this template | this template, the adopted tag | none |
 
 A repository follows `template.upstream` when it has that field, and
@@ -323,7 +412,7 @@ A repository follows `template.upstream` when it has that field, and
 - A paper takes this template's releases through `template-upgrade`, reading
   `RELEASE_NOTES.md` at the target tag. It continues the
   `## In this repository` sections this template wrote.
-  `bash .agents/scripts/upgrade-template.sh [--check] <TARGET_TAG>` applies
+  `bash .agents/scripts/shared/upgrade-template.sh [--check] <TARGET_TAG>` applies
   the procedure's mechanical part (step 5) and prints the rest; when it
   reports no conflict and every release it crosses is **Command only.**, the
   upgrade takes the light path that `template-upgrade` defines in its

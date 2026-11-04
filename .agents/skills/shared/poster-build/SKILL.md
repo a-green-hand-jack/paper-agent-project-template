@@ -112,8 +112,8 @@ font scale last.
   own Overleaf project on a second remote, never the paper's:
 
   ```bash
-  bash .agents/scripts/overleaf-sync.sh status --remote overleaf-poster --tree poster
-  bash .agents/scripts/overleaf-sync.sh push --remote overleaf-poster --tree poster
+  bash .agents/scripts/shared/overleaf-sync.sh status --remote overleaf-poster --tree poster
+  bash .agents/scripts/shared/overleaf-sync.sh push --remote overleaf-poster --tree poster
   ```
 
   Never push over Overleaf edits that `poster/` lacks: import them first with

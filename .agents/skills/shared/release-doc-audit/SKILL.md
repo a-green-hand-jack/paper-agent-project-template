@@ -1,17 +1,34 @@
 ---
 name: release-doc-audit
-description: Audit release documentation, version references and registry paths before tagging.
+description: Write and review self-contained, illustrated release narratives, then audit version references, registry paths and upgrade instructions before tagging.
 ---
 
-# Release documentation audit
+# Release narrative and documentation audit
 
-Run this read-only audit from the repository root before creating a release tag.
-Pass the release tag being prepared as `TARGET_TAG` in the commands below. The
-skill is usable by the template repository and by downstream projects after
-adapting the repository URL, release-note ownership and `RELEASE_HEADING`.
+Use this skill to prepare or review a release page for people, including a
+product upgrade, results, a milestone or an archive. A release explains a period
+of change; an Issue/PR list supplies provenance, not the explanation. Writing a
+draft or running this audit does not authorize a tag, publication or downstream
+upgrade. Keep drafts explicitly labelled until publication is authorized.
+
+Use [development-writing's common principles](../development-writing/SKILL.md#common-principles)
+for reader order, self-contained prose, traceable claims, historical evidence,
+proportional visuals and redaction. The steps below apply those principles to
+release claims and publication surfaces; they remain the release procedure.
+
+Run the consistency audit below read-only from the repository root before
+tagging. Pass the release being prepared as `TARGET_TAG`. Before a release
+heading exists, use `Unreleased` for the upgrade-section check in step 3 and
+record that version readiness is pending. Do not invent a version to make a
+check pass.
 
 ## Adaptation slot
 
+- Record the repository URL, release audience/type, notes ownership, target
+  publication surface and its image hosting/rendering support in the destination's
+  trailing adaptation section. Use its writing language for the release, without
+  translating this shared procedure. Project examples and their images remain
+  project-owned content outside this shared skill.
 - `RELEASE_HEADING`: extended regular expression that matches the line of the
   project's `RELEASE_NOTES.md` naming `TARGET_TAG`. Default: one `## <tag>`
   heading per release, as the command in step 1 shows.
@@ -24,10 +41,61 @@ or illustrative tag elsewhere in the file does not satisfy it, and end the tag
 the way the default does so that a shorter tag (`v0.4`) does not match a longer
 one (`v0.4.0`).
 
+## Prepare the narrative
+
+1. Establish the audience, release claim and comparison baseline. Name the
+   previous version and exact candidate commit, what the release covers and
+   what it does not. Select the relevant emphasis from
+   [release types](references/release-types.md); small releases can use a few
+   connected paragraphs and one useful visual rather than a large form.
+2. Apply the common reader order to the release: the claim and necessary project
+   background;
+   the prior situation; the most consequential changes with examples; evidence
+   and what it establishes; how to use, upgrade or obtain the deliverable;
+   limitations and next steps. Organize by user consequence, not commit order.
+   Explain release-specific terms and causal connections in prose.
+3. Support each substantive claim with inspected artifacts or recorded checks.
+   State commands/method, version or run identity, conditions, outcome and limits
+   where relevant. Separate historical acceptance from checks of the final
+   candidate; name remaining unverified scope and reuse/upgrade conditions.
+   Require model/data fields only when they affect this release's claims.
+4. Choose visuals that carry information: tables for before/after comparisons,
+   flow diagrams for sequence or responsibility, plots for measured results,
+   and real redacted screenshots/demos for observable behavior. Give each a
+   descriptive caption and explain its relevance in nearby prose. Label
+   schematics as such; for results give units, conditions and uncertainty where
+   applicable. Add useful alt text or an adjacent text equivalent. Never
+   manufacture screenshots, results or decorative numbers.
+5. Keep applicable Issue, PR, previous release, fixed commit/version code and
+   full compare links in a short reference block at the beginning or end.
+   Use immutable code links rather than only a moving development branch.
+   Apply the common link-hiding review: the body must still explain
+   what this is, what changed, why it matters, what evidence supports, how to
+   use it and its limits. Restore the references before delivery.
+
+## Review the rendered page
+
+Render the actual Markdown on the intended publication surface using existing
+tools. Inspect prose, tables, diagrams and image links at normal reading width
+and a narrow viewport: check legibility, clipping, captions, alt text and image
+accessibility. Where diagrams or relative images do not survive the surface,
+provide an accessible static image at a stable URL and verify that URL without
+private-session access. A repository-relative image suitable for a checked-in
+document may need a fixed raw URL or hosted attachment in a release body.
+
+For a local-only draft, use the platform's renderer/preview when available and
+record exactly which surface was inspected. A local HTML preview does not prove
+the hosted release layout or remote image availability. Keep rendered artifacts
+and observations in the worktree's state directory; report missing tools,
+unavailable previews or image hosting precisely, never call a source-only check
+a rendering pass. Do not publish merely to obtain a preview.
+
+## Audit release consistency
+
 1. Confirm the target release identity and version record:
 
    ```bash
-   test -n "${TARGET_TAG:?set TARGET_TAG, for example v0.1.13}"
+   test -n "${TARGET_TAG:?set TARGET_TAG, for example v0.1.15}"
    RELEASE_HEADING="${RELEASE_HEADING:-^## ${TARGET_TAG//./\\.}([[:space:]]|\$)}"
    grep -nE "$RELEASE_HEADING" RELEASE_NOTES.md
    sed -n '/^template:/,/^[^[:space:]]/p' .agents/content-registry.yaml
@@ -59,36 +127,60 @@ one (`v0.4.0`).
    template repository's release notes from a downstream project's own release
    notes.
 
+   A template that other repositories upgrade from (this template, or a
+   derived template) also checks the upgrade section of the release entry:
+   `### Upgrading ...` must start with `**Command only.**` or list numbered
+   manual steps, because `upgrade-template.sh` prints it for every release it
+   crosses (`template-upgrade`, "Light path"). Before the release heading
+   exists, pass `Unreleased` instead of the tag. A project that is not a
+   template skips this check.
+
+   ```bash
+   python3 - "$TARGET_TAG" <<'PY'
+   import re, sys
+   tag = sys.argv[1]
+   notes = open("RELEASE_NOTES.md", encoding="utf-8").read()
+   entry = next((e for e in re.split(r"^## ", notes, flags=re.M)[1:] if e.split(None, 1)[0] == tag), None)
+   if entry is None:
+       raise SystemExit(f"RELEASE_NOTES.md has no `## {tag}` entry")
+   section = re.search(r"^### Upgrading\b[^\n]*\n(.*?)(?=^### |\Z)", entry, re.M | re.S)
+   body = section.group(1).strip() if section else ""
+   if not body.startswith("**Command only.**") and not re.search(r"^\d+\. ", body, re.M):
+       raise SystemExit(f"`## {tag}`: the `### Upgrading ...` section must start with"
+                        " **Command only.** or list numbered manual steps")
+   print(f"{tag}: upgrade section marked")
+   PY
+   ```
+
 4. Verify every path named by a skill or document exists, and verify every
    registry entry points to an existing path. For a quick registry-path check:
 
    ```bash
-   python3 - <<'PY'
-   from pathlib import Path
-   import yaml
-   root = Path('.')
-   data = yaml.safe_load(Path('.agents/content-registry.yaml').read_text())
-   missing = []
-   for entry in data['entries']:
-       path = entry['path']
-       matches = list(root.glob(path)) if any(ch in path for ch in '*?[') else [root / path]
-       if not matches or not any(match.exists() for match in matches):
-           missing.append(path)
-   if missing:
-       raise SystemExit('missing registry paths: ' + ', '.join(missing))
-   print('registry paths exist')
-   PY
+   bash .agents/scripts/shared/check-development.sh
    ```
 
-5. Write a short audit report in the release PR with each finding, location,
-   classification, resolution or intentional exception. Do not treat a passed
-   CI check as evidence that a documentation finding was classified.
+   The schema-aware check distinguishes active paths from retired history,
+   optional rejection and template-only omissions, validates real CLAUDE links,
+   and checks generated indexes. Do not replace it with a blanket exists check.
+
+
+5. Record findings, locations, classifications, resolutions or intentional
+   exceptions, together with the candidate identity, checks and rendered-page
+   observations. Use worktree state during local preparation; include the
+   report in the release PR when that delivery is authorized. Explicitly
+   distinguish a draft, implementation, validation and publication. A passed
+   CI check does not classify documentation findings or prove readability.
 
 ## In this repository
 
 | Slot | Value |
 | --- | --- |
 | `RELEASE_HEADING` | default (`## <tag>`) |
+| Repository | `https://github.com/a-green-hand-jack/paper-agent-project-template`; a paper sets its own URL. |
+| Audience / type | Template adopters / template upgrades here; a paper names its own readers and release type. |
+| Publication surface | Repository Markdown and GitHub Releases; publication still requires Human approval. |
+| Images | Use project-owned diagrams or inspected artifacts when they explain the release; verify stable image URLs on the intended surface. |
+| Notes ownership | This template's own `RELEASE_NOTES.md`; never copy the coding template's history. |
 
 This template's own releases are `v<major>.<minor>.<patch>` tags with one
 `## <tag>` heading each in `RELEASE_NOTES.md`; `template.upstream.version` is
@@ -96,13 +188,12 @@ the coding-template tag it follows. A paper made from it tags paper releases
 (`submit-<venue>-<yyyy>`, `arxiv-v1`, `camera-ready`) and writes one `## <tag>`
 heading per release in its own `RELEASE_NOTES.md`.
 
-- Step 3 (Check release instructions), for this template's own releases: the
-  `## <tag>` entry has an "Adoption states" table naming, per adoption state,
-  the `make release-check` steps expected to fail, and its
-  `### Upgrading a paper from <previous tag>` section says what a paper on the
-  previous release must do: it starts with **Command only.** when
-  `upgrade-template.sh` alone completes the upgrade, or lists the manual steps
-  that remain. Run
+- Audit release consistency, step 3 (Check copy-ready prompts and release
+  instructions), for this template's own releases: the
+  upgrade-section check above applies to every `## <tag>` entry, whose section
+  is `### Upgrading a paper from <previous tag>`. The entry also has an
+  "Adoption states" table naming, per adoption state, the `make release-check`
+  steps expected to fail. Run
   `python3 -m unittest discover -s .agents/tests -p 'test_adoption_states.py'`;
   it builds each state from the release candidate and checks the table, checks
   that every entry after v0.4.0 marks its upgrade section one way or the

@@ -2,11 +2,7 @@
 name: repository-identity
 date: 2026-10-20
 source: DEC-0018 and DEC-0019 of this template's decision log, Issues #148, #151 and #156
-scope: project
 applies_to: this template repository's name, description and positioning
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # The repository is paper-agent-project-template

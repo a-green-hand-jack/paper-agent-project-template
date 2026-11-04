@@ -1,6 +1,14 @@
 name: Feature
 description: Propose a bounded product or development change
 body:
+  - type: markdown
+    attributes:
+      value: >-
+        Follow `.agents/skills/shared/development-writing/SKILL.md` from the
+        repository root. Explain the problem and intended result without relying
+        on links. In the existing acceptance field, name the entrypoint,
+        conditions and expected evidence, including when a real build or run
+        is required. Use the project's writing language and redact private data.
   - type: textarea
     id: problem
     attributes:

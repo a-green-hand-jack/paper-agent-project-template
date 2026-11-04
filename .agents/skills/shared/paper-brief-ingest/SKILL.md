@@ -36,13 +36,13 @@ template repository.
 3. Validate the brief before writing anything:
 
    ```bash
-   python3 .agents/skills/shared/paper-brief-ingest/scripts/paper-brief.py validate --brief <path>
+   python3 .agents/skills/shared/paper-brief-ingest/scripts/paper_brief.py validate --brief <path>
    ```
 
 4. From the root of the paper repository, ingest it:
 
    ```bash
-   python3 .agents/skills/shared/paper-brief-ingest/scripts/paper-brief.py ingest --brief <path> [--commit]
+   python3 .agents/skills/shared/paper-brief-ingest/scripts/paper_brief.py ingest --brief <path> [--commit]
    ```
 
    The tool writes the brief to the record `.agents/memory/project/brief.md`

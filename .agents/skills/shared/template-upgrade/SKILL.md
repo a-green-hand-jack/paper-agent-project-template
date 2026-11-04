@@ -15,6 +15,67 @@ domain docs, local memory, knowledge, skills, assets, public behavior and local
 customizations unless the user explicitly approves a change. Never replace the
 downstream repository with the template tree or merge template history into it.
 
+## The upgrade command
+
+`bash .agents/scripts/shared/upgrade-template.sh [--check] [--resolved PATH]... <TARGET_TAG>`
+does the mechanical part of steps 1, 2 and 5:
+
+- It reads the followed template from the registry (step 1) and fetches both
+  tags into `.project/state/template-upgrade/<name>.git`; once both tags are
+  there it works offline.
+- For each path changed between the tags it applies step 5 by the target
+  release's registry (the source release's for a removed path). It skips
+  `scope: template` and project-owned paths, keeps out an `optional: true`
+  path the repository left out, and prints the release's diff for an
+  `upgrade: review` file. A shared file is replaced above its
+  `## In this repository` section after check 1, or whole when unchanged here
+  (three-way merged when it has no section); a new shared path is added, and a
+  removed one is removed only when unchanged here. It never touches `assets/`,
+  `.project/` or `.env`.
+- It merges the registry key by key and entry by entry. It never takes
+  `scope: template` entries or the template's `writing:` block, keeps this
+  repository's `writing:` block and the repository and version values of its
+  `template` block, and sets the followed version to the target only when
+  nothing conflicts.
+- A local edit that the release's change overlaps is a conflict: it is never
+  overwritten, a `git merge-file` proposal is written under
+  `.project/state/template-upgrade/proposals/`, and the command exits 1. A
+  section whose slots or keyed steps changed is listed as a manual step.
+- It prints what it applied, skipped, refused, left for review and for manual
+  steps, the upgrade section of every release it crosses, and
+  `Light path: yes|no`. `--check` changes nothing outside
+  `.project/state/template-upgrade/`.
+
+Run it again after resolving a conflict: a file that already holds the
+target's change counts as applied, and a file resolved by hand in another way
+is accepted with `--resolved <path>` (the registry too) once no conflict marker
+is left. Never edit the followed version by hand.
+
+A repository without the command yet runs the target release's copy, cloning
+the followed template's repository (the URL from step 1):
+
+```bash
+clone=.project/state/template-upgrade/coding-agent-project-template.git
+[ -d "$clone" ] || git clone -q --bare https://github.com/a-green-hand-jack/coding-agent-project-template "$clone"
+mkdir -p .project/state/template-upgrade/target-command
+git -C "$clone" archive <TARGET_TAG> .agents/scripts/shared | tar -x -C .project/state/template-upgrade/target-command
+bash .project/state/template-upgrade/target-command/.agents/scripts/shared/upgrade-template.sh <TARGET_TAG>
+```
+
+## Light path
+
+Each release entry in the template's `RELEASE_NOTES.md` has a
+`### Upgrading a project from <previous tag>` section that starts with
+`**Command only.**` when the command completes the upgrade, or lists the manual
+steps that remain. When every release crossed is command only and `--check`
+reports no conflict and no manual step (`Light path: yes`; review items do not
+count), the upgrade is one Issue, one worktree, the command, the checks of step
+6 and a PR. It needs no migration map and no step 4 presentation, and the Issue
+is dispatched in the mechanical tier (`issue-workflow`, "Dispatch by
+difficulty"). Otherwise follow the full procedure below; the command's plan is
+the start of the step 2 migration map, and in step 5 the command applies the
+mechanical part.
+
 ## Procedure
 
 1. Identify the template this repository follows from the downstream
@@ -44,6 +105,10 @@ downstream repository with the template tree or merge template history into it.
    `src/`.
    Treat the template repository's `RELEASE_NOTES.md` as template-only content;
    it is not copied into the downstream project's release history.
+   Keep a rejected optional path out (registry `optional: true`, for example
+   `.github/workflows/template-check.yml` in a project whose `issue-workflow`
+   `<CI>` is `no`), and keep the registry's `writing:` block: both are local
+   decisions.
 4. Present the migration map and acceptance plan before mutating a repository when
    conflicts, public behavior or asset paths are involved.
 5. Work on an Issue branch. Apply only approved shared changes, adapt commands and
@@ -86,7 +151,7 @@ downstream repository with the template tree or merge template history into it.
      way.
 
    Replace adopted scripts whole; the project's
-   `.agents/scripts/setup-project.sh` and `.agents/scripts/migrate-project.rules`
+   `.agents/scripts/project/setup-project.sh` and `.agents/scripts/project/migrate-project.rules`
    are not template files and stay. A local edit to an adopted script is a local
    conflict: move it into one of those two files (`template-adoption` step 5), or
    report it through `template-feedback` when neither can hold it. When the
@@ -105,7 +170,7 @@ capabilities it adopted and which it intentionally kept different.
 ## Backfill a missing template record
 
 A repository adopted before `v0.1.5` records its adopted release only in its
-developer docs or git history, and `.agents/scripts/diagnose-environment.sh`
+developer docs or git history, and `.agents/scripts/shared/diagnose-environment.sh`
 reports a missing registry `template.version`. On the Issue branch, before the
 migration map:
 
@@ -129,12 +194,42 @@ migration map:
    ```
 
 3. Verify with `grep -A2 '^template:' .agents/content-registry.yaml`, and with
-   `bash .agents/scripts/diagnose-environment.sh` once the target scripts are
+   `bash .agents/scripts/shared/diagnose-environment.sh` once the target scripts are
    in place.
 
 The backfilled value is the release the repository **adopted**. Step 5 of the
 procedure later moves it to the target tag; list the backfill in the migration
 report with its evidence.
+
+## Schema 1 to 2 and layout migration
+
+Use the target release command **and its sibling content_registry.py**, not the
+old flat script. Inspect `--check` first. The target registry maps source paths
+before comparing blobs, preserving their merge base and local trailing sections.
+Local lifecycle/optional rejection and writing/template identity remain local.
+Project hooks move to scripts/project; template commands move to scripts/shared.
+Local flat content uses its existing registered scope or schema1 project default;
+unknown classification or a naming conflict needs an explicit reviewed decision.
+Multi-source/multi-target maps are reported for manual reconciliation; the version
+does not advance across an unresolved content conflict. `--resolved` never grants
+permission to discard a local record. New optional content still needs adoption.
+
+After upgrading, generate indexes from the merged registry and run the official
+check. Verify each old path disposition, independent document registration,
+retired history and adaptation section. Repeating the same upgrade must leave
+all content and the new layout unchanged. Old compatibility wrappers are absent:
+all known template callers move together, and downstream callers must update in
+the reviewed migration. Preserve their old command references as history only.
+
+Preserve an adopter's stable IDs and retarget imported migration destinations and
+current replacement edges to those IDs; retain upstream IDs as provenance.
+Resolve legacy lifecycle references by ID, repository/record-relative path, or an
+unambiguous filename. Reconcile the whole graph before stripping frontmatter or
+moving project files. Missing/ambiguous targets, cycles or conflicting metadata
+hold all source writes and version advancement. Preserve retired/superseded
+memory and knowledge bodies with explicit historical retention and a reason;
+generated indexes mark them as history. Known upstream historical descriptions
+stay explicitly recorded as provenance, not fabricated replacement identities.
 
 ## In this repository
 
@@ -143,47 +238,28 @@ report with its evidence.
   follows `template` (this template) and upgrades from its `RELEASE_NOTES.md`.
 - Step 6 (Run setup, diagnostics): also run `make check`; the paper builds and
   their checks replace product runs.
-- Steps 2 to 5 (Fetch, Classify, Present, Apply), in a paper:
-  `bash .agents/scripts/upgrade-template.sh --check <TARGET_TAG>` fetches both
-  tags into `.project/build/template-upgrade/` and prints the plan: what step
-  5 applies, what it skips (`scope: template`, project-owned paths, and
-  `assets/`, `.project/` and `.env`, which it never touches), each local
-  conflict with a three-way merge proposal under
-  `.project/build/template-upgrade/proposals/`, what it leaves for review,
-  each section to reconcile, and the upgrade section of every release it
-  crosses. Without `--check` it applies the plan, never overwrites a
-  conflict, and sets `template.version` to the target when nothing
-  conflicts; it exits 1 on a conflict.
+- Steps 2 to 5 (Fetch, Classify, Present, Apply), in a paper: run
+  `bash .agents/scripts/shared/upgrade-template.sh --check <TARGET_TAG>`
+  first; its plan is the migration map.
   - The Human documents whose registry entry has `upgrade: review`
     (`README.md`, `PAPER.md`, `DEV.md`) are the paper's own once it has
     started: the command never changes them and prints the release's diff
     for each under "Review", never as a conflict. Take from it only what the
     release notes' manual steps require, or what the paper wants.
-  - A file adapted without a `## In this repository` section is merged three
-    ways with the source tag as base, and a merge without overlap is applied;
-    only an overlap is a conflict. For a Markdown file, "Review" proposes
-    moving its local text into a section (step 5); do it in the upgrade or a
-    later Issue, so that check 1 applies from then on.
-  - Run the command again after resolving a conflict: a file that already
-    holds the target's change counts as applied. A file resolved by hand in
-    any other way is accepted with `--resolved <path>` (repeat it per file,
-    `.agents/content-registry.yaml` included) once no conflict marker is
-    left, and the command then sets `template.version`; never edit the
-    version by hand.
+  - A Markdown file adapted without a `## In this repository` section is
+    merged three ways and conflicts only on an overlap; move its local text
+    into a section in the upgrade or a later Issue, so that check 1 applies
+    from then on.
 
-  A paper without the command yet, or whose target release notes say so,
-  runs the target release's copy once:
+  A paper without the command yet, or whose target release notes say so
+  (every paper before the `.agents/scripts/shared/` layout), runs the target
+  release's whole command directory once; the command needs its sibling
+  `content_registry.py`, so never stream a single file:
 
   ```bash
-  clone=.project/build/template-upgrade/paper-agent-project-template.git
+  clone=.project/state/template-upgrade/paper-agent-project-template.git
   [ -d "$clone" ] || git clone -q --bare https://github.com/a-green-hand-jack/paper-agent-project-template "$clone"
-  bash <(git -C "$clone" show <TARGET_TAG>:.agents/scripts/upgrade-template.sh) <TARGET_TAG>
+  mkdir -p .project/state/template-upgrade/target-command
+  git -C "$clone" archive <TARGET_TAG> .agents/scripts/shared | tar -x -C .project/state/template-upgrade/target-command
+  bash .project/state/template-upgrade/target-command/.agents/scripts/shared/upgrade-template.sh <TARGET_TAG>
   ```
-
-- The light path: when every release crossed is marked **Command only.** and
-  `--check` reports no conflict and no manual step (`Light path: yes`; review
-  items do not count), the upgrade is one Issue, one Herdr worktree, the
-  command, `make check` and a PR. It needs no migration map and no
-  full-procedure session, and its dispatch can use the low tier. Otherwise
-  the full procedure applies, and the command's plan is the start of its
-  migration map.

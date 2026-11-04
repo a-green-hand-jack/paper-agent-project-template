@@ -100,7 +100,7 @@ curl -L "https://arxiv.org/e-print/<arxiv-id>" \
 Write working cards next to the downloads, one Markdown file per paper. When
 the Human wants a card kept with the repository, turn it into a knowledge
 record under `.agents/knowledge/project/` (front matter from
-`.agents/knowledge/ENTRY_TEMPLATE.md`; the award page is the source and the
+`.agents/knowledge/entry-template.md`; the award page is the source and the
 check date is the date). PDFs and source bundles are never committed. Do not
 change `.agents/references/ledger.json` unless `citation-support-review`
 makes the paper a manuscript citation.

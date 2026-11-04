@@ -2,11 +2,7 @@
 name: reference-integrity
 date: 2026-10-20
 source: this template's reference-integrity contract (REFERENCES.md before v0.4.0, Issues #80-#153), moved into a record by Issue #156
-scope: shared
 applies_to: paper repositories that cite literature from paper/refs.bib and keep a reference ledger
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Bibliographic identity and claim support are separate obligations
@@ -76,19 +72,19 @@ looking like a fabricated citation.
 ## Apply
 
 - `make check` runs the offline gate:
-  `python3 .agents/scripts/check-reference-integrity.py --profile draft`;
+  `python3 .agents/scripts/shared/check_reference_integrity.py --profile draft`;
   `make release-check` runs `--profile release` and the full online metadata
   audit of every entry, which needs `uv` and the network.
-- Inventory and record support with `.agents/scripts/reference-evidence.py`
+- Inventory and record support with `.agents/scripts/shared/reference_evidence.py`
   (`inventory`, `packet`, `record`; `migrate` upgrades a v1 ledger), following
   the `citation-support-review` skill. Occurrence-level review is new in v2,
   so every occurrence `migrate` writes starts `pending` and needs a fresh
   Human confirmation before `make release-check`.
 - Optional checks with the locked dependencies in
-  `.agents/scripts/reference-integrity/` (needs `uv`):
-  `check-bibtex-format.py` (classic BibTeX syntax and required fields),
-  `check-reference-metadata.py` (online identity audit, non-generative) and
-  `check-reference-corrections.py` (correction candidates). CI runs them
+  `.agents/scripts/shared/reference-integrity/` (needs `uv`):
+  `check_bibtex_format.py` (classic BibTeX syntax and required fields),
+  `check_reference_metadata.py` (online identity audit, non-generative) and
+  `check_reference_corrections.py` (correction candidates). CI runs them
   keyless on pull requests and with repository secrets on protected branches;
   see the bibliographic-metadata-services knowledge record for the services
   and variables.
@@ -102,7 +98,7 @@ looking like a fabricated citation.
   parallel with a kept cache; it reports and blocks no merge. A provider
   outage, rate limit or bot challenge is an infrastructure outcome that names
   the entries it left open, never a failed entry.
-- **Fingerprints.** `check-reference-metadata.py --record` writes the
+- **Fingerprints.** `check_reference_metadata.py --record` writes the
   fingerprint of each entry it verified into the ledger and drops it from an
   entry with a positive problem. Run it once after adopting the tiers, with
   the full scope, and commit the ledger; afterwards a changed entry loses its

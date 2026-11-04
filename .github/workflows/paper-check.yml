@@ -48,7 +48,7 @@ jobs:
             texlive-bibtex-extra
 
       - name: Initialize worktree state
-        run: bash .agents/scripts/setup-worktree.sh
+        run: bash .agents/scripts/shared/setup-worktree.sh
 
       - name: Build main and blind and run every check
         run: make check
