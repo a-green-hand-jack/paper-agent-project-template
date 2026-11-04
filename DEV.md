@@ -172,34 +172,14 @@ make check
 
 ## 与模板的关系
 
-### 开发中：v0.4.6 之后的迁移草案
-
-以下是 #195 的未发布变更，不是新的发布标签。准备发布时，将最终核验过的步骤
-写入新版本的 `RELEASE_NOTES.md`，不要改写 v0.4.6 的历史记录。
-跟随的 coding template 为 v0.1.30；本模板暂时保留三类必要差异：升级命令保留本地
-模板专有登记和额外开发根目录，并按路径组件处理“移动目录同时重命名文件”；
-registry 检查器给重复身份列出路径；可选凭据
-资料及未采用的长运行技能使用不会指向缺失本地文件的说明。后续升级上游时需要
-重新核对这些差异，不能只依赖版本号。
-
-1. 在论文中保存已有改动、引用台账和范例记录；运行目标版本的完整
-   `.agents/scripts/shared/upgrade-template.sh --check <目标标签>`，检查逐路径
-   迁移及冲突。六个 `paper-*` 技能入口取代旧的论文平级入口；原资料和脚本移到
-   各入口的 `sources/` 中。核对项目自己的调用及本地适配，不要覆盖它们。
-2. 按预检应用迁移；对冲突逐项保留项目内容并人工解决，然后仅为已审阅的路径
-   使用 `--resolved <路径>` 重跑。已有 `paper/refs.bib`、
-   `.agents/references/ledger.json` 和 `policy.json` 保持原位置与内容。
-   这次保留台账路径以兼容现有论文；新增的 `exemplars/` 区分写作、图表与海报
-   范例，已有的项目知识记录不强制移动。范例不自动成为论文引用。
-3. 更新论文自己的命令、技能调用和文档；运行 `make check`、开发面与 Shell 检查，
-   再运行一次升级，确认没有非预期变更。实际编译并检查受影响的论文页面。
+跟随 coding template v0.1.30；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 发布说明。后续升级上游时应重新核对这些差异。
 
 本仓库是 `coding-agent-project-template` 的派生模板：在其基础上构建，并供论文使用。它的 registry `.agents/content-registry.yaml` 在 `template` 中记录本模板，在 `template.upstream` 中记录其遵循的 coding template：
 
 | 仓库 | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | 自身及其当前版本 | 无 |
-| 本模板 | 自身及其发布版本（v0.4.6） | coding template 及其所遵循的标签（v0.1.26） |
+| 本模板 | 自身及其发布版本（v0.4.7） | coding template 及其所遵循的标签（v0.1.30） |
 | 由本模板创建的论文 | 本模板及采用的标签 | 无 |
 
 仓库有 `template.upstream` 字段时遵循该字段，否则遵循 `template`。

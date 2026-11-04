@@ -3,6 +3,45 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.7 — 2026-11-04
+
+本版将论文模板的开发面整理为 coding template 的论文扩展，并跟随其 v0.1.30 正式版。论文产品仍可单独复制和构建，Overleaf 仍只接收论文树。此前平级的论文技能较多、职责重叠；现在按任务分为六个入口，原有独特工具和资料仍按需可用（[Issue #195](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/195)）。
+
+| 工作 | 入口 | 主要内容 |
+| --- | --- | --- |
+| 论文起步与决定 | `paper-foundation` | brief、控制项、稳定接口 |
+| 写作与润色 | `paper-writing` | 章节、结构、语言、校对和写作范例 |
+| 图表 | `paper-figures` | 数据图、示意图、TikZ、重绘和检查 |
+| 引用文献 | `paper-references` | 引用身份、台账和论断支持 |
+| 审阅 | `paper-review` | 一致性、审稿意见和修订 |
+| 投稿与发布 | `paper-publication` | 版本规划、Overleaf 和海报 |
+
+旧技能的专有资料、脚本、许可和来源保存在相应入口的 `sources/` 内；registry 保留稳定身份和逐文件迁移记录。开发默认可在 `dev` 直接进行；派出 Herdr worktree 前须逐次确认是否派遣、coding agent、具体模型和 thinking level。
+
+论文正文使用的文献仍在产品面的 `paper/refs.bib`；引用身份和论断支持由开发面的现有 `.agents/references/ledger.json`、`policy.json` 审核。写作、图表和海报范例分别归入 `.agents/references/exemplars/`，下载放在 `.project/artifacts/`；范例不会自动成为论文引用或科学证据。同一论文若同时用作范例和引用，引用仍须单独审核。
+
+本模板为继承内容保留少量本地适配：升级命令保留派生模板自己的登记与额外开发根目录，并处理目录迁移时的文件重命名；registry 的重复身份错误列出路径；未采用的可选凭据和长运行资料不会产生失效的本地链接。后续上游升级须重新核对这些差异。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文按表中步骤失败，原因见 v0.4.2。模板本身包含占位内容，不能视为投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.6
+
+1. 保存论文现有改动、引用台账和范例记录。按 `template-upgrade` 的“In this repository”使用本发布版完整的 `.agents/scripts/shared/` 命令目录，先运行 `upgrade-template.sh --check v0.4.7`，审查逐路径迁移和冲突。
+2. 按预检应用迁移；对冲突逐项保留项目内容并人工解决，仅为已审阅的路径使用 `--resolved <路径>` 重跑。`paper/refs.bib` 和现有 ledger、policy 保持原位置；项目自己的技能和知识记录不应被覆盖。
+3. 将论文自己的旧技能路径、调用和文档更新到六个新入口及其 `sources/`。范例目录按需使用；已有项目范例记录不必移动，也不会自动进入引用表。
+4. 运行 `make check`、`bash .agents/scripts/shared/check-development.sh` 和 `bash .agents/scripts/shared/check-shells.sh`，重新运行升级确认无非预期变化；实际编译并检查受影响的论文页面。
+
+本版的下游升级与引用保全由合成论文场景验证；这不代替真实论文的科学内容审查。具体发布检查以对应提交及 CI 为准。
+
 ## v0.4.6 — 2026-11-04
 
 本版本将跟随的 coding template 从 `v0.1.13` 升至 `v0.1.26`（#185 升至
