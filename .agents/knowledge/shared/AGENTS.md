@@ -2,42 +2,21 @@
 
 This directory contains dated facts whose source and refresh condition can be
 used across projects. Every record is a separate Markdown file with the fields
-in [`../ENTRY_TEMPLATE.md`](../ENTRY_TEMPLATE.md), `scope: shared`, and a
-refresh or expiry condition. A venue record starts from
-[`../VENUE_TEMPLATE.md`](../VENUE_TEMPLATE.md); a value no official page states
-stays `UNKNOWN`.
+in [`../entry-template.md`](../entry-template.md), a registry-owned refresh condition.
 
-## Index
+<!-- registry-index:start -->
+- [agent-session-messaging.md](agent-session-messaging.md) — Dated native messaging, naming, bootstrap and caller-context observations.
+- [bibliographic-metadata-services.md](bibliographic-metadata-services.md) — Services, variables and secrets of the online reference audits.
+- [credential-inventory.md](credential-inventory.md) — Credential inventory formats and value-free validation/probe behavior.
+- [gpt5-strict-backend-requests.md](gpt5-strict-backend-requests.md) — Dated request shapes rejected by strict backends; refresh when clients or providers change.
+- [official-latex-templates.md](official-latex-templates.md) — Official publisher and venue kits and their authorities as last compiled by the retired smoke tests.
+- [venue-iclr-2027.md](venue-iclr-2027.md) — Dated ICLR 2027 facts and kit hashes; refresh at the decisions and the camera-ready instructions.
+- [venue-icml-2026.md](venue-icml-2026.md) — Dated ICML 2026 facts and kit hashes; ICML 2027 unknown until its call is published.
+- [venue-neurips-2026-poster.md](venue-neurips-2026-poster.md) — Dated NeurIPS 2026 poster sizes and print deadlines; recheck before ordering.
+- [venue-template.md](venue-template.md) — Record shape for a venue's submission facts; unknown values stay UNKNOWN.
+<!-- registry-index:end -->
 
-Inherited from `coding-agent-project-template`:
+## In this repository
 
-- [`agent-session-messaging.md`](agent-session-messaging.md) — dated native
-  messaging, caller-identity and isolation capabilities; distinguish queue
-  submission, receiver acknowledgement and recovery evidence.
-- [`credential-inventory.md`](credential-inventory.md) — the formats of the
-  device `inventory.yaml` and the project's `credentials.yaml`, and what
-  `probe-credentials.sh --check` and its probes check and print. Kept with
-  `llm-credentials`; this repository keeps no `credentials.yaml`.
-- [`gpt5-strict-backend-requests.md`](gpt5-strict-backend-requests.md) — the
-  three GPT-5.x request shapes strict Responses backends reject, what to send
-  instead, that a relay can hide the rejections, and which common clients
-  produce them. Kept with the two LLM memory records it belongs to; no tool
-  here sends such requests.
-
-Papers:
-
-- [`venue-iclr-2027.md`](venue-iclr-2027.md) — ICLR 2027: 9 pages at submission
-  and 10 later, unlimited references and appendix, required AI use statement,
-  review and decision dates, kit URL and SHA-256 values (checked 2026-10-20).
-- [`venue-icml-2026.md`](venue-icml-2026.md) — ICML 2026: 8 pages (9
-  camera-ready), impact statement, layout and file-size rules, kit URL and
-  SHA-256 values; ICML 2027 still unpublished (checked 2026-10-20).
-- [`venue-neurips-2026-poster.md`](venue-neurips-2026-poster.md) — NeurIPS
-  2026 posters: 140 x 90 cm landscape, workshops 61 x 85 cm portrait, print
-  order deadlines (checked 2026-10-20).
-- [`official-latex-templates.md`](official-latex-templates.md) — official
-  publisher and venue kits and their authorities, as compiled by this
-  template's retired smoke tests (2026-08-27).
-- [`bibliographic-metadata-services.md`](bibliographic-metadata-services.md) —
-  the locked reference-audit tools, the services they query, their variables,
-  CI secrets and rate-limit outcomes, and tools assessed and not adopted.
+A venue record starts from [`venue-template.md`](venue-template.md); a value no
+official page states stays `UNKNOWN`.

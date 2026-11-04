@@ -2,11 +2,7 @@
 name: brief
 date: 2026-10-20
 source: the template's starter brief (BRIEF.md before v0.4.0), moved into a record by Issue #156
-scope: project
 applies_to: this paper
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Paper brief
@@ -105,6 +101,6 @@ runs, URLs, or `none yet`):
 
 Write this paper in a repository made from the `paper-agent-project-template`
 GitHub template. Ingest this brief with `paper-brief-ingest`
-(`python3 .agents/skills/shared/paper-brief-ingest/scripts/paper-brief.py ingest --brief <path>`),
+(`python3 .agents/skills/shared/paper-brief-ingest/scripts/paper_brief.py ingest --brief <path>`),
 then draft under the declared operating mode; `README.md` and `DEV.md` of the
 paper repository describe the workflow.

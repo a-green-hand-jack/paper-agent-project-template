@@ -2,11 +2,7 @@
 name: paper-run-boundary
 date: 2026-10-20
 source: Issue #152, the standing collaboration contract with paper-run, carried over by Issue #156
-scope: project
 applies_to: this template repository and the paper-run project that consumes its releases
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # The template is a versioned foundation; paper-run owns the runtime

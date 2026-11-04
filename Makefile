@@ -20,8 +20,8 @@ pdf:
 blind submission:
 	@$(MAKE) --no-print-directory -C paper $@
 check:
-	@bash .agents/scripts/paper-check.sh
+	@bash .agents/scripts/shared/paper-check.sh
 release-check:
-	@bash .agents/scripts/release-check.sh
+	@bash .agents/scripts/shared/release-check.sh
 clean:
 	@$(MAKE) --no-print-directory -C paper clean

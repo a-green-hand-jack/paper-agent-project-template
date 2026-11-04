@@ -49,7 +49,7 @@ generate the first prompt, with the Issue link, branch, reading scope and
 acceptance:
 
 ```bash
-bash .agents/scripts/new-agent-prompt.sh 123 feat/issue-123-example dev \
+bash .agents/scripts/shared/new-agent-prompt.sh 123 feat/issue-123-example dev \
   .project/state/coordinator-handoff.md
 ```
 
@@ -129,12 +129,12 @@ Each worktree is a separate unit of work with its own state. After creating
 one, run in it:
 
 ```bash
-bash .agents/scripts/setup-worktree.sh
+bash .agents/scripts/shared/setup-worktree.sh
 ```
 
 Setup writes `.project/home` and `.project/worktree.env`, creates the local
 state directories, checks tools and the asset manifest, and runs
-`.agents/scripts/setup-project.sh`, which creates `.project/build/` and
+`.agents/scripts/project/setup-project.sh`, which creates `.project/build/` and
 reports the TeX tools. Never reuse another worktree's `.project/`.
 
 After the PR merges, do not delete the directory directly.
@@ -152,11 +152,11 @@ these duties complete.
 Then run:
 
 ```bash
-bash .agents/scripts/teardown-worktree.sh --migrate-to <canonical checkout>
+bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkout>
 ```
 
 It checks ignored state, copies what should be kept and writes a migration
-record; it never deletes the worktree. `.agents/scripts/migrate-project.rules`
+record; it never deletes the worktree. `.agents/scripts/project/migrate-project.rules`
 says that `.project/build/` is dropped, because `make` rebuilds it. Destroy the
 worktree and branch with the worktree manager only after the assets are
 migrated and no unique copy remains in it.
@@ -179,8 +179,9 @@ Two variables adjust it:
 checks (undefined references or citations, missing files, multiply defined
 labels), the page count of `blind`, the PDF text-layer check that underscores
 survive (T1 encoding), the offline reference gate, the interface-macro check,
-the skill, memory and knowledge structure check, and the unit tests. Build
-logs are in `.project/build/logs/<build>.log`.
+the development registry check (`check-development.sh`), the skill, memory and
+knowledge structure check, and the unit tests of `.agents/tests/shared/` and
+`.agents/tests/project/`. Build logs are in `.project/build/logs/<build>.log`.
 
 A passing `make check` does not show that the pages look right. Before calling
 a build done, render the affected pages and look at them
@@ -194,9 +195,9 @@ Requirements:
 - `pdftotext` and `pdfinfo` (poppler-utils) for the PDF checks;
 - Python 3 with PyYAML for the scripts;
 - optionally `uv`, for the online reference audits that use the locked
-  dependencies in `.agents/scripts/reference-integrity/`.
+  dependencies in `.agents/scripts/shared/reference-integrity/`.
 
-`bash .agents/scripts/setup-worktree.sh` reports what is missing.
+`bash .agents/scripts/shared/setup-worktree.sh` reports what is missing.
 
 A paper has no Python package, container or installer, so this template has
 no `pyproject.toml`, `Dockerfile`, `.dockerignore` or `install.sh`, and
@@ -234,8 +235,8 @@ Figure sources:
 
 The offline reference gate runs in `make check` (Draft) and
 `make release-check` (Release). The online audits, the metadata audit
-(`check-reference-metadata.py`) and the correction candidates
-(`check-reference-corrections.py`), run in three tiers:
+(`check_reference_metadata.py`) and the correction candidates
+(`check_reference_corrections.py`), run in three tiers:
 
 | When | What runs | Gate |
 | --- | --- | --- |
@@ -245,7 +246,7 @@ The offline reference gate runs in `make check` (Draft) and
 
 A verified entry's fingerprint is recorded in the ledger
 (`verification.bibtex_fingerprint`) by
-`python3 .agents/scripts/check-reference-metadata.py --record`. Run it once
+`python3 .agents/scripts/shared/check_reference_metadata.py --record`. Run it once
 with the full scope after adopting the tiers and commit the ledger. A provider
 outage, rate limit or bot challenge is an infrastructure outcome that names
 the entries it left open, never a failed entry. The rules are in
@@ -276,9 +277,9 @@ The branch is found from the remote's `HEAD`; `--branch`, `OVERLEAF_BRANCH` or
 `git config remote.overleaf.overleafBranch` override it. Then:
 
 ```bash
-bash .agents/scripts/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
-bash .agents/scripts/overleaf-sync.sh pull     # Overleaf edits -> branch sync/overleaf-<commit>, for a PR into dev
-bash .agents/scripts/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
+bash .agents/scripts/shared/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
+bash .agents/scripts/shared/overleaf-sync.sh pull     # Overleaf edits -> branch sync/overleaf-<commit>, for a PR into dev
+bash .agents/scripts/shared/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
 ```
 
 - Before editing, run `status`
@@ -309,13 +310,15 @@ The `poster-build` skill describes it. The template ships no `poster/`.
 
 `.agents/memory/` holds durable decisions and `.agents/knowledge/` dated facts
 with a source and a refresh condition. The `AGENTS.md` of each directory holds
-only its rules and a short index; each record is its own Markdown file under
-`shared/` or `project/` with the front matter of the directory's
-`ENTRY_TEMPLATE.md`. A venue record starts from
-`.agents/knowledge/VENUE_TEMPLATE.md`. When a record is added or moved, update
-its index and `.agents/content-registry.yaml`. `make check` checks each
-record's front matter, sections and index link, and the registry entry of
-every skill.
+its rules and an index generated from the registry; each record is its own
+Markdown file under `shared/` or `project/` with the front matter of the
+directory's `entry-template.md`. A venue record starts from
+`.agents/knowledge/shared/venue-template.md`. Scope, status, replacements and
+the refresh condition live in `.agents/content-registry.yaml`, not in the front
+matter. When a record is added or moved, register it there and run
+`bash .agents/scripts/shared/check-development.sh --write-indexes`.
+`make check` checks the registry, layout and indexes, each record's front
+matter and sections, and the registry entry of every skill.
 
 A paper fills the starter records in `.agents/memory/project/` (`brief.md`,
 `experiments.md`, `paper-interfaces.md`, `publication.md`) and adds one record
@@ -325,7 +328,7 @@ per durable decision.
 
 `dev` is the integration branch and `main` the release branch. The first setup
 of a new repository creates and pushes `dev` and makes it the GitHub default
-branch, when the GitHub CLI is available; `bash .agents/scripts/init-branches.sh`
+branch, when the GitHub CLI is available; `bash .agents/scripts/shared/init-branches.sh`
 does the same explicitly. The diagnostics report what is missing and how to
 fix it.
 
@@ -342,13 +345,16 @@ Tests check real risks, past defects and seams; do not add tests for
 coverage. A paper change is verified by its public entry points, the builds:
 
 ```bash
-bash .agents/scripts/diagnose-environment.sh
-bash .agents/scripts/inspect-state.sh
+bash .agents/scripts/shared/diagnose-environment.sh
+bash .agents/scripts/shared/inspect-state.sh
 make check
 ```
 
 `make check` runs every unit test; run one file with
-`python3 -m unittest discover -s .agents/tests -p 'test_<name>.py'`. A
+`python3 -m unittest discover -s .agents/tests/<shared|project> -p 'test_<name>.py'`.
+After a change to the development plane, also run
+`bash .agents/scripts/shared/check-shells.sh`; regenerate the registry's
+indexes with `bash .agents/scripts/shared/check-development.sh --write-indexes`. A
 passing unit test does not replace `make check`, and neither replaces looking
 at the pages.
 
@@ -373,7 +379,7 @@ release, run `release-doc-audit` and `make check`; `main` requires the CI jobs
 "Adoption states" table: for each state a paper reaches by following README
 "Start a paper" (a fresh paper, an existing bibliography with no ledger or a
 migrated one, a venue kit), the `make release-check` steps expected to fail
-there. `make check` runs `.agents/tests/test_adoption_states.py`, which
+there. `make check` runs `.agents/tests/project/test_adoption_states.py`, which
 builds each state from the shipped files, runs `make check` and
 `make release-check` on it and compares the failures with that table, and
 runs the online metadata audit on a bibliography of realistic size; a release
@@ -393,7 +399,7 @@ coding template it follows in `template.upstream`:
 | Repository | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | itself, its current version | none |
-| this template | itself, its release (v0.4.5) | the coding template and the tag it follows (v0.1.25) |
+| this template | itself, its release (v0.4.5) | the coding template and the tag it follows (v0.1.26) |
 | a paper made from this template | this template, the adopted tag | none |
 
 A repository follows `template.upstream` when it has that field, and
@@ -406,7 +412,7 @@ A repository follows `template.upstream` when it has that field, and
 - A paper takes this template's releases through `template-upgrade`, reading
   `RELEASE_NOTES.md` at the target tag. It continues the
   `## In this repository` sections this template wrote.
-  `bash .agents/scripts/upgrade-template.sh [--check] <TARGET_TAG>` applies
+  `bash .agents/scripts/shared/upgrade-template.sh [--check] <TARGET_TAG>` applies
   the procedure's mechanical part (step 5) and prints the rest; when it
   reports no conflict and every release it crosses is **Command only.**, the
   upgrade takes the light path that `template-upgrade` defines in its

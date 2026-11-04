@@ -2,11 +2,7 @@
 name: rebuild-on-coding-template
 date: 2026-10-20
 source: Issue #156, the maintainer's decisions D1 to D8 on it, and dev at de691d9 (v0.3.1 and #153); Issue #185 (upstream v0.1.19)
-scope: project
 applies_to: this template repository's v0.4.0 layout, and the downstreams that move to it from template-sync
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # v0.4.0 is rebuilt on coding-agent-project-template

@@ -2,11 +2,7 @@
 name: experiments
 date: 2026-10-20
 source: the template's experiment contract (EXPERIMENTS.md before v0.4.0), moved into a record by Issue #156
-scope: project
 applies_to: this paper's experiment evidence and the code repositories that produce it
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Experiment evidence

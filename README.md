@@ -30,19 +30,22 @@ the Human before a locked change, a release or a submission.
 1. On GitHub, use **Use this template** to create the paper repository, and
    prefer **Private** until the paper is public. For a reproducible start,
    clone a release tag instead (see "Template versions" below).
-2. In the new repository, run `bash .agents/scripts/init-branches.sh`. It
+2. In the new repository, run `bash .agents/scripts/shared/init-branches.sh`. It
    creates and pushes `dev` and makes it the default branch. Work branches
    start from `dev`; releases merge to `main`.
-3. In every worktree, run `bash .agents/scripts/setup-worktree.sh` first.
+3. In every worktree, run `bash .agents/scripts/shared/setup-worktree.sh` first.
 4. Remove what belongs only to this template:
    - In `.agents/content-registry.yaml`, keep `template.repository` and
      `template.version` (this template and the release you started from) and
      delete the `upstream` block.
-   - Delete the files the registry marks `scope: template`, together with
-     their registry entries and index lines:
+   - Delete the files the registry marks `scope: template`, move their
+     registry entries to `omitted` (`id`, `path` and the reason "Upstream
+     template-only content; not adopted.", the text `upgrade-template.sh`
+     records), and regenerate the indexes with
+     `bash .agents/scripts/shared/check-development.sh --write-indexes`:
      `.agents/memory/project/rebuild-on-coding-template.md`,
      `protected-case-branches.md`, `repository-identity.md`,
-     `paper-run-boundary.md` and `.agents/tests/test_adoption_states.py`. In
+     `paper-run-boundary.md` and `.agents/tests/project/test_adoption_states.py`. In
      `AGENTS.md`, replace the rule about this template's case branches with
      the paper's own list, or remove it.
    - Replace `RELEASE_NOTES.md` with the paper's own, which starts empty and
@@ -122,7 +125,7 @@ such as `submit-<venue>-<yyyy>`, `arxiv-v1` or `camera-ready`, recorded in
 `RELEASE_NOTES.md`.
 
 Overleaf mirrors `paper/` on `dev` through
-`.agents/scripts/overleaf-sync.sh`: `status` compares the two sides, `push`
+`.agents/scripts/shared/overleaf-sync.sh`: `status` compares the two sides, `push`
 puts `HEAD:paper` on Overleaf as a fast-forward, and `pull` brings Overleaf
 edits onto a `sync/overleaf-*` branch for a PR. Both directions check that the
 trees are equal, and the repository root never reaches Overleaf. `DEV.md`
@@ -164,10 +167,13 @@ git push -u origin main
 ```
 
 Read `RELEASE_NOTES.md` at that tag first. Later releases arrive through the
-`template-upgrade` skill: `bash .agents/scripts/upgrade-template.sh --check
+`template-upgrade` skill: `bash .agents/scripts/shared/upgrade-template.sh --check
 <TEMPLATE_TAG>` prints the plan and `upgrade-template.sh <TEMPLATE_TAG>`
 applies it; a release marked **Command only.** without a conflict needs
-nothing else (the light path). A defect in the template goes back through
+nothing else (the light path). A paper from before the
+`.agents/scripts/shared/` layout runs the target release's whole command
+directory once, as `template-upgrade` shows in its `## In this repository`
+section. A defect in the template goes back through
 `template-feedback`. An existing paper repository joins through
 `template-adoption`; one that used `template-sync` follows the v0.4.0 notes in
 `RELEASE_NOTES.md`.

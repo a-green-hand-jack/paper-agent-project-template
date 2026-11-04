@@ -2,11 +2,7 @@
 name: overleaf-paper-tree-only
 date: 2026-10-20
 source: Issue #156 §4; Overleaf synchronization in every downstream paper repository examined, including a rejected subtree push and a rewrapped Overleaf tip
-scope: shared
 applies_to: repositories whose product tree is mirrored to an Overleaf project through Overleaf's Git remote
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Overleaf receives the paper tree only, as a fast-forward checked by tree
@@ -45,7 +41,7 @@ commit ids after a sync reports a false difference every time.
 
 ## Apply
 
-- Use `.agents/scripts/overleaf-sync.sh status|push|pull`; it implements every
+- Use `.agents/scripts/shared/overleaf-sync.sh status|push|pull`; it implements every
   point above, verifies tree equality after each push and pull, and refuses a
   remote URL with a password or token. `--remote` and `--tree` select a second
   product (`--remote overleaf-poster --tree poster`).

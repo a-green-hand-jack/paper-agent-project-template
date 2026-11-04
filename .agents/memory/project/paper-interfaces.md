@@ -2,11 +2,7 @@
 name: paper-interfaces
 date: 2026-10-20
 source: Issue #156; the `% Interface:` markers in paper/macros.tex
-scope: project
 applies_to: paper/macros.tex and every paper/ source that calls an interface macro
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Paper interface macros
@@ -43,7 +39,7 @@ it (see [`../shared/results-through-interface-macros.md`](../shared/results-thro
 
 ## Apply
 
-- `make check` runs `.agents/scripts/check-paper-interfaces.py`. It fails when
+- `make check` runs `.agents/scripts/shared/check_paper_interfaces.py`. It fails when
   a marked interface has no definition or no row here, when an interface other
   than the three authoring helpers is used nowhere in `paper/`, when a macro
   without arguments is called without `{}` (TeX would swallow the following

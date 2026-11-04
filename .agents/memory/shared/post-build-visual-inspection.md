@@ -2,11 +2,7 @@
 name: post-build-visual-inspection
 date: 2026-10-20
 source: Issue #156 §7; visual-inspection records of the downstream paper repositories, including figure labels judged legible from an asset render that printed at half the caption size on the page
-scope: shared
 applies_to: repositories that build a paper, poster or other typeset product whose layout a person will read
-status: active
-supersedes: null
-superseded_by: null
 ---
 
 # Look at the rendered pages before calling a build done

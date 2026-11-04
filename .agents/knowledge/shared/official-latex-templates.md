@@ -2,12 +2,7 @@
 name: official-latex-templates
 date: 2026-08-27
 source: this template's official-template smoke tests up to v0.3.1 (LATEX_TEMPLATES.md and its download catalog, last changed 2026-08-27), moved into a record by Issue #156
-scope: shared
 applies_to: papers that move onto a publisher's or venue's official LaTeX kit
-status: active
-refresh_after: before a paper adopts one of these kits; the smoke tests that kept this list current were retired in v0.4.0
-supersedes: null
-superseded_by: null
 ---
 
 # Official LaTeX kits and where they come from

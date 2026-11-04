@@ -2,12 +2,7 @@
 name: venue-icml-2026
 date: 2026-10-20
 source: https://icml.cc/Conferences/2026/AuthorInstructions and https://icml.cc/Conferences/2026/CallForPapers, read 2026-10-20; the official style archive, downloaded and hashed 2026-10-20
-scope: shared
 applies_to: papers that target ICML 2026, or plan for ICML 2027 until its own pages are published
-status: active
-refresh_after: when https://icml.cc/Conferences/2027/CallForPapers stops returning 404; write venue-icml-2027 then
-supersedes: null
-superseded_by: null
 ---
 
 # ICML 2026: submission facts (and ICML 2027 unknowns)
@@ -87,4 +82,4 @@ and are only a planning stand-in for ICML 2027, whose pages are not published.
 ## Refresh
 
 When the ICML 2027 call for papers is published, write `venue-icml-2027.md`
-from `VENUE_TEMPLATE.md` and mark this record superseded for 2027 planning.
+from `venue-template.md` and mark this record superseded for 2027 planning.

@@ -8,10 +8,14 @@ under `shared/` or `project/`; do not append facts to this index.
 - [`shared/`](shared/AGENTS.md) — reusable facts whose source and refresh rule
   apply across projects.
 - [`project/`](project/AGENTS.md) — facts owned by this repository.
-- [`ENTRY_TEMPLATE.md`](ENTRY_TEMPLATE.md) — front matter and body structure for
+- [`entry-template.md`](entry-template.md) — front matter and body structure for
   a new record.
-- [`VENUE_TEMPLATE.md`](VENUE_TEMPLATE.md) — the same structure with the fields
-  of a venue's submission facts; start every venue record from it.
 
 Search the relevant index before creating a record. Update the index link and
 `content-registry.yaml` in the same change when adding a reusable entry.
+
+## In this repository
+
+A venue record starts from
+[`shared/venue-template.md`](shared/venue-template.md), the same structure
+with the fields of a venue's submission facts.
