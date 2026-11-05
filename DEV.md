@@ -170,30 +170,16 @@ make check
 
 本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit` 和 `make check`；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。`make check` 运行 `.agents/tests/project/test_adoption_states.py`，从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
 
-## 开发中：v0.4.7 之后的脚本迁移草案
-
-本段记录 #197 的未发布变更，不是发布版本。论文构建检查、引用工具和投稿工具分别位于 `.agents/scripts/shared/paper-build/`、`.agents/scripts/shared/paper-references/` 和 `.agents/scripts/shared/paper-publication/`；对应的共享测试按能力分组。`make check` 和 `make release-check` 仍是公开入口。
-
-旧版论文升级时，先用目标版本的完整 `.agents/scripts/shared/` 命令目录运行 `upgrade-template.sh --check <目标标签>`，审查迁移与冲突，再按结果应用。逐项更新论文自有脚本、CI、文档或外部自动化对旧路径的调用；旧路径不保留兼容包装。不要覆盖引用台账、范例或本地适配。运行 `make check`、开发面及 Shell 检查，重复升级并确认无非预期变化。目标版本发布时将经过验证的步骤写入该版本的发布说明，保留历史发布条目。
-
-本模板还对上游 registry 检查器和升级器保留本地适配：按文件位置判断 Python 命名，并将历史迁移的目标按稳定 ID 重定向到当前路径。跟随后续 coding template release 时必须重新核对并验证这些差异。
-
-### 开发中：论文记录分组迁移
-
-论文相关的 memory 和 knowledge 按 `paper-foundation`、`paper-build`、`paper-references`、`paper-publication` 分类；模板维护自己的决定在 `memory/project/template-maintenance/`。通用上游记录保留原位置。`execution/` 当前只有治理入口，不承载运行状态。
-
-旧论文使用目标版本的完整升级命令目录先运行 `--check`。逐项审阅冲突，尤其是论文已删除模板保护分支说明的根 `AGENTS.md`；合并论文自己的规则后，对已解决路径使用 `--resolved`。项目自己的 brief、实验、接口和出版记录迁移时保留内容；如新位置已有文件，命令拒绝覆盖并要求人工处理。检查记录中的链接以及论文自有脚本和文档对旧路径的调用，运行开发面检查和 `make check`，然后再次升级确认无非预期变化。本段是未发布草案，发布时须将验证后的步骤写入新版本发布说明。
-
 ## 与模板的关系
 
-跟随 coding template v0.1.30；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 发布说明。后续升级上游时应重新核对这些差异。
+跟随 coding template v0.1.30；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 和 v0.4.8 发布说明。后续升级上游时应重新核对这些差异。
 
 本仓库是 `coding-agent-project-template` 的派生模板：在其基础上构建，并供论文使用。它的 registry `.agents/content-registry.yaml` 在 `template` 中记录本模板，在 `template.upstream` 中记录其遵循的 coding template：
 
 | 仓库 | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | 自身及其当前版本 | 无 |
-| 本模板 | 自身及其发布版本（v0.4.7） | coding template 及其所遵循的标签（v0.1.30） |
+| 本模板 | 自身及其发布版本（v0.4.8） | coding template 及其所遵循的标签（v0.1.30） |
 | 由本模板创建的论文 | 本模板及采用的标签 | 无 |
 
 仓库有 `template.upstream` 字段时遵循该字段，否则遵循 `template`。
