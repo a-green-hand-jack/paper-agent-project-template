@@ -157,7 +157,7 @@ bash .agents/scripts/shared/inspect-state.sh
 make check
 ```
 
-`make check` 运行所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s .agents/tests/<shared|project> -p 'test_<name>.py'`。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
+`make check` 运行所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s <该测试所在目录> -p 'test_<name>.py'`（例如 `.agents/tests/shared/paper-references`）。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
 
 ## 发布
 

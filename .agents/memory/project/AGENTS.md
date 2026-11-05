@@ -9,6 +9,7 @@ record is a separate Markdown file with the fields in
 - [experiments.md](experiments.md) — Starter record of the paper's evidence questions.
 - [paper-interfaces.md](paper-interfaces.md) — Starter record of the paper's interface macros; make check reads it.
 - [paper-run-boundary.md](paper-run-boundary.md) — The boundary between this template and paper-run (#152).
+- [paper-template-extension-boundary.md](paper-template-extension-boundary.md) — Why the paper template keeps inherited development, paper capabilities and product evidence in distinct boundaries.
 - [protected-case-branches.md](protected-case-branches.md) — This template's protected case branches and trackers (DEC-0014); a paper records its own.
 - [publication.md](publication.md) — Starter record of the paper's venue, kit, budget, Overleaf and release tags.
 - [rebuild-on-coding-template.md](rebuild-on-coding-template.md) — This template's v0.4.0 migration map; a paper made from the template deletes it.

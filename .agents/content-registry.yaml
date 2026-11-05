@@ -11672,6 +11672,17 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
+  - path: .agents/memory/project/paper-template-extension-boundary.md
+    id: content-paper-template-extension-boundary
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Why the paper template keeps inherited development, paper capabilities and product evidence in distinct boundaries."
+    status: active
+    source: {"issues": [195, 197], "commit": "80bfd1d"}
+    updated: 2026-11-05
+    supersedes: []
+    superseded_by: []
 omitted: []
 local_legacy_inventory: {
     "version": "v0.1.25",
