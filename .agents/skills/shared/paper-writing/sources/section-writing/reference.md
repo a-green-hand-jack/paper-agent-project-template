@@ -20,11 +20,11 @@ Do not use this skill for a manuscript-wide review after a version is complete
   writing choices relevant to the active section in `PAPER.md`;
 - the active section and only the neighboring text needed for continuity;
 - the matching surface in [`references/paper-writing-guide.md`](references/paper-writing-guide.md);
-- `.agents/memory/project/experiments.md` only for experiment, result,
+- `.agents/memory/project/paper-foundation/experiments.md` only for experiment, result,
   evidence or interpretation text;
-- `.agents/memory/project/paper-interfaces.md` only for recurring terminology,
+- `.agents/memory/project/paper-foundation/paper-interfaces.md` only for recurring terminology,
   notation, claims, results, figures, tables or macros;
-- `.agents/memory/shared/reference-integrity.md` and the relevant records in
+- `.agents/memory/shared/paper-references/reference-integrity.md` and the relevant records in
   `.agents/references/ledger.json` only when citations or external claim
   support are involved.
 
@@ -50,7 +50,7 @@ knowledge unless the active section actually requires them.
    and never upgrade provisional support to `human-confirmed`.
 7. Draft from available claims, evidence, results, interfaces and references.
    A reported number enters the text only through its interface macro in
-   `paper/macros.tex` (`.agents/memory/shared/results-through-interface-macros.md`);
+   `paper/macros.tex` (`.agents/memory/shared/paper-foundation/results-through-interface-macros.md`);
    a planned or expected result is never written as an observation. Keep
    missing material visible with `\PaperTODO{}` rather than filling it
    plausibly; an author note for co-authors goes in `\PaperNote{}`, which only

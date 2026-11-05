@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-TOOL = ROOT / ".agents/scripts/shared/overleaf-sync.sh"
+ROOT = Path(__file__).resolve().parents[4]
+TOOL = ROOT / ".agents/scripts/shared/paper-publication/overleaf-sync.sh"
 ENV = {key: value for key, value in os.environ.items()
        if not key.startswith("GIT_") and key != "OVERLEAF_BRANCH"}
 ENV.update({

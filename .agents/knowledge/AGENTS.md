@@ -19,5 +19,5 @@ only the static group navigation above by hand.
 ## In this repository
 
 A venue record starts from
-[`shared/venue-template.md`](shared/venue-template.md), the same structure
+[`shared/venue-template.md`](shared/paper-publication/venue-template.md), the same structure
 with the fields of a venue's submission facts.

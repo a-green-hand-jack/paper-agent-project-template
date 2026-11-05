@@ -10,8 +10,8 @@ try:
 except ImportError:
     HttpClient = None
 
-ROOT = Path(__file__).resolve().parents[3]
-HELPER = ROOT / ".agents/scripts/shared/bounded_run.py"
+ROOT = Path(__file__).resolve().parents[4]
+HELPER = ROOT / ".agents/scripts/shared/paper-references/bounded_run.py"
 
 
 @unittest.skipIf(HttpClient is None, "bibtex-updater is installed only in the locked reference environment")

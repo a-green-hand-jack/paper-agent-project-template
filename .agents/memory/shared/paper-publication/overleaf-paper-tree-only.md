@@ -41,7 +41,7 @@ commit ids after a sync reports a false difference every time.
 
 ## Apply
 
-- Use `.agents/scripts/shared/overleaf-sync.sh status|push|pull`; it implements every
+- Use `.agents/scripts/shared/paper-publication/overleaf-sync.sh status|push|pull`; it implements every
   point above, verifies tree equality after each push and pull, and refuses a
   remote URL with a password or token. `--remote` and `--tree` select a second
   product (`--remote overleaf-poster --tree poster`).

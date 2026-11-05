@@ -13,7 +13,7 @@ never the paper's. Its content comes only from the paper.
 ## Minimum context
 
 - `PAPER.md`: locked and bounded items bind the poster too;
-- `.agents/memory/project/publication.md` for the venue and the poster's
+- `.agents/memory/project/paper-publication/publication.md` for the venue and the poster's
   record, and the venue's poster facts in `.agents/knowledge/shared/` (for
   example `venue-neurips-2026-poster.md`), rechecked on the official page
   before a print is ordered;
@@ -112,13 +112,13 @@ font scale last.
   own Overleaf project on a second remote, never the paper's:
 
   ```bash
-  bash .agents/scripts/shared/overleaf-sync.sh status --remote overleaf-poster --tree poster
-  bash .agents/scripts/shared/overleaf-sync.sh push --remote overleaf-poster --tree poster
+  bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status --remote overleaf-poster --tree poster
+  bash .agents/scripts/shared/paper-publication/overleaf-sync.sh push --remote overleaf-poster --tree poster
   ```
 
   Never push over Overleaf edits that `poster/` lacks: import them first with
   `pull` and the same options. After the push the Overleaf tree must equal
-  `HEAD:poster`. `.agents/memory/shared/overleaf-paper-tree-only.md` gives the
+  `HEAD:poster`. `.agents/memory/shared/paper-publication/overleaf-paper-tree-only.md` gives the
   rules.
 
 ## baposter notes

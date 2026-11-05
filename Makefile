@@ -6,7 +6,7 @@
 #   make clean                      remove the build output
 # TEXBIN=<TeX Live bin directory> selects the TeX binaries when the right
 # latexmk is not first on PATH. PAGE_BUDGET is the venue's main-text page
-# limit, measured on the blind build (.agents/memory/shared/page-budget-on-blind-build.md);
+# limit, measured on the blind build (.agents/memory/shared/paper-build/page-budget-on-blind-build.md);
 # PAGE_BUDGET=none declares a release without a page limit, such as arXiv.
 PAGE_BUDGET ?=
 TEXBIN ?=
@@ -20,8 +20,8 @@ pdf:
 blind submission:
 	@$(MAKE) --no-print-directory -C paper $@
 check:
-	@bash .agents/scripts/shared/paper-check.sh
+	@bash .agents/scripts/shared/paper-build/paper-check.sh
 release-check:
-	@bash .agents/scripts/shared/release-check.sh
+	@bash .agents/scripts/shared/paper-publication/release-check.sh
 clean:
 	@$(MAKE) --no-print-directory -C paper clean

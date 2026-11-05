@@ -18,7 +18,7 @@ REPORT_SCHEMA = "paper-bibtex-format-report-v1"
 
 
 def load_integrity_module(root: Path) -> ModuleType:
-    path = root / ".agents/scripts/shared/check_reference_integrity.py"
+    path = root / ".agents/scripts/shared/paper-references/check_reference_integrity.py"
     spec = importlib.util.spec_from_file_location("paper_reference_integrity", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load structural checker: {path}")
@@ -96,9 +96,9 @@ def main() -> int:
         return 0
 
     uv = shutil.which(args.uv)
-    dependency_root = root / ".agents/scripts/shared/reference-integrity"
+    dependency_root = root / ".agents/scripts/shared/paper-references/reference-integrity"
     lock = dependency_root / "uv.lock"
-    helper = root / ".agents/scripts/shared/validate_bibtex_with_pybtex.py"
+    helper = root / ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py"
     if uv is None or not lock.is_file() or not helper.is_file():
         detail = "missing uv, committed dependency lock, or Pybtex helper"
         write_summary(summary_path, outcome="infrastructure_error", detail=detail)

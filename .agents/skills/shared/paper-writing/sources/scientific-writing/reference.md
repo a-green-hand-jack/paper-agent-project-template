@@ -40,7 +40,7 @@ attribution in `SOURCES.md`, which travels with the package.
   This skill diagnoses and advises; it changes `paper/` only inside a task one
   of those owners runs.
 - "Keep claims proportional to evidence" is settled by the cues in `PAPER.md`
-  and the evidence in `.agents/memory/project/experiments.md`: a structural
+  and the evidence in `.agents/memory/project/paper-foundation/experiments.md`: a structural
   change never strengthens a `locked` or `bounded` claim, and a planned result
   is never written as an observation.
 - `references/figures.md` covers what a figure must show; making or redrawing

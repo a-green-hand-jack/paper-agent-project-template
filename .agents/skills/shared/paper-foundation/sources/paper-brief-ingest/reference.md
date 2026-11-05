@@ -12,7 +12,7 @@ autonomous paper sessions.
 ## Trigger
 
 - The Human supplies a brief: a brief file, a brief repository, or the starter
-  record `.agents/memory/project/brief.md` filled in place.
+  record `.agents/memory/project/paper-foundation/brief.md` filled in place.
 - The Human asks to start an autonomous or brief-driven paper session.
 
 Do not use for ordinary drafting, and never for writing paper content into the
@@ -22,7 +22,7 @@ template repository.
 
 - the brief and any materials it links;
 - the repository role from `paper-orientation`;
-- `PAPER.md`, and `.agents/memory/project/experiments.md` and `publication.md`
+- `PAPER.md`, and `.agents/memory/project/paper-foundation/experiments.md` and `publication.md`
   when the brief touches evidence or delivery.
 
 ## Procedure
@@ -45,7 +45,7 @@ template repository.
    python3 .agents/skills/shared/paper-foundation/sources/paper-brief-ingest/scripts/paper_brief.py ingest --brief <path> [--commit]
    ```
 
-   The tool writes the brief to the record `.agents/memory/project/brief.md`
+   The tool writes the brief to the record `.agents/memory/project/paper-foundation/brief.md`
    and fills only decided `PAPER.md` fields (identity, thesis, contributions,
    operating mode, locked and evolving items, unresolved queue, style).
    Missing, empty and placeholder fields stay `unresolved`, and a decided field
@@ -55,7 +55,7 @@ template repository.
    brief filled in place before using it.
 5. The brief record stays authoritative for evidence, delivery, authors,
    constraints and the first deliverable until their owner workflows update
-   `.agents/memory/project/experiments.md`, `publication.md`
+   `.agents/memory/project/paper-foundation/experiments.md`, `publication.md`
    (`publication-planning`) and `paper/authors.tex`.
 6. Confirm the declared operating mode in `PAPER.md` (`collaborative` or
    `autonomous`) and its approval boundary. Never widen the boundary silently.

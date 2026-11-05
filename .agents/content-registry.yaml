@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.4.7
+  version: v0.4.8
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.30
@@ -3705,7 +3705,7 @@ migrations: [
       "to": [
         {
           "id": "content-3709a4fecb6b40af",
-          "path": ".agents/knowledge/shared/venue-template.md"
+          "path": ".agents/knowledge/shared/paper-publication/venue-template.md"
         }
       ],
       "action": "rename",
@@ -3723,7 +3723,7 @@ migrations: [
       "to": [
         {
           "id": "content-8624f9df96064345",
-          "path": ".agents/scripts/shared/paper-check.sh"
+          "path": ".agents/scripts/shared/paper-build/paper-check.sh"
         }
       ],
       "action": "move",
@@ -3741,7 +3741,7 @@ migrations: [
       "to": [
         {
           "id": "content-d6fe6393f637c209",
-          "path": ".agents/scripts/shared/release-check.sh"
+          "path": ".agents/scripts/shared/paper-publication/release-check.sh"
         }
       ],
       "action": "move",
@@ -3759,7 +3759,7 @@ migrations: [
       "to": [
         {
           "id": "content-cccf92ecec609660",
-          "path": ".agents/scripts/shared/overleaf-sync.sh"
+          "path": ".agents/scripts/shared/paper-publication/overleaf-sync.sh"
         }
       ],
       "action": "move",
@@ -3777,7 +3777,7 @@ migrations: [
       "to": [
         {
           "id": "content-870bfa562ec92701",
-          "path": ".agents/scripts/shared/check_paper_build.py"
+          "path": ".agents/scripts/shared/paper-build/check_paper_build.py"
         }
       ],
       "action": "rename",
@@ -3795,7 +3795,7 @@ migrations: [
       "to": [
         {
           "id": "content-fdc6e798a6740cb0",
-          "path": ".agents/scripts/shared/check_paper_interfaces.py"
+          "path": ".agents/scripts/shared/paper-build/check_paper_interfaces.py"
         }
       ],
       "action": "rename",
@@ -3831,7 +3831,7 @@ migrations: [
       "to": [
         {
           "id": "content-c4cd69fab46dda4f",
-          "path": ".agents/scripts/shared/check_reference_integrity.py"
+          "path": ".agents/scripts/shared/paper-references/check_reference_integrity.py"
         }
       ],
       "action": "rename",
@@ -3849,7 +3849,7 @@ migrations: [
       "to": [
         {
           "id": "content-d02e8d28ceb097e2",
-          "path": ".agents/scripts/shared/reference_evidence.py"
+          "path": ".agents/scripts/shared/paper-references/reference_evidence.py"
         }
       ],
       "action": "rename",
@@ -3867,7 +3867,7 @@ migrations: [
       "to": [
         {
           "id": "content-6c2865d4ba80b555",
-          "path": ".agents/scripts/shared/check_bibtex_format.py"
+          "path": ".agents/scripts/shared/paper-references/check_bibtex_format.py"
         }
       ],
       "action": "rename",
@@ -3885,7 +3885,7 @@ migrations: [
       "to": [
         {
           "id": "content-e2d2c53a9043efb0",
-          "path": ".agents/scripts/shared/check_reference_metadata.py"
+          "path": ".agents/scripts/shared/paper-references/check_reference_metadata.py"
         }
       ],
       "action": "rename",
@@ -3903,7 +3903,7 @@ migrations: [
       "to": [
         {
           "id": "content-bf199be2a7a9a01d",
-          "path": ".agents/scripts/shared/check_reference_corrections.py"
+          "path": ".agents/scripts/shared/paper-references/check_reference_corrections.py"
         }
       ],
       "action": "rename",
@@ -3921,7 +3921,7 @@ migrations: [
       "to": [
         {
           "id": "content-145aed8ea633ef00",
-          "path": ".agents/scripts/shared/bib_identity.py"
+          "path": ".agents/scripts/shared/paper-references/bib_identity.py"
         }
       ],
       "action": "rename",
@@ -3939,7 +3939,7 @@ migrations: [
       "to": [
         {
           "id": "content-ac271e9b5042f50f",
-          "path": ".agents/scripts/shared/bounded_run.py"
+          "path": ".agents/scripts/shared/paper-references/bounded_run.py"
         }
       ],
       "action": "rename",
@@ -3957,7 +3957,7 @@ migrations: [
       "to": [
         {
           "id": "content-e79711b3396c6bdf",
-          "path": ".agents/scripts/shared/citation_occurrences.py"
+          "path": ".agents/scripts/shared/paper-references/citation_occurrences.py"
         }
       ],
       "action": "rename",
@@ -3975,7 +3975,7 @@ migrations: [
       "to": [
         {
           "id": "content-5c52fe0cbf4b59c8",
-          "path": ".agents/scripts/shared/reference_env.py"
+          "path": ".agents/scripts/shared/paper-references/reference_env.py"
         }
       ],
       "action": "rename",
@@ -3993,7 +3993,7 @@ migrations: [
       "to": [
         {
           "id": "content-bbada582c0813ad0",
-          "path": ".agents/scripts/shared/validate_bibtex_correction.py"
+          "path": ".agents/scripts/shared/paper-references/validate_bibtex_correction.py"
         }
       ],
       "action": "rename",
@@ -4011,7 +4011,7 @@ migrations: [
       "to": [
         {
           "id": "content-2f63b4acafe27f6c",
-          "path": ".agents/scripts/shared/validate_bibtex_with_pybtex.py"
+          "path": ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py"
         }
       ],
       "action": "rename",
@@ -4029,7 +4029,7 @@ migrations: [
       "to": [
         {
           "id": "content-cd1a78dc5f68c5dc",
-          "path": ".agents/scripts/shared/reference-integrity/"
+          "path": ".agents/scripts/shared/paper-references/reference-integrity/"
         }
       ],
       "action": "move",
@@ -4101,7 +4101,7 @@ migrations: [
       "to": [
         {
           "id": "content-465c82c00f749905",
-          "path": ".agents/tests/shared/test_bibtex_correction_helper.py"
+          "path": ".agents/tests/shared/paper-references/test_bibtex_correction_helper.py"
         }
       ],
       "action": "move",
@@ -4119,7 +4119,7 @@ migrations: [
       "to": [
         {
           "id": "content-fb35e18a1dff3deb",
-          "path": ".agents/tests/shared/test_bibtex_format_helper.py"
+          "path": ".agents/tests/shared/paper-references/test_bibtex_format_helper.py"
         }
       ],
       "action": "move",
@@ -4137,7 +4137,7 @@ migrations: [
       "to": [
         {
           "id": "content-9f959e075a89c673",
-          "path": ".agents/tests/shared/test_overleaf_sync.py"
+          "path": ".agents/tests/shared/paper-publication/test_overleaf_sync.py"
         }
       ],
       "action": "move",
@@ -4155,7 +4155,7 @@ migrations: [
       "to": [
         {
           "id": "content-a0fe2907aa55e0f2",
-          "path": ".agents/tests/shared/test_paper_brief.py"
+          "path": ".agents/tests/shared/paper-foundation/test_paper_brief.py"
         }
       ],
       "action": "move",
@@ -4173,7 +4173,7 @@ migrations: [
       "to": [
         {
           "id": "content-0cfac28e91dfe6ed",
-          "path": ".agents/tests/shared/test_paper_interfaces.py"
+          "path": ".agents/tests/shared/paper-build/test_paper_interfaces.py"
         }
       ],
       "action": "move",
@@ -4191,7 +4191,7 @@ migrations: [
       "to": [
         {
           "id": "content-73816421cc4bc6fd",
-          "path": ".agents/tests/shared/test_reference_corrections.py"
+          "path": ".agents/tests/shared/paper-references/test_reference_corrections.py"
         }
       ],
       "action": "move",
@@ -4209,7 +4209,7 @@ migrations: [
       "to": [
         {
           "id": "content-11b2ccaa3074f841",
-          "path": ".agents/tests/shared/test_reference_evidence.py"
+          "path": ".agents/tests/shared/paper-references/test_reference_evidence.py"
         }
       ],
       "action": "move",
@@ -4227,7 +4227,7 @@ migrations: [
       "to": [
         {
           "id": "content-f83ab3122b4320a5",
-          "path": ".agents/tests/shared/test_reference_integrity.py"
+          "path": ".agents/tests/shared/paper-references/test_reference_integrity.py"
         }
       ],
       "action": "move",
@@ -4245,7 +4245,7 @@ migrations: [
       "to": [
         {
           "id": "content-d0bba38a40618c07",
-          "path": ".agents/tests/shared/test_reference_tool_contract.py"
+          "path": ".agents/tests/shared/paper-references/test_reference_tool_contract.py"
         }
       ],
       "action": "move",
@@ -8392,6 +8392,978 @@ migrations: [
       "reason": "Consolidate paper skill source as a resource without discarding its identity.",
       "source_commit": "70dfcb02e141f8911b2ecfc9fa6a650a16c6087a",
       "verification": "check-development and downstream upgrade tests"
+    },
+    {
+      "from": [
+        {
+          "id": "content-8624f9df96064345",
+          "path": ".agents/scripts/shared/paper-check.sh"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-8624f9df96064345",
+          "path": ".agents/scripts/shared/paper-build/paper-check.sh"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-870bfa562ec92701",
+          "path": ".agents/scripts/shared/check_paper_build.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-870bfa562ec92701",
+          "path": ".agents/scripts/shared/paper-build/check_paper_build.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-fdc6e798a6740cb0",
+          "path": ".agents/scripts/shared/check_paper_interfaces.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-fdc6e798a6740cb0",
+          "path": ".agents/scripts/shared/paper-build/check_paper_interfaces.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d6fe6393f637c209",
+          "path": ".agents/scripts/shared/release-check.sh"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d6fe6393f637c209",
+          "path": ".agents/scripts/shared/paper-publication/release-check.sh"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cccf92ecec609660",
+          "path": ".agents/scripts/shared/overleaf-sync.sh"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cccf92ecec609660",
+          "path": ".agents/scripts/shared/paper-publication/overleaf-sync.sh"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-145aed8ea633ef00",
+          "path": ".agents/scripts/shared/bib_identity.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-145aed8ea633ef00",
+          "path": ".agents/scripts/shared/paper-references/bib_identity.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ac271e9b5042f50f",
+          "path": ".agents/scripts/shared/bounded_run.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ac271e9b5042f50f",
+          "path": ".agents/scripts/shared/paper-references/bounded_run.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-6c2865d4ba80b555",
+          "path": ".agents/scripts/shared/check_bibtex_format.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-6c2865d4ba80b555",
+          "path": ".agents/scripts/shared/paper-references/check_bibtex_format.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-bf199be2a7a9a01d",
+          "path": ".agents/scripts/shared/check_reference_corrections.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-bf199be2a7a9a01d",
+          "path": ".agents/scripts/shared/paper-references/check_reference_corrections.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c4cd69fab46dda4f",
+          "path": ".agents/scripts/shared/check_reference_integrity.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c4cd69fab46dda4f",
+          "path": ".agents/scripts/shared/paper-references/check_reference_integrity.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-e2d2c53a9043efb0",
+          "path": ".agents/scripts/shared/check_reference_metadata.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-e2d2c53a9043efb0",
+          "path": ".agents/scripts/shared/paper-references/check_reference_metadata.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-e79711b3396c6bdf",
+          "path": ".agents/scripts/shared/citation_occurrences.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-e79711b3396c6bdf",
+          "path": ".agents/scripts/shared/paper-references/citation_occurrences.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-5c52fe0cbf4b59c8",
+          "path": ".agents/scripts/shared/reference_env.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-5c52fe0cbf4b59c8",
+          "path": ".agents/scripts/shared/paper-references/reference_env.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d02e8d28ceb097e2",
+          "path": ".agents/scripts/shared/reference_evidence.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d02e8d28ceb097e2",
+          "path": ".agents/scripts/shared/paper-references/reference_evidence.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-bbada582c0813ad0",
+          "path": ".agents/scripts/shared/validate_bibtex_correction.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-bbada582c0813ad0",
+          "path": ".agents/scripts/shared/paper-references/validate_bibtex_correction.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-2f63b4acafe27f6c",
+          "path": ".agents/scripts/shared/validate_bibtex_with_pybtex.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-2f63b4acafe27f6c",
+          "path": ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/reference-integrity/"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/paper-references/reference-integrity/"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-a0fe2907aa55e0f2",
+          "path": ".agents/tests/shared/test_paper_brief.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-a0fe2907aa55e0f2",
+          "path": ".agents/tests/shared/paper-foundation/test_paper_brief.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-0cfac28e91dfe6ed",
+          "path": ".agents/tests/shared/test_paper_interfaces.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-0cfac28e91dfe6ed",
+          "path": ".agents/tests/shared/paper-build/test_paper_interfaces.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-9f959e075a89c673",
+          "path": ".agents/tests/shared/test_overleaf_sync.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-9f959e075a89c673",
+          "path": ".agents/tests/shared/paper-publication/test_overleaf_sync.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-465c82c00f749905",
+          "path": ".agents/tests/shared/test_bibtex_correction_helper.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-465c82c00f749905",
+          "path": ".agents/tests/shared/paper-references/test_bibtex_correction_helper.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-fb35e18a1dff3deb",
+          "path": ".agents/tests/shared/test_bibtex_format_helper.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-fb35e18a1dff3deb",
+          "path": ".agents/tests/shared/paper-references/test_bibtex_format_helper.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-73816421cc4bc6fd",
+          "path": ".agents/tests/shared/test_reference_corrections.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-73816421cc4bc6fd",
+          "path": ".agents/tests/shared/paper-references/test_reference_corrections.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-11b2ccaa3074f841",
+          "path": ".agents/tests/shared/test_reference_evidence.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-11b2ccaa3074f841",
+          "path": ".agents/tests/shared/paper-references/test_reference_evidence.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-f83ab3122b4320a5",
+          "path": ".agents/tests/shared/test_reference_integrity.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-f83ab3122b4320a5",
+          "path": ".agents/tests/shared/paper-references/test_reference_integrity.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-d0bba38a40618c07",
+          "path": ".agents/tests/shared/test_reference_tool_contract.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-d0bba38a40618c07",
+          "path": ".agents/tests/shared/paper-references/test_reference_tool_contract.py"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper tooling and tests by responsibility while retaining identity.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "development registry, all test discovery, and v0.4.7 upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/reference-integrity/THIRD_PARTY.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/paper-references/reference-integrity/THIRD_PARTY.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Preserve individual locked dependency files and local changes across relocation.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "locked reference environment and downstream upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/reference-integrity/pyproject.toml"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/paper-references/reference-integrity/pyproject.toml"
+        }
+      ],
+      "action": "move",
+      "reason": "Preserve individual locked dependency files and local changes across relocation.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "locked reference environment and downstream upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/reference-integrity/uv.lock"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/paper-references/reference-integrity/uv.lock"
+        }
+      ],
+      "action": "move",
+      "reason": "Preserve individual locked dependency files and local changes across relocation.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "locked reference environment and downstream upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/reference-integrity/uv.toml"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-cd1a78dc5f68c5dc",
+          "path": ".agents/scripts/shared/paper-references/reference-integrity/uv.toml"
+        }
+      ],
+      "action": "move",
+      "reason": "Preserve individual locked dependency files and local changes across relocation.",
+      "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
+      "verification": "locked reference environment and downstream upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ebd85c6aa3a78ee3",
+          "path": ".agents/memory/shared/one-source-three-builds.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ebd85c6aa3a78ee3",
+          "path": ".agents/memory/shared/paper-build/one-source-three-builds.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-2603e306270576f1",
+          "path": ".agents/memory/shared/page-budget-on-blind-build.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-2603e306270576f1",
+          "path": ".agents/memory/shared/paper-build/page-budget-on-blind-build.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-2d06ea5d7e128611",
+          "path": ".agents/memory/shared/post-build-visual-inspection.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-2d06ea5d7e128611",
+          "path": ".agents/memory/shared/paper-build/post-build-visual-inspection.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-11e912c3abdabd0f",
+          "path": ".agents/memory/shared/tex-engine-from-texbin.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-11e912c3abdabd0f",
+          "path": ".agents/memory/shared/paper-build/tex-engine-from-texbin.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-92f166ab50d3c28b",
+          "path": ".agents/memory/shared/results-through-interface-macros.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-92f166ab50d3c28b",
+          "path": ".agents/memory/shared/paper-foundation/results-through-interface-macros.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-217f93089be3eada",
+          "path": ".agents/memory/shared/official-venue-kit-unmodified.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-217f93089be3eada",
+          "path": ".agents/memory/shared/paper-publication/official-venue-kit-unmodified.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4f4e2f0d90f1eeda",
+          "path": ".agents/memory/shared/overleaf-paper-tree-only.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4f4e2f0d90f1eeda",
+          "path": ".agents/memory/shared/paper-publication/overleaf-paper-tree-only.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b45e11608eed7f06",
+          "path": ".agents/memory/shared/sync-overleaf-before-editing.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b45e11608eed7f06",
+          "path": ".agents/memory/shared/paper-publication/sync-overleaf-before-editing.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c4f6ba821f80cc3a",
+          "path": ".agents/memory/shared/reference-integrity.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c4f6ba821f80cc3a",
+          "path": ".agents/memory/shared/paper-references/reference-integrity.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-129a141821db166c",
+          "path": ".agents/memory/project/brief.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-129a141821db166c",
+          "path": ".agents/memory/project/paper-foundation/brief.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b529e9d91177535a",
+          "path": ".agents/memory/project/experiments.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b529e9d91177535a",
+          "path": ".agents/memory/project/paper-foundation/experiments.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-095031c3e80db308",
+          "path": ".agents/memory/project/paper-interfaces.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-095031c3e80db308",
+          "path": ".agents/memory/project/paper-foundation/paper-interfaces.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-79d7090b2d54afda",
+          "path": ".agents/memory/project/publication.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-79d7090b2d54afda",
+          "path": ".agents/memory/project/paper-publication/publication.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-87453f37a4a46350",
+          "path": ".agents/memory/project/paper-run-boundary.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-87453f37a4a46350",
+          "path": ".agents/memory/project/template-maintenance/paper-run-boundary.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-paper-template-extension-boundary",
+          "path": ".agents/memory/project/paper-template-extension-boundary.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-paper-template-extension-boundary",
+          "path": ".agents/memory/project/template-maintenance/paper-template-extension-boundary.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-e232649022b0410b",
+          "path": ".agents/memory/project/protected-case-branches.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-e232649022b0410b",
+          "path": ".agents/memory/project/template-maintenance/protected-case-branches.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ec9e77d7482cdd80",
+          "path": ".agents/memory/project/rebuild-on-coding-template.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ec9e77d7482cdd80",
+          "path": ".agents/memory/project/template-maintenance/rebuild-on-coding-template.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-10778fcb1176db12",
+          "path": ".agents/memory/project/repository-identity.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-10778fcb1176db12",
+          "path": ".agents/memory/project/template-maintenance/repository-identity.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ef8c7935ff310bfe",
+          "path": ".agents/knowledge/shared/official-latex-templates.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ef8c7935ff310bfe",
+          "path": ".agents/knowledge/shared/paper-publication/official-latex-templates.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-64b3ad46c0508f04",
+          "path": ".agents/knowledge/shared/venue-iclr-2027.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-64b3ad46c0508f04",
+          "path": ".agents/knowledge/shared/paper-publication/venue-iclr-2027.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-230ddb81aa36d949",
+          "path": ".agents/knowledge/shared/venue-icml-2026.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-230ddb81aa36d949",
+          "path": ".agents/knowledge/shared/paper-publication/venue-icml-2026.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-92a8325c090c84d7",
+          "path": ".agents/knowledge/shared/venue-neurips-2026-poster.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-92a8325c090c84d7",
+          "path": ".agents/knowledge/shared/paper-publication/venue-neurips-2026-poster.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-3709a4fecb6b40af",
+          "path": ".agents/knowledge/shared/venue-template.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-3709a4fecb6b40af",
+          "path": ".agents/knowledge/shared/paper-publication/venue-template.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-3306a1757f23c130",
+          "path": ".agents/knowledge/shared/bibliographic-metadata-services.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-3306a1757f23c130",
+          "path": ".agents/knowledge/shared/paper-references/bibliographic-metadata-services.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
     }
   ]
 entries:
@@ -9947,7 +10919,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/official-venue-kit-unmodified.md
+  - path: .agents/memory/shared/paper-publication/official-venue-kit-unmodified.md
     id: content-217f93089be3eada
     kind: memory
     scope: shared
@@ -9958,7 +10930,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/one-source-three-builds.md
+  - path: .agents/memory/shared/paper-build/one-source-three-builds.md
     id: content-ebd85c6aa3a78ee3
     kind: memory
     scope: shared
@@ -9969,7 +10941,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/overleaf-paper-tree-only.md
+  - path: .agents/memory/shared/paper-publication/overleaf-paper-tree-only.md
     id: content-4f4e2f0d90f1eeda
     kind: memory
     scope: shared
@@ -9980,7 +10952,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/page-budget-on-blind-build.md
+  - path: .agents/memory/shared/paper-build/page-budget-on-blind-build.md
     id: content-2603e306270576f1
     kind: memory
     scope: shared_with_adaptation
@@ -9992,7 +10964,7 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build."
-  - path: .agents/memory/shared/post-build-visual-inspection.md
+  - path: .agents/memory/shared/paper-build/post-build-visual-inspection.md
     id: content-2d06ea5d7e128611
     kind: memory
     scope: shared_with_adaptation
@@ -10004,7 +10976,7 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
-  - path: .agents/memory/shared/reference-integrity.md
+  - path: .agents/memory/shared/paper-references/reference-integrity.md
     id: content-c4f6ba821f80cc3a
     kind: memory
     scope: shared
@@ -10015,7 +10987,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/results-through-interface-macros.md
+  - path: .agents/memory/shared/paper-foundation/results-through-interface-macros.md
     id: content-92f166ab50d3c28b
     kind: memory
     scope: shared
@@ -10037,7 +11009,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/sync-overleaf-before-editing.md
+  - path: .agents/memory/shared/paper-publication/sync-overleaf-before-editing.md
     id: content-b45e11608eed7f06
     kind: memory
     scope: shared
@@ -10048,7 +11020,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/tex-engine-from-texbin.md
+  - path: .agents/memory/shared/paper-build/tex-engine-from-texbin.md
     id: content-11e912c3abdabd0f
     kind: memory
     scope: shared
@@ -10059,7 +11031,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/brief.md
+  - path: .agents/memory/project/paper-foundation/brief.md
     id: content-129a141821db166c
     kind: memory
     scope: project
@@ -10070,7 +11042,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/experiments.md
+  - path: .agents/memory/project/paper-foundation/experiments.md
     id: content-b529e9d91177535a
     kind: memory
     scope: project
@@ -10081,7 +11053,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/paper-interfaces.md
+  - path: .agents/memory/project/paper-foundation/paper-interfaces.md
     id: content-095031c3e80db308
     kind: memory
     scope: project
@@ -10092,7 +11064,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/publication.md
+  - path: .agents/memory/project/paper-publication/publication.md
     id: content-79d7090b2d54afda
     kind: memory
     scope: project
@@ -10103,7 +11075,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/knowledge/shared/bibliographic-metadata-services.md
+  - path: .agents/knowledge/shared/paper-references/bibliographic-metadata-services.md
     id: content-3306a1757f23c130
     kind: knowledge
     scope: shared
@@ -10115,7 +11087,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "when bibtex-updater or pybtex changes version in uv.lock, or when a service changes its API, rate limits or key requirements"
-  - path: .agents/knowledge/shared/official-latex-templates.md
+  - path: .agents/knowledge/shared/paper-publication/official-latex-templates.md
     id: content-ef8c7935ff310bfe
     kind: knowledge
     scope: shared
@@ -10127,7 +11099,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "before a paper adopts one of these kits; the smoke tests that kept this list current were retired in v0.4.0"
-  - path: .agents/knowledge/shared/venue-iclr-2027.md
+  - path: .agents/knowledge/shared/paper-publication/venue-iclr-2027.md
     id: content-64b3ad46c0508f04
     kind: knowledge
     scope: shared
@@ -10139,7 +11111,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "2026-12-16 (final decisions), and when the camera-ready instructions arrive (announced for mid-February 2027)"
-  - path: .agents/knowledge/shared/venue-icml-2026.md
+  - path: .agents/knowledge/shared/paper-publication/venue-icml-2026.md
     id: content-230ddb81aa36d949
     kind: knowledge
     scope: shared
@@ -10151,7 +11123,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "when https://icml.cc/Conferences/2027/CallForPapers stops returning 404; write venue-icml-2027 then"
-  - path: .agents/knowledge/shared/venue-neurips-2026-poster.md
+  - path: .agents/knowledge/shared/paper-publication/venue-neurips-2026-poster.md
     id: content-92a8325c090c84d7
     kind: knowledge
     scope: shared
@@ -10163,7 +11135,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "before ordering a print, and before 2026-11-04 (the first order deadline)"
-  - path: .agents/knowledge/shared/venue-template.md
+  - path: .agents/knowledge/shared/paper-publication/venue-template.md
     id: content-3709a4fecb6b40af
     kind: document
     scope: shared
@@ -10209,7 +11181,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/scripts/shared/paper-check.sh
+  - path: .agents/scripts/shared/paper-build/paper-check.sh
     id: content-8624f9df96064345
     kind: code
     scope: shared
@@ -10220,7 +11192,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/scripts/shared/release-check.sh
+  - path: .agents/scripts/shared/paper-publication/release-check.sh
     id: content-d6fe6393f637c209
     kind: code
     scope: shared
@@ -10231,7 +11203,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/scripts/shared/overleaf-sync.sh
+  - path: .agents/scripts/shared/paper-publication/overleaf-sync.sh
     id: content-cccf92ecec609660
     kind: code
     scope: shared
@@ -10242,7 +11214,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/scripts/shared/check_paper_build.py
+  - path: .agents/scripts/shared/paper-build/check_paper_build.py
     id: content-870bfa562ec92701
     kind: code
     scope: shared
@@ -10254,7 +11226,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/check_paper_interfaces.py
+  - path: .agents/scripts/shared/paper-build/check_paper_interfaces.py
     id: content-fdc6e798a6740cb0
     kind: code
     scope: shared
@@ -10278,7 +11250,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/check_reference_integrity.py
+  - path: .agents/scripts/shared/paper-references/check_reference_integrity.py
     id: content-c4cd69fab46dda4f
     kind: code
     scope: shared
@@ -10290,7 +11262,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/reference_evidence.py
+  - path: .agents/scripts/shared/paper-references/reference_evidence.py
     id: content-d02e8d28ceb097e2
     kind: code
     scope: shared
@@ -10302,7 +11274,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/check_bibtex_format.py
+  - path: .agents/scripts/shared/paper-references/check_bibtex_format.py
     id: content-6c2865d4ba80b555
     kind: code
     scope: shared
@@ -10314,7 +11286,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/check_reference_metadata.py
+  - path: .agents/scripts/shared/paper-references/check_reference_metadata.py
     id: content-e2d2c53a9043efb0
     kind: code
     scope: shared
@@ -10326,7 +11298,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/check_reference_corrections.py
+  - path: .agents/scripts/shared/paper-references/check_reference_corrections.py
     id: content-bf199be2a7a9a01d
     kind: code
     scope: shared
@@ -10338,7 +11310,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/bib_identity.py
+  - path: .agents/scripts/shared/paper-references/bib_identity.py
     id: content-145aed8ea633ef00
     kind: code
     scope: shared
@@ -10350,7 +11322,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/bounded_run.py
+  - path: .agents/scripts/shared/paper-references/bounded_run.py
     id: content-ac271e9b5042f50f
     kind: code
     scope: shared
@@ -10362,7 +11334,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/citation_occurrences.py
+  - path: .agents/scripts/shared/paper-references/citation_occurrences.py
     id: content-e79711b3396c6bdf
     kind: code
     scope: shared
@@ -10374,7 +11346,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/reference_env.py
+  - path: .agents/scripts/shared/paper-references/reference_env.py
     id: content-5c52fe0cbf4b59c8
     kind: code
     scope: shared
@@ -10386,7 +11358,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/validate_bibtex_correction.py
+  - path: .agents/scripts/shared/paper-references/validate_bibtex_correction.py
     id: content-bbada582c0813ad0
     kind: code
     scope: shared
@@ -10398,7 +11370,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/validate_bibtex_with_pybtex.py
+  - path: .agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py
     id: content-2f63b4acafe27f6c
     kind: code
     scope: shared
@@ -10410,7 +11382,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/reference-integrity/
+  - path: .agents/scripts/shared/paper-references/reference-integrity/
     id: content-cd1a78dc5f68c5dc
     kind: code
     scope: shared
@@ -10457,7 +11429,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_bibtex_correction_helper.py
+  - path: .agents/tests/shared/paper-references/test_bibtex_correction_helper.py
     id: content-465c82c00f749905
     kind: code
     scope: shared
@@ -10469,7 +11441,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_bibtex_format_helper.py
+  - path: .agents/tests/shared/paper-references/test_bibtex_format_helper.py
     id: content-fb35e18a1dff3deb
     kind: code
     scope: shared
@@ -10481,7 +11453,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_overleaf_sync.py
+  - path: .agents/tests/shared/paper-publication/test_overleaf_sync.py
     id: content-9f959e075a89c673
     kind: code
     scope: shared
@@ -10493,7 +11465,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_paper_brief.py
+  - path: .agents/tests/shared/paper-foundation/test_paper_brief.py
     id: content-a0fe2907aa55e0f2
     kind: code
     scope: shared
@@ -10505,7 +11477,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_paper_interfaces.py
+  - path: .agents/tests/shared/paper-build/test_paper_interfaces.py
     id: content-0cfac28e91dfe6ed
     kind: code
     scope: shared
@@ -10517,7 +11489,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_reference_corrections.py
+  - path: .agents/tests/shared/paper-references/test_reference_corrections.py
     id: content-73816421cc4bc6fd
     kind: code
     scope: shared
@@ -10529,7 +11501,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_reference_evidence.py
+  - path: .agents/tests/shared/paper-references/test_reference_evidence.py
     id: content-11b2ccaa3074f841
     kind: code
     scope: shared
@@ -10541,7 +11513,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_reference_integrity.py
+  - path: .agents/tests/shared/paper-references/test_reference_integrity.py
     id: content-f83ab3122b4320a5
     kind: code
     scope: shared
@@ -10553,7 +11525,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/test_reference_tool_contract.py
+  - path: .agents/tests/shared/paper-references/test_reference_tool_contract.py
     id: content-d0bba38a40618c07
     kind: code
     scope: shared
@@ -10825,7 +11797,7 @@ entries:
     updated: 2026-11-04
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/paper-run-boundary.md
+  - path: .agents/memory/project/template-maintenance/paper-run-boundary.md
     id: content-87453f37a4a46350
     kind: memory
     scope: template
@@ -10836,7 +11808,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/protected-case-branches.md
+  - path: .agents/memory/project/template-maintenance/protected-case-branches.md
     id: content-e232649022b0410b
     kind: memory
     scope: template
@@ -10847,7 +11819,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/rebuild-on-coding-template.md
+  - path: .agents/memory/project/template-maintenance/rebuild-on-coding-template.md
     id: content-ec9e77d7482cdd80
     kind: memory
     scope: template
@@ -10858,7 +11830,7 @@ entries:
     updated: 2026-10-26
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/repository-identity.md
+  - path: .agents/memory/project/template-maintenance/repository-identity.md
     id: content-10778fcb1176db12
     kind: memory
     scope: template
@@ -11120,6 +12092,29 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
+  - path: .agents/tests/project/test_issue_197_upgrade.py
+    id: content-issue-197-upgrade-tests
+    kind: code
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Verify v0.4.7 paper tooling relocation preserves local data and upgrade behavior."
+    status: active
+    source: {"issue": 197}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/memory/project/template-maintenance/paper-template-extension-boundary.md
+    id: content-paper-template-extension-boundary
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Why the paper template keeps inherited development, paper capabilities and product evidence in distinct boundaries."
+    status: active
+    source: {"issues": [195, 197], "commit": "80bfd1d"}
+    updated: 2026-11-05
+    supersedes: []
+    superseded_by: []
 omitted: []
 local_legacy_inventory: {
     "version": "v0.1.25",

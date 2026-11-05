@@ -78,4 +78,4 @@ that none were requested), and any conflict or open question. Keep a
 `file:line` ledger with the reason for each change, not the full rewritten
 text. When `paper/` changed, run `make check` and report its result; when the
 change can move the layout (line or page breaks, floats), inspect the rendered
-pages as `.agents/memory/shared/post-build-visual-inspection.md` describes.
+pages as `.agents/memory/shared/paper-build/post-build-visual-inspection.md` describes.

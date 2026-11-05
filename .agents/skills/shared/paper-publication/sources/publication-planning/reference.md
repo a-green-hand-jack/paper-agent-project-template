@@ -15,15 +15,15 @@ Use `release-review` to prepare a tagged release.
 
 ## Minimum context
 
-- `.agents/memory/project/publication.md` (venue, page budget, builds,
+- `.agents/memory/project/paper-publication/publication.md` (venue, page budget, builds,
   Overleaf, release tags);
 - `PAPER.md` and the decision records it links;
-- `.agents/memory/shared/one-source-three-builds.md`;
+- `.agents/memory/shared/paper-build/one-source-three-builds.md`;
 - the active venue entry `.agents/knowledge/shared/venue-<venue>-<year>.md`
   when a concrete venue is active;
-- `.agents/memory/project/paper-interfaces.md` only when a result, term,
+- `.agents/memory/project/paper-foundation/paper-interfaces.md` only when a result, term,
   notation, claim or artifact could differ between builds;
-- for Overleaf, `.agents/memory/shared/overleaf-paper-tree-only.md` and
+- for Overleaf, `.agents/memory/shared/paper-publication/overleaf-paper-tree-only.md` and
   `sync-overleaf-before-editing.md`.
 
 Do not load unrelated venue entries until a concrete venue is active.
@@ -36,7 +36,7 @@ Do not load unrelated venue entries until a concrete venue is active.
    `refresh_after` before treating deadlines, page limits, anonymity or
    operational rules as current. When the entry is missing or due for refresh,
    read the official pages and write or refresh it from
-   `.agents/knowledge/shared/venue-template.md` through `project-memory-governance`,
+   `.agents/knowledge/shared/paper-publication/venue-template.md` through `project-memory-governance`,
    with its sources and a refresh condition.
 3. Treat official deadlines and limits as hard constraints. Derive internal
    writing, experiment, review and approval buffers without labeling them
@@ -48,16 +48,16 @@ Do not load unrelated venue entries until a concrete venue is active.
    build only does not fit this layout; bring it to the Human as a decision
    packet.
 5. Use the venue's official LaTeX kit unmodified
-   (`.agents/memory/shared/official-venue-kit-unmodified.md`,
-   `.agents/knowledge/shared/official-latex-templates.md`): adapt the paper to
+   (`.agents/memory/shared/paper-publication/official-venue-kit-unmodified.md`,
+   `.agents/knowledge/shared/paper-publication/official-latex-templates.md`): adapt the paper to
    the kit, never the kit to the paper.
 6. Record the venue's main-text page limit in `publication.md`, place
    `\label{PaperMainTextEnd}` in `paper/main.tex` at the end of the part the
    venue counts, and measure the blind build with `make check PAGE_BUDGET=<pages>`
-   (`.agents/memory/shared/page-budget-on-blind-build.md`).
+   (`.agents/memory/shared/paper-build/page-budget-on-blind-build.md`).
 7. Build every affected form (`make pdf`, `make submission`, `make blind`), run
    `make check`, and look at the rendered pages
-   (`.agents/memory/shared/post-build-visual-inspection.md`) for anonymity,
+   (`.agents/memory/shared/paper-build/post-build-visual-inspection.md`) for anonymity,
    authors, acknowledgements, appendix and interface behavior.
 8. Update `publication.md`, and the venue entry when venue facts changed.
 9. Report external venue or platform behavior as unverified unless actually
@@ -71,7 +71,7 @@ configuration, without a token in its URL, and its credentials only in Git's
 credential helper; never write the Overleaf URL, project id or a token into a
 tracked file.
 
-1. Start with `bash .agents/scripts/shared/overleaf-sync.sh status`, and before the
+1. Start with `bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status`, and before the
    first edit of a session follow `sync-overleaf-before-editing.md`.
 2. When Overleaf holds edits (`overleaf-ahead` or `diverged`), run
    `overleaf-sync.sh pull`: it puts them on a `sync/overleaf-<commit>` branch

@@ -196,6 +196,22 @@ class AgentContentChecks(unittest.TestCase):
             self.assertIn("a-lesson.md: needs the sections ## Decision, ## Why, ## Apply", result.stdout)
             self.assertIn("a-lesson.md: not linked from .agents/memory/shared/AGENTS.md", result.stdout)
 
+    def test_nested_records_are_checked_and_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root)
+            old = root / ".agents/memory/shared/a-lesson.md"
+            moved = root / ".agents/memory/shared/paper-build/a-lesson.md"
+            moved.parent.mkdir(parents=True)
+            old.rename(moved)
+            registry = root / ".agents/content-registry.yaml"
+            registry.write_text(registry.read_text().replace(
+                ".agents/memory/shared/a-lesson.md", ".agents/memory/shared/paper-build/a-lesson.md"))
+            write(root / ".agents/memory/shared/AGENTS.md", "- [paper-build/a-lesson.md](paper-build/a-lesson.md) — lesson.\n")
+            self.assertEqual(run(root).returncode, 0, run(root).stdout)
+            edit(moved, "\n## Why\n", "\n## Missing\n")
+            self.check_fails(root, "needs the sections ## Decision, ## Why, ## Apply")
+
     def test_record_must_be_registered(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

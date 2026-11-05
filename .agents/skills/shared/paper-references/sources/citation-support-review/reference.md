@@ -24,9 +24,9 @@ exemplar enters the bibliography only through this workflow.
   source, with file and line;
 - the relevant records in `.agents/references/ledger.json`, including the
   occurrence and any existing evidence records;
-- `.agents/memory/shared/reference-integrity.md` for the durable rules, verdict
+- `.agents/memory/shared/paper-references/reference-integrity.md` for the durable rules, verdict
   semantics and offline gates; load it once per session;
-- `.agents/memory/project/experiments.md` or `PAPER.md` only when they define
+- `.agents/memory/project/paper-foundation/experiments.md` or `PAPER.md` only when they define
   the claim or interpretation being checked.
 
 Do not load the complete manuscript, all references or the full ledger for an
@@ -160,7 +160,7 @@ reject or leave unresolved).
 
 ## Procedure
 
-Run `python3 .agents/scripts/shared/reference_evidence.py` from the repository root.
+Run `python3 .agents/scripts/shared/paper-references/reference_evidence.py` from the repository root.
 Its global options go before the command (`--offline` stops provider calls),
 and its runs, packets and caches go to `.project/build/reference-support/`.
 
@@ -191,7 +191,7 @@ and its runs, packets and caches go to `.project/build/reference-support/`.
    `provisional`). `record` rejects stale packets (claim fingerprint or
    citation set drift); re-inventory before recording.
 6. Run the offline gates after changes:
-   `python3 .agents/scripts/shared/check_reference_integrity.py --profile draft`, and
+   `python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft`, and
    `--profile release` for Release. `make check` runs the draft profile and
    `make release-check` the release profile.
 

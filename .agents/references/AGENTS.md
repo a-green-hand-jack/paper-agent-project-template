@@ -20,8 +20,8 @@ Two uses of external papers have distinct authority:
   `supplied-fixed` for a read-only bibliography supplied with the task).
 
 The rules are in
-[`../memory/shared/reference-integrity.md`](../memory/shared/reference-integrity.md).
-Change the ledger through `.agents/scripts/shared/reference_evidence.py` and the
+[`../memory/shared/reference-integrity.md`](../memory/shared/paper-references/reference-integrity.md).
+Change the ledger through `.agents/scripts/shared/paper-references/reference_evidence.py` and the
 `paper-references` skill, never by copying an
 empty ledger over a populated one. `check_reference_metadata.py --record`
 writes only `verification.bibtex_fingerprint`, the fingerprint of the entry it

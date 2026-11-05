@@ -20,9 +20,9 @@ score, accept/reject recommendation or mandatory gate between writing steps.
 Read in this order:
 
 1. `PAPER.md`;
-2. `.agents/memory/project/experiments.md` for experimental claims,
+2. `.agents/memory/project/paper-foundation/experiments.md` for experimental claims,
    conditions, results and maximum interpretations;
-3. `.agents/memory/project/paper-interfaces.md` and `paper/macros.tex` for
+3. `.agents/memory/project/paper-foundation/paper-interfaces.md` and `paper/macros.tex` for
    recurring semantic surfaces;
 4. the complete source graph of that manuscript version (the files the `main`
    build reads, from `paper/main.tex`);

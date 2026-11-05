@@ -108,7 +108,7 @@ Then follow `credential-setup` in the canonical checkout and in each worktree.
 | `SHARED_CREDENTIAL_FILE` | the device's shared file named by user-level configuration; none by default, and a paper runs without it |
 | `CREDENTIAL_DIR` | `credentials` |
 
-The online reference audits (`.agents/scripts/shared/reference_env.py`) read the
+The online reference audits (`.agents/scripts/shared/paper-references/reference_env.py`) read the
 link `.project/credentials/.env` to the shared file, in a worktree through the
 `.project/credentials` link, and export only `BIBTEX_CHECK_MAILTO`,
 `OPENALEX_API_KEY` and `S2_API_KEY` from it (`credential-setup` step 4). A root

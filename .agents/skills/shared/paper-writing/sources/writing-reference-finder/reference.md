@@ -31,7 +31,7 @@ adds an entry to `paper/refs.bib` and never supports a scientific claim.
 6. **Learn structure, not geometry.** Study an exemplar's moves, order and
    evidence presentation. Never copy its spacing, margin or float tricks into
    `paper/`; layout follows the venue's official kit
-   (`.agents/memory/shared/official-venue-kit-unmodified.md`).
+   (`.agents/memory/shared/paper-publication/official-venue-kit-unmodified.md`).
 7. **Report the results as writing references** with the candidate cards and
    the output contract of the playbook (sections 7 and 8), labelled as
    auxiliary.

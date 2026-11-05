@@ -13,7 +13,7 @@ outside a bounded area.
 ## Minimum context
 
 - the current contract entry in `PAPER.md` or the project record it lives in
-  (`.agents/memory/project/experiments.md`, `paper-interfaces.md`,
+  (`.agents/memory/project/paper-foundation/experiments.md`, `paper-interfaces.md`,
   `publication.md`);
 - the latest applicable decision record in `.agents/memory/project/`;
 - directly affected paper sections, experiments and interfaces;

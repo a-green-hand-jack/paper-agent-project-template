@@ -52,7 +52,7 @@ Use this for any figure that carries numeric evidence.
    style helper (`icarus-figures`).
 5. Export vector-first (`.pdf`, `.svg`) plus a raster preview when useful.
 6. Rebuild the paper and run the gate in
-   `.agents/memory/shared/post-build-visual-inspection.md`.
+   `.agents/memory/shared/paper-build/post-build-visual-inspection.md`.
 7. Report the source data, script, output path and inspection result.
 
 Candidate tools are listed in `references/github-candidates.md`. For default
@@ -107,7 +107,7 @@ A figure is not done until:
 - colors stay readable in grayscale and for color-vision deficiency when
   relevant;
 - the exported format suits LaTeX and Overleaf;
-- the compiled pages pass `.agents/memory/shared/post-build-visual-inspection.md`;
+- the compiled pages pass `.agents/memory/shared/paper-build/post-build-visual-inspection.md`;
 - the source files and scripts are stored as the storage policy says.
 
 ## Storage Policy

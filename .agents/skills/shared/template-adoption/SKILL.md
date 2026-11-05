@@ -181,7 +181,7 @@ and the coding template in `template.upstream`.
   root documents (`EXPERIMENTS.md`, `PUBLICATION.md`, `DECISIONS.md`,
   `PAPER_INTERFACES.md`, `REFERENCES.md`, `BRIEF.md`) to the records in
   `.agents/memory/project/`, its publication variants to the three builds of
-  [`one-source-three-builds`](../../../memory/shared/one-source-three-builds.md),
+  [`one-source-three-builds`](../../../memory/shared/paper-build/one-source-three-builds.md),
   and any `template-sync` state to this skill (`RELEASE_NOTES.md` explains the
   move from `template-sync`). A paper made from this template records only this
   template and removes the `upstream` block. The optional content of the

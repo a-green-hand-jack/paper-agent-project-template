@@ -5,7 +5,7 @@ The brief is the Human-authored input contract (normally ``BRIEF.md`` in a
 separate brief repository). ``validate`` checks that the brief has the required
 sections and a valid operating mode. ``ingest`` runs inside a paper repository
 made from the template: it writes the brief as the project memory record
-``.agents/memory/project/brief.md`` (front matter and the record sections
+``.agents/memory/project/paper-foundation/brief.md`` (front matter and the record sections
 Decision, Why and Apply ahead of the brief's own sections) and fills only the
 decided ``PAPER.md`` fields that have a recognized target. Missing or empty
 brief fields stay ``unresolved``; the tool never invents a title, claim,
@@ -14,7 +14,7 @@ result, citation, venue, author, approval, or release state.
 ``ingest`` refuses to run outside a Git repository, through a symlink, or in
 the template repository itself, and it fails closed when a decided brief field
 has no recognized contract target. The other records
-(``.agents/memory/project/experiments.md``, ``publication.md``) are updated by
+(``.agents/memory/project/paper-foundation/experiments.md``, ``publication.md``) are updated by
 their owner workflows; the brief record stays authoritative until then.
 """
 from __future__ import annotations
@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 
 BRIEF_NAME = "BRIEF.md"
-BRIEF_RECORD = Path(".agents/memory/project/brief.md")
+BRIEF_RECORD = Path(".agents/memory/project/paper-foundation/brief.md")
 PAPER_RELATIVE = Path("PAPER.md")
 REGISTRY_RELATIVE = Path(".agents/content-registry.yaml")
 COMMIT_MESSAGE = "chore: ingest paper brief into contracts"
@@ -71,7 +71,7 @@ materials.
 
 The brief stays authoritative for evidence, delivery, authors, constraints and
 the first deliverable until their owner workflows update
-`.agents/memory/project/experiments.md`, `publication.md` and
+`.agents/memory/project/paper-foundation/experiments.md`, `publication.md` and
 `paper/authors.tex`. Change it only with the Human, then ingest it again.
 
 """

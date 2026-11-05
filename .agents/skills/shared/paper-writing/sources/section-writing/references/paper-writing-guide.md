@@ -3,8 +3,8 @@
 Use this document while drafting or revising one paper section. Load only the
 guidance for the active surface. This is not a manuscript review checklist, and
 it does not replace the current decisions in `PAPER.md`,
-`.agents/memory/project/experiments.md`, or
-`.agents/memory/project/paper-interfaces.md`.
+`.agents/memory/project/paper-foundation/experiments.md`, or
+`.agents/memory/project/paper-foundation/paper-interfaces.md`.
 
 This guidance incorporates and adapts Michael J. Black, “Writing a good
 scientific paper” (8 November 2024), as its primary source, together with
@@ -155,7 +155,7 @@ contrast,” or “therefore.”
 - End each group with its relationship to the present paper, while reserving
   the paper's full argument for the introduction and method.
 - Keep citation identity and claim-support status consistent with
-  `.agents/memory/shared/reference-integrity.md` and
+  `.agents/memory/shared/paper-references/reference-integrity.md` and
   `.agents/references/ledger.json`.
 - Follow important lines of work far enough back to support any historical or
   first-work claim; recent search results alone do not establish precedence.
@@ -187,7 +187,7 @@ contrast,” or “therefore.”
   competing methods.
 - Explain what the result teaches, including negative or inconclusive evidence.
 - Do not exceed the maximum interpretation recorded in
-  `.agents/memory/project/experiments.md`.
+  `.agents/memory/project/paper-foundation/experiments.md`.
 
 ## Equations
 

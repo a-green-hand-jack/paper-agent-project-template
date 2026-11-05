@@ -1,7 +1,7 @@
 ---
 name: bibliographic-metadata-services
 date: 2026-10-20
-source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/shared/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165); keyless OpenAlex and Semantic Scholar responses and the tools' backoff code read 2026-10-20 (#171); shared credential file as the preferred key source (#176)
+source: this template's reference-integrity contract (REFERENCES.md, last changed 2026-09-02 by #153) and the locked dependencies in .agents/scripts/shared/paper-references/reference-integrity/, moved into a record by Issue #156; DBLP and OpenReview behavior observed 2026-10-20 (#165); keyless OpenAlex and Semantic Scholar responses and the tools' backoff code read 2026-10-20 (#171); shared credential file as the preferred key source (#176)
 applies_to: paper repositories that run the online reference audits in .agents/scripts/
 ---
 
@@ -13,7 +13,7 @@ applies_to: paper repositories that run the online reference audits in .agents/s
   upstream; core dependencies only): `bibtex-check` in non-generative mode for
   identity and `bibtex-update` for correction candidates. `pybtex==0.26.1`
   (MIT) parses classic BibTeX for the format gate. The complete dependency
-  graph is locked in `.agents/scripts/shared/reference-integrity/uv.lock`; nothing is
+  graph is locked in `.agents/scripts/shared/paper-references/reference-integrity/uv.lock`; nothing is
   vendored or read by `paper/`. They need Python 3.10+ and `uv`.
 - **Services.** The identity audit queries Crossref, OpenAlex, DBLP, OpenReview
   and Semantic Scholar. Google Books and Zotero are not used (the audit passes
@@ -96,7 +96,7 @@ applies_to: paper repositories that run the online reference audits in .agents/s
 ## Evidence
 
 - `REFERENCES.md` of this template at v0.3.1 and #153; `uv.lock` and
-  `THIRD_PARTY.md` in `.agents/scripts/shared/reference-integrity/`.
+  `THIRD_PARTY.md` in `.agents/scripts/shared/paper-references/reference-integrity/`.
 - 2026-10-20 (#165): a DBLP search request answered `202 Accepted` with
   `text/html`, and keyless `bibtex-check` runs with the wrapper's options on a
   public COLM 2024 entry gave `venue_mismatch` (`mismatched_fields: [venue]`)

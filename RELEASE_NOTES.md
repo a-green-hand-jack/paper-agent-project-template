@@ -3,6 +3,36 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.8 — 2026-11-05
+
+本版按论文能力整理开发工具和记录，使写作、构建、引用与投稿所需的入口更容易查找，同时保持 coding template 通用开发内容的继承关系。此前已发布的六个论文技能保持原有职责；本版调整它们调用的脚本、测试及所读取的记录（[#197](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/197)）。
+
+- 脚本按 `paper-build/`、`paper-references/` 和 `paper-publication/` 分组；相关共享测试按对应能力分组，并由 `make check` 逐组发现。公开构建入口仍是 `make check` 和 `make release-check`。
+- 论文 memory 按基础、构建、引用和出版分组；论文 knowledge 按引用和出版分组。模板维护的决定单独归类。上游通用记录保持其继承布局，`execution/` 当前只有治理入口。registry 保留稳定 ID、来源、范围和逐路径迁移记录。
+- 引用台账和策略继续位于 `.agents/references/`，范例继续与论文引用分开；`paper/` 仍可单独构建，Overleaf 同步仍只投影 `HEAD:paper`。
+
+已有论文的项目记录会按登记身份迁移，保留内容和本地 ID，并修正可明确解析的相对链接；目标位置已存在、符号链接或含糊链接会阻止自动迁移，供维护者处理。升级器对项目记录先做完整冲突预检，避免存在未解决冲突时先移动记录。针对较早版本的连续改名，升级器选择实际存在的源路径；两个源同时存在时要求人工处理。本模板保留这些升级器适配以及嵌套记录检查器的本地修改，后续跟随 coding template 时须重新核对。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文在表中步骤失败，原因见 v0.4.2。模板中的占位内容不是投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.7
+
+1. 保存现有改动、项目记录、引用台账及范例。按 `template-upgrade` 的“In this repository”获取本发布版完整的 `.agents/scripts/shared/` 命令目录，先运行 `upgrade-template.sh --check v0.4.8`，审查迁移和冲突。
+2. 逐项合并冲突。旧论文可能因删除了本模板的 case 分支保护说明而在根 `AGENTS.md` 冲突；保留论文自己的规则。新记录位置已有内容或存在符号链接时，先人工处理，绝不覆盖唯一内容。只对已审阅解决的路径使用 `--resolved <路径>`，然后应用升级。
+3. 将论文自己维护的脚本、CI、文档和外部自动化对旧脚本及 memory、knowledge 路径的调用更新到新位置；旧脚本路径不提供兼容包装。检查迁移后的项目记录及其链接；引用 ledger、policy、范例和项目自有材料不得丢失。
+4. 运行 `make check`、`bash .agents/scripts/shared/check-development.sh` 和 `bash .agents/scripts/shared/check-shells.sh`，重新运行升级确认无非预期变化，实际构建并检查受影响的论文页面。
+
+本版使用新论文及含本地适配、引用证据和冲突的合成旧论文验证；这些测试不代替真实论文的科学内容审查。公开构建检查使用 native TeX Live；远端 Overleaf 未因本次迁移连接。
+
 ## v0.4.7 — 2026-11-04
 
 本版将论文模板的开发面整理为 coding template 的论文扩展，并跟随其 v0.1.30 正式版。论文产品仍可单独复制和构建，Overleaf 仍只接收论文树。此前平级的论文技能较多、职责重叠；现在按任务分为六个入口，原有独特工具和资料仍按需可用（[Issue #195](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/195)）。

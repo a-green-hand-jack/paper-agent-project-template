@@ -38,15 +38,18 @@ not replace `make check` or `make release-check`, and neither replaces looking
 at the rendered pages. `make check` runs every test in both groups:
 
 ```bash
-python3 -m unittest discover -s .agents/tests/shared -p 'test_*.py'
+for dir in .agents/tests/shared .agents/tests/shared/*/; do
+  [ -d "$dir" ] || continue
+  python3 -m unittest discover -s "$dir" -p 'test_*.py' || exit
+done
 python3 -m unittest discover -s .agents/tests/project -p 'test_*.py'
 ```
 
 Run one file with `-p test_<name>.py`. Tests write only to temporary
 directories. The two BibTeX helper tests run only inside the locked reference
-environment (`uv run --project .agents/scripts/shared/reference-integrity ...`,
+environment (`uv run --project .agents/scripts/shared/paper-references/reference-integrity ...`,
 as CI does) and are skipped elsewhere, and so is the locked-tool contract test
-(`shared/test_reference_tool_contract.py`), which CI runs in the same
+(`shared/paper-references/test_reference_tool_contract.py`), which CI runs in the same
 environment.
 
 `shared/` holds the tests of the shared scripts, which a paper keeps.

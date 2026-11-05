@@ -18,7 +18,7 @@ from typing import Callable
 
 import yaml
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "shared"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "shared/paper-references"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts/shared"))
 import content_registry  # noqa: E402
 import test_reference_integrity as reference_tests  # noqa: E402  # its fixtures, without collecting its tests here
@@ -34,7 +34,7 @@ CLONE = ".project/state/template-upgrade/paper-agent-project-template.git"
 # The conflict the v0.4.6 upgrade section documents for a paper from before it:
 # README "Start a paper" had it delete this template's index lines from this
 # file, which v0.4.6 replaces with a generated index.
-DOCUMENTED_CONFLICTS = (".agents/memory/project/AGENTS.md",)
+DOCUMENTED_CONFLICTS = (".agents/memory/project/AGENTS.md", "AGENTS.md")
 
 # A stand-in for a venue's official kit, with the kind of text real kits carry
 # about authors; no real kit's text.
@@ -128,10 +128,13 @@ def start_paper(root: Path) -> None:
                                    lambda line: "protects the case branches" in line), encoding="utf-8")
     (root / "RELEASE_NOTES.md").write_text("# Release notes\n", encoding="utf-8")
     (root / "README.md").write_text("# A paper\n\nBuild it with `make check`.\n", encoding="utf-8")
-    for record, slots in ((".agents/memory/shared/page-budget-on-blind-build.md", ("PAGE_MARGIN",)),
-                          (".agents/memory/shared/post-build-visual-inspection.md", ("MIN_FIGURE_TEXT", "LAST_LINE_FILL"))):
+    for record, slots in ((".agents/memory/shared/paper-build/page-budget-on-blind-build.md", ("PAGE_MARGIN",)),
+                          (".agents/memory/shared/paper-build/post-build-visual-inspection.md", ("MIN_FIGURE_TEXT", "LAST_LINE_FILL"))):
         rows = "".join(f"| `{slot}` | to be set for the venue |\n" for slot in slots)
-        with (root / record).open("a", encoding="utf-8") as handle:
+        record_path = root / record
+        if not record_path.exists():
+            record_path = root / ".agents/memory/shared" / Path(record).name
+        with record_path.open("a", encoding="utf-8") as handle:
             handle.write(f"\n## In this repository\n\n| Slot | Value |\n| --- | --- |\n{rows}")
 
 
@@ -168,7 +171,7 @@ def bibliography_with_migrated_ledger(root: Path) -> None:
         reference_tests.ledger([reference_tests.reference(key, status="unverified", review="pending") for key in keys],
                                usages=usages),
         encoding="utf-8")
-    subprocess.run([sys.executable, ".agents/scripts/shared/reference_evidence.py", "migrate"],
+    subprocess.run([sys.executable, ".agents/scripts/shared/paper-references/reference_evidence.py", "migrate"],
                    cwd=root, check=True, capture_output=True, text=True)
 
 
@@ -354,7 +357,10 @@ class UpgradeStateTests(unittest.TestCase):
         # registry indexes; a group AGENTS.md that differs from the release only
         # inside the index markers is then resolved as well.
         for path in DOCUMENTED_CONFLICTS:
-            (cls.paper / path).write_bytes(git("show", f"{cls.target}:{path}", cwd=template).stdout)
+            content = git("show", f"{cls.target}:{path}", cwd=template).stdout.decode()
+            if path == "AGENTS.md":
+                content = drop_bullets(content, lambda line: "protects the case branches" in line)
+            (cls.paper / path).write_text(content, encoding="utf-8")
         resolved = list(DOCUMENTED_CONFLICTS)
         second = run(*[part for path in resolved for part in ("--resolved", path)], cls.target)
         cls.index_only = []
@@ -417,8 +423,13 @@ class UpgradeStateTests(unittest.TestCase):
                     self.assertTrue(all(any(f"]({Path(name.rstrip('/')).name}" in line for name in missing_optional)
                                         for line in extra), extra)
                 elif path in project and path.startswith(".agents/"):
-                    head, _, body = self.before[path].partition(b"\n---\n")
-                    self.assertEqual(upgraded.get(path), fields.sub(b"", head + b"\n") + b"---\n" + body)
+                    source_path = next((item["path"] for migration in registry["migrations"]
+                                        if any(dest["path"] == path for dest in migration.get("to", []))
+                                        for item in migration.get("from", []) if item["path"] in self.before), path)
+                    head, _, body = self.before[source_path].partition(b"\n---\n")
+                    original = fields.sub(b"", head + b"\n") + b"---\n" + body
+                    links = re.compile(rb"(?<=\]\()[^)\s]+")
+                    self.assertEqual(links.sub(b"<link>", upgraded[path]), links.sub(b"<link>", original))
                 else:
                     new_optional = path not in upgraded and path.startswith(optional)
                     self.assertTrue(path.startswith(("paper/", "assets/")) or path in owned or new_optional,
@@ -439,7 +450,7 @@ class OnlineAuditStateTests(unittest.TestCase):
 
     def audit(self, root: Path, *arguments: str, seconds: str = "0") -> tuple[int, dict[str, object]]:
         result = subprocess.run(
-            [sys.executable, ".agents/scripts/shared/check_reference_metadata.py", *arguments],
+            [sys.executable, ".agents/scripts/shared/paper-references/check_reference_metadata.py", *arguments],
             cwd=root, env={**offline_environment(root.parent / "bin"), "FAKE_CHECKER_SECONDS": seconds},
             capture_output=True, text=True, check=False,
         )

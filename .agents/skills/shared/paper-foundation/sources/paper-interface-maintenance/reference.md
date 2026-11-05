@@ -12,7 +12,7 @@ result, claim form, figure, table or LaTeX interface macro.
 
 ## Minimum context
 
-- the entry in `.agents/memory/project/paper-interfaces.md` (each interface
+- the entry in `.agents/memory/project/paper-foundation/paper-interfaces.md` (each interface
   macro's meaning, control cue and source);
 - `paper/macros.tex` and its active consumers;
 - for a value taken from a code repository, its entry in
@@ -27,7 +27,7 @@ result, claim form, figure, table or LaTeX interface macro.
 2. Search active paper surfaces for every consumer.
 3. Distinguish a presentation or value update from a semantic change.
 4. A reported number reaches the text only through its macro
-   (`.agents/memory/shared/results-through-interface-macros.md`). A new value
+   (`.agents/memory/shared/paper-foundation/results-through-interface-macros.md`). A new value
    from a code repository changes together with its manifest entry; never
    type a number that has no recorded source, and never write a planned result
    as an observation. An unknown value stays `\PaperTODO{}`.

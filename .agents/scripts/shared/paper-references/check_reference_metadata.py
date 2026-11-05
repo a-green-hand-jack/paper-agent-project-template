@@ -44,7 +44,7 @@ OPENREVIEW_RESIDUAL_FIELDS = {"year", "venue"}
 
 
 def load_integrity_module(root: Path) -> ModuleType:
-    path = root / ".agents/scripts/shared/check_reference_integrity.py"
+    path = root / ".agents/scripts/shared/paper-references/check_reference_integrity.py"
     spec = importlib.util.spec_from_file_location("paper_reference_integrity", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load structural checker: {path}")
@@ -54,7 +54,7 @@ def load_integrity_module(root: Path) -> ModuleType:
 
 
 def load_script(root: Path, filename: str, name: str) -> ModuleType:
-    path = root / ".agents/scripts/shared" / filename
+    path = root / ".agents/scripts/shared/paper-references" / filename
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load helper: {path}")
@@ -448,7 +448,7 @@ def main() -> int:
         print(f"ERROR reference metadata audit requires uv: {args.uv}")
         return 2
 
-    dependency_root = root / ".agents/scripts/shared/reference-integrity"
+    dependency_root = root / ".agents/scripts/shared/paper-references/reference-integrity"
     lock = dependency_root / "uv.lock"
     if not lock.is_file():
         write_summary(summary, outcome="infrastructure_error", detail="missing committed uv.lock", attempts=0)
