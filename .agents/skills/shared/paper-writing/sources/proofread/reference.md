@@ -772,7 +772,7 @@ The text above is the upstream skill, unchanged; see `PROVENANCE.md`.
   into a project environment only when a task needs it.
 - Thresholds marked `[HARD]` that depend on the venue, such as the 150-word
   abstract, yield to the venue's rules in
-  `.agents/memory/project/publication.md` and `.agents/knowledge/shared/`.
+  `.agents/memory/project/paper-publication/publication.md` and `.agents/knowledge/shared/`.
 - Interactive mode edits `paper/` sources one confirmed finding at a time. A
   finding that touches text `PAPER.md` marks `locked`, a reported number (an
   interface macro in `paper/macros.tex`) or a citation is reported and routed
@@ -781,4 +781,4 @@ The text above is the upstream skill, unchanged; see `PROVENANCE.md`.
   after the edits.
 - Check 3 (statistical relevance) reports missing evidence; it never licenses
   adding a number. New evidence enters through
-  `.agents/memory/project/experiments.md` and `assets/MANIFEST.yaml`.
+  `.agents/memory/project/paper-foundation/experiments.md` and `assets/MANIFEST.yaml`.

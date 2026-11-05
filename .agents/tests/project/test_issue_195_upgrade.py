@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from test_adoption_states import ROOT, CLONE, content_registry, git, shipped_tree, start_paper, tree
+from test_adoption_states import ROOT, CLONE, content_registry, drop_bullets, git, refused_paths, shipped_tree, start_paper, tree
 import test_reference_evidence as reference_fixture
 
 
@@ -88,9 +88,12 @@ class ExistingPaperUpgrade(unittest.TestCase):
             before = tree(paper)
             plan = run("--check", "v0.4.7-test")
             self.assertEqual(tree(paper), before, "preflight must be read-only")
-            self.assertEqual(plan.returncode, 0, plan.stdout + plan.stderr)
+            self.assertNotEqual(plan.returncode, 0, plan.stdout + plan.stderr)
+            self.assertEqual(refused_paths(plan.stdout), ["AGENTS.md"], plan.stdout + plan.stderr)
             self.assertNotIn("has no `## v0.4.7-test` entry", plan.stdout)
-            upgraded = run("v0.4.7-test")
+            target_agents = git("show", "v0.4.7-test:AGENTS.md", cwd=template).stdout.decode()
+            (paper / "AGENTS.md").write_text(drop_bullets(target_agents, lambda line: "protects the case branches" in line))
+            upgraded = run("--resolved", "AGENTS.md", "v0.4.7-test")
             self.assertEqual(upgraded.returncode, 0, upgraded.stdout + upgraded.stderr)
             moved = paper / ".agents/skills/shared/paper-writing/sources/section-writing/reference.md"
             self.assertIn("Local paper adaptation 195.", moved.read_text())

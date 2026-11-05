@@ -80,4 +80,4 @@ repository or managed storage and are linked under `assets/` as above.
 
 - Step 2 (Register its id): also record `paper_path` and, for a number, the
   interface macro in `paper/macros.tex` that carries it
-  ([`results-through-interface-macros`](../../../memory/shared/results-through-interface-macros.md)).
+  ([`results-through-interface-macros`](../../../memory/shared/paper-foundation/results-through-interface-macros.md)).

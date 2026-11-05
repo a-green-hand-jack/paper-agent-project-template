@@ -3,7 +3,7 @@
 
 The interfaces are the commands marked `% Interface: Name` in paper/macros.tex.
 Every interface must be defined there and documented in
-.agents/memory/project/paper-interfaces.md; every interface except the authoring
+.agents/memory/project/paper-foundation/paper-interfaces.md; every interface except the authoring
 helpers must be used somewhere in paper/; a command without arguments must be
 called with braces (\\Name{}) so that the space after it survives; and
 paper/macros.tex defines nothing that is not marked as an interface.
@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 MACROS = "paper/macros.tex"
-DOCUMENTATION = ".agents/memory/project/paper-interfaces.md"
+DOCUMENTATION = ".agents/memory/project/paper-foundation/paper-interfaces.md"
 REQUIRED = ("PaperTODO", "PaperNote", "PaperIdentity", "PaperTitle")
 # Authoring helpers: a finished paper uses none of them, so none needs a consumer.
 HELPERS = ("PaperTODO", "PaperNote", "PaperIdentity")

@@ -61,5 +61,5 @@ numbers come from.
   cannot support, and what would make the interpretation stale.
 - A number enters the text only through an interface macro whose row in
   [`paper-interfaces.md`](paper-interfaces.md) names its manifest entry
-  ([`../shared/results-through-interface-macros.md`](../shared/results-through-interface-macros.md)).
+  ([`../shared/results-through-interface-macros.md`](../../shared/paper-foundation/results-through-interface-macros.md)).
   A planned result stays planned.

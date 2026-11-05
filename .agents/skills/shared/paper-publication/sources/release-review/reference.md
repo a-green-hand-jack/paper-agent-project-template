@@ -13,7 +13,7 @@ version or another release that the Human approves and that is tagged on
 
 ## Minimum context
 
-- `PAPER.md` and `.agents/memory/project/experiments.md`,
+- `PAPER.md` and `.agents/memory/project/paper-foundation/experiments.md`,
   `paper-interfaces.md` and `publication.md`;
 - the current decision records in `.agents/memory/project/`;
 - the build being released (`blind` for an anonymous submission, otherwise
@@ -44,7 +44,7 @@ Do not load historical alternatives unless a current conflict requires them.
    behavior, appendix inclusion, claim support at Release strength
    (`citation-support-review`), figures, tables and compilation.
 7. Look at every rendered page of the delivered build
-   (`.agents/memory/shared/post-build-visual-inspection.md`).
+   (`.agents/memory/shared/paper-build/post-build-visual-inspection.md`).
 8. Mark unavailable external environments, such as a submission portal or
    arXiv processing, as unverified, not successful.
 9. Open the release PR from `dev` to `main`, run `release-doc-audit` with

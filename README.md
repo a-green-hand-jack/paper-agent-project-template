@@ -17,12 +17,12 @@
 3. 在每个 worktree 中，首先运行 `bash .agents/scripts/shared/setup-worktree.sh`。
 4. 移除仅属于本模板的内容：
    - 在 `.agents/content-registry.yaml` 中保留 `template.repository` 和 `template.version`（本模板及其起始版本），删除 `upstream` 块。
-   - 删除 registry 标记为 `scope: template` 的文件，将对应 registry 条目移到 `omitted`（记录 `id`、`path` 和原因 `Upstream template-only content; not adopted.`，与 `upgrade-template.sh` 记录的文本一致），然后用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成索引。需删除的文件包括 `.agents/memory/project/rebuild-on-coding-template.md`、`protected-case-branches.md`、`repository-identity.md`、`paper-run-boundary.md` 和 `.agents/tests/project/test_adoption_states.py`。在 `AGENTS.md` 中，将关于本模板 case 分支的规则替换为论文自己的列表，或删除该规则。
+   - 删除 registry 标记为 `scope: template` 的文件，将对应 registry 条目移到 `omitted`（记录 `id`、`path` 和原因 `Upstream template-only content; not adopted.`，与 `upgrade-template.sh` 记录的文本一致），然后用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成索引。需删除的内容包括 `.agents/memory/project/template-maintenance/` 中本模板专有的记录，以及 `.agents/tests/project/` 中 registry 标为 `scope: template` 的测试；以 registry 的完整清单为准。在 `AGENTS.md` 中，将关于本模板 case 分支的规则替换为论文自己的列表，或删除该规则。
    - 将 `RELEASE_NOTES.md` 替换为论文自己的发布记录；初始为空，每个发布标签对应一个 `## <tag>` 标题。
    - 将本 README 改写为论文说明：介绍论文及构建方法。
-5. 填写模板留给论文的槽位：在 `.agents/memory/shared/page-budget-on-blind-build.md`（`PAGE_MARGIN`）和 `.agents/memory/shared/post-build-visual-inspection.md`（`MIN_FIGURE_TEXT`、`LAST_LINE_FILL`）末尾分别添加含 Slot/Value 表格的 `## In this repository` 小节。在两者都填写之前，`diagnose-environment.sh` 会发出警告。
+5. 填写模板留给论文的槽位：在 `.agents/memory/shared/paper-build/page-budget-on-blind-build.md`（`PAGE_MARGIN`）和 `.agents/memory/shared/paper-build/post-build-visual-inspection.md`（`MIN_FIGURE_TEXT`、`LAST_LINE_FILL`）末尾分别添加含 Slot/Value 表格的 `## In this repository` 小节。在两者都填写之前，`diagnose-environment.sh` 会发出警告。
 6. 将论文简报交给 Agent。`paper-foundation` 技能会验证简报，并填写 `PAPER.md` 中已决定的字段；未决定的内容保持为 `unresolved`。没有简报时，与 Agent 一起填写 `PAPER.md`。
-7. 确定投稿场所后，将其官方套件原样放入 `paper/`，在根目录 `Makefile` 中设置 `PAGE_BUDGET`，并在 `.agents/memory/project/publication.md` 中记录投稿场所（`paper-publication`）。将作者写入 `paper/authors.tex`，用每位真实作者的姓名、电子邮箱和机构对应的 `\PaperIdentity` 替换模板占位身份（`Template-Author-Name` 等）。在此之前，`make release-check` 的 `identity` 步骤会因占位身份失败，`leftovers` 会因模板的 `\PaperTODO` 文本失败，而 `pages` 在设置 `PAGE_BUDGET` 之前会失败；`make check` 则可以通过。占位文本不会匹配任何投稿套件的文本。
+7. 确定投稿场所后，将其官方套件原样放入 `paper/`，在根目录 `Makefile` 中设置 `PAGE_BUDGET`，并在 `.agents/memory/project/paper-publication/publication.md` 中记录投稿场所（`paper-publication`）。将作者写入 `paper/authors.tex`，用每位真实作者的姓名、电子邮箱和机构对应的 `\PaperIdentity` 替换模板占位身份（`Template-Author-Name` 等）。在此之前，`make release-check` 的 `identity` 步骤会因占位身份失败，`leftovers` 会因模板的 `\PaperTODO` 文本失败，而 `pages` 在设置 `PAGE_BUDGET` 之前会失败；`make check` 则可以通过。占位文本不会匹配任何投稿套件的文本。
 8. 在 `paper/` 中写作。将每张结果表、每个图数据文件和每个报告的数字登记到 `assets/MANIFEST.yaml`，并且只通过 `paper/macros.tex` 中的接口宏将数字写入正文。
 
 Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只加载该任务需要的记录。

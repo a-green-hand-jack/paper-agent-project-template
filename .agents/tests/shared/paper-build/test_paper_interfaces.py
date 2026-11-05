@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
 TOOL = ROOT / ".agents/scripts/shared/paper-build/check_paper_interfaces.py"
-DOCUMENTATION = ".agents/memory/project/paper-interfaces.md"
+DOCUMENTATION = ".agents/memory/project/paper-foundation/paper-interfaces.md"
 
 
 def run(root: Path) -> subprocess.CompletedProcess[str]:
@@ -57,6 +57,7 @@ def fixture(root: Path) -> None:
         "\\MethodName{} \\CoreTerm{} 50\\% of \\MainResult{} \\MainResultUncertainty{}\n",
         encoding="utf-8",
     )
+    (root / DOCUMENTATION).parent.mkdir(parents=True, exist_ok=True)
     (root / DOCUMENTATION).write_text(
         """# Paper interfaces
 

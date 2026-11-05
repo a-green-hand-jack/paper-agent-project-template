@@ -82,7 +82,7 @@ evidence first, then fix it in the current unit of work and verify again.
 
 For the paper, the evidence is the build: `make check` passes, and the
 rendered pages have been looked at
-([`post-build-visual-inspection`](.agents/memory/shared/post-build-visual-inspection.md)).
+([`post-build-visual-inspection`](.agents/memory/shared/paper-build/post-build-visual-inspection.md)).
 A release also passes `make release-check`.
 
 ## Paper work
@@ -90,11 +90,11 @@ A release also passes `make release-check`.
 ### Orientation
 
 1. Read `PAPER.md`.
-2. Read `.agents/memory/project/experiments.md` only for experiment, evidence,
+2. Read `.agents/memory/project/paper-foundation/experiments.md` only for experiment, evidence,
    claim-support or result-interpretation work.
-3. Read `.agents/memory/project/paper-interfaces.md` only for recurring
+3. Read `.agents/memory/project/paper-foundation/paper-interfaces.md` only for recurring
    identity, terminology, notation, results, claims, figures, tables or macros.
-4. Read `.agents/memory/project/publication.md` only for the venue, the builds,
+4. Read `.agents/memory/project/paper-publication/publication.md` only for the venue, the builds,
    Overleaf or releases.
 5. Read only the decision records under `.agents/memory/project/` that the
    task touches.
@@ -158,20 +158,20 @@ Human before changing a locked item, approving a release or submitting.
   is never written as an observation.
 - A reported number reaches the text only through an interface macro in
   `paper/macros.tex` whose source is an entry in `assets/MANIFEST.yaml`
-  ([`results-through-interface-macros`](.agents/memory/shared/results-through-interface-macros.md)).
+  ([`results-through-interface-macros`](.agents/memory/shared/paper-foundation/results-through-interface-macros.md)).
 - Do not turn correlation into causal language without support.
 - Do not silently change a locked claim, story decision, experiment
   condition, limitation or interface meaning.
 - The three builds come from one source: `submission` and `blind` only remove
   layers of `main`
-  ([`one-source-three-builds`](.agents/memory/shared/one-source-three-builds.md)).
+  ([`one-source-three-builds`](.agents/memory/shared/paper-build/one-source-three-builds.md)).
   Never copy scientific content into a build-specific file.
 - Keep negative or inconclusive evidence visible when it constrains a central
   claim.
 - `paper/` depends on nothing outside `paper/`.
 - Overleaf receives only `HEAD:paper`, through `.agents/scripts/shared/paper-publication/overleaf-sync.sh`,
   never the repository root and never a forced push
-  ([`overleaf-paper-tree-only`](.agents/memory/shared/overleaf-paper-tree-only.md)).
+  ([`overleaf-paper-tree-only`](.agents/memory/shared/paper-publication/overleaf-paper-tree-only.md)).
 - Build output, screenshots and logs go to `.project/`, never into `paper/` or
   the root.
 - Never draft a real paper in this template repository.
@@ -179,7 +179,7 @@ Human before changing a locked item, approving a release or submitting.
   `case/arxiv-2604-01658` and `case/arxiv-2605-03042`, their case Issues (#23,
   #24, #30) and the verification trackers (#21, #31): never propose, plan or
   perform their deletion, and leave them out of cleanup reports
-  ([`protected-case-branches`](.agents/memory/project/protected-case-branches.md)).
+  ([`protected-case-branches`](.agents/memory/project/template-maintenance/protected-case-branches.md)).
   A paper made from the template keeps its own list instead.
 
 ### Handoff

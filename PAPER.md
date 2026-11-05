@@ -54,7 +54,7 @@ For each contribution, record whether it is central, supporting, or optional and
 - 得出诚实结论所必需的限制或负面结果；
 - 稳定论文接口（例如 `\MainResult{}`）的含义。
 
-为每项锁定主张链接证据：`.agents/memory/project/experiments.md` 中的问题及其对应的 `assets/MANIFEST.yaml` 条目。证据仍处于计划阶段时必须明确说明，绝不能将计划中的结果写成观察结果。
+为每项锁定主张链接证据：`.agents/memory/project/paper-foundation/experiments.md` 中的问题及其对应的 `assets/MANIFEST.yaml` 条目。证据仍处于计划阶段时必须明确说明，绝不能将计划中的结果写成观察结果。
 
 当前锁定项：
 

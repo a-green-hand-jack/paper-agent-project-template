@@ -19,7 +19,7 @@ scientific interpretation.
 ## Audits
 
 Run from the repository root (rules in
-`.agents/memory/shared/reference-integrity.md`):
+`.agents/memory/shared/paper-references/reference-integrity.md`):
 
 ```bash
 python3 .agents/scripts/shared/check_bibtex_format.py
@@ -41,7 +41,7 @@ replaces its own report.
 3. Inspect every manuscript use and existing claim-evidence locator for the key.
 4. Retrieve authoritative records, preferring DOI, publisher or proceedings
    pages, OpenReview, exact arXiv identifiers or domain-primary sources
-   (`.agents/knowledge/shared/bibliographic-metadata-services.md` lists the
+   (`.agents/knowledge/shared/paper-references/bibliographic-metadata-services.md` lists the
    services and their limits).
 5. Compare title, complete authors, year, venue, type, identifiers and version
    lineage. Never rely on a tool's confidence alone.

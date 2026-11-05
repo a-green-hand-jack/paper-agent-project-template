@@ -165,7 +165,7 @@ def check_records(root: Path, plane: str, entries: dict, report: Report) -> None
             continue
         index_path = directory / "AGENTS.md"
         index = index_path.read_text(encoding="utf-8") if index_path.is_file() else ""
-        for path in sorted(directory.glob("*.md")):
+        for path in sorted(directory.rglob("*.md")):
             if path.name == "AGENTS.md":
                 continue
             shown = path.relative_to(root).as_posix()
@@ -190,7 +190,7 @@ def check_records(root: Path, plane: str, entries: dict, report: Report) -> None
             positions = [text.find(f"\n{heading}\n") for heading in RECORD_SECTIONS[plane]]
             if -1 in positions or positions != sorted(positions):
                 report.error(f"{shown}: needs the sections {', '.join(RECORD_SECTIONS[plane])} in this order")
-            if f"]({path.name})" not in index:
+            if f"]({path.relative_to(directory).as_posix()})" not in index:
                 report.error(f"{shown}: not linked from {index_path.relative_to(root).as_posix()}")
     print(f"CHECKED {count} {plane} records")
 

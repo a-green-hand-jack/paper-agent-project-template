@@ -32,7 +32,7 @@ new delivery gets a new tag.
 ## Why
 
 The three builds differ only by removal
-([`../shared/one-source-three-builds.md`](../shared/one-source-three-builds.md)),
+([`../shared/one-source-three-builds.md`](../../shared/paper-build/one-source-three-builds.md)),
 so the publication plan is a short list of facts and decisions rather than a
 set of variant files: which venue rules apply, which kit typesets the paper,
 which budget binds and which tag holds each delivered version.
@@ -57,4 +57,4 @@ which budget binds and which tag holds each delivered version.
   upload; record that separately.
 - Per-paper layout preferences (float placement, last-line targets) are
   recorded here, as the slots of
-  [`../shared/post-build-visual-inspection.md`](../shared/post-build-visual-inspection.md).
+  [`../shared/post-build-visual-inspection.md`](../../shared/paper-build/post-build-visual-inspection.md).

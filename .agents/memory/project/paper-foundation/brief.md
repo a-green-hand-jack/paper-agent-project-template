@@ -27,7 +27,7 @@ materials.
 
 The brief stays authoritative for evidence, delivery, authors, constraints and
 the first deliverable until their owner workflows update
-`.agents/memory/project/experiments.md`, `publication.md` and
+`.agents/memory/project/paper-foundation/experiments.md`, `publication.md` and
 `paper/authors.tex`. Change it only with the Human, then ingest it again.
 
 ## Paper identity

@@ -14,21 +14,21 @@ the record's own text never contains that heading line.
 - [issue-in-herdr-worktree.md](issue-in-herdr-worktree.md) — Choose direct development or a confirmed Herdr dispatch and keep issue ownership clear.
 - [llm-credentials.md](llm-credentials.md) — Keep stable shared credentials and project-owned refreshing logins behind local paths.
 - [look-at-the-artifact-before-concluding.md](look-at-the-artifact-before-concluding.md) — Inspect referenced artifacts before concluding from automated metrics.
-- [official-venue-kit-unmodified.md](official-venue-kit-unmodified.md) — Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only.
-- [one-source-three-builds.md](one-source-three-builds.md) — main, submission and blind from one source in a fixed order, each removing a layer.
-- [overleaf-paper-tree-only.md](overleaf-paper-tree-only.md) — Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force.
-- [page-budget-on-blind-build.md](page-budget-on-blind-build.md) — Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
-- [post-build-visual-inspection.md](post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
+- [paper-build/one-source-three-builds.md](paper-build/one-source-three-builds.md) — main, submission and blind from one source in a fixed order, each removing a layer.
+- [paper-build/page-budget-on-blind-build.md](paper-build/page-budget-on-blind-build.md) — Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
+- [paper-build/post-build-visual-inspection.md](paper-build/post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
+- [paper-build/tex-engine-from-texbin.md](paper-build/tex-engine-from-texbin.md) — TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
+- [paper-foundation/results-through-interface-macros.md](paper-foundation/results-through-interface-macros.md) — Reported numbers only through interface macros with a manifest source; planned results are never observations.
+- [paper-publication/official-venue-kit-unmodified.md](paper-publication/official-venue-kit-unmodified.md) — Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only.
+- [paper-publication/overleaf-paper-tree-only.md](paper-publication/overleaf-paper-tree-only.md) — Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force.
+- [paper-publication/sync-overleaf-before-editing.md](paper-publication/sync-overleaf-before-editing.md) — Take in Overleaf edits before writing and deliver to both sides together.
+- [paper-references/reference-integrity.md](paper-references/reference-integrity.md) — Identity and claim support are separate, occurrence-level obligations.
 - [product-state-root.md](product-state-root.md) — Resolve worktree-local product state from the project marker.
 - [project-positioning-before-layout.md](project-positioning-before-layout.md) — Establish users, deliverables and domain concepts before choosing paths.
 - [provider-cost-routing.md](provider-cost-routing.md) — Use the cheapest capable provider/model and record why each real run is needed.
-- [reference-integrity.md](reference-integrity.md) — Identity and claim support are separate, occurrence-level obligations.
 - [resolve-real-paths-before-moving.md](resolve-real-paths-before-moving.md) — Prove source and destination differ before moving or replacing assets.
-- [results-through-interface-macros.md](results-through-interface-macros.md) — Reported numbers only through interface macros with a manifest source; planned results are never observations.
 - [screen-with-scriptable-fakes.md](screen-with-scriptable-fakes.md) — Screen boundary failures with data-driven fakes before applicable real acceptance.
 - [skill-frontmatter-validity.md](skill-frontmatter-validity.md) — Every SKILL.md front matter parses; make check re-parses them.
 - [speed-and-parallelism-by-measurement.md](speed-and-parallelism-by-measurement.md) — Measure concurrency, remove repeated work and retain every required check.
-- [sync-overleaf-before-editing.md](sync-overleaf-before-editing.md) — Take in Overleaf edits before writing and deliver to both sides together.
-- [tex-engine-from-texbin.md](tex-engine-from-texbin.md) — TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
 - [third-party-llm-compat-patches.md](third-party-llm-compat-patches.md) — Fill PATCH_DIR for the project's patches or wrappers of third-party LLM tools; they run on every run and state that metrics, prompts and reasoning effort are unchanged.
 <!-- registry-index:end -->

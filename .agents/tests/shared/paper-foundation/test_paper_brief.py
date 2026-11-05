@@ -14,7 +14,7 @@ TEMPLATE_ORIGINS = (
     "git@github.com:a-green-hand-jack/ccfa-writing-paper-template.git",
 )
 PAPER_ORIGIN = "git@github.com:someone/paper-repo.git"
-BRIEF_RECORD = Path(".agents/memory/project/brief.md")
+BRIEF_RECORD = Path(".agents/memory/project/paper-foundation/brief.md")
 
 
 def write(path: Path, text: str) -> None:

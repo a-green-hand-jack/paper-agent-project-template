@@ -70,7 +70,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 
 `make check` 按顺序执行：`main` 和 `blind` 构建及其日志检查（未定义的引用或引文、缺失文件、重复定义的标签）、`blind` 页数、PDF 文本层下划线保留检查（T1 编码）、离线参考文献门槛、接口宏检查、开发 registry 检查（`check-development.sh`）、技能/记忆/知识结构检查，以及 `.agents/tests/shared/` 和 `.agents/tests/project/` 的单元测试。构建日志位于 `.project/build/logs/<build>.log`。
 
-通过 `make check` 不代表页面视觉效果正确。宣布构建完成前，应渲染并查看受影响页面（[`post-build-visual-inspection`](.agents/memory/shared/post-build-visual-inspection.md)）；渲染结果和截图放入 `.project/build/inspect/`。
+通过 `make check` 不代表页面视觉效果正确。宣布构建完成前，应渲染并查看受影响页面（[`post-build-visual-inspection`](.agents/memory/shared/paper-build/post-build-visual-inspection.md)）；渲染结果和截图放入 `.project/build/inspect/`。
 
 依赖：
 
@@ -85,7 +85,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 
 ## 证据
 
-结果来自代码仓库。将每张结果表、每个图数据文件和每个报告的数字登记在 `assets/MANIFEST.yaml`：源仓库、提交、运行或配置标识、校验和及重新生成命令。数字只能通过 `paper/macros.tex` 的接口宏进入正文；`.agents/memory/project/paper-interfaces.md` 为每个宏记录含义、控制提示和 manifest ID。计划中的结果登记为 `planned`，绝不写成观察结果。大型文件（原始日志、checkpoint、数据集）保留在其代码仓库或受管存储中；通过 `.project/assets.links` 本地链接，绝不放入 Git。
+结果来自代码仓库。将每张结果表、每个图数据文件和每个报告的数字登记在 `assets/MANIFEST.yaml`：源仓库、提交、运行或配置标识、校验和及重新生成命令。数字只能通过 `paper/macros.tex` 的接口宏进入正文；`.agents/memory/project/paper-foundation/paper-interfaces.md` 为每个宏记录含义、控制提示和 manifest ID。计划中的结果登记为 `planned`，绝不写成观察结果。大型文件（原始日志、checkpoint、数据集）保留在其代码仓库或受管存储中；通过 `.project/assets.links` 本地链接，绝不放入 Git。
 
 图的来源：
 
@@ -106,13 +106,13 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 | 向 `main` 的 PR、推送到 `main`，以及 `make release-check` | 所有条目的完整元数据审计（CI 还运行更正审计） | 必须通过 |
 | 每周及 `workflow_dispatch`（`references-full` job） | 两项完整审计并行运行，缓存跨运行保留 | 报告结果；不阻塞合并 |
 
-已验证条目的指纹通过 `python3 .agents/scripts/shared/paper-references/check_reference_metadata.py --record` 记录在台账（`verification.bibtex_fingerprint`）。采用分级机制后，对完整范围运行一次并提交台账。provider 故障、限流或机器人验证属于基础设施结果，应列出因此未完成的条目，不能算作条目失败。规则见 [`reference-integrity`](.agents/memory/shared/reference-integrity.md)，服务、密钥和缓存见 [`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md)。
+已验证条目的指纹通过 `python3 .agents/scripts/shared/paper-references/check_reference_metadata.py --record` 记录在台账（`verification.bibtex_fingerprint`）。采用分级机制后，对完整范围运行一次并提交台账。provider 故障、限流或机器人验证属于基础设施结果，应列出因此未完成的条目，不能算作条目失败。规则见 [`reference-integrity`](.agents/memory/shared/paper-references/reference-integrity.md)，服务、密钥和缓存见 [`bibliographic-metadata-services`](.agents/knowledge/shared/paper-references/bibliographic-metadata-services.md)。
 
 本地审计优先从环境读取 `BIBTEX_CHECK_MAILTO`、`OPENALEX_API_KEY` 和 `S2_API_KEY`。首选文件来源是设备的共享凭据文件：将规范 checkout 的 `.project/credentials/.env` 链接到该文件，每个 worktree 再通过 `setup-worktree.sh` 创建的 `.project/credentials` 链接访问。只导出这三个键，跳过其他键。仅含这三个键的项目专用根目录 `.env` 仍是后备来源，且优先于共享文件。
 
 ## Overleaf
 
-Overleaf 镜像 `dev` 上的 `paper/`，且只镜像 `paper/`（[`overleaf-paper-tree-only`](.agents/memory/shared/overleaf-paper-tree-only.md)）。每个 checkout 添加一次 remote，URL 中不含 token；token 存在 Git credential helper 中：
+Overleaf 镜像 `dev` 上的 `paper/`，且只镜像 `paper/`（[`overleaf-paper-tree-only`](.agents/memory/shared/paper-publication/overleaf-paper-tree-only.md)）。每个 checkout 添加一次 remote，URL 中不含 token；token 存在 Git credential helper 中：
 
 ```bash
 git remote add overleaf https://git.overleaf.com/<project-id>
@@ -126,7 +126,7 @@ bash .agents/scripts/shared/paper-publication/overleaf-sync.sh pull     # Overle
 bash .agents/scripts/shared/paper-publication/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
 ```
 
-- 编辑前运行 `status`（[`sync-overleaf-before-editing`](.agents/memory/shared/sync-overleaf-before-editing.md)）。如果 Overleaf 有 `dev` 缺少的编辑，`pull` 将其放到从双方最后共同状态创建的分支；通过 PR 合并到 `dev` 后再 `push`。
+- 编辑前运行 `status`（[`sync-overleaf-before-editing`](.agents/memory/shared/paper-publication/sync-overleaf-before-editing.md)）。如果 Overleaf 有 `dev` 缺少的编辑，`pull` 将其放到从双方最后共同状态创建的分支；通过 PR 合并到 `dev` 后再 `push`。
 - `push` 在 Overleaf tip 之上提交 `HEAD:paper` 并非强制推送。如果 Overleaf 包含 `HEAD` 缺少的编辑，命令会拒绝执行；推送后重新 fetch 并检查文件树相等。`push --replace` 会覆盖这些编辑；只在首次发布到与 `paper/` 没有共同状态的项目，或 Human 明确允许时使用。
 - 比较的是文件树而非提交，因为 Overleaf 会重写收到的提交。
 - 实际运行 Overleaf 需要维护者的项目及凭据；单元测试以本地裸仓库代替。
@@ -137,7 +137,7 @@ bash .agents/scripts/shared/paper-publication/overleaf-sync.sh push     # HEAD:p
 
 ## 记忆与知识
 
-`.agents/memory/` 保存持久决策，`.agents/knowledge/` 保存带来源和刷新条件的时效性事实。每个目录的 `AGENTS.md` 保存规则和从 registry 生成的索引；每条记录是 `shared/` 或 `project/` 下独立的 Markdown 文件，front matter 遵循该目录的 `entry-template.md`。投稿场所记录从 `.agents/knowledge/shared/venue-template.md` 开始。范围、状态、替代关系和刷新条件放在 `.agents/content-registry.yaml`，而非 front matter。新增或移动记录时，在 registry 登记并运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`。`make check` 检查 registry、布局和索引、每条记录的 front matter 和小节，以及每个技能的 registry 条目。
+`.agents/memory/` 保存持久决策，`.agents/knowledge/` 保存带来源和刷新条件的时效性事实。每个目录的 `AGENTS.md` 保存规则和从 registry 生成的索引；每条记录是 `shared/` 或 `project/` 下独立的 Markdown 文件，front matter 遵循该目录的 `entry-template.md`。投稿场所记录从 `.agents/knowledge/shared/paper-publication/venue-template.md` 开始。范围、状态、替代关系和刷新条件放在 `.agents/content-registry.yaml`，而非 front matter。新增或移动记录时，在 registry 登记并运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`。`make check` 检查 registry、布局和索引、每条记录的 front matter 和小节，以及每个技能的 registry 条目。
 
 论文需要填写 `.agents/memory/project/` 中的初始记录（`brief.md`、`experiments.md`、`paper-interfaces.md`、`publication.md`），并为每项持久决策增加一条记录。
 
@@ -178,6 +178,12 @@ make check
 
 本模板还对上游 registry 检查器和升级器保留本地适配：按文件位置判断 Python 命名，并将历史迁移的目标按稳定 ID 重定向到当前路径。跟随后续 coding template release 时必须重新核对并验证这些差异。
 
+### 开发中：论文记录分组迁移
+
+论文相关的 memory 和 knowledge 按 `paper-foundation`、`paper-build`、`paper-references`、`paper-publication` 分类；模板维护自己的决定在 `memory/project/template-maintenance/`。通用上游记录保留原位置。`execution/` 当前只有治理入口，不承载运行状态。
+
+旧论文使用目标版本的完整升级命令目录先运行 `--check`。逐项审阅冲突，尤其是论文已删除模板保护分支说明的根 `AGENTS.md`；合并论文自己的规则后，对已解决路径使用 `--resolved`。项目自己的 brief、实验、接口和出版记录迁移时保留内容；如新位置已有文件，命令拒绝覆盖并要求人工处理。检查记录中的链接以及论文自有脚本和文档对旧路径的调用，运行开发面检查和 `make check`，然后再次升级确认无非预期变化。本段是未发布草案，发布时须将验证后的步骤写入新版本发布说明。
+
 ## 与模板的关系
 
 跟随 coding template v0.1.30；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 发布说明。后续升级上游时应重新核对这些差异。
@@ -195,7 +201,7 @@ make check
 - 本模板通过 `template-upgrade` 接收 coding template 发布，更新 `template.upstream.version`。继承文件保持原文，本模板的适配只放在末尾的 `## In this repository` 小节。
 - 论文通过 `template-upgrade` 接收本模板发布，阅读目标标签的 `RELEASE_NOTES.md`，并延续本模板编写的 `## In this repository` 小节。`bash .agents/scripts/shared/upgrade-template.sh [--check] <TARGET_TAG>` 执行流程的机械部分（步骤 5）并输出其余步骤；如果没有冲突且跨过的每个版本都标记 **Command only.**，则采用 `template-upgrade` 的 `## In this repository` 小节定义的轻量路径。
 - 论文发现的缺陷或缺口通过 `template-feedback` 反馈给本模板。本模板将继承内容中的缺陷转发给 coding template，并链接两个 Issue。
-- 从 v0.4.0 之前布局的迁移记录在 `.agents/memory/project/rebuild-on-coding-template.md`，使用过 `template-sync` 的论文的迁移步骤在 `RELEASE_NOTES.md` 的 v0.4.0 条目中。
+- 从 v0.4.0 之前布局的迁移记录在 `.agents/memory/project/template-maintenance/rebuild-on-coding-template.md`，使用过 `template-sync` 的论文的迁移步骤在 `RELEASE_NOTES.md` 的 v0.4.0 条目中。
 
 ## 操作
 

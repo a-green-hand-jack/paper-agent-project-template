@@ -8,7 +8,7 @@ Register each one in [`MANIFEST.yaml`](MANIFEST.yaml) with its source
 repository, commit, run or config identifier, checksum and regeneration
 command; the header of the manifest gives the entry format. A number reaches
 the paper only through an interface macro in `paper/macros.tex`, whose record
-in `.agents/memory/project/paper-interfaces.md` names the manifest id. A planned
+in `.agents/memory/project/paper-foundation/paper-interfaces.md` names the manifest id. A planned
 result is registered with `status: planned` and is never written as an
 observation.
 

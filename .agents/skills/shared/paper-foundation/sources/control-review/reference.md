@@ -13,9 +13,9 @@ limitation, result interpretation or stable paper interface.
 ## Minimum context
 
 - the relevant section of `PAPER.md`;
-- `.agents/memory/project/experiments.md` only for experiment or result
+- `.agents/memory/project/paper-foundation/experiments.md` only for experiment or result
   changes;
-- `.agents/memory/project/paper-interfaces.md` only for recurring semantic
+- `.agents/memory/project/paper-foundation/paper-interfaces.md` only for recurring semantic
   interfaces;
 - the active text and the decision record in `.agents/memory/project/` that
   currently governs it.

@@ -6,7 +6,7 @@
 #   make clean                      remove the build output
 # TEXBIN=<TeX Live bin directory> selects the TeX binaries when the right
 # latexmk is not first on PATH. PAGE_BUDGET is the venue's main-text page
-# limit, measured on the blind build (.agents/memory/shared/page-budget-on-blind-build.md);
+# limit, measured on the blind build (.agents/memory/shared/paper-build/page-budget-on-blind-build.md);
 # PAGE_BUDGET=none declares a release without a page limit, such as arXiv.
 PAGE_BUDGET ?=
 TEXBIN ?=

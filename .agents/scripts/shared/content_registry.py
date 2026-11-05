@@ -244,7 +244,9 @@ def generated_index(root, directory, entries):
         if (e['status'] != 'active' and not historical_body(e)) or not p.startswith(prefix) or e['kind'] in ('governance', 'symlink-index'):
             continue
         rest = p[len(prefix):].rstrip('/')
-        if '/' in rest or not rest or not (root / p).exists():
+        if not rest or not (root / p).exists():
+            continue
+        if '/' in rest and not (e['kind'] in ('memory', 'knowledge', 'document') and directory.split('/')[1] in ('memory', 'knowledge')):
             continue
         target = rest + '/SKILL.md' if e['kind'] == 'skill' else rest
         label = f" ({e['status']} history)" if historical_body(e) else ""

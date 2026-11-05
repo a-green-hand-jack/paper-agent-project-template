@@ -35,7 +35,7 @@ section keeps the old method name, the abstract reports last week's number.
 With one definition per interface, a change is one line in `paper/macros.tex`,
 every build shows the same value, and the control cue makes the change
 reviewable. The source column ties each reported value to the evidence behind
-it (see [`../shared/results-through-interface-macros.md`](../shared/results-through-interface-macros.md)).
+it (see [`../shared/results-through-interface-macros.md`](../../shared/paper-foundation/results-through-interface-macros.md)).
 
 ## Apply
 

@@ -25,11 +25,11 @@ literature search use `citation-support-review`.
 
 1. `PAPER.md`: the paper's identity, locked and bounded claims, current
    evidence state and unresolved decisions.
-2. `.agents/memory/project/experiments.md` when feedback touches results,
+2. `.agents/memory/project/paper-foundation/experiments.md` when feedback touches results,
    baselines, protocols, ablations or claim support.
-3. `.agents/memory/project/paper-interfaces.md` when feedback touches names,
+3. `.agents/memory/project/paper-foundation/paper-interfaces.md` when feedback touches names,
    terms, notation, result macros, figures, tables or claim forms.
-4. `.agents/memory/project/publication.md` when feedback affects the
+4. `.agents/memory/project/paper-publication/publication.md` when feedback affects the
    submission, a release, the Overleaf project, the venue or a camera-ready or
    revision package.
 
@@ -263,7 +263,7 @@ The dossier feeds the paper's revision work; it does not change the paper.
 - prose revisions: `writing-router`, which routes to `section-writing`;
 - names, notation and result macros: `paper-interface-maintenance`;
 - requested citations: `citation-support-review`;
-- new experiments: recorded in `.agents/memory/project/experiments.md` and
+- new experiments: recorded in `.agents/memory/project/paper-foundation/experiments.md` and
   run in the code repository; the paper only reports their results;
 - a camera-ready or revision build: `publication-planning` and
   `release-review`.

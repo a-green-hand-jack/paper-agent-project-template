@@ -56,7 +56,7 @@ Operating mode: collaborative or autonomous
 ```
 
 When the Human provides a brief (a brief file, a brief repository or the filled
-starter record `.agents/memory/project/brief.md`), it is this packet in
+starter record `.agents/memory/project/paper-foundation/brief.md`), it is this packet in
 structured form; use `paper-brief-ingest` instead of transcribing it.
 
 With no evidence, limit work to clarification, an evidence plan or an outline.
@@ -67,12 +67,12 @@ authorship, venue choice or approval state.
 ## Reading order
 
 1. Read `PAPER.md`.
-2. Read `.agents/memory/project/experiments.md` only when the task touches
+2. Read `.agents/memory/project/paper-foundation/experiments.md` only when the task touches
    experiments, evidence, result interpretation or claim support.
-3. Read `.agents/memory/project/paper-interfaces.md` and `paper/macros.tex`
+3. Read `.agents/memory/project/paper-foundation/paper-interfaces.md` and `paper/macros.tex`
    only when the task changes recurring identity, terminology, notation,
    results, claims, figures, tables or macros.
-4. Read `.agents/memory/project/publication.md` only when the task touches the
+4. Read `.agents/memory/project/paper-publication/publication.md` only when the task touches the
    venue, page budget, the `main` / `submission` / `blind` builds, Overleaf or a
    release; read a venue entry under `.agents/knowledge/shared/` only for an
    active venue.
@@ -92,7 +92,7 @@ bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status
 ```
 
 When Overleaf holds edits that this branch does not have, import them first
-(`publication-planning`, `.agents/memory/shared/sync-overleaf-before-editing.md`)
+(`publication-planning`, `.agents/memory/shared/paper-publication/sync-overleaf-before-editing.md`)
 instead of writing on top of a stale tree.
 
 ## Before a high-impact edit

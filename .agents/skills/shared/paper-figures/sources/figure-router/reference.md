@@ -65,7 +65,7 @@ manuscript and the paper's terminology.
 Every track ends with the paper build, not with the figure file. Rebuild the
 job in question (`make pdf`, `make blind` or `make submission`), render the
 pages that carry the figure into `.project/build/inspect/<job>/`, and follow
-`.agents/memory/shared/post-build-visual-inspection.md`: the figure is dense,
+`.agents/memory/shared/paper-build/post-build-visual-inspection.md`: the figure is dense,
 placed at full width, legible at fit-page-height, and its in-figure text is not
 smaller than the caption text. Reject and revise a sparse or illegible figure.
 

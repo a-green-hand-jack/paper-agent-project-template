@@ -757,7 +757,7 @@ def reconcile_lifecycle(upgrade, entries, original, target, upstream_ids, pendin
     for entry in entries:
         path = entry['path']
         values = {key: entry.get(key, []) for key in ('supersedes', 'superseded_by')}
-        state = upgrade.local(path) if entry['kind'] in ('memory', 'knowledge') else None
+        state = (pending_writes.get(path) or upgrade.local(path)) if entry['kind'] in ('memory', 'knowledge') else None
         if state and state[0] != '120000' and entry['scope'] == 'project':
             body = state[1].decode()
             split = body.split('---', 2) if body.startswith('---\n') else []
@@ -844,11 +844,85 @@ def prepare_layout(upgrade, source_text, target_text, local_text):
             continue
         if old[0]["path"] != new[0]["path"]:
             old_path,new_path=old[0]['path'],new[0]['path']
-            old_state,new_state=upgrade.local(old_path),upgrade.local(new_path)
-            if old_state and new_state and old_state!=new_state:
-                upgrade.manual_paths.update((old_path,new_path))
+            old_state = upgrade.local(old_path)
+            destination = upgrade.root / upgrade.physical(new_path)
+            new_state = upgrade.local(new_path) if destination.exists() or destination.is_symlink() else None
+            if old_state and new_state and old_state != new_state:
+                upgrade.manual_paths.update((old_path, new_path))
                 report.refused(f'{old_path} -> {new_path}: conflicting existing destination; both files held')
-            upgrade.aliases[new_path] = old_path
+            previous = upgrade.aliases.get(new_path)
+            previous_state = upgrade.local(previous) if previous else None
+            if previous and previous != old_path and previous_state and old_state:
+                upgrade.manual_paths.update((previous, old_path, new_path))
+                report.refused(f'{previous} and {old_path} both map to {new_path}; preserve both and resolve manually')
+            if not previous or old_state or not previous_state:
+                upgrade.aliases[new_path] = old_path
+    local_by_id = {entry.get('upstream_id', entry.get('id')): entry for entry in local['entries']
+                   if entry.get('upstream_id', entry.get('id'))}
+    inverse_aliases = {old: new for new, old in upgrade.aliases.items()}
+    for target_entry in target['entries']:
+        if target_entry.get('scope') != 'project':
+            continue
+        new_path = target_entry['path']
+        old_path = upgrade.aliases.get(new_path)
+        mine = local_by_id.get(target_entry['id']) or next(
+            (entry for entry in local['entries'] if entry.get('scope') == 'project' and entry['path'] == old_path), None)
+        if old_path and not mine and local.get('schema_version') == 1:
+            legacy_owner = entry_of(old_path, parse_registry(local_text))
+            if scope_in(legacy_owner) == 'project':
+                mine = {'path': old_path}
+        if not old_path or not mine or mine['path'] != old_path:
+            continue
+        source_file = upgrade.root / upgrade.physical(old_path)
+        if any(parent.is_symlink() for parent in source_file.parents if parent != upgrade.root and upgrade.root in parent.parents):
+            report.refused(f'{old_path}: project-owned source has a symbolic-link parent')
+            upgrade.catalog_blocked = True
+            continue
+        old_state = upgrade.local(old_path)
+        if old_state is None:
+            continue
+        destination = upgrade.root / upgrade.physical(new_path)
+        if any(parent.is_symlink() for parent in destination.parents if parent != upgrade.root and upgrade.root in parent.parents):
+            report.refused(f'{old_path} -> {new_path}: project-owned destination has a symbolic-link parent')
+            upgrade.catalog_blocked = True
+            continue
+        if destination.exists() or destination.is_symlink():
+            report.refused(f'{old_path} -> {new_path}: project-owned destination already exists; preserve both and resolve manually')
+            upgrade.catalog_blocked = True
+            continue
+        if old_state[0] not in ('100644', '100755'):
+            report.refused(f'{old_path}: project-owned record is not a regular file; preserve and resolve manually')
+            upgrade.catalog_blocked = True
+            continue
+        try:
+            text = old_state[1].decode('utf-8')
+            from markdown_it import MarkdownIt
+            replacements = {}
+            for token in MarkdownIt('commonmark').parse(text):
+                for child in token.children or []:
+                    if child.type not in ('link_open', 'image'):
+                        continue
+                    href = child.attrGet('href' if child.type == 'link_open' else 'src') or ''
+                    parsed = urlsplit(href)
+                    if parsed.scheme or parsed.netloc or parsed.path.startswith('/') or not parsed.path:
+                        continue
+                    linked = posixpath.normpath(posixpath.join(posixpath.dirname(old_path), unquote(parsed.path)))
+                    destination_path = inverse_aliases.get(linked, linked)
+                    relative = posixpath.relpath(destination_path, posixpath.dirname(new_path))
+                    updated = urlunsplit(('', '', quote(relative, safe='/._-~'), parsed.query, parsed.fragment))
+                    if updated != href:
+                        replacements[href] = updated
+            for old_href, new_href in replacements.items():
+                syntax = '](' + old_href
+                if text.count(syntax) != 1:
+                    raise ValueError(f'ambiguous Markdown link {old_href}')
+                text = text.replace(syntax, '](' + new_href, 1)
+            pending_writes[new_path] = (old_state[0], text.encode('utf-8'))
+            report.applied(f'{old_path} -> {new_path}: preserve project-owned record')
+        except (UnicodeDecodeError, ValueError, ImportError) as exc:
+            report.refused(f'{old_path}: cannot safely relocate project-owned record: {exc}')
+            upgrade.catalog_blocked = True
+
     # Local hook names had a defined caller in schema1; move without rewriting
     # their contents. Other flat local items follow their existing scope.
     known = {x["path"] for x in target["entries"]}
@@ -1163,6 +1237,19 @@ def main(arguments: list[str]) -> int:
                 expected = (upgrade.physical(before[identity]['path']), upgrade.physical(after[identity]['path']))
                 if local_path not in expected:
                     raise Failure(f'{identity}: locally relocated path {local_path}; automatic mapping is unsupported; reconcile the upgrade manually before advancing the version')
+        if not check and not mappings:
+            project_ids = {entry['id'] for entry in target_data.get('entries', []) if entry.get('scope') == 'project'}
+            project_moves = any(
+                len(migration.get('from', [])) == len(migration.get('to', [])) == 1
+                and migration['to'][0]['id'] in project_ids
+                and migration['from'][0]['path'] != migration['to'][0]['path']
+                and (root / migration['from'][0]['path']).is_file()
+                for migration in target_data.get('migrations', [])
+            )
+            if project_moves:
+                status = main(['--check', *sum((['--resolved', p] for p in sorted(resolved)), []), target])
+                if status:
+                    raise Failure('project record migration preflight failed; no source files or registry were changed')
         local_v2 = prepare_layout(upgrade, source_registry, target_registry, registry_text)
         upgrade.local_entries = local_v2["entries"]
     changes = [] if upgrade.catalog_blocked else layout_changes(upgrade) if schema2 else raw_changes(upgrade)

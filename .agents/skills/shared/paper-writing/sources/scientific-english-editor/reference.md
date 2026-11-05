@@ -472,7 +472,7 @@ The text above is the upstream skill, unchanged; see `PROVENANCE.md`.
 - Text that `PAPER.md` marks `locked` is not edited. Report the language
   issue and route it to `control-review`.
 - English variety: American English unless the venue record
-  (`.agents/memory/project/publication.md`) or the paper's approved writing
+  (`.agents/memory/project/paper-publication/publication.md`) or the paper's approved writing
   policy (owned by `style-alignment`) names another.
 - When the task asks for file edits rather than suggestions, apply the
   revised text to the source file and report a `file:line` ledger with the

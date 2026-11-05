@@ -3705,7 +3705,7 @@ migrations: [
       "to": [
         {
           "id": "content-3709a4fecb6b40af",
-          "path": ".agents/knowledge/shared/venue-template.md"
+          "path": ".agents/knowledge/shared/paper-publication/venue-template.md"
         }
       ],
       "action": "rename",
@@ -8932,6 +8932,438 @@ migrations: [
       "reason": "Preserve individual locked dependency files and local changes across relocation.",
       "source_commit": "8652946aae4a11216e23caf6eb917b3fd8a8dd27",
       "verification": "locked reference environment and downstream upgrade"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ebd85c6aa3a78ee3",
+          "path": ".agents/memory/shared/one-source-three-builds.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ebd85c6aa3a78ee3",
+          "path": ".agents/memory/shared/paper-build/one-source-three-builds.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-2603e306270576f1",
+          "path": ".agents/memory/shared/page-budget-on-blind-build.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-2603e306270576f1",
+          "path": ".agents/memory/shared/paper-build/page-budget-on-blind-build.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-2d06ea5d7e128611",
+          "path": ".agents/memory/shared/post-build-visual-inspection.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-2d06ea5d7e128611",
+          "path": ".agents/memory/shared/paper-build/post-build-visual-inspection.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-11e912c3abdabd0f",
+          "path": ".agents/memory/shared/tex-engine-from-texbin.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-11e912c3abdabd0f",
+          "path": ".agents/memory/shared/paper-build/tex-engine-from-texbin.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-92f166ab50d3c28b",
+          "path": ".agents/memory/shared/results-through-interface-macros.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-92f166ab50d3c28b",
+          "path": ".agents/memory/shared/paper-foundation/results-through-interface-macros.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-217f93089be3eada",
+          "path": ".agents/memory/shared/official-venue-kit-unmodified.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-217f93089be3eada",
+          "path": ".agents/memory/shared/paper-publication/official-venue-kit-unmodified.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-4f4e2f0d90f1eeda",
+          "path": ".agents/memory/shared/overleaf-paper-tree-only.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-4f4e2f0d90f1eeda",
+          "path": ".agents/memory/shared/paper-publication/overleaf-paper-tree-only.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b45e11608eed7f06",
+          "path": ".agents/memory/shared/sync-overleaf-before-editing.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b45e11608eed7f06",
+          "path": ".agents/memory/shared/paper-publication/sync-overleaf-before-editing.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-c4f6ba821f80cc3a",
+          "path": ".agents/memory/shared/reference-integrity.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-c4f6ba821f80cc3a",
+          "path": ".agents/memory/shared/paper-references/reference-integrity.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-129a141821db166c",
+          "path": ".agents/memory/project/brief.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-129a141821db166c",
+          "path": ".agents/memory/project/paper-foundation/brief.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-b529e9d91177535a",
+          "path": ".agents/memory/project/experiments.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-b529e9d91177535a",
+          "path": ".agents/memory/project/paper-foundation/experiments.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-095031c3e80db308",
+          "path": ".agents/memory/project/paper-interfaces.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-095031c3e80db308",
+          "path": ".agents/memory/project/paper-foundation/paper-interfaces.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-79d7090b2d54afda",
+          "path": ".agents/memory/project/publication.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-79d7090b2d54afda",
+          "path": ".agents/memory/project/paper-publication/publication.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-87453f37a4a46350",
+          "path": ".agents/memory/project/paper-run-boundary.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-87453f37a4a46350",
+          "path": ".agents/memory/project/template-maintenance/paper-run-boundary.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-paper-template-extension-boundary",
+          "path": ".agents/memory/project/paper-template-extension-boundary.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-paper-template-extension-boundary",
+          "path": ".agents/memory/project/template-maintenance/paper-template-extension-boundary.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-e232649022b0410b",
+          "path": ".agents/memory/project/protected-case-branches.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-e232649022b0410b",
+          "path": ".agents/memory/project/template-maintenance/protected-case-branches.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ec9e77d7482cdd80",
+          "path": ".agents/memory/project/rebuild-on-coding-template.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ec9e77d7482cdd80",
+          "path": ".agents/memory/project/template-maintenance/rebuild-on-coding-template.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-10778fcb1176db12",
+          "path": ".agents/memory/project/repository-identity.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-10778fcb1176db12",
+          "path": ".agents/memory/project/template-maintenance/repository-identity.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ef8c7935ff310bfe",
+          "path": ".agents/knowledge/shared/official-latex-templates.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ef8c7935ff310bfe",
+          "path": ".agents/knowledge/shared/paper-publication/official-latex-templates.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-64b3ad46c0508f04",
+          "path": ".agents/knowledge/shared/venue-iclr-2027.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-64b3ad46c0508f04",
+          "path": ".agents/knowledge/shared/paper-publication/venue-iclr-2027.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-230ddb81aa36d949",
+          "path": ".agents/knowledge/shared/venue-icml-2026.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-230ddb81aa36d949",
+          "path": ".agents/knowledge/shared/paper-publication/venue-icml-2026.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-92a8325c090c84d7",
+          "path": ".agents/knowledge/shared/venue-neurips-2026-poster.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-92a8325c090c84d7",
+          "path": ".agents/knowledge/shared/paper-publication/venue-neurips-2026-poster.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-3709a4fecb6b40af",
+          "path": ".agents/knowledge/shared/venue-template.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-3709a4fecb6b40af",
+          "path": ".agents/knowledge/shared/paper-publication/venue-template.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-3306a1757f23c130",
+          "path": ".agents/knowledge/shared/bibliographic-metadata-services.md"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-3306a1757f23c130",
+          "path": ".agents/knowledge/shared/paper-references/bibliographic-metadata-services.md"
+        }
+      ],
+      "action": "move",
+      "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
+      "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
+      "verification": "registry, nested record checks, project-record upgrade and repeat migration"
     }
   ]
 entries:
@@ -10487,7 +10919,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/official-venue-kit-unmodified.md
+  - path: .agents/memory/shared/paper-publication/official-venue-kit-unmodified.md
     id: content-217f93089be3eada
     kind: memory
     scope: shared
@@ -10498,7 +10930,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/one-source-three-builds.md
+  - path: .agents/memory/shared/paper-build/one-source-three-builds.md
     id: content-ebd85c6aa3a78ee3
     kind: memory
     scope: shared
@@ -10509,7 +10941,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/overleaf-paper-tree-only.md
+  - path: .agents/memory/shared/paper-publication/overleaf-paper-tree-only.md
     id: content-4f4e2f0d90f1eeda
     kind: memory
     scope: shared
@@ -10520,7 +10952,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/page-budget-on-blind-build.md
+  - path: .agents/memory/shared/paper-build/page-budget-on-blind-build.md
     id: content-2603e306270576f1
     kind: memory
     scope: shared_with_adaptation
@@ -10532,7 +10964,7 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build."
-  - path: .agents/memory/shared/post-build-visual-inspection.md
+  - path: .agents/memory/shared/paper-build/post-build-visual-inspection.md
     id: content-2d06ea5d7e128611
     kind: memory
     scope: shared_with_adaptation
@@ -10544,7 +10976,7 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
-  - path: .agents/memory/shared/reference-integrity.md
+  - path: .agents/memory/shared/paper-references/reference-integrity.md
     id: content-c4f6ba821f80cc3a
     kind: memory
     scope: shared
@@ -10555,7 +10987,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/results-through-interface-macros.md
+  - path: .agents/memory/shared/paper-foundation/results-through-interface-macros.md
     id: content-92f166ab50d3c28b
     kind: memory
     scope: shared
@@ -10577,7 +11009,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/sync-overleaf-before-editing.md
+  - path: .agents/memory/shared/paper-publication/sync-overleaf-before-editing.md
     id: content-b45e11608eed7f06
     kind: memory
     scope: shared
@@ -10588,7 +11020,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/tex-engine-from-texbin.md
+  - path: .agents/memory/shared/paper-build/tex-engine-from-texbin.md
     id: content-11e912c3abdabd0f
     kind: memory
     scope: shared
@@ -10599,7 +11031,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/brief.md
+  - path: .agents/memory/project/paper-foundation/brief.md
     id: content-129a141821db166c
     kind: memory
     scope: project
@@ -10610,7 +11042,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/experiments.md
+  - path: .agents/memory/project/paper-foundation/experiments.md
     id: content-b529e9d91177535a
     kind: memory
     scope: project
@@ -10621,7 +11053,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/paper-interfaces.md
+  - path: .agents/memory/project/paper-foundation/paper-interfaces.md
     id: content-095031c3e80db308
     kind: memory
     scope: project
@@ -10632,7 +11064,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/publication.md
+  - path: .agents/memory/project/paper-publication/publication.md
     id: content-79d7090b2d54afda
     kind: memory
     scope: project
@@ -10643,7 +11075,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/knowledge/shared/bibliographic-metadata-services.md
+  - path: .agents/knowledge/shared/paper-references/bibliographic-metadata-services.md
     id: content-3306a1757f23c130
     kind: knowledge
     scope: shared
@@ -10655,7 +11087,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "when bibtex-updater or pybtex changes version in uv.lock, or when a service changes its API, rate limits or key requirements"
-  - path: .agents/knowledge/shared/official-latex-templates.md
+  - path: .agents/knowledge/shared/paper-publication/official-latex-templates.md
     id: content-ef8c7935ff310bfe
     kind: knowledge
     scope: shared
@@ -10667,7 +11099,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "before a paper adopts one of these kits; the smoke tests that kept this list current were retired in v0.4.0"
-  - path: .agents/knowledge/shared/venue-iclr-2027.md
+  - path: .agents/knowledge/shared/paper-publication/venue-iclr-2027.md
     id: content-64b3ad46c0508f04
     kind: knowledge
     scope: shared
@@ -10679,7 +11111,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "2026-12-16 (final decisions), and when the camera-ready instructions arrive (announced for mid-February 2027)"
-  - path: .agents/knowledge/shared/venue-icml-2026.md
+  - path: .agents/knowledge/shared/paper-publication/venue-icml-2026.md
     id: content-230ddb81aa36d949
     kind: knowledge
     scope: shared
@@ -10691,7 +11123,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "when https://icml.cc/Conferences/2027/CallForPapers stops returning 404; write venue-icml-2027 then"
-  - path: .agents/knowledge/shared/venue-neurips-2026-poster.md
+  - path: .agents/knowledge/shared/paper-publication/venue-neurips-2026-poster.md
     id: content-92a8325c090c84d7
     kind: knowledge
     scope: shared
@@ -10703,7 +11135,7 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "before ordering a print, and before 2026-11-04 (the first order deadline)"
-  - path: .agents/knowledge/shared/venue-template.md
+  - path: .agents/knowledge/shared/paper-publication/venue-template.md
     id: content-3709a4fecb6b40af
     kind: document
     scope: shared
@@ -11365,7 +11797,7 @@ entries:
     updated: 2026-11-04
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/paper-run-boundary.md
+  - path: .agents/memory/project/template-maintenance/paper-run-boundary.md
     id: content-87453f37a4a46350
     kind: memory
     scope: template
@@ -11376,7 +11808,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/protected-case-branches.md
+  - path: .agents/memory/project/template-maintenance/protected-case-branches.md
     id: content-e232649022b0410b
     kind: memory
     scope: template
@@ -11387,7 +11819,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/rebuild-on-coding-template.md
+  - path: .agents/memory/project/template-maintenance/rebuild-on-coding-template.md
     id: content-ec9e77d7482cdd80
     kind: memory
     scope: template
@@ -11398,7 +11830,7 @@ entries:
     updated: 2026-10-26
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/project/repository-identity.md
+  - path: .agents/memory/project/template-maintenance/repository-identity.md
     id: content-10778fcb1176db12
     kind: memory
     scope: template
@@ -11672,7 +12104,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/memory/project/paper-template-extension-boundary.md
+  - path: .agents/memory/project/template-maintenance/paper-template-extension-boundary.md
     id: content-paper-template-extension-boundary
     kind: memory
     scope: template
