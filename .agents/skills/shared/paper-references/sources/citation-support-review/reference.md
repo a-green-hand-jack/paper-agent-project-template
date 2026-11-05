@@ -160,7 +160,7 @@ reject or leave unresolved).
 
 ## Procedure
 
-Run `python3 .agents/scripts/shared/reference_evidence.py` from the repository root.
+Run `python3 .agents/scripts/shared/paper-references/reference_evidence.py` from the repository root.
 Its global options go before the command (`--offline` stops provider calls),
 and its runs, packets and caches go to `.project/build/reference-support/`.
 
@@ -191,7 +191,7 @@ and its runs, packets and caches go to `.project/build/reference-support/`.
    `provisional`). `record` rejects stale packets (claim fingerprint or
    citation set drift); re-inventory before recording.
 6. Run the offline gates after changes:
-   `python3 .agents/scripts/shared/check_reference_integrity.py --profile draft`, and
+   `python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft`, and
    `--profile release` for Release. `make check` runs the draft profile and
    `make release-check` the release profile.
 

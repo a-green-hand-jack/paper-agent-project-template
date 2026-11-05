@@ -45,7 +45,7 @@ which budget binds and which tag holds each delivered version.
 - Human review is needed before adding a build, changing what a build shows
   (identity, acknowledgements, appendix), accepting a difference between two
   delivered versions, and creating a release tag.
-- Overleaf mirrors `paper/` on `dev`: `.agents/scripts/shared/overleaf-sync.sh`
+- Overleaf mirrors `paper/` on `dev`: `.agents/scripts/shared/paper-publication/overleaf-sync.sh`
   (`status` before the first edit of a session, `pull` onto a branch for a PR,
   `push` after a merge). Record the Overleaf project here by its remote name
   only; the project URL and the token stay in the local Git configuration and

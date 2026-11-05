@@ -71,7 +71,7 @@ configuration, without a token in its URL, and its credentials only in Git's
 credential helper; never write the Overleaf URL, project id or a token into a
 tracked file.
 
-1. Start with `bash .agents/scripts/shared/overleaf-sync.sh status`, and before the
+1. Start with `bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status`, and before the
    first edit of a session follow `sync-overleaf-before-editing.md`.
 2. When Overleaf holds edits (`overleaf-ahead` or `diverged`), run
    `overleaf-sync.sh pull`: it puts them on a `sync/overleaf-<commit>` branch

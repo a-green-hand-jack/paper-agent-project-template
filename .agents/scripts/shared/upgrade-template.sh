@@ -565,6 +565,8 @@ class Upgrade:
                 return self.conflict(path, f"{path}: changed here and in {self.target}"
                                            f"{self.propose(path, merged, clean)}")
             if merged == here:
+                if path in self.aliases and self.local(self.aliases[path]) is not None:
+                    self.write(path, new_mode, merged.encode())
                 report.applied(f"{path}: already has the change of {self.target}")
             else:
                 self.write(path, new_mode, merged.encode())
@@ -581,12 +583,16 @@ class Upgrade:
             self.write(path, new_mode, (target[0] + ("\n" + section if section else "")).encode())
             report.applied(f"{path}: replaced above {SECTION}")
         elif mine[0] == target[0]:
+            if path in self.aliases and self.local(self.aliases[path]) is not None:
+                self.write(path, new_mode, here.encode())
             report.applied(f"{path}: already as in {self.target} above {SECTION}")
         else:
             merged, clean = self.merge(mine[0], source[0], target[0])
             if not (clean and merged == mine[0]):
                 return self.conflict(path, f"{path}: edited above {SECTION} (check 1)"
                                            f"{self.propose(path, merged + chr(10) + mine[1], clean)}")
+            if path in self.aliases and self.local(self.aliases[path]) is not None:
+                self.write(path, new_mode, here.encode())
             report.applied(f"{path}: already has the change of {self.target} above {SECTION}")
         reasons = reconcile(source, target, mine[1]) if mine[1] != target[1] else []
         if reasons:
@@ -979,6 +985,10 @@ def prepare_layout(upgrade, source_text, target_text, local_text):
             if old_id in upstream_ids:
                 destination.setdefault('upstream_id', old_id)
                 destination['id'] = upstream_ids[old_id]
+            current_entry = next((entry for entry in entries if entry['id'] == destination['id']), None)
+            if current_entry and not catalog.rank(destination['path'], current_entry['path']):
+                destination.setdefault('upstream_path', destination['path'])
+                destination['path'] = current_entry['path']
             local_template = local_template_entries.get(destination['id'])
             upstream_template = next((entry for entry in target['entries']
                                       if entry['id'] == old_id and entry['scope'] == 'template'), None)

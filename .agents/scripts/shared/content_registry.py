@@ -392,7 +392,7 @@ def validate(root, data):
             if name == '.agents' or any(fnmatch.fnmatchcase(name, x.get('pattern','')) and x.get('reason') for x in exceptions):
                 continue
             stem = name.rsplit('.',1)[0] if '.' in name else name
-            python_name=name.endswith('.py') or (root/Path(*parts[:position+1])/'__init__.py').is_file() or (entry.get('language')=='python' and entry['kind']=='code')
+            python_name=name.endswith('.py') or (root/Path(*parts[:position+1])/'__init__.py').is_file() or (position == len(parts) - 1 and entry.get('language')=='python' and entry['kind']=='code')
             pattern = r'[a-z][a-z0-9_]*' if python_name else r'[a-z0-9]+(?:-[a-z0-9]+)*'
             if not re.fullmatch(pattern, stem):
                 fail(f'naming violation: {p} ({name}); register a reasoned exception')

@@ -169,7 +169,7 @@ Human before changing a locked item, approving a release or submitting.
 - Keep negative or inconclusive evidence visible when it constrains a central
   claim.
 - `paper/` depends on nothing outside `paper/`.
-- Overleaf receives only `HEAD:paper`, through `.agents/scripts/shared/overleaf-sync.sh`,
+- Overleaf receives only `HEAD:paper`, through `.agents/scripts/shared/paper-publication/overleaf-sync.sh`,
   never the repository root and never a forced push
   ([`overleaf-paper-tree-only`](.agents/memory/shared/overleaf-paper-tree-only.md)).
 - Build output, screenshots and logs go to `.project/`, never into `paper/` or

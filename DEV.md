@@ -77,7 +77,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 - 带 `latexmk`、`pdflatex`、`bibtex` 及论文和投稿套件所需宏包的 TeX Live；
 - 用于 PDF 检查的 `pdftotext` 和 `pdfinfo`（poppler-utils）；
 - 用于脚本的 Python 3、PyYAML 和 markdown-it-py；开发面检查以隔离模式运行，依赖须在该模式下可用；
-- 可选的 `uv`，供使用 `.agents/scripts/shared/reference-integrity/` 中锁定依赖的在线参考文献审计使用。
+- 可选的 `uv`，供使用 `.agents/scripts/shared/paper-references/reference-integrity/` 中锁定依赖的在线参考文献审计使用。
 
 `bash .agents/scripts/shared/setup-worktree.sh` 会报告缺失项。
 
@@ -106,7 +106,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 | 向 `main` 的 PR、推送到 `main`，以及 `make release-check` | 所有条目的完整元数据审计（CI 还运行更正审计） | 必须通过 |
 | 每周及 `workflow_dispatch`（`references-full` job） | 两项完整审计并行运行，缓存跨运行保留 | 报告结果；不阻塞合并 |
 
-已验证条目的指纹通过 `python3 .agents/scripts/shared/check_reference_metadata.py --record` 记录在台账（`verification.bibtex_fingerprint`）。采用分级机制后，对完整范围运行一次并提交台账。provider 故障、限流或机器人验证属于基础设施结果，应列出因此未完成的条目，不能算作条目失败。规则见 [`reference-integrity`](.agents/memory/shared/reference-integrity.md)，服务、密钥和缓存见 [`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md)。
+已验证条目的指纹通过 `python3 .agents/scripts/shared/paper-references/check_reference_metadata.py --record` 记录在台账（`verification.bibtex_fingerprint`）。采用分级机制后，对完整范围运行一次并提交台账。provider 故障、限流或机器人验证属于基础设施结果，应列出因此未完成的条目，不能算作条目失败。规则见 [`reference-integrity`](.agents/memory/shared/reference-integrity.md)，服务、密钥和缓存见 [`bibliographic-metadata-services`](.agents/knowledge/shared/bibliographic-metadata-services.md)。
 
 本地审计优先从环境读取 `BIBTEX_CHECK_MAILTO`、`OPENALEX_API_KEY` 和 `S2_API_KEY`。首选文件来源是设备的共享凭据文件：将规范 checkout 的 `.project/credentials/.env` 链接到该文件，每个 worktree 再通过 `setup-worktree.sh` 创建的 `.project/credentials` 链接访问。只导出这三个键，跳过其他键。仅含这三个键的项目专用根目录 `.env` 仍是后备来源，且优先于共享文件。
 
@@ -121,9 +121,9 @@ git remote add overleaf https://git.overleaf.com/<project-id>
 分支从 remote 的 `HEAD` 查找；`--branch`、`OVERLEAF_BRANCH` 或 `git config remote.overleaf.overleafBranch` 可覆盖。然后：
 
 ```bash
-bash .agents/scripts/shared/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
-bash .agents/scripts/shared/overleaf-sync.sh pull     # Overleaf edits -> branch sync/overleaf-<commit>, for a PR into dev
-bash .agents/scripts/shared/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
+bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status   # in-sync, overleaf-behind, overleaf-ahead, diverged or unrelated
+bash .agents/scripts/shared/paper-publication/overleaf-sync.sh pull     # Overleaf edits -> branch sync/overleaf-<commit>, for a PR into dev
+bash .agents/scripts/shared/paper-publication/overleaf-sync.sh push     # HEAD:paper -> Overleaf, as a fast-forward
 ```
 
 - 编辑前运行 `status`（[`sync-overleaf-before-editing`](.agents/memory/shared/sync-overleaf-before-editing.md)）。如果 Overleaf 有 `dev` 缺少的编辑，`pull` 将其放到从双方最后共同状态创建的分支；通过 PR 合并到 `dev` 后再 `push`。
@@ -169,6 +169,14 @@ make check
 4. 在 `RELEASE_NOTES.md` 中添加 `## <tag>` 条目，记录发布内容、所用构建及检查结果。
 
 本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit` 和 `make check`；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。`make check` 运行 `.agents/tests/project/test_adoption_states.py`，从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
+
+## 开发中：v0.4.7 之后的脚本迁移草案
+
+本段记录 #197 的未发布变更，不是发布版本。论文构建检查、引用工具和投稿工具分别位于 `.agents/scripts/shared/paper-build/`、`.agents/scripts/shared/paper-references/` 和 `.agents/scripts/shared/paper-publication/`；对应的共享测试按能力分组。`make check` 和 `make release-check` 仍是公开入口。
+
+旧版论文升级时，先用目标版本的完整 `.agents/scripts/shared/` 命令目录运行 `upgrade-template.sh --check <目标标签>`，审查迁移与冲突，再按结果应用。逐项更新论文自有脚本、CI、文档或外部自动化对旧路径的调用；旧路径不保留兼容包装。不要覆盖引用台账、范例或本地适配。运行 `make check`、开发面及 Shell 检查，重复升级并确认无非预期变化。目标版本发布时将经过验证的步骤写入该版本的发布说明，保留历史发布条目。
+
+本模板还对上游 registry 检查器和升级器保留本地适配：按文件位置判断 Python 命名，并将历史迁移的目标按稳定 ID 重定向到当前路径。跟随后续 coding template release 时必须重新核对并验证这些差异。
 
 ## 与模板的关系
 

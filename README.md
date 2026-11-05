@@ -69,7 +69,7 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 
 发布（投稿版本、arXiv 版本或终稿版本）通过从 `dev` 到 `main` 的 PR 完成：通过 `make release-check` 后，在 `main` 上创建例如 `submit-<venue>-<yyyy>`、`arxiv-v1` 或 `camera-ready` 的标签，并记录到 `RELEASE_NOTES.md`。
 
-Overleaf 通过 `.agents/scripts/shared/overleaf-sync.sh` 镜像 `dev` 上的 `paper/`：`status` 比较两边，`push` 将 `HEAD:paper` 快进推送到 Overleaf，`pull` 将 Overleaf 编辑拉到 `sync/overleaf-*` 分支供 PR 使用。两个方向都会检查文件树相等，仓库根目录不会发送到 Overleaf。具体说明见 `DEV.md`。
+Overleaf 通过 `.agents/scripts/shared/paper-publication/overleaf-sync.sh` 镜像 `dev` 上的 `paper/`：`status` 比较两边，`push` 将 `HEAD:paper` 快进推送到 Overleaf，`pull` 将 Overleaf 编辑拉到 `sync/overleaf-*` 分支供 PR 使用。两个方向都会检查文件树相等，仓库根目录不会发送到 Overleaf。具体说明见 `DEV.md`。
 
 ## 为什么使用这个模板
 

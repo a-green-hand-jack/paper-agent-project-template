@@ -11,8 +11,8 @@ try:
 except ImportError:
     pybtex = None
 
-ROOT = Path(__file__).resolve().parents[3]
-HELPER = ROOT / ".agents/scripts/shared/validate_bibtex_with_pybtex.py"
+ROOT = Path(__file__).resolve().parents[4]
+HELPER = ROOT / ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py"
 sys.path.insert(0, str(HELPER.parent))
 
 

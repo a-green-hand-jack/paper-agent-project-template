@@ -90,7 +90,7 @@ def main() -> int:
     summary = output / "run.json"
 
     try:
-        integrity = load_module(root / ".agents/scripts/shared/check_reference_integrity.py", "paper_reference_integrity")
+        integrity = load_module(root / ".agents/scripts/shared/paper-references/check_reference_integrity.py", "paper_reference_integrity")
         policy = integrity.enforcement_policy(root)
     except Exception as exc:
         write_summary(summary, outcome="infrastructure_error", detail=str(exc))
@@ -135,19 +135,19 @@ def main() -> int:
     keys = set(selected)
 
     try:
-        env_helper = load_module(root / ".agents/scripts/shared/reference_env.py", "paper_reference_env")
+        env_helper = load_module(root / ".agents/scripts/shared/paper-references/reference_env.py", "paper_reference_env")
         env_helper.load_reference_env(root)
-        bounded = load_module(root / ".agents/scripts/shared/bounded_run.py", "paper_bounded_run")
+        bounded = load_module(root / ".agents/scripts/shared/paper-references/bounded_run.py", "paper_bounded_run")
     except Exception as exc:
         write_summary(summary, outcome="infrastructure_error", detail=str(exc), canonical_sha256=original_hash)
         print(f"ERROR reference correction audit could not load .env: {exc}")
         return 2
 
     uv = shutil.which(args.uv)
-    dependency_root = root / ".agents/scripts/shared/reference-integrity"
+    dependency_root = root / ".agents/scripts/shared/paper-references/reference-integrity"
     lock = dependency_root / "uv.lock"
-    format_helper = root / ".agents/scripts/shared/validate_bibtex_with_pybtex.py"
-    correction_helper = root / ".agents/scripts/shared/validate_bibtex_correction.py"
+    format_helper = root / ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py"
+    correction_helper = root / ".agents/scripts/shared/paper-references/validate_bibtex_correction.py"
     if uv is None or not lock.is_file() or not format_helper.is_file() or not correction_helper.is_file():
         detail = "missing uv, committed dependency lock, or correction validation helper"
         write_summary(summary, outcome="infrastructure_error", detail=detail, canonical_sha256=original_hash)

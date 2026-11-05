@@ -7,9 +7,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-CLI = ROOT / ".agents/scripts/shared/reference_evidence.py"
-CHECKER = ROOT / ".agents/scripts/shared/check_reference_integrity.py"
+ROOT = Path(__file__).resolve().parents[4]
+CLI = ROOT / ".agents/scripts/shared/paper-references/reference_evidence.py"
+CHECKER = ROOT / ".agents/scripts/shared/paper-references/check_reference_integrity.py"
 sys.path.insert(0, str(CLI.parent))
 
 import citation_occurrences as scanner  # noqa: E402

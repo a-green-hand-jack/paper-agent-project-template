@@ -88,7 +88,7 @@ authorship, venue choice or approval state.
 If the paper has an Overleaf remote, check it before editing paper sources:
 
 ```bash
-bash .agents/scripts/shared/overleaf-sync.sh status
+bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status
 ```
 
 When Overleaf holds edits that this branch does not have, import them first

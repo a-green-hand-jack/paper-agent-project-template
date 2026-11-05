@@ -23,9 +23,9 @@ Run from the repository root (rules in
 
 ```bash
 python3 .agents/scripts/shared/check_bibtex_format.py
-python3 .agents/scripts/shared/check_reference_corrections.py
-python3 .agents/scripts/shared/check_reference_metadata.py
-python3 .agents/scripts/shared/check_reference_integrity.py --profile draft
+python3 .agents/scripts/shared/paper-references/check_reference_corrections.py
+python3 .agents/scripts/shared/paper-references/check_reference_metadata.py
+python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft
 ```
 
 Their reports go to `.project/build/reference-integrity/`, and each run
@@ -56,7 +56,7 @@ replaces its own report.
 9. Never carry claim-evidence locators across a version change without checking
    the actual target document.
 10. Run the four audits again, then
-    `python3 .agents/scripts/shared/check_reference_integrity.py --profile release`,
+    `python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile release`,
     `make check` and `make submission`. Compare the results with the baseline,
     and report a failure that predates the repair as pre-existing.
 

@@ -12,8 +12,8 @@ try:
 except ImportError:
     bibtexparser = None
 
-ROOT = Path(__file__).resolve().parents[3]
-HELPER = ROOT / ".agents/scripts/shared/validate_bibtex_correction.py"
+ROOT = Path(__file__).resolve().parents[4]
+HELPER = ROOT / ".agents/scripts/shared/paper-references/validate_bibtex_correction.py"
 sys.path.insert(0, str(HELPER.parent))
 
 

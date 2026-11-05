@@ -39,7 +39,7 @@ it (see [`../shared/results-through-interface-macros.md`](../shared/results-thro
 
 ## Apply
 
-- `make check` runs `.agents/scripts/shared/check_paper_interfaces.py`. It fails when
+- `make check` runs `.agents/scripts/shared/paper-build/check_paper_interfaces.py`. It fails when
   a marked interface has no definition or no row here, when an interface other
   than the three authoring helpers is used nowhere in `paper/`, when a macro
   without arguments is called without `{}` (TeX would swallow the following

@@ -12,10 +12,10 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path(__file__).resolve().parents[3]
-CHECKER = ROOT / ".agents/scripts/shared/check_reference_integrity.py"
-METADATA = ROOT / ".agents/scripts/shared/check_reference_metadata.py"
-FORMAT = ROOT / ".agents/scripts/shared/check_bibtex_format.py"
+ROOT = Path(__file__).resolve().parents[4]
+CHECKER = ROOT / ".agents/scripts/shared/paper-references/check_reference_integrity.py"
+METADATA = ROOT / ".agents/scripts/shared/paper-references/check_reference_metadata.py"
+FORMAT = ROOT / ".agents/scripts/shared/paper-references/check_bibtex_format.py"
 
 
 def write(path: Path, text: str) -> None:
@@ -443,10 +443,10 @@ class ReferenceMetadataTests(unittest.TestCase):
         )
 
     def add_lock(self, root: Path) -> None:
-        write(root / ".agents/scripts/shared/reference-integrity/uv.lock", "fixture lock\n")
-        write(root / ".agents/scripts/shared/check_reference_integrity.py", CHECKER.read_text(encoding="utf-8"))
-        write(root / ".agents/scripts/shared/reference_env.py", (ROOT / ".agents/scripts/shared/reference_env.py").read_text(encoding="utf-8"))
-        write(root / ".agents/scripts/shared/bounded_run.py", (ROOT / ".agents/scripts/shared/bounded_run.py").read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/shared/paper-references/reference-integrity/uv.lock", "fixture lock\n")
+        write(root / ".agents/scripts/shared/paper-references/check_reference_integrity.py", CHECKER.read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/shared/paper-references/reference_env.py", (ROOT / ".agents/scripts/shared/paper-references/reference_env.py").read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/shared/paper-references/bounded_run.py", (ROOT / ".agents/scripts/shared/paper-references/bounded_run.py").read_text(encoding="utf-8"))
 
     def test_policy_absent_skips_without_uv(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -1280,9 +1280,9 @@ class BibtexFormatTests(unittest.TestCase):
         )
 
     def add_tools(self, root: Path) -> None:
-        write(root / ".agents/scripts/shared/reference-integrity/uv.lock", "fixture lock\n")
-        write(root / ".agents/scripts/shared/check_reference_integrity.py", CHECKER.read_text(encoding="utf-8"))
-        write(root / ".agents/scripts/shared/validate_bibtex_with_pybtex.py", "# fixture helper\n")
+        write(root / ".agents/scripts/shared/paper-references/reference-integrity/uv.lock", "fixture lock\n")
+        write(root / ".agents/scripts/shared/paper-references/check_reference_integrity.py", CHECKER.read_text(encoding="utf-8"))
+        write(root / ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py", "# fixture helper\n")
 
     def test_empty_bibliography_skips_without_uv(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

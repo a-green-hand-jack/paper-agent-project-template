@@ -6,8 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-TOOL = ROOT / ".agents/scripts/shared/check_paper_interfaces.py"
+ROOT = Path(__file__).resolve().parents[4]
+TOOL = ROOT / ".agents/scripts/shared/paper-build/check_paper_interfaces.py"
 DOCUMENTATION = ".agents/memory/project/paper-interfaces.md"
 
 

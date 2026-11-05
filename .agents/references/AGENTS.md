@@ -21,7 +21,7 @@ Two uses of external papers have distinct authority:
 
 The rules are in
 [`../memory/shared/reference-integrity.md`](../memory/shared/reference-integrity.md).
-Change the ledger through `.agents/scripts/shared/reference_evidence.py` and the
+Change the ledger through `.agents/scripts/shared/paper-references/reference_evidence.py` and the
 `paper-references` skill, never by copying an
 empty ledger over a populated one. `check_reference_metadata.py --record`
 writes only `verification.bibtex_fingerprint`, the fingerprint of the entry it

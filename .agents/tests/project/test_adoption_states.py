@@ -18,7 +18,7 @@ from typing import Callable
 
 import yaml
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "shared"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "shared/paper-references"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts/shared"))
 import content_registry  # noqa: E402
 import test_reference_integrity as reference_tests  # noqa: E402  # its fixtures, without collecting its tests here
@@ -168,7 +168,7 @@ def bibliography_with_migrated_ledger(root: Path) -> None:
         reference_tests.ledger([reference_tests.reference(key, status="unverified", review="pending") for key in keys],
                                usages=usages),
         encoding="utf-8")
-    subprocess.run([sys.executable, ".agents/scripts/shared/reference_evidence.py", "migrate"],
+    subprocess.run([sys.executable, ".agents/scripts/shared/paper-references/reference_evidence.py", "migrate"],
                    cwd=root, check=True, capture_output=True, text=True)
 
 
@@ -439,7 +439,7 @@ class OnlineAuditStateTests(unittest.TestCase):
 
     def audit(self, root: Path, *arguments: str, seconds: str = "0") -> tuple[int, dict[str, object]]:
         result = subprocess.run(
-            [sys.executable, ".agents/scripts/shared/check_reference_metadata.py", *arguments],
+            [sys.executable, ".agents/scripts/shared/paper-references/check_reference_metadata.py", *arguments],
             cwd=root, env={**offline_environment(root.parent / "bin"), "FAKE_CHECKER_SECONDS": seconds},
             capture_output=True, text=True, check=False,
         )

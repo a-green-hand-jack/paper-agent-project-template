@@ -10,12 +10,12 @@ import unittest
 from unittest import mock
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-CORRECTIONS = ROOT / ".agents/scripts/shared/check_reference_corrections.py"
-INTEGRITY = ROOT / ".agents/scripts/shared/check_reference_integrity.py"
-ENV_HELPER = ROOT / ".agents/scripts/shared/reference_env.py"
-FORMAT_HELPER = ROOT / ".agents/scripts/shared/validate_bibtex_with_pybtex.py"
-CORRECTION_HELPER = ROOT / ".agents/scripts/shared/validate_bibtex_correction.py"
+ROOT = Path(__file__).resolve().parents[4]
+CORRECTIONS = ROOT / ".agents/scripts/shared/paper-references/check_reference_corrections.py"
+INTEGRITY = ROOT / ".agents/scripts/shared/paper-references/check_reference_integrity.py"
+ENV_HELPER = ROOT / ".agents/scripts/shared/paper-references/reference_env.py"
+FORMAT_HELPER = ROOT / ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py"
+CORRECTION_HELPER = ROOT / ".agents/scripts/shared/paper-references/validate_bibtex_correction.py"
 REFERENCE_KEYS = ("BIBTEX_CHECK_MAILTO", "OPENALEX_API_KEY", "S2_API_KEY")
 # Synthetic lines of a device's shared credential file: other consumers' keys around the allowlisted ones.
 SHARED_FILE = (
@@ -35,12 +35,12 @@ def write(path: Path, text: str) -> None:
 
 
 def prepare(root: Path, bib: str = "") -> None:
-    write(root / ".agents/scripts/shared/check_reference_integrity.py", INTEGRITY.read_text(encoding="utf-8"))
-    write(root / ".agents/scripts/shared/reference_env.py", ENV_HELPER.read_text(encoding="utf-8"))
-    write(root / ".agents/scripts/shared/bounded_run.py", (ROOT / ".agents/scripts/shared/bounded_run.py").read_text(encoding="utf-8"))
-    write(root / ".agents/scripts/shared/validate_bibtex_with_pybtex.py", FORMAT_HELPER.read_text(encoding="utf-8"))
-    write(root / ".agents/scripts/shared/validate_bibtex_correction.py", CORRECTION_HELPER.read_text(encoding="utf-8"))
-    write(root / ".agents/scripts/shared/reference-integrity/uv.lock", "fixture lock\n")
+    write(root / ".agents/scripts/shared/paper-references/check_reference_integrity.py", INTEGRITY.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/shared/paper-references/reference_env.py", ENV_HELPER.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/shared/paper-references/bounded_run.py", (ROOT / ".agents/scripts/shared/paper-references/bounded_run.py").read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py", FORMAT_HELPER.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/shared/paper-references/validate_bibtex_correction.py", CORRECTION_HELPER.read_text(encoding="utf-8"))
+    write(root / ".agents/scripts/shared/paper-references/reference-integrity/uv.lock", "fixture lock\n")
     write(
         root / ".agents/references/policy.json",
         """{"schema_version":"paper-reference-integrity-policy-v1","enforcement":"enforced","ledger":".agents/references/ledger.json","bibliography":"paper/refs.bib"}

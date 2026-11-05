@@ -35,7 +35,7 @@ approve.
 
 ## Apply
 
-- Start a paper session with `bash .agents/scripts/shared/overleaf-sync.sh status`; act
+- Start a paper session with `bash .agents/scripts/shared/paper-publication/overleaf-sync.sh status`; act
   on its `STATE` line.
 - Keep Overleaf's compiler and TeX Live version matched to the local build, so
   that both sides typeset the same pages.

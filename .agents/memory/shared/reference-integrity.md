@@ -72,16 +72,16 @@ looking like a fabricated citation.
 ## Apply
 
 - `make check` runs the offline gate:
-  `python3 .agents/scripts/shared/check_reference_integrity.py --profile draft`;
+  `python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft`;
   `make release-check` runs `--profile release` and the full online metadata
   audit of every entry, which needs `uv` and the network.
-- Inventory and record support with `.agents/scripts/shared/reference_evidence.py`
+- Inventory and record support with `.agents/scripts/shared/paper-references/reference_evidence.py`
   (`inventory`, `packet`, `record`; `migrate` upgrades a v1 ledger), following
   the `paper-references` skill. Occurrence-level review is new in v2,
   so every occurrence `migrate` writes starts `pending` and needs a fresh
   Human confirmation before `make release-check`.
 - Optional checks with the locked dependencies in
-  `.agents/scripts/shared/reference-integrity/` (needs `uv`):
+  `.agents/scripts/shared/paper-references/reference-integrity/` (needs `uv`):
   `check_bibtex_format.py` (classic BibTeX syntax and required fields),
   `check_reference_metadata.py` (online identity audit, non-generative) and
   `check_reference_corrections.py` (correction candidates). CI runs them
