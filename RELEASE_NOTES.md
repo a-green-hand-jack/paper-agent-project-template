@@ -3,6 +3,37 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.11 — 2026-11-11
+
+本版解决三个下游反馈：brief ingest 写出的记录 front matter、可选 CLI 的项目内环境，以及按作者区分的批注命令（[#201](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/201)、[#202](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/202)、[#203](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/203)）。`paper/` 仍自包含，`make check` 与论文构建不调用这些 CLI。
+
+- brief ingest 只写 `name`、`date`、`source`、`applies_to`，并保留已有记录的来源；重新 ingest 旧记录会删除 `scope`、`status`、`supersedes`、`superseded_by`，使 starter brief 再次通过开发面检查。
+- 可选 CLI 通过 `.agents/scripts/shared/tool-env.sh` 在 `.project/tools/<tool>/` 创建和运行；`tool-environments.json` 固定公开来源与完整提交，数据和配置留在当前工作区。未安装时明确失败，不回退用户级命令。
+- 新增 `paper/style/author-comments.sty` 的 `\AuthorComment` 和 `\agent`；批注只在 `main` 显示，`submission` 和 `blind` 自动去除，`make release-check` 拒绝遗留调用。每篇论文按作者在该样式文件中添加颜色和命令。
+- `AGENTS.md`、`DEV.md` 和 `PAPER.md` 分别记录可选 CLI 入口、环境用法和批注约定。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文在表中步骤失败，原因见 v0.4.2。模板中的占位内容不是投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.10
+
+1. 保存现有改动、项目记录、引用台账及范例。按 `template-upgrade` 的“In this repository”获取本发布版完整的 `.agents/scripts/shared/` 命令目录，先运行 `upgrade-template.sh --check v0.4.11`，审查计划和冲突。
+2. 逐项合并冲突。论文修改过的根 `AGENTS.md`、`paper-check.yml` 和 `paper/main.tex` 保留论文自己的设置；shared 的新文件会由升级复制。只对已审阅解决的路径使用 `--resolved <路径>`。
+3. 清理 brief 记录：把当前 `.agents/memory/project/paper-foundation/brief.md` 作为 `--brief` 重新运行 `paper_brief.py ingest`，会保留来源并删除旧版写入的 `scope`、`status`、`supersedes`、`superseded_by`；也可以手工删除这四个字段。
+4. 可选 CLI：运行 `bash .agents/scripts/shared/tool-env.sh install benchmark-radar`，之后用 `tool-env.sh run benchmark-radar ...`；不要再使用用户级安装。数据和配置进入该 worktree 的 `.project/tools/benchmark-radar/`。
+5. 作者批注：确认 `paper/main.tex` 加载 `style/author-comments`；在 `paper/style/author-comments.sty` 中按作者添加颜色和命令。`\PaperNote` 保持不变。
+6. 运行 `make check`、`bash .agents/scripts/shared/check-development.sh` 和 `bash .agents/scripts/shared/check-shells.sh`，重复升级确认无非预期变化，构建并查看受影响的论文页面。
+
+本版使用真实 CLI 运行、合成下游升级和论文构建验证；不代替真实论文的科学内容审查，也未连接远端 Overleaf。
+
 ## v0.4.10 — 2026-11-11
 
 本版修复 CI 在 GitHub-hosted runner 的瞬时 DNS/网络故障下耗尽整个 30 分钟 job 超时的问题（[#205](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/205)）。在 v0.4.9 发布中，`check` 和 `paper-only` 卡在 TeX 安装，安装日志有 118 次 `Temporary failure resolving`；代码和论文没有失败。`paper/`、构建入口、必需检查名称和发布内容不变。
