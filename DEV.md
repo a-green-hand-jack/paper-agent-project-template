@@ -170,6 +170,8 @@ make check
 
 本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit` 和 `make check`；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。`make check` 运行 `.agents/tests/project/test_adoption_states.py`，从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
 
+CI 的 Ubuntu 镜像 DNS 预检和 TeX 安装步骤各有独立超时，apt 也设置连接超时和有限重试；runner 的瞬时 DNS/网络故障会在数分钟内显式失败，而不是耗尽 job 超时。遇到该失败时读取安装日志并重跑 failed jobs，不使用管理员权限绕过必需检查。
+
 ## 与模板的关系
 
 跟随 coding template v0.1.30；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 和 v0.4.8 发布说明。后续升级上游时应重新核对这些差异。

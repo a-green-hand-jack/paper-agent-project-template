@@ -28,10 +28,30 @@ jobs:
           # test_adoption_states.py upgrades a paper from the v0.4.1 tag.
           fetch-depth: 0
 
-      - name: Install TeX, PDF text tools and development checker dependencies
+      - name: Check the Ubuntu package mirrors resolve
+        timeout-minutes: 3
         run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          set -euo pipefail
+          for host in archive.ubuntu.com security.ubuntu.com azure.archive.ubuntu.com; do
+            resolved=false
+            for attempt in 1 2 3; do
+              if timeout 10 getent hosts "$host" >/dev/null; then
+                resolved=true
+                break
+              fi
+              sleep 5
+            done
+            if [ "$resolved" != true ]; then
+              echo "::error::cannot resolve $host; the runner's network/DNS failed, rerun the failed jobs"
+              exit 1
+            fi
+          done
+
+      - name: Install TeX, PDF text tools and development checker dependencies
+        timeout-minutes: 18
+        run: |
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y --no-install-recommends \
             cm-super \
             latexmk \
             poppler-utils \
@@ -93,10 +113,30 @@ jobs:
           test ! -e "$RUNNER_TEMP/paper-only/.agents"
           test ! -e "$RUNNER_TEMP/paper-only/.project"
 
-      - name: Install TeX
+      - name: Check the Ubuntu package mirrors resolve
+        timeout-minutes: 3
         run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          set -euo pipefail
+          for host in archive.ubuntu.com security.ubuntu.com azure.archive.ubuntu.com; do
+            resolved=false
+            for attempt in 1 2 3; do
+              if timeout 10 getent hosts "$host" >/dev/null; then
+                resolved=true
+                break
+              fi
+              sleep 5
+            done
+            if [ "$resolved" != true ]; then
+              echo "::error::cannot resolve $host; the runner's network/DNS failed, rerun the failed jobs"
+              exit 1
+            fi
+          done
+
+      - name: Install TeX
+        timeout-minutes: 18
+        run: |
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y --no-install-recommends \
             cm-super \
             latexmk \
             texlive-latex-base \
