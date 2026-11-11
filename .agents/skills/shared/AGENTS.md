@@ -27,6 +27,7 @@ concrete project release examples outside shared packages.
 - [.gitattributes](.gitattributes) — Whitespace exceptions for vendored files that keep upstream bytes git diff --check would report; extend it when vendoring such a file.
 - [agent-communication](agent-communication/SKILL.md) — Resolve native addresses, reconcile backlog and record distinct delivery/receipt outcomes.
 - [asset-lifecycle](asset-lifecycle/SKILL.md) — Adapt asset classes, storage roots and migration evidence.
+- [benchmark-radar](benchmark-radar/SKILL.md) — Benchmark discovery, records and recent Radar evidence; vendored MIT from ktwu01/benchmark-radar@21f3018, PROVENANCE.md.
 - [cli-first-operations](cli-first-operations/SKILL.md) — Use the project's public CLI instead of ad-hoc wrappers.
 - [credential-setup](credential-setup/SKILL.md) — Set up declared project credentials without copying logins or exposing values.
 - [development-writing](development-writing/SKILL.md) — Write Issues, PRs, comments and commits around reader decisions and traceable evidence.
@@ -69,3 +70,8 @@ Never edit upstream text in place. When an upstream file carries whitespace
 that `git diff --check` reports, list that file in `.gitattributes` here
 instead of changing its bytes. Upstream file names that break the naming rules
 keep them through reasoned `policy.naming_exceptions` in the registry.
+
+A third-party skill a project installs itself belongs in `project/` as its own
+package with its own `PROVENANCE.md`, not directly under `.agents/skills/`; an
+installer's root lock file, such as `skills-lock.json`, is local installation
+state and stays out of Git.

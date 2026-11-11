@@ -3,6 +3,34 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.9 — 2026-11-11
+
+本版把 Benchmark Radar 作为受治理的共享技能加入模板，使“找 benchmark、查看记录、读取最近的 Radar 证据”有唯一的位置、来源、许可和任务路由（[#199](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/199)）。论文正文、构建入口和 Overleaf 投影不变。
+
+- 新增 `.agents/skills/shared/benchmark-radar/`，从 `ktwu01/benchmark-radar@21f3018c460cda0eec74f303569524288dd22bbc` 引入 `SKILL.md` 与 `agents/openai.yaml`（逐字节不变），附上游 MIT `LICENSE` 和逐文件 SHA-256 的 `PROVENANCE.md`。CLI 仍由技能按需从官方仓库安装；模板没有新增 Python 依赖、安装器或 CI 作业。
+- registry 登记该 shared 技能，重新生成技能索引，并在根 `AGENTS.md` 加入 benchmark discovery 的任务路由。shared 技能治理说明同时写明：项目自行安装的第三方技能放在 `project/` 并带自己的 `PROVENANCE.md`，安装器在仓库根生成的锁文件属于本地安装状态。
+- `paper/` 仍自包含；`make check` 和论文构建不调用该 CLI，离线构建不受影响。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文在表中步骤失败，原因见 v0.4.2。模板中的占位内容不是投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.8
+
+1. 保存现有改动、项目记录、引用台账及范例。按 `template-upgrade` 的“In this repository”获取本发布版完整的 `.agents/scripts/shared/` 命令目录，先运行 `upgrade-template.sh --check v0.4.9`，审查计划和冲突。
+2. 逐项合并冲突。旧论文若删除了本模板的 case 分支保护说明，根 `AGENTS.md` 的新增路由行可能冲突；保留论文自己的规则。若论文曾把第三方技能直接安装在 `.agents/skills/` 根目录，按新的治理说明移到 `project/` 并补自己的 `PROVENANCE.md`；安装器生成的根锁文件保持本地状态。只对已审阅解决的路径使用 `--resolved <路径>`，然后应用升级。
+3. 新技能属于 shared 内容，升级会复制其文件、registry 条目和路由，不需要论文手工复制。CLI 不是构建依赖；需要时按技能说明在项目的环境中安装并运行。
+4. 运行 `make check`、`bash .agents/scripts/shared/check-development.sh` 和 `bash .agents/scripts/shared/check-shells.sh`，确认 `paper/`、构建产物和 Overleaf `HEAD:paper` 投影无变化。
+
+本版使用固定提交的真实 CLI 运行、合成下游升级和模板构建验证；不代替真实论文的科学内容审查，也未连接远端 Overleaf。
+
 ## v0.4.8 — 2026-11-05
 
 本版按论文能力整理开发工具和记录，使写作、构建、引用与投稿所需的入口更容易查找，同时保持 coding template 通用开发内容的继承关系。此前已发布的六个论文技能保持原有职责；本版调整它们调用的脚本、测试及所读取的记录（[#197](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/197)）。
