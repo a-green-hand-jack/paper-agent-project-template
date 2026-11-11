@@ -179,7 +179,7 @@ make check
 | 仓库 | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | 自身及其当前版本 | 无 |
-| 本模板 | 自身及其发布版本（v0.4.8） | coding template 及其所遵循的标签（v0.1.30） |
+| 本模板 | 自身及其发布版本（v0.4.9） | coding template 及其所遵循的标签（v0.1.30） |
 | 由本模板创建的论文 | 本模板及采用的标签 | 无 |
 
 仓库有 `template.upstream` 字段时遵循该字段，否则遵循 `template`。
