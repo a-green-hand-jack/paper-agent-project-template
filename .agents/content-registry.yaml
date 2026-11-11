@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.4.10
+  version: v0.4.11
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.30
@@ -9705,6 +9705,17 @@ entries:
     updated: 2026-10-13
     supersedes: []
     superseded_by: []
+  - path: .agents/memory/shared/optional-cli-environments.md
+    id: content-issue-202-optional-cli-environments
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Optional CLIs run from the project environment under .project/tools, with no user-level fallback."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
   - path: .agents/memory/shared/issue-dispatch-by-difficulty.md
     id: content-22cf99dd1d9d159b
     kind: memory
@@ -10589,6 +10600,28 @@ entries:
     updated: 2026-10-28
     supersedes: []
     superseded_by: []
+  - path: .agents/scripts/shared/tool-env.sh
+    id: content-issue-202-tool-env
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Create and run project-local environments for optional CLIs."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/tool-environments.json
+    id: content-issue-202-tool-manifest
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Pinned sources, revisions and project-local paths for optional CLIs."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
   - path: .agents/skills/shared/paper-writing/sources/academic-voice/
     id: content-64efce3c980def01
     kind: code
@@ -11429,6 +11462,18 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
+  - path: .agents/tests/shared/test_tool_env.py
+    id: content-issue-202-tool-env-test
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Pin, isolation and no-fallback tests for the project tool environment."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+    language: python
   - path: .agents/tests/shared/paper-references/test_bibtex_correction_helper.py
     id: content-465c82c00f749905
     kind: code
@@ -11486,6 +11531,18 @@ entries:
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_paper_interfaces.py"}
     updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/tests/shared/paper-build/test_author_comments.py
+    id: content-issue-203-author-comments-test
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Release-check leftovers coverage for per-author comments."
+    status: active
+    source: {"issue": 203}
+    updated: 2026-11-11
     supersedes: []
     superseded_by: []
     language: python
@@ -11647,7 +11704,7 @@ entries:
     kind: code
     scope: shared
     owner: paper-template-maintainers
-    summary: "Display macros (paper-harness.sty with T1 encoding) and the venue-kit compatibility layer (compat.sty)."
+    summary: "Display macros (paper-harness.sty with T1 encoding), per-author comments (author-comments.sty) and the venue-kit compatibility layer (compat.sty)."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/style"}
     updated: 2026-10-20

@@ -1,0 +1,20 @@
+% author-comments.sty
+% Per-author reminders for the working draft. Declare one color and one
+% command per author; every command calls \AuthorComment, which is shown only
+% when \ifPaperNotes is true. Submission and blind builds remove it. Examples:
+%   \definecolor{authorAlice}{HTML}{1864AB}
+%   \newcommand{\alice}[1]{\AuthorComment{authorAlice}{AL}{#1}}
+% Keep the labels consistent with paper/authors.tex.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{author-comments}[2026/11/11 v1.0 per-author comments for paper-agent-project-template]
+
+\RequirePackage{xcolor}
+
+\definecolor{authorAgent}{HTML}{7048E8}
+
+\newcommand{\AuthorComment}[3]{%
+  \ifPaperNotes{\color{#1}[\textbf{#2:} #3]}\fi
+}
+\newcommand{\agent}[1]{\AuthorComment{authorAgent}{Agent}{#1}}
+
+\endinput

@@ -2,7 +2,7 @@
 # make release-check: build blind and submission and fail when the blind build
 # shows an author identity (PDF text, PDF metadata or any source it reads) or
 # paper/authors.tex still declares the template's placeholder identity, when
-# submission still has \PaperTODO, \PaperNote or TODO, when the main text of
+# submission still has \PaperTODO, \PaperNote or an author comment, when the main text of
 # blind is over PAGE_BUDGET or no budget is set, when the references do not
 # pass the release profile, or when the full online metadata audit of every
 # bibliography entry does not pass (it needs uv and the network; a provider

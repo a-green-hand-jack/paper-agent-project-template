@@ -14,6 +14,7 @@ the record's own text never contains that heading line.
 - [issue-in-herdr-worktree.md](issue-in-herdr-worktree.md) — Choose direct development or a confirmed Herdr dispatch and keep issue ownership clear.
 - [llm-credentials.md](llm-credentials.md) — Keep stable shared credentials and project-owned refreshing logins behind local paths.
 - [look-at-the-artifact-before-concluding.md](look-at-the-artifact-before-concluding.md) — Inspect referenced artifacts before concluding from automated metrics.
+- [optional-cli-environments.md](optional-cli-environments.md) — Optional CLIs run from the project environment under .project/tools, with no user-level fallback.
 - [paper-build/one-source-three-builds.md](paper-build/one-source-three-builds.md) — main, submission and blind from one source in a fixed order, each removing a layer.
 - [paper-build/page-budget-on-blind-build.md](paper-build/page-budget-on-blind-build.md) — Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
 - [paper-build/post-build-visual-inspection.md](paper-build/post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.

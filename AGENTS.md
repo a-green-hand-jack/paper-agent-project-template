@@ -128,6 +128,13 @@ review passes while drafting a section: a version-level consistency review is
 explicit, starts only after the Human marks a version ready, and reports
 findings only, unless the Human asks for changes.
 
+Optional CLIs named by a skill run from the project environment, not a
+user-level install: `bash .agents/scripts/shared/tool-env.sh install <tool>`
+then `bash .agents/scripts/shared/tool-env.sh run <tool> ...`. Their source and
+full revision are pinned in `.agents/scripts/shared/tool-environments.json`, and
+their data and configuration live under `.project/tools/<tool>/`. This replaces
+the install step in a vendored skill such as `benchmark-radar`.
+
 ### Collaboration cues
 
 - **locked**: analyze or propose; do not silently change the meaning.
