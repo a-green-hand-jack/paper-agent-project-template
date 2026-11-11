@@ -16,5 +16,7 @@ Shared may be empty; do not generalize project implementations just to fill it.
 - [probe-credentials.sh](probe-credentials.sh) — Report only the status of explicitly declared credential requirements.
 - [setup-worktree.sh](setup-worktree.sh) — Initialize worktree-local state, asset links and project setup.
 - [teardown-worktree.sh](teardown-worktree.sh) — Check retirement preconditions and migrate local state.
+- [tool-env.sh](tool-env.sh) — Create and run project-local environments for optional CLIs.
+- [tool-environments.json](tool-environments.json) — Pinned sources, revisions and project-local paths for optional CLIs.
 - [upgrade-template.sh](upgrade-template.sh) — Apply reviewed template upgrades with schema and identity-aware path migration.
 <!-- registry-index:end -->
