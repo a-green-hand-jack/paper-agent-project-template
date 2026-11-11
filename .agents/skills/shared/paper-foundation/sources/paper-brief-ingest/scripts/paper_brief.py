@@ -238,6 +238,22 @@ def with_record_sections(body: str) -> str:
     return body.rstrip("\n") + "\n\n" + RECORD_PREAMBLE.rstrip("\n") + "\n"
 
 
+def front_matter_source(path: Path) -> str:
+    """The existing record's source line, so an in-place ingest keeps it."""
+    if not path.is_file():
+        return ""
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return ""
+    end = text.find("\n---\n", 4)
+    if end < 0:
+        return ""
+    for line in text[4:end].splitlines():
+        if line.startswith("source: "):
+            return line[len("source: "):].strip()
+    return ""
+
+
 def brief_record(brief_text: str, source_name: str) -> str:
     """The brief as a project memory record: front matter, the record sections, the brief."""
     front_matter = "\n".join(
@@ -246,11 +262,7 @@ def brief_record(brief_text: str, source_name: str) -> str:
             "name: brief",
             f"date: {datetime.date.today().isoformat()}",
             f"source: {source_name}",
-            "scope: project",
             "applies_to: this paper",
-            "status: active",
-            "supersedes: null",
-            "superseded_by: null",
             "---",
         )
     )
@@ -569,7 +581,8 @@ def ingest(root: Path, brief_arg: str, commit: bool) -> int:
     paper_path.write_text(paper, encoding="utf-8")
     record_path = root / BRIEF_RECORD
     record_path.parent.mkdir(parents=True, exist_ok=True)
-    record_path.write_text(brief_record(brief_text, path.name), encoding="utf-8")
+    source_name = front_matter_source(record_path) or path.name
+    record_path.write_text(brief_record(brief_text, source_name), encoding="utf-8")
 
     filled = sorted(set(applied))
     print(
