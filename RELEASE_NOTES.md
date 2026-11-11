@@ -3,6 +3,31 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.10 — 2026-11-11
+
+本版修复 CI 在 GitHub-hosted runner 的瞬时 DNS/网络故障下耗尽整个 30 分钟 job 超时的问题（[#205](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/205)）。在 v0.4.9 发布中，`check` 和 `paper-only` 卡在 TeX 安装，安装日志有 118 次 `Temporary failure resolving`；代码和论文没有失败。`paper/`、构建入口、必需检查名称和发布内容不变。
+
+- `paper-check.yml` 的两个 job 增加 3 分钟 Ubuntu 镜像 DNS 预检；失败时约 15 秒内给出明确错误，而不是等待 job 超时。
+- TeX 安装步骤有独立的 18 分钟上限，apt 设置连接超时和有限重试，覆盖观察到的约 15 分钟慢安装。
+- 失败模式和处置步骤记录在 memory 与 `DEV.md`：读取安装日志、重跑 failed jobs，不使用管理员权限绕过必需检查。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文在表中步骤失败，原因见 v0.4.2。模板中的占位内容不是投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.9
+
+**Command only.** 本版只替换 shared 的 `paper-check.yml` 并更新 registry 版本记录；按 `template-upgrade` 的“In this repository”运行一次本发布版副本，先 `--check` 再应用，最后运行 `make check`。若论文修改过该 workflow，`--check` 会报告冲突，按常规保留论文自己的设置。
+
+本版使用真实 CI 的失败与成功 run 验证；不改变论文构建或 Overleaf 投影。
+
 ## v0.4.9 — 2026-11-11
 
 本版把 Benchmark Radar 作为受治理的共享技能加入模板，使“找 benchmark、查看记录、读取最近的 Radar 证据”有唯一的位置、来源、许可和任务路由（[#199](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/199)）。论文正文、构建入口和 Overleaf 投影不变。

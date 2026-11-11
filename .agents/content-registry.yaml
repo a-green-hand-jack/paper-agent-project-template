@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.4.9
+  version: v0.4.10
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.30
@@ -12124,6 +12124,17 @@ entries:
     status: active
     source: {"issues": [195, 197], "commit": "80bfd1d"}
     updated: 2026-11-05
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/ci-tex-install-bounded.md
+    id: content-ci-tex-install-bounded
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Bound the CI Ubuntu mirror preflight and TeX install, and rerun runner DNS failures instead of bypassing required checks."
+    status: active
+    source: {"issue": 205}
+    updated: 2026-11-11
     supersedes: []
     superseded_by: []
 omitted: []
