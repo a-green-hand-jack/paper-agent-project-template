@@ -11741,6 +11741,17 @@ entries:
     updated: 2026-11-04
     supersedes: []
     superseded_by: []
+  - path: .agents/skills/shared/benchmark-radar/
+    id: paper-skill-benchmark-radar
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Benchmark discovery, records and recent Radar evidence; vendored MIT from ktwu01/benchmark-radar@21f3018, PROVENANCE.md."
+    status: active
+    source: {"issue": 199}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
   - path: .agents/references/exemplars/
     id: paper-exemplar-records
     kind: code
