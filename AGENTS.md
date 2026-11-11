@@ -111,6 +111,7 @@ Skills are at `.agents/skills/shared/<name>/SKILL.md`.
 | paper context, brief, control decisions and stable interfaces | `paper-foundation` |
 | scientific writing, editing, proofreading and writing exemplars | `paper-writing` |
 | citation discovery, claim support and bibliographic repair | `paper-references` |
+| benchmark discovery, benchmark records and recent Radar evidence | `benchmark-radar` |
 | scientific data figures, diagrams and editable figure reconstruction | `paper-figures` |
 | manuscript consistency and peer-review triage | `paper-review` |
 | venue, builds, Overleaf, release preparation and posters | `paper-publication` |
