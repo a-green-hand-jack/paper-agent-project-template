@@ -12126,6 +12126,17 @@ entries:
     updated: 2026-11-05
     supersedes: []
     superseded_by: []
+  - path: .agents/memory/project/template-maintenance/ci-tex-install-bounded.md
+    id: content-ci-tex-install-bounded
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Bound the CI Ubuntu mirror preflight and TeX install, and rerun runner DNS failures instead of bypassing required checks."
+    status: active
+    source: {"issue": 205}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
 omitted: []
 local_legacy_inventory: {
     "version": "v0.1.25",
