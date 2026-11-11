@@ -110,6 +110,8 @@ TODO：描述偏好的叙事推进方式，例如问题 → 缺口 → 洞见 �
 - Terms or expressions to avoid: TODO
 - Venue-specific overlay: TODO; load only when the target venue is active and current rules have been verified.
 
+作者之间的提醒使用 `\AuthorComment{颜色}{标签}{内容}`，或在 `paper/style/author-comments.sty` 中按作者定义的命令（模板包含 `\agent{...}`）。它们只在 `main` 构建显示，`submission` 和 `blind` 构建自动去除，`make release-check` 会拒绝 submission 中仍然存在的调用。写进正文的文本都是正式内容；给作者的提醒不要留在正文里。
+
 ## Human decisions required
 
 以下事项最终由 Human 负责：

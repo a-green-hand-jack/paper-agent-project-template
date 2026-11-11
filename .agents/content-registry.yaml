@@ -11489,6 +11489,18 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
+  - path: .agents/tests/shared/paper-build/test_author_comments.py
+    id: content-issue-203-author-comments-test
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Release-check leftovers coverage for per-author comments."
+    status: active
+    source: {"issue": 203}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+    language: python
   - path: .agents/tests/shared/paper-references/test_reference_corrections.py
     id: content-73816421cc4bc6fd
     kind: code
@@ -11647,7 +11659,7 @@ entries:
     kind: code
     scope: shared
     owner: paper-template-maintainers
-    summary: "Display macros (paper-harness.sty with T1 encoding) and the venue-kit compatibility layer (compat.sty)."
+    summary: "Display macros (paper-harness.sty with T1 encoding), per-author comments (author-comments.sty) and the venue-kit compatibility layer (compat.sty)."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/style"}
     updated: 2026-10-20
