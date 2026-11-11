@@ -235,13 +235,13 @@ class PaperBriefChecks(unittest.TestCase):
             self.assertTrue(front_matter.startswith("---\nname: brief\ndate: "))
             for field in (
                 "source: BRIEF.md",
-                "scope: project",
                 "applies_to: this paper",
-                "status: active",
-                "supersedes: null",
-                "superseded_by: null",
             ):
                 self.assertIn(field, front_matter)
+            for field in ("scope:", "status:", "supersedes:", "superseded_by:"):
+                self.assertNotIn(field, front_matter)
+            keys = [line.split(":", 1)[0] for line in front_matter.splitlines()[1:]]
+            self.assertEqual(keys, ["name", "date", "source", "applies_to"])
             self.assertNotIn(directory, record)
             # The memory-record sections come first, then the brief unchanged.
             self.assertTrue(record_sections_in_order(record))
@@ -280,8 +280,31 @@ class PaperBriefChecks(unittest.TestCase):
             self.assertEqual(record.count("name: brief"), 1)
             self.assertEqual(record.count("\n## Decision\n"), 1)
             self.assertTrue(record_sections_in_order(record))
-            self.assertIn("source: brief.md", record)
+            self.assertIn("source: BRIEF.md", record)
+            self.assertNotIn("source: brief.md", record)
             self.assertIn("Working title: A Study of X", (repo / "PAPER.md").read_text(encoding="utf-8"))
+
+    def test_reingesting_removes_legacy_registry_owned_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory) / "paper"
+            make_paper_repo(repo)
+            brief = Path(directory) / "briefrepo" / "BRIEF.md"
+            write(brief, brief_fixture())
+            self.assertEqual(run(repo, "ingest", "--brief", str(brief)).returncode, 0)
+            record = repo / BRIEF_RECORD
+            legacy = record.read_text(encoding="utf-8").replace(
+                "applies_to: this paper\n",
+                "applies_to: this paper\nscope: project\nstatus: active\nsupersedes: null\nsuperseded_by: null\n",
+                1,
+            )
+            record.write_text(legacy, encoding="utf-8")
+            write(repo / "PAPER.md", FACTORY_PAPER)
+            result = run(repo, "ingest", "--brief", str(record))
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            cleaned = record.read_text(encoding="utf-8")
+            for field in ("scope:", "status:", "supersedes:", "superseded_by:"):
+                self.assertNotIn(field, cleaned)
+            self.assertIn("source: BRIEF.md", cleaned)
 
     def test_ingest_commit_stages_record_and_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
