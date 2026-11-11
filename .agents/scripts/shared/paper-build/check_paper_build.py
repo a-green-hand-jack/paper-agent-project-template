@@ -27,8 +27,12 @@ MAIN_TEXT_END = re.compile(r"\\newlabel\{PaperMainTextEnd\}\{\{[^{}]*\}\{([^{}]*
 IDENTITY = re.compile(r"\\PaperIdentity\{([^{}]+)\}")
 # The identity paper/authors.tex ships with; a release declares the real one.
 PLACEHOLDER_IDENTITIES = ("Template-Author-Name", "template-author@example.invalid", "Template-Institution")
-LEFTOVER_MACROS = ("PaperTODO", "PaperNote")
+LEFTOVER_MACROS = ("PaperTODO", "PaperNote", "AuthorComment", "agent")
 DEFINITION = re.compile(r"\\(?:newcommand|renewcommand|providecommand|DeclareRobustCommand|def)\b")
+DECLARATION = re.compile(
+    r"\\(?:newcommand|renewcommand|providecommand|DeclareRobustCommand)\*?\s*"
+    r"(?:\{\s*\\([A-Za-z@]+)\s*\}|\\([A-Za-z@]+))"
+)
 UNDERSCORE_TOKEN = re.compile(r"[A-Za-z0-9.:/-]*[A-Za-z0-9](?:\\_[A-Za-z0-9.:/-]*[A-Za-z0-9])+")
 SOURCE_SUFFIXES = {".tex", ".sty", ".cls", ""}
 
@@ -249,9 +253,23 @@ def cmd_identity(args: argparse.Namespace) -> int:
     return failed
 
 
+def author_comment_names(paper: Path) -> list[str]:
+    """Author commands declared in paper/style/author-comments.sty."""
+    path = paper / "style/author-comments.sty"
+    if not path.is_file():
+        return []
+    names: list[str] = []
+    for match in DECLARATION.finditer(active(path.read_text(encoding="utf-8"))):
+        name = match.group(1) or match.group(2)
+        if name not in LEFTOVER_MACROS and name not in names:
+            names.append(name)
+    return names
+
+
 def cmd_leftovers(args: argparse.Namespace) -> int:
     files = job_files(args.build_dir, args.job)
-    calls = re.compile(r"\\(" + "|".join(LEFTOVER_MACROS) + r")(?![A-Za-z@])")
+    names = tuple(LEFTOVER_MACROS) + tuple(author_comment_names(args.paper))
+    calls = re.compile(r"\\(" + "|".join(re.escape(name) for name in names) + r")(?![A-Za-z@])")
     failed = 0
     for path in paper_sources(files, args.paper):
         for number, line in enumerate(lines_of(path), 1):
@@ -266,7 +284,7 @@ def cmd_leftovers(args: argparse.Namespace) -> int:
             print(f"ERROR {args.job}: 'TODO' in the PDF text: {line.strip()[:80]}")
             failed = 1
     if not failed:
-        print(f"OK {args.job}: no unresolved \\PaperTODO, \\PaperNote or TODO")
+        print(f"OK {args.job}: no unresolved \\PaperTODO, \\PaperNote or author comment")
     return failed
 
 
