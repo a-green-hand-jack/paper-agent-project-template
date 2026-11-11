@@ -83,6 +83,17 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 
 论文没有 Python 包、容器或安装器，因此本模板没有 `pyproject.toml`、`Dockerfile`、`.dockerignore` 或 `install.sh`，`diagnose-environment.sh` 会将其报告为缺失的可选文件。不要为论文添加它们。需要独立环境的工具将环境安装在 `.project/` 下。
 
+## 可选 CLI 环境
+
+可选 CLI 由项目内环境提供，不安装到用户级环境，也不进入 `paper/`、`make check` 或发布内容：
+
+```bash
+bash .agents/scripts/shared/tool-env.sh install benchmark-radar
+bash .agents/scripts/shared/tool-env.sh run benchmark-radar status --json
+```
+
+声明在 `.agents/scripts/shared/tool-environments.json`，包含来源、固定提交、入口和环境变量。环境、数据和缓存位于当前 worktree 的 `.project/tools/<tool>/`；未安装时 `run` 明确失败，不回退到 `PATH` 上的全局命令。新增工具只需增加一条声明并运行 `install`；使用 CLI 自己的公共命令，不另建搜索、状态或监控层。凭据仍按 `llm-credentials` 政策注入，不写入声明或跟踪文件。
+
 ## 证据
 
 结果来自代码仓库。将每张结果表、每个图数据文件和每个报告的数字登记在 `assets/MANIFEST.yaml`：源仓库、提交、运行或配置标识、校验和及重新生成命令。数字只能通过 `paper/macros.tex` 的接口宏进入正文；`.agents/memory/project/paper-foundation/paper-interfaces.md` 为每个宏记录含义、控制提示和 manifest ID。计划中的结果登记为 `planned`，绝不写成观察结果。大型文件（原始日志、checkpoint、数据集）保留在其代码仓库或受管存储中；通过 `.project/assets.links` 本地链接，绝不放入 Git。

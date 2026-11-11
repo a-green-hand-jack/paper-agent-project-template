@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "tools": {
+    "benchmark-radar": {
+      "source": "https://github.com/ktwu01/benchmark-radar.git",
+      "revision": "21f3018c460cda0eec74f303569524288dd22bbc",
+      "entrypoint": "benchmark-radar",
+      "env": {
+        "BENCHMARK_RADAR_HOME": "data"
+      },
+      "summary": "Benchmark discovery, records and recent Radar evidence."
+    }
+  }
+}
