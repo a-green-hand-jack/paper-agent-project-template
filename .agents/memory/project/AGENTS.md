@@ -10,6 +10,7 @@ record is a separate Markdown file with the fields in
 - [paper-foundation/paper-interfaces.md](paper-foundation/paper-interfaces.md) — Starter record of the paper's interface macros; make check reads it.
 - [paper-publication/publication.md](paper-publication/publication.md) — Starter record of the paper's venue, kit, budget, Overleaf and release tags.
 - [template-maintenance/ci-tex-install-bounded.md](template-maintenance/ci-tex-install-bounded.md) — Bound the CI Ubuntu mirror preflight and TeX install, and rerun runner DNS failures instead of bypassing required checks.
+- [template-maintenance/derived-template-upgrade-command.md](template-maintenance/derived-template-upgrade-command.md) — A derived template follows its upstream with its own command directory, not the followed template's copy.
 - [template-maintenance/paper-run-boundary.md](template-maintenance/paper-run-boundary.md) — The boundary between this template and paper-run (#152).
 - [template-maintenance/paper-template-extension-boundary.md](template-maintenance/paper-template-extension-boundary.md) — Why the paper template keeps inherited development, paper capabilities and product evidence in distinct boundaries.
 - [template-maintenance/protected-case-branches.md](template-maintenance/protected-case-branches.md) — This template's protected case branches and trackers (DEC-0014); a paper records its own.
