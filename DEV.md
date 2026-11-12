@@ -185,14 +185,14 @@ CI 的 Ubuntu 镜像 DNS 预检和 TeX 安装步骤各有独立超时，apt 也�
 
 ## 与模板的关系
 
-跟随 coding template v0.1.30；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 和 v0.4.8 发布说明。后续升级上游时应重新核对这些差异。
+跟随 coding template v0.1.32；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 和 v0.4.8 发布说明。后续升级上游时应重新核对这些差异。
 
 本仓库是 `coding-agent-project-template` 的派生模板：在其基础上构建，并供论文使用。它的 registry `.agents/content-registry.yaml` 在 `template` 中记录本模板，在 `template.upstream` 中记录其遵循的 coding template：
 
 | 仓库 | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | 自身及其当前版本 | 无 |
-| 本模板 | 自身及其发布版本（v0.4.11） | coding template 及其所遵循的标签（v0.1.30） |
+| 本模板 | 自身及其发布版本（v0.4.12） | coding template 及其所遵循的标签（v0.1.32） |
 | 由本模板创建的论文 | 本模板及采用的标签 | 无 |
 
 仓库有 `template.upstream` 字段时遵循该字段，否则遵循 `template`。

@@ -3,6 +3,33 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.12 — 2026-11-12
+
+本版跟随 coding template v0.1.30 → v0.1.32，把它对 schema 1→2 升级边界的修复整合进本模板继承的升级命令，使 v0.4.6 之前采纳的论文可以用一条命令跨过开发面目录与 registry 格式的边界；同时采用 v0.1.31 的 `engineering-change` 共享技能。论文正文、`paper/` 自包含、构建入口和 Overleaf 投影不变（[#212](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/212)、[#213](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/213)；上游 [#152](https://github.com/a-green-hand-jack/coding-agent-project-template/issues/152)）。
+
+- 升级命令迁移新建条目时按其**最终路径**生成身份，避免与旧路径对应的上游身份再次碰撞。
+- 对旧命令已经生成的碰撞身份，仅当保留的旧 registry 证明身份由旧路径自动生成且不存在引用歧义时改为 `local-…`；其他歧义身份继续拒绝并保留源文件。
+- schema 2 升级在产出计划或写入项目文件之前检查 `markdown-it-py`：缺失时明确失败并说明安装；预检被阻塞时也不再打印 registry 迁移行。
+- 新增 `engineering-change` 共享技能（按需加载的缺陷、变更与重构流程）；`template-upgrade` 明确：registry 为 `schema_version: 1` 的论文必须使用目标版本完整的命令目录，不得运行自带的旧副本。
+- 本模板保留的升级命令本地适配（template 条目保留、`path_mappings`、冲突预检）随上游修复一并核对。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文在表中步骤失败，原因见 v0.4.2。模板中的占位内容不是投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.11
+
+**Command only.** 本版替换继承的升级命令并新增 `engineering-change` 共享技能；按 `template-upgrade` 的“In this repository”运行一次本发布版完整的 `.agents/scripts/shared/` 命令目录，先 `--check` 再应用，最后运行 `make check`。registry 仍为 `schema_version: 1` 的论文（v0.4.6 之前采纳）必须使用本发布版的命令目录，不得运行自带的旧副本；该命令一次完成 schema 1→2 迁移，缺少 `markdown-it-py` 时在产出计划前失败并说明安装。
+
+本版使用合成下游升级（v0.4.5 schema 1 → 本版、缺依赖与身份碰撞回归）和模板自身检查（真实构建、adoption states、v0.4.1 → 本版升级）验证；不代替真实论文的科学内容审查，也未连接远端 Overleaf。
+
 ## v0.4.11 — 2026-11-11
 
 本版解决三个下游反馈：brief ingest 写出的记录 front matter、可选 CLI 的项目内环境，以及按作者区分的批注命令（[#201](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/201)、[#202](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/202)、[#203](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/203)）。`paper/` 仍自包含，`make check` 与论文构建不调用这些 CLI。
