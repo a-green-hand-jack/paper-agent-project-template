@@ -5,7 +5,7 @@ template:
   version: v0.4.11
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.30
+    version: v0.1.32
 default_scope: project
 matching: "Most specific path wins; explicit entries override directory defaults."
 classes: {
@@ -9705,17 +9705,6 @@ entries:
     updated: 2026-10-13
     supersedes: []
     superseded_by: []
-  - path: .agents/memory/shared/optional-cli-environments.md
-    id: content-issue-202-optional-cli-environments
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Optional CLIs run from the project environment under .project/tools, with no user-level fallback."
-    status: active
-    source: {"issue": 202}
-    updated: 2026-11-11
-    supersedes: []
-    superseded_by: []
   - path: .agents/memory/shared/issue-dispatch-by-difficulty.md
     id: content-22cf99dd1d9d159b
     kind: memory
@@ -10173,6 +10162,17 @@ entries:
     adaptation: "Common reader and evidence principles plus Issue, PR, comment and commit guidance; neutral examples in references. Uses writing.language by default for commits; any project-specific commit language or convention goes only in the trailing adaptation section. Historical project cases are not part of this shared package."
     supersedes: []
     superseded_by: []
+  - path: .agents/skills/shared/engineering-change/
+    id: content-engineering-change
+    kind: skill
+    scope: shared
+    owner: template-maintainers
+    summary: "Implement, debug and refactor code with behavior-focused evidence."
+    status: active
+    source: {"url": "https://github.com/unclebob/ub-mode", "note": "Independently written selective adaptation"}
+    updated: 2026-11-05
+    supersedes: []
+    superseded_by: []
   - path: .agents/skills/shared/issue-workflow/
     id: content-8759e65e941a5603
     kind: skill
@@ -10598,6 +10598,17 @@ entries:
     status: active
     source: {"issue": 133}
     updated: 2026-10-28
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/optional-cli-environments.md
+    id: content-issue-202-optional-cli-environments
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Optional CLIs run from the project environment under .project/tools, with no user-level fallback."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
     supersedes: []
     superseded_by: []
   - path: .agents/scripts/shared/tool-env.sh
@@ -12181,6 +12192,17 @@ entries:
     status: active
     source: {"issues": [195, 197], "commit": "80bfd1d"}
     updated: 2026-11-05
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/derived-template-upgrade-command.md
+    id: content-derived-template-upgrade-command
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "A derived template follows its upstream with its own command directory, not the followed template's copy."
+    status: active
+    source: {"issue": 213, "upstream": "v0.1.32"}
+    updated: 2026-11-12
     supersedes: []
     superseded_by: []
   - path: .agents/memory/project/template-maintenance/ci-tex-install-bounded.md

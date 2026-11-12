@@ -51,8 +51,13 @@ target's change counts as applied, and a file resolved by hand in another way
 is accepted with `--resolved <path>` (the registry too) once no conflict marker
 is left. Never edit the followed version by hand.
 
-A repository without the command yet runs the target release's copy, cloning
-the followed template's repository (the URL from step 1):
+When the local registry is schema 1 and the target uses schema 2, run the
+target release's complete command directory, including `content_registry.py`,
+even when the repository already has an older command. Old commands cannot
+recognize the newer registry format and can write an unreadable mixture. Install
+the target command's declared `markdown-it-py` dependency before planning. A
+repository without the command also runs the target copy, cloning the followed
+template's repository (the URL from step 1):
 
 ```bash
 clone=.project/state/template-upgrade/coding-agent-project-template.git
@@ -275,10 +280,11 @@ stay explicitly recorded as provenance, not fabricated replacement identities.
     into a section in the upgrade or a later Issue, so that check 1 applies
     from then on.
 
-  A paper without the command yet, or whose target release notes say so
-  (every paper before the `.agents/scripts/shared/` layout), runs the target
-  release's whole command directory once; the command needs its sibling
-  `content_registry.py`, so never stream a single file:
+  A paper whose registry is `schema_version: 1` (every paper adopted before the
+  `.agents/scripts/shared/` layout) must run the target paper-template release's
+  whole command directory once, even though it still has an older command; do not
+  run the inherited old copy. The command needs its sibling `content_registry.py`,
+  so never stream a single file:
 
   ```bash
   clone=.project/state/template-upgrade/paper-agent-project-template.git
