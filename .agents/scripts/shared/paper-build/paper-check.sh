@@ -12,6 +12,7 @@ cd "$root"
 build=${BUILD_DIR:-$root/.project/build}
 mkdir -p "$build/logs"
 export PYTHONPYCACHEPREFIX="$build/cache"
+python=${AGENTS_PYTHON:-python3}
 failed=()
 
 step() { printf '\n== %s\n' "$1"; }
@@ -25,7 +26,7 @@ unit_tests() { # unit_tests DIRECTORY: every test file except a template's own t
   local file status=0
   for file in "$1"/test_*.py; do
     [[ ${file##*/} == test_template_* ]] && continue
-    python3 -m unittest discover -s "$1" -p "${file##*/}" || status=1
+    "$python" -m unittest discover -s "$1" -p "${file##*/}" || status=1
   done
   return "$status"
 }
@@ -38,26 +39,26 @@ for job in main blind; do
     echo "ERROR $job: the build failed; the full output is in .project/build/logs/$job.log"
     failed+=("build $job")
   fi
-  run "log $job" python3 .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" log "$job"
+  run "log $job" "$python" .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" log "$job"
 done
 
 step 'page budget (blind)'
-run 'pages' python3 .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" pages blind --budget "${PAGE_BUDGET:-}"
+run 'pages' "$python" .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" pages blind --budget "${PAGE_BUDGET:-}"
 
 step 'PDF text layer (main)'
-run 'underscores' python3 .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" underscores main
+run 'underscores' "$python" .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" underscores main
 
 step 'reference integrity (draft)'
-run 'references' python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft
+run 'references' "$python" .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft
 
 step 'interface macros'
-run 'interfaces' python3 .agents/scripts/shared/paper-build/check_paper_interfaces.py
+run 'interfaces' "$python" .agents/scripts/shared/paper-build/check_paper_interfaces.py
 
 step 'development registry and layout'
 run 'development registry' bash .agents/scripts/shared/check-development.sh
 
 step 'skills, memory and knowledge records'
-run 'agent content' python3 .agents/scripts/shared/check_agent_content.py
+run 'agent content' "$python" .agents/scripts/shared/check_agent_content.py
 
 step 'unit tests'
 for group in shared project; do

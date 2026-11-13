@@ -15,6 +15,7 @@ cd "$root"
 build=${BUILD_DIR:-$root/.project/build}
 mkdir -p "$build/logs"
 export PYTHONPYCACHEPREFIX="$build/cache"
+python=${AGENTS_PYTHON:-python3}
 failed=()
 
 step() { printf '\n== %s\n' "$1"; }
@@ -23,7 +24,7 @@ run() {
   shift
   "$@" || failed+=("$name")
 }
-check() { python3 .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" "$@"; }
+check() { "$python" .agents/scripts/shared/paper-build/check_paper_build.py --build-dir "$build" "$@"; }
 
 for job in blind submission; do
   step "build $job"
@@ -47,10 +48,10 @@ step 'page budget (blind)'
 run 'pages' check pages blind --budget "${PAGE_BUDGET:-}" --require-budget --fail-over
 
 step 'reference integrity (release)'
-run 'references' python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile release
+run 'references' "$python" .agents/scripts/shared/paper-references/check_reference_integrity.py --profile release
 
 step 'reference metadata (full online audit)'
-run 'metadata' python3 .agents/scripts/shared/paper-references/check_reference_metadata.py
+run 'metadata' "$python" .agents/scripts/shared/paper-references/check_reference_metadata.py
 
 echo
 if ((${#failed[@]})); then

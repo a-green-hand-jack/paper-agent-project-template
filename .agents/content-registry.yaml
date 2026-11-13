@@ -5,7 +5,7 @@ template:
   version: v0.4.12
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.32
+    version: v0.1.34
 default_scope: project
 matching: "Most specific path wins; explicit entries override directory defaults."
 classes: {
@@ -10249,6 +10249,7 @@ entries:
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/skills/shared/long-running-supervision/SKILL.md"}
     updated: unknown
     adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
+    optional: true
     supersedes: []
     superseded_by: []
     adoption: "Rejected since v0.4.6: a paper has no long-running product runtime."
@@ -10392,19 +10393,6 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
-  - path: .dockerignore
-    id: content-2f754321d62f08ba
-    kind: document
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Adapt product inputs but keep .agents, .project and agent instruction files excluded."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".dockerignore"}
-    updated: unknown
-    adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
-    optional: true
-    supersedes: []
-    superseded_by: []
   - path: .env.example
     id: content-a3046da0d15a27e8
     kind: document
@@ -10511,19 +10499,6 @@ entries:
     superseded_by: []
     upgrade: review
     adaptation: "Development process of a paper; keep the Issue, build, Overleaf and release sections and adapt names."
-  - path: Dockerfile
-    id: content-dd2c0eb6ea5cfc6c
-    kind: document
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Replace the base image and entrypoint; keep development-plane files out of the build context."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "Dockerfile"}
-    updated: unknown
-    adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
-    optional: true
-    supersedes: []
-    superseded_by: []
   - path: README.md
     id: content-b335630551682c19
     kind: document
@@ -10581,32 +10556,6 @@ entries:
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "assets/README.md"}
     updated: unknown
-    supersedes: []
-    superseded_by: []
-  - path: install.sh
-    id: content-043df5bdbf6639d7
-    kind: code
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Replace the installation policy and retain a stable public installer entrypoint."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "install.sh"}
-    updated: unknown
-    adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
-    optional: true
-    supersedes: []
-    superseded_by: []
-  - path: pyproject.toml
-    id: content-50c86b7ed8ac2cf9
-    kind: document
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Replace project metadata and dependencies; keep the package boundary under the product tree (src/ by default)."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "pyproject.toml"}
-    updated: unknown
-    adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
-    optional: true
     supersedes: []
     superseded_by: []
   - path: src/.gitkeep
@@ -12237,6 +12186,18 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
+  - path: .agents/tests/project/test_template_issue_216_upgrade.py
+    id: paper-test-issue-216
+    kind: code
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Upgrade a paper that left template content out and check its omissions stay single and out."
+    status: active
+    source: {"issue": 216}
+    updated: 2026-11-13
+    supersedes: []
+    superseded_by: []
+    language: python
   - path: .agents/memory/project/template-maintenance/paper-template-extension-boundary.md
     id: content-paper-template-extension-boundary
     kind: memory
@@ -12253,10 +12214,10 @@ entries:
     kind: memory
     scope: template
     owner: paper-template-maintainers
-    summary: "A derived template follows its upstream with its own command directory, not the followed template's copy."
+    summary: "A derived template follows its upstream with the target release's command directory and keeps the inherited scripts byte-identical."
     status: active
-    source: {"issue": 213, "upstream": "v0.1.32"}
-    updated: 2026-11-12
+    source: {"issue": 218, "upstream": "v0.1.34"}
+    updated: 2026-11-13
     supersedes: []
     superseded_by: []
   - path: .agents/memory/project/template-maintenance/ci-tex-install-bounded.md
@@ -12270,7 +12231,28 @@ entries:
     updated: 2026-11-11
     supersedes: []
     superseded_by: []
-omitted: []
+omitted: [
+    {
+      "id": "content-2f754321d62f08ba",
+      "path": ".dockerignore",
+      "reason": "Optional content left out here (recorded from an optional entry without a file)."
+    },
+    {
+      "id": "content-dd2c0eb6ea5cfc6c",
+      "path": "Dockerfile",
+      "reason": "Optional content left out here (recorded from an optional entry without a file)."
+    },
+    {
+      "id": "content-043df5bdbf6639d7",
+      "path": "install.sh",
+      "reason": "Optional content left out here (recorded from an optional entry without a file)."
+    },
+    {
+      "id": "content-50c86b7ed8ac2cf9",
+      "path": "pyproject.toml",
+      "reason": "Optional content left out here (recorded from an optional entry without a file)."
+    }
+  ]
 local_legacy_inventory: {
     "version": "v0.1.25",
     "entries": [

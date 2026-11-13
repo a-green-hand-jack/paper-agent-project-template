@@ -12,8 +12,8 @@
 #   - scope template: skipped; project-owned: left alone;
 #   - `upgrade: review` (a file the project owns once it has started): never
 #     changed; the release's diff is printed for review;
-#   - `optional: true` and left out here: a local decision, kept; a new optional
-#     path is left for a manual decision;
+#   - recorded in `omitted:` (or `optional: true` and left out here): a local
+#     decision, kept; a new optional path is left for a manual decision;
 #   - shared: replaced above its `## In this repository` section when check 1
 #     passes; without a section, replaced whole when unchanged here and
 #     otherwise three-way merged with the source tag as base; added when new;
@@ -37,7 +37,7 @@
 #   Extract TARGET_TAG:.agents/scripts/shared/ into .project/state/template-upgrade/
 #   and run that upgrade-template.sh with its content_registry.py alongside it.
 set -euo pipefail
-exec python3 -I -B - "$(dirname "${BASH_SOURCE[0]}")" "$@" <<'PY'
+exec "${AGENTS_PYTHON:-python3}" -I -B - "$(dirname "${BASH_SOURCE[0]}")" "$@" <<'PY'
 import os
 import posixpath
 import hashlib
@@ -393,6 +393,7 @@ class Upgrade:
         self.proposals = clone.parent / "proposals"
         self.report = Report()
         self.path_mappings = []
+        self.kept_out = set()
 
     def physical(self, path: str) -> str:
         matches = [(source, dest) for source, dest in self.path_mappings
@@ -502,6 +503,8 @@ class Upgrade:
 
     def path(self, old_mode: str, new_mode: str, old_sha: str, new_sha: str, status: str, path: str,
              entry: dict) -> None:
+        if any(catalog.rank(self.physical(path), kept) for kept in self.kept_out):
+            return
         report, state, scope = self.report, self.local(path), scope_in(entry)
         local_entry = next((e for e in self.local_entries if catalog.rank(self.physical(path),e["path"])), {})
         if local_entry.get("status") in ("retired", "superseded", "rejected"):
@@ -811,12 +814,14 @@ def prepare_layout(upgrade, source_text, target_text, local_text):
         result['path_mappings'] = local['path_mappings']
     pending_writes = {}
     upstream_ids = {}
-    result['omitted'] = list(local.get('omitted',[]))
-    for omitted in target.get('omitted', []):
-        if omitted not in result['omitted']:
+    def omitted_already(record):
+        return any(x.get('id') == record.get('id') or x.get('path') == record.get('path') for x in result['omitted'])
+    result['omitted'] = []
+    for omitted in [*local.get('omitted', []), *target.get('omitted', [])]:
+        if not omitted_already(omitted):
             result['omitted'].append(omitted)
     for e in target['entries']:
-        if e['scope']=='template' and not any(x['id']==e['id'] for x in result['omitted']):
+        if e['scope']=='template' and not omitted_already(e):
             result['omitted'].append({'id':e['id'],'path':e['path'],'reason':'Upstream template-only content; not adopted.'})
     result["template"] = local["template"]
     if "writing" in local: result["writing"] = local["writing"]
@@ -998,6 +1003,8 @@ def prepare_layout(upgrade, source_text, target_text, local_text):
             continue
         path = mapped(e["path"])
         if e["scope"] == "template":
+            if "upstream" not in local.get("template", {}):
+                continue
             if path in target_paths:
                 report.refused(f'{path}: local template-only identity collides with upstream content')
                 upgrade.catalog_blocked = True
@@ -1083,6 +1090,48 @@ def prepare_layout(upgrade, source_text, target_text, local_text):
     result["entries"] = entries
     local_template_entries = {entry['id']: entry for entry in entries if entry['scope'] == 'template'}
     result['omitted'] = [entry for entry in result['omitted'] if entry.get('id') not in local_template_entries]
+    recorded = local.get('omitted', [])
+    template_only = {entry['id'] for entry in target['entries'] if entry['scope'] == 'template'}
+    local_ids = {entry.get('id') for entry in local['entries']}
+    for entry in list(entries):
+        path = entry['path']
+        omissions = [x for x in result['omitted'] if x.get('id') == entry['id']
+                     or (x.get('path') == path and x.get('id') not in template_only)]
+        present = upgrade.local(path) is not None
+        status = entry.get('status', 'active')
+        if not omissions:
+            if (status == 'active' and entry.get('optional') and not present and entry['id'] in local_ids
+                    and entry['scope'] != 'template' and not omitted_already(entry)):
+                entries.remove(entry)
+                upgrade.kept_out.add(upgrade.physical(path))
+                result['omitted'].append({'id': entry['id'], 'path': path,
+                                          'reason': 'Optional content left out here (recorded from an optional entry without a file).'})
+                report.applied(f"omitted: {path} (optional entry without a file recorded as an omission)")
+            continue
+        local_records = [x for x in omissions if x in recorded]
+        if status != 'active':
+            if present:
+                report.refused(f"{path}: local status {status} and omitted, but the file is present; reconcile by hand")
+                upgrade.catalog_blocked = True
+                continue
+            result['omitted'] = [x for x in result['omitted'] if x not in omissions]
+            upgrade.kept_out.add(upgrade.physical(path))
+            if local_records:
+                reasons = '; '.join(x.get('reason', '') for x in local_records)
+                report.skipped(f"kept {status}: {path} (redundant omission dropped: {reasons})")
+        elif present:
+            result['omitted'] = [x for x in result['omitted'] if x not in omissions]
+            if local_records and any(x.get('id') in template_only for x in local_records):
+                report.applied(f"project-owned: {path} (template-only omission dropped; file present)")
+            elif local_records:
+                report.applied(f"adopted: {path} (omission dropped; file present)")
+        else:
+            entries.remove(entry)
+            upgrade.kept_out.add(upgrade.physical(path))
+            for upstream, current in list(upstream_ids.items()):
+                if current == entry['id']:
+                    del upstream_ids[upstream]
+            report.skipped(f"kept out: {path} (omitted {'locally' if local_records else 'in ' + upgrade.target})")
     if local["schema_version"] == 2:
         # Preserve local policy exceptions and history in addition to upstream.
         exceptions = result["policy"]["naming_exceptions"]

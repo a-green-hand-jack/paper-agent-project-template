@@ -51,7 +51,10 @@ example assets or project-specific memory and knowledge.
    `.env.example`) and the device's inventory rows they need. Skip them when
    the project calls no LLM.
    Map the optional content the registry marks `optional: true` as adopted or
-   rejected; a rejected path is left out, and `template-upgrade` keeps it out.
+   rejected. A rejected path is left out and recorded as an `omitted:` record
+   with its upstream ID, path and reason (`.agents/AGENTS.md`, "Registry
+   authority"), never as an active entry without a file; `template-upgrade`
+   keeps it out.
    Decide `.github/workflows/template-check.yml` with the `issue-workflow`
    `<CI>` slot: adopted when it is `yes`, rejected when it is `no`. Either way
    fill `<LOCAL_CHECK>` with the `DEV.md` check commands; CI only marks the PR.
@@ -69,7 +72,8 @@ example assets or project-specific memory and knowledge.
    made from (a derived template), `template` names the target repository and
    its own release instead, and the adopted repository and tag go in
    `template.upstream` (`repository` and `version`, block style). Map the
-   `scope: template` content of the adopted template as rejected; the derived
+   `scope: template` content of the adopted template as not adopted
+   (`omitted:` records); the derived
    template writes its own release notes. When the adopted template is itself a
    derived template (its registry has `template.upstream`), record only that
    template and never copy its `upstream` block.
@@ -189,8 +193,9 @@ and the coding template in `template.upstream`.
   `third-party-llm-compat-patches`, `credential-setup`, `credential-inventory`
   and `gpt5-strict-backend-requests` are adopted together for the optional
   `image-to-editable-ppt` CLI, without a `credentials.yaml`; the product
-  release skeleton, `docker-objects-prefixed-and-removed`,
-  `run-settings-from-config` and `serve-the-coding-agent` are rejected, because
+  release skeleton is left out as `omitted:` records, and
+  `docker-objects-prefixed-and-removed`, `run-settings-from-config` and
+  `serve-the-coding-agent` stay registered with `status: rejected`, because
   a paper starts no container, has no product run and keeps no run records or
   usage accounting; `template-check.yml` is adopted (`<CI>` is `yes`) with
   `<LOCAL_CHECK>` set to the `DEV.md` check commands; the registry has no

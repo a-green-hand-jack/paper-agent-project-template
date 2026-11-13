@@ -325,6 +325,32 @@ def relationship_errors(entries):
     return errors
 
 
+def omission_errors(data):
+    errors = []
+    fail = errors.append
+    omitted = data.get('omitted', [])
+    if not isinstance(omitted, list):
+        return ['omitted must be a list of id/path/reason records']
+    registered = {e.get('id'): e for e in data.get('entries', [])}
+    seen = {}
+    for record in omitted:
+        if not isinstance(record, dict):
+            fail(f'invalid omission: {record!r}; use an id/path/reason record')
+            continue
+        eid, path, reason = record.get('id'), record.get('path'), record.get('reason')
+        if not eid or not safe_path(path) or not isinstance(reason, str) or not reason.strip() or set(record) - {'id', 'path', 'reason'}:
+            fail(f'invalid omission: {path or eid}; requires only id, path and a nonempty reason')
+        for key in (eid, path):
+            if key and key in seen and seen[key] is not record:
+                fail(f'duplicate omission: {key}')
+            seen.setdefault(key, record)
+        entry = registered.get(eid)
+        if entry:
+            fail(f'omitted and registered: {path} ({eid}) is also entry {entry.get("path")} ({entry.get("id")}); '
+                 'run the target release upgrade command or keep one record')
+    return errors
+
+
 def validate(root, data):
     errors = []
     fail = errors.append
@@ -360,6 +386,7 @@ def validate(root, data):
             if not isinstance(e.get(key, []), list):
                 fail(f'{key} must contain stable IDs: {path}')
     errors.extend(relationship_errors(entries))
+    errors.extend(omission_errors(data))
     policy = data.get('policy', {})
     exceptions = policy.get('naming_exceptions', [])
     for exception in exceptions:

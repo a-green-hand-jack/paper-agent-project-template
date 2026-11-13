@@ -20,4 +20,4 @@ done
 for tool in pdftotext pdfinfo; do
   command -v "$tool" >/dev/null || echo "warning: $tool not found; make check needs poppler-utils" >&2
 done
-python3 -I -c 'import yaml, markdown_it' 2>/dev/null || echo 'warning: make check needs PyYAML and markdown-it-py available to isolated Python' >&2
+"${AGENTS_PYTHON:-python3}" -I -c 'import yaml, markdown_it' 2>/dev/null || echo 'warning: make check needs PyYAML and markdown-it-py available to isolated Python; set AGENTS_PYTHON to an interpreter that has them (DEV.md)' >&2
