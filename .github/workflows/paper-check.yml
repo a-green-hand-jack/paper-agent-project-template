@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          # test_adoption_states.py upgrades a paper from the v0.4.1 tag.
+          # test_template_adoption_states.py upgrades a paper from the v0.4.1 tag.
           fetch-depth: 0
 
       - name: Check the Ubuntu package mirrors resolve
@@ -76,6 +76,10 @@ jobs:
 
       - name: Build the submission form
         run: make submission
+
+      - name: Run the template's own tests
+        if: hashFiles('.agents/tests/project/test_template_*.py') != ''
+        run: python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'
 
       - name: Upload the build logs
         if: failure()

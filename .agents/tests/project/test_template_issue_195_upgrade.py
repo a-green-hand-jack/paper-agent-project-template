@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from test_adoption_states import ROOT, CLONE, content_registry, drop_bullets, git, refused_paths, shipped_tree, start_paper, tree
+from test_template_adoption_states import ROOT, CLONE, content_registry, drop_bullets, git, refused_paths, setUpModule, shipped_tree, start_paper, tree
 import test_reference_evidence as reference_fixture
 
 
@@ -120,8 +120,8 @@ class DerivedTemplateUpgrade(unittest.TestCase):
             template = base / "upstream"
             template.mkdir()
             shipped_tree(template)
-            shutil.copy2(ROOT / ".agents/tests/project/test_adoption_states.py",
-                         template / ".agents/tests/project/test_adoption_states.py")
+            shutil.copy2(ROOT / ".agents/tests/project/test_template_adoption_states.py",
+                         template / ".agents/tests/project/test_template_adoption_states.py")
             notes = template / "RELEASE_NOTES.md"
             notes.write_text(notes.read_text().replace("# 发布说明\n", "# 发布说明\n\n## test-up-1\n", 1))
             git("add", "-A", cwd=template)

@@ -4281,7 +4281,7 @@ migrations: [
       "to": [
         {
           "id": "content-ed370ffcde71c896",
-          "path": ".agents/tests/project/test_adoption_states.py"
+          "path": ".agents/tests/project/test_template_adoption_states.py"
         }
       ],
       "action": "move",
@@ -9364,6 +9364,60 @@ migrations: [
       "reason": "Group paper records by responsibility while retaining stable identity and ownership.",
       "source_commit": "00a12c3f019a1f846a34f9ff70aab0110e6c62d5",
       "verification": "registry, nested record checks, project-record upgrade and repeat migration"
+    },
+    {
+      "from": [
+        {
+          "id": "content-ed370ffcde71c896",
+          "path": ".agents/tests/project/test_adoption_states.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-ed370ffcde71c896",
+          "path": ".agents/tests/project/test_template_adoption_states.py"
+        }
+      ],
+      "action": "rename",
+      "reason": "Template-only tests carry the test_template_ prefix the shared test rules and the template-check workflow select by.",
+      "source_commit": "582765a6bc783ae16ad2eeeb8fa4320b392a9a6c",
+      "verification": "bash .agents/scripts/shared/check-development.sh; python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'"
+    },
+    {
+      "from": [
+        {
+          "id": "paper-test-issue-195",
+          "path": ".agents/tests/project/test_issue_195_upgrade.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "paper-test-issue-195",
+          "path": ".agents/tests/project/test_template_issue_195_upgrade.py"
+        }
+      ],
+      "action": "rename",
+      "reason": "Template-only tests carry the test_template_ prefix the shared test rules and the template-check workflow select by.",
+      "source_commit": "582765a6bc783ae16ad2eeeb8fa4320b392a9a6c",
+      "verification": "bash .agents/scripts/shared/check-development.sh; python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'"
+    },
+    {
+      "from": [
+        {
+          "id": "content-issue-197-upgrade-tests",
+          "path": ".agents/tests/project/test_issue_197_upgrade.py"
+        }
+      ],
+      "to": [
+        {
+          "id": "content-issue-197-upgrade-tests",
+          "path": ".agents/tests/project/test_template_issue_197_upgrade.py"
+        }
+      ],
+      "action": "rename",
+      "reason": "Template-only tests carry the test_template_ prefix the shared test rules and the template-check workflow select by.",
+      "source_commit": "582765a6bc783ae16ad2eeeb8fa4320b392a9a6c",
+      "verification": "bash .agents/scripts/shared/check-development.sh; python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'"
     }
   ]
 entries:
@@ -11920,7 +11974,7 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/tests/project/test_adoption_states.py
+  - path: .agents/tests/project/test_template_adoption_states.py
     id: content-ed370ffcde71c896
     kind: code
     scope: template
@@ -12159,7 +12213,7 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_issue_195_upgrade.py
+  - path: .agents/tests/project/test_template_issue_195_upgrade.py
     id: paper-test-issue-195
     kind: code
     scope: template
@@ -12171,7 +12225,7 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/project/test_issue_197_upgrade.py
+  - path: .agents/tests/project/test_template_issue_197_upgrade.py
     id: content-issue-197-upgrade-tests
     kind: code
     scope: template

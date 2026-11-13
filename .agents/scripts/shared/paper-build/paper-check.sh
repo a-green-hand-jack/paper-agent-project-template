@@ -2,8 +2,9 @@
 # make check: build main and blind, fail on undefined references or citations,
 # missing files and multiply defined labels, report the main-text pages of the
 # blind build against PAGE_BUDGET, and run the repository's static checks, the
-# development registry check and the unit tests. Build output and logs stay in
-# BUILD_DIR (.project/build/).
+# development registry check and the unit tests. A template repository's own
+# tests (.agents/tests/project/test_template_*.py) are left to CI and the
+# template's release. Build output and logs stay in BUILD_DIR (.project/build/).
 set -uo pipefail
 
 root=$(git rev-parse --show-toplevel)
@@ -18,6 +19,15 @@ run() { # run NAME COMMAND...: run a check and remember a failure
   local name=$1
   shift
   "$@" || failed+=("$name")
+}
+
+unit_tests() { # unit_tests DIRECTORY: every test file except a template's own test_template_*.py
+  local file status=0
+  for file in "$1"/test_*.py; do
+    [[ ${file##*/} == test_template_* ]] && continue
+    python3 -m unittest discover -s "$1" -p "${file##*/}" || status=1
+  done
+  return "$status"
 }
 
 for job in main blind; do
@@ -54,7 +64,7 @@ for group in shared project; do
   for directory in ".agents/tests/$group" ".agents/tests/$group"/*/; do
     [[ -d "$directory" ]] || continue
     compgen -G "$directory/test_*.py" >/dev/null || continue
-    run "unit tests ($directory)" python3 -m unittest discover -s "$directory" -p 'test_*.py'
+    run "unit tests ($directory)" unit_tests "$directory"
   done
 done
 
