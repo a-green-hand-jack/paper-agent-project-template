@@ -29,6 +29,22 @@ class AuthorCommentLeftovers(unittest.TestCase):
         main = (ROOT / "paper/main.tex").read_text(encoding="utf-8")
         self.assertIn(r"\usepackage{style/author-comments}", main)
 
+    def test_names_are_read_past_a_comment_header(self) -> None:
+        module = checker()
+        with tempfile.TemporaryDirectory() as directory:
+            paper = Path(directory) / "paper"
+            style = paper / "style/author-comments.sty"
+            style.parent.mkdir(parents=True)
+            style.write_text(
+                "% author-comments.sty\n"
+                "%   \\newcommand{\\bob}[1]{\\AuthorComment{red}{BO}{#1}}\n"
+                "\\newcommand{\\AuthorComment}[3]{\\ifPaperNotes{\\color{#1}[#2: #3]}\\fi}\n"
+                "\\newcommand{\\alice}[1]{\\AuthorComment{blue}{AL}{#1}} % 50\\% done\n",
+                encoding="utf-8",
+            )
+            names = module.author_comment_names(paper)
+        self.assertEqual(names, ["alice"])
+
     def test_leftovers_flags_generic_and_per_author_calls(self) -> None:
         module = checker()
         with tempfile.TemporaryDirectory() as directory:

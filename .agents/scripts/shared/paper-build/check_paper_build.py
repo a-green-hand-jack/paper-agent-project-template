@@ -259,7 +259,8 @@ def author_comment_names(paper: Path) -> list[str]:
     if not path.is_file():
         return []
     names: list[str] = []
-    for match in DECLARATION.finditer(active(path.read_text(encoding="utf-8"))):
+    text = "\n".join(active(line) for line in lines_of(path))
+    for match in DECLARATION.finditer(text):
         name = match.group(1) or match.group(2)
         if name not in LEFTOVER_MACROS and name not in names:
             names.append(name)
