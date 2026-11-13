@@ -3,6 +3,36 @@
 本文件记录本模板自身的发布历史，每个版本使用一个 `## <tag>` 标题。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
+## v0.4.13 — 2026-11-13
+
+本版修复两个由论文仓库报告的缺陷，并跟随 coding template v0.1.32 → v0.1.34，去掉本模板对继承升级命令的全部本地修改。论文正文、`paper/` 自包含、三种构建和 Overleaf 投影不变（[#216](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/216)、[#217](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/217)、[#218](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/218)；上游 [#154](https://github.com/a-green-hand-jack/coding-agent-project-template/issues/154)、[#155](https://github.com/a-green-hand-jack/coding-agent-project-template/issues/155)、[#159](https://github.com/a-green-hand-jack/coding-agent-project-template/issues/159)）。
+
+- **作者批注检查此前会漏报，现在会报出来。** `make release-check` 的 `leftovers` 一步原本读不到 `paper/style/author-comments.sty` 里按作者声明的命令：文件开头的注释使命令名单变成空的，源码里还有批注调用时也输出 `OK`。现在：
+  - 该文件中声明的所有命令都会被检查；
+  - 在其他源文件（例如 `paper/main.tex`）中声明、定义里调用 `\AuthorComment` 的命令也会被检查，`\def` 和 `\NewDocumentCommand` 形式的声明同样识别；
+  - 不调用 `\AuthorComment` 的自定义批注命令必须声明在 `paper/style/author-comments.sty`，否则不会被检查（`PAPER.md` 已写明）；
+  - 检查通过时列出实际检查的命令名。
+  - **对论文的影响**：源码中仍有作者批注调用的论文，升级后 `make release-check` 的 `leftovers` 会开始失败。这是该检查的本意；发布前删除这些调用。
+- **升级时遵守论文“不采纳”的决定。** registry 顶层的 `omitted:` 是记录“不采纳模板内容”的唯一方式（`.agents/AGENTS.md`，“Registry authority”）。升级命令不再把已省略的路径重新登记为在用条目；计划中逐路径报告 `kept out`、`adopted`、`project-owned`、`kept <status>` 或 `omitted`。带 `optional: true`、文件不存在的条目会自动改记为省略。已经因旧命令而同时带有省略记录和在用条目的论文，用本版命令重跑一次升级即自动修复，原有理由保留。
+- **继承命令与上游一致。** `upgrade-template.sh`、`content_registry.py` 等继承脚本与 coding template v0.1.34 逐字节相同；本模板早先携带的修改已全部进入上游。此前为避免断链而改写的三条 shared 记录（`llm-credentials`、`provider-cost-routing`、`screen-with-scriptable-fakes`）恢复为上游正文。
+- **Python 解释器可以指定。** `make check`、`make release-check` 和继承命令默认使用 `PATH` 上的 `python3`；设置 `AGENTS_PYTHON` 即改用指定解释器。`diagnose-environment.sh` 会检查 PyYAML 和 markdown-it-py，缺失时输出 `FAIL` 和处理办法（`DEV.md`，“构建与检查”）。registry 缺少 `template:` 块时的补录提示改用 `<TEMPLATE_URL>` 占位符：论文应填本模板的仓库地址。
+- **仅影响本模板仓库**：模板自有测试改名为 `test_template_*.py` 并移出 `make check`，由 CI 的 `check` job 和模板发布流程运行；`make check` 在模板仓库中从约 17 分钟降到约 1 分钟。论文没有这些文件，`make check` 的内容不变。
+
+### Adoption states
+
+以下状态通过 `make check`；`make release-check` 对尚未填写的论文在表中步骤失败，原因见 v0.4.2。模板中的占位内容不是投稿论文。
+
+| State | `make release-check` fails on |
+| --- | --- |
+| fresh paper | `identity`, `leftovers`, `pages` |
+| existing bibliography, no ledger | `identity`, `leftovers`, `pages`, `references` |
+| existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
+| venue kit | `identity`, `leftovers`, `pages` |
+
+### Upgrading a paper from v0.4.12
+
+**Command only.** 按 `template-upgrade` 的“In this repository”运行一次本发布版完整的 `.agents/scripts/shared/` 命令目录，先 `--check` 再应用，最后运行 `make check`；不要运行论文自带的旧命令，它仍会产生重复条目。审阅计划中的 `kept out`、`adopted`、`project-owned`、`kept <status>` 和 `omitted` 行，确认与论文的决定一致。`PAPER.md` 的变更列在计划的 “Review” 下，由论文自行取用。升级后运行 `make release-check`：若 `leftovers` 报出作者批注调用，在发布前删除它们。
+
 ## v0.4.12 — 2026-11-12
 
 本版跟随 coding template v0.1.30 → v0.1.32，把它对 schema 1→2 升级边界的修复整合进本模板继承的升级命令，使 v0.4.6 之前采纳的论文可以用一条命令跨过开发面目录与 registry 格式的边界；同时采用 v0.1.31 的 `engineering-change` 共享技能。论文正文、`paper/` 自包含、构建入口和 Overleaf 投影不变（[#212](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/212)、[#213](https://github.com/a-green-hand-jack/paper-agent-project-template/issues/213)；上游 [#152](https://github.com/a-green-hand-jack/coding-agent-project-template/issues/152)）。
