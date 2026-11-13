@@ -28,11 +28,10 @@ IDENTITY = re.compile(r"\\PaperIdentity\{([^{}]+)\}")
 # The identity paper/authors.tex ships with; a release declares the real one.
 PLACEHOLDER_IDENTITIES = ("Template-Author-Name", "template-author@example.invalid", "Template-Institution")
 LEFTOVER_MACROS = ("PaperTODO", "PaperNote", "AuthorComment", "agent")
-DEFINITION = re.compile(r"\\(?:newcommand|renewcommand|providecommand|DeclareRobustCommand|def)\b")
-DECLARATION = re.compile(
-    r"\\(?:newcommand|renewcommand|providecommand|DeclareRobustCommand)\*?\s*"
-    r"(?:\{\s*\\([A-Za-z@]+)\s*\}|\\([A-Za-z@]+))"
-)
+DEFINERS = r"(?:(?:new|renew|provide)command|DeclareRobustCommand|(?:New|Renew|Provide|Declare)DocumentCommand|[egx]?def)"
+DEFINITION = re.compile(r"\\" + DEFINERS + r"\b")
+DECLARATION = re.compile(r"\\" + DEFINERS + r"\*?\s*(?:\{\s*\\([A-Za-z@]+)\s*\}|\\([A-Za-z@]+))")
+AUTHOR_COMMENT_CALL = re.compile(r"\\AuthorComment(?![A-Za-z@])")
 UNDERSCORE_TOKEN = re.compile(r"[A-Za-z0-9.:/-]*[A-Za-z0-9](?:\\_[A-Za-z0-9.:/-]*[A-Za-z0-9])+")
 SOURCE_SUFFIXES = {".tex", ".sty", ".cls", ""}
 
@@ -49,9 +48,9 @@ def job_files(build_dir: Path, job: str) -> dict[str, Path]:
     }
 
 
-def active(line: str) -> str:
-    """Drop a TeX comment, keeping an escaped percent sign."""
-    return re.split(r"(?<!\\)%", line, maxsplit=1)[0]
+def active(text: str) -> str:
+    """Drop TeX comments from one line or many, keeping an escaped percent sign."""
+    return "\n".join(re.split(r"(?<!\\)%", line, maxsplit=1)[0] for line in text.split("\n"))
 
 
 def lines_of(path: Path) -> list[str]:
@@ -253,39 +252,72 @@ def cmd_identity(args: argparse.Namespace) -> int:
     return failed
 
 
-def author_comment_names(paper: Path) -> list[str]:
-    """Author commands declared in paper/style/author-comments.sty."""
-    path = paper / "style/author-comments.sty"
-    if not path.is_file():
-        return []
+def definition_end(text: str, start: int) -> int:
+    """Where the definition that declares a name at `start` ends: after its
+    bracket and brace groups, the arguments and the body."""
+    position = end = start
+    while position < len(text):
+        char = text[position]
+        if char.isspace() or char.isdigit() or char == "#":
+            position += 1
+            continue
+        if char not in "[{":
+            break
+        close = "]" if char == "[" else "}"
+        depth = 0
+        while position < len(text):
+            if text[position] == "\\":
+                position += 2
+                continue
+            depth += (text[position] == char) - (text[position] == close)
+            position += 1
+            if depth == 0:
+                break
+        end = position
+    return end
+
+
+def author_comment_names(paper: Path, sources: tuple[Path, ...] | list[Path] = ()) -> list[str]:
+    """Author commands: every command paper/style/author-comments.sty declares, and
+    every command another source declares with a definition that calls \\AuthorComment."""
+    style = paper / "style/author-comments.sty"
     names: list[str] = []
-    text = "\n".join(active(line) for line in lines_of(path))
-    for match in DECLARATION.finditer(text):
-        name = match.group(1) or match.group(2)
-        if name not in LEFTOVER_MACROS and name not in names:
-            names.append(name)
+    paths = [style] if style.is_file() else []
+    paths += [path for path in sources if path.resolve() != style.resolve()]
+    for path in paths:
+        text = active(path.read_text(encoding="utf-8", errors="replace"))
+        for match in DECLARATION.finditer(text):
+            name = match.group(1) or match.group(2)
+            if name in LEFTOVER_MACROS or name in names:
+                continue
+            if path is style or AUTHOR_COMMENT_CALL.search(text, match.end(), definition_end(text, match.end())):
+                names.append(name)
     return names
 
 
 def cmd_leftovers(args: argparse.Namespace) -> int:
     files = job_files(args.build_dir, args.job)
-    names = tuple(LEFTOVER_MACROS) + tuple(author_comment_names(args.paper))
+    sources = paper_sources(files, args.paper)
+    names = tuple(LEFTOVER_MACROS) + tuple(author_comment_names(args.paper, sources))
     calls = re.compile(r"\\(" + "|".join(re.escape(name) for name in names) + r")(?![A-Za-z@])")
     failed = 0
-    for path in paper_sources(files, args.paper):
-        for number, line in enumerate(lines_of(path), 1):
-            text = active(line)
-            if DEFINITION.search(text):
+    for path in sources:
+        text = active(path.read_text(encoding="utf-8", errors="replace"))
+        definitions = [(match.start(), definition_end(text, match.end())) for match in DECLARATION.finditer(text)]
+        lines = text.split("\n")
+        for match in calls.finditer(text):
+            number = text.count("\n", 0, match.start()) + 1
+            if any(start <= match.start() < end for start, end in definitions) or DEFINITION.search(lines[number - 1]):
                 continue
-            for name in calls.findall(text):
-                print(f"ERROR {args.job}: unresolved \\{name} in {shown(path, args.paper)}:{number}")
-                failed = 1
+            print(f"ERROR {args.job}: unresolved \\{match.group(1)} in {shown(path, args.paper)}:{number}")
+            failed = 1
     for line in pdf_text(files["pdf"]).splitlines():
         if re.search(r"\bTODO\b", line):
             print(f"ERROR {args.job}: 'TODO' in the PDF text: {line.strip()[:80]}")
             failed = 1
     if not failed:
-        print(f"OK {args.job}: no unresolved \\PaperTODO, \\PaperNote or author comment")
+        checked = ", ".join("\\" + name for name in names)
+        print(f"OK {args.job}: no unresolved \\PaperTODO, \\PaperNote or author comment (checked: {checked})")
     return failed
 
 
