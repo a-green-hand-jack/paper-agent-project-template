@@ -7,17 +7,17 @@ applies_to: repositories whose code, tools or agents call LLM providers with API
 
 # Manage LLM credentials across projects
 
-When adopted, the steps that apply these decisions are in
-`.agents/skills/shared/credential-setup/SKILL.md`; the formats of
-`inventory.yaml` and `credentials.yaml` and what `probe-credentials.sh`
-checks are in `.agents/knowledge/shared/credential-inventory.md`. An adopter
-that uses these decisions adopts those optional resources together.
+The steps that apply these decisions are in the optional skill `credential-setup`
+(`.agents/skills/shared/credential-setup/SKILL.md`); the formats of
+`inventory.yaml` and `credentials.yaml` and what `probe-credentials.sh` checks are
+in the optional knowledge record `credential-inventory`
+(`.agents/knowledge/shared/credential-inventory.md`). Each is adopted separately.
 
-Related: [`third-party-llm-compat-patches.md`](third-party-llm-compat-patches.md)
+Related: the optional memory record `third-party-llm-compat-patches` (`.agents/memory/shared/third-party-llm-compat-patches.md`, when adopted)
 (compatibility changes to third-party LLM tools),
 [`provider-cost-routing.md`](provider-cost-routing.md) (which source, provider
 and model a check uses) and
-[`../../knowledge/shared/gpt5-strict-backend-requests.md`](../../knowledge/shared/gpt5-strict-backend-requests.md)
+the optional knowledge record `gpt5-strict-backend-requests` (`.agents/knowledge/shared/gpt5-strict-backend-requests.md`, when adopted)
 (request shapes strict backends reject). Read them together when a project
 calls an LLM provider or relay.
 
@@ -91,6 +91,17 @@ worktree would need a new login for every worktree and would be lost with it.
 
 Each project fills two parameters, and writes its own additions to a step of
 `credential-setup`, in the `## In this repository` section at the end of this
+record (see `template-adoption` step 5):
+
+- `SHARED_CREDENTIAL_FILE`: the device's shared file, taken from user-level
+  configuration. If the device has none, the project runs without it.
+- `CREDENTIAL_DIR`: the name of the Git-ignored directory under the canonical
+  checkout's `.project/` that holds the symlink to the shared file and the
+  project's own logins. This project uses `credentials`.
+
+Then follow `credential-setup` in the canonical checkout and in each worktree.
+
+## In this repository` section at the end of this
 record (see `template-adoption` step 5):
 
 - `SHARED_CREDENTIAL_FILE`: the device's shared file, taken from user-level

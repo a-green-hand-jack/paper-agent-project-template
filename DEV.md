@@ -76,7 +76,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 
 - 带 `latexmk`、`pdflatex`、`bibtex` 及论文和投稿套件所需宏包的 TeX Live；
 - 用于 PDF 检查的 `pdftotext` 和 `pdfinfo`（poppler-utils）；
-- 用于脚本的 Python 3、PyYAML 和 markdown-it-py；开发面检查以隔离模式运行，依赖须在该模式下可用；
+- 用于脚本的 Python 3、PyYAML 和 markdown-it-py；开发面检查以隔离模式运行（忽略用户级 site-packages 和 `PYTHONPATH`），依赖须在该模式下可用。`make check`、`make release-check` 和继承命令默认使用 `PATH` 上的 `python3`；设置 `AGENTS_PYTHON` 为解释器路径即改用它。解释器拒绝 `pip install`（PEP 668 “externally managed”）时，创建一个装有这两项依赖的虚拟环境并 `export AGENTS_PYTHON=<venv>/bin/python`；`diagnose-environment.sh` 会检查这两项依赖并在缺失时输出 `FAIL`；
 - 可选的 `uv`，供使用 `.agents/scripts/shared/paper-references/reference-integrity/` 中锁定依赖的在线参考文献审计使用。
 
 `bash .agents/scripts/shared/setup-worktree.sh` 会报告缺失项。
@@ -168,7 +168,7 @@ bash .agents/scripts/shared/inspect-state.sh
 make check
 ```
 
-`make check` 运行所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s <该测试所在目录> -p 'test_<name>.py'`（例如 `.agents/tests/shared/paper-references`）。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
+`make check` 运行除模板自有测试（`.agents/tests/project/test_template_*.py`）之外的所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s <该测试所在目录> -p 'test_<name>.py'`（例如 `.agents/tests/shared/paper-references`）。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
 
 ## 发布
 
@@ -179,20 +179,20 @@ make check
 3. 创建从 `dev` 到 `main` 的 PR。合并后在 `main` 上创建并推送标签，例如 `submit-<venue>-<yyyy>`、`arxiv-v1` 或 `camera-ready`。
 4. 在 `RELEASE_NOTES.md` 中添加 `## <tag>` 条目，记录发布内容、所用构建及检查结果。
 
-本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit` 和 `make check`；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。`make check` 运行 `.agents/tests/project/test_adoption_states.py`，从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
+本模板自身的发布使用 `main` 上的 `v<major>.<minor>.<patch>` 标签，每个标签在 `RELEASE_NOTES.md` 中有一个 `## <tag>` 标题。模板发布前运行 `release-doc-audit`、`make check` 和模板自有测试（`python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'`，约十几分钟；CI 的 `check` job 也会运行）；`main` 要求 CI job `structure`、`check`、`paper-only` 和 `references` 通过。发布条目包含 “Adoption states” 表：对按 README “Start a paper” 到达的每个状态（新论文、没有台账的现有参考文献或已迁移台账、投稿套件），列出该状态下预期失败的 `make release-check` 步骤。模板自有测试中的 `.agents/tests/project/test_template_adoption_states.py` 从交付文件构建每种状态，分别运行 `make check` 和 `make release-check` 并将失败项与表格比较，还会对真实规模的参考文献运行在线元数据审计；发布需要该测试通过。升级小节 `### Upgrading a paper from <previous tag>` 在 `upgrade-template.sh` 单独完成升级时以 **Command only.** 开头，否则列出剩余手动步骤；同一测试检查 v0.4.0 之后的每个条目，并用候选版本自身的命令将 v0.4.1 的新论文升级到候选版本。
 
 CI 的 Ubuntu 镜像 DNS 预检和 TeX 安装步骤各有独立超时，apt 也设置连接超时和有限重试；runner 的瞬时 DNS/网络故障会在数分钟内显式失败，而不是耗尽 job 超时。遇到该失败时读取安装日志并重跑 failed jobs，不使用管理员权限绕过必需检查。
 
 ## 与模板的关系
 
-跟随 coding template v0.1.32；本模板保留的升级命令、registry 检查及可选内容适配详见 v0.4.7 和 v0.4.8 发布说明。后续升级上游时应重新核对这些差异。
+跟随 coding template v0.1.34。继承的命令和记录与该版本没有本地差异：`.agents/scripts/shared/` 中来自上游的脚本（包括 `upgrade-template.sh` 和 `content_registry.py`）与 v0.1.34 逐字节相同，继承的技能和记录在 `## In this repository` 小节之上与上游原文相同。本模板早先携带的升级命令和 registry 检查修改已全部进入上游（v0.1.33，上游 #155）。每次跟随新的上游版本后重新核对：用 `cmp` 比较上游脚本，比较各记录在小节之上的正文；出现必须保留的本地差异时，在此逐块列出原因、引入它的 Issue 和上游状态。
 
 本仓库是 `coding-agent-project-template` 的派生模板：在其基础上构建，并供论文使用。它的 registry `.agents/content-registry.yaml` 在 `template` 中记录本模板，在 `template.upstream` 中记录其遵循的 coding template：
 
 | 仓库 | `template.repository` / `template.version` | `template.upstream` |
 | --- | --- | --- |
 | `coding-agent-project-template` | 自身及其当前版本 | 无 |
-| 本模板 | 自身及其发布版本（v0.4.12） | coding template 及其所遵循的标签（v0.1.32） |
+| 本模板 | 自身及其发布版本（v0.4.13） | coding template 及其所遵循的标签（v0.1.34） |
 | 由本模板创建的论文 | 本模板及采用的标签 | 无 |
 
 仓库有 `template.upstream` 字段时遵循该字段，否则遵循 `template`。

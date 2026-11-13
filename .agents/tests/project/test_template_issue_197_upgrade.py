@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from test_adoption_states import ROOT, CLONE, content_registry, drop_bullets, git, refused_paths, shipped_tree, start_paper, tree
+from test_template_adoption_states import ROOT, CLONE, content_registry, drop_bullets, git, refused_paths, setUpModule, shipped_tree, start_paper, tree
 import test_reference_evidence as reference_fixture
 
 

@@ -194,7 +194,7 @@ heading per release in its own `RELEASE_NOTES.md`.
   is `### Upgrading a paper from <previous tag>`. The entry also has an
   "Adoption states" table naming, per adoption state, the `make release-check`
   steps expected to fail. Run
-  `python3 -m unittest discover -s .agents/tests -p 'test_adoption_states.py'`;
+  `python3 -m unittest discover -s .agents/tests/project -p 'test_template_adoption_states.py'`;
   it builds each state from the release candidate and checks the table, checks
   that every entry after v0.4.0 marks its upgrade section one way or the
   other, and upgrades a fresh paper at v0.4.1 to the candidate with the

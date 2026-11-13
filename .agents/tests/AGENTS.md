@@ -35,14 +35,17 @@ live agent obeys the rules; native transport and receiver evidence stay separate
 
 For this paper the public entry points are the builds: a passing unit test does
 not replace `make check` or `make release-check`, and neither replaces looking
-at the rendered pages. `make check` runs every test in both groups:
+at the rendered pages. `make check` runs every test in both groups except the
+template's own `project/test_template_*.py`:
 
 ```bash
-for dir in .agents/tests/shared .agents/tests/shared/*/; do
+for dir in .agents/tests/shared .agents/tests/shared/*/ .agents/tests/project; do
   [ -d "$dir" ] || continue
-  python3 -m unittest discover -s "$dir" -p 'test_*.py' || exit
+  for file in "$dir"/test_*.py; do
+    case ${file##*/} in test_template_*) continue ;; esac
+    python3 -m unittest discover -s "$dir" -p "${file##*/}" || exit
+  done
 done
-python3 -m unittest discover -s .agents/tests/project -p 'test_*.py'
 ```
 
 Run one file with `-p test_<name>.py`. Tests write only to temporary
@@ -53,12 +56,23 @@ as CI does) and are skipped elsewhere, and so is the locked-tool contract test
 environment.
 
 `shared/` holds the tests of the shared scripts, which a paper keeps.
-`project/test_adoption_states.py` belongs to this template
-(`scope: template`): it builds each adoption state from the shipped files in a
+The `project/test_template_*.py` files are this template's own tests
+(`scope: template`; a paper deletes them). They build papers and take several
+minutes, so `make check` leaves them out: the `check` job of
+`paper-check.yml` runs them where TeX is installed, the inherited
+`template-check.yml` step skips them because that job has no TeX, and
+a template release runs them locally (`DEV.md`, "发布"):
+
+```bash
+python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'
+```
+
+`test_template_adoption_states.py` builds each adoption state from the shipped files in a
 temporary directory, runs `make check` and `make release-check` there and
 compares the failures with the newest `RELEASE_NOTES.md` entry. It also
 upgrades a fresh paper at v0.4.1 to the shipped files with this release's
 `upgrade-template.sh` and runs `make check` there, and checks that every
-release entry marks its upgrade section. It is a release requirement
-(`DEV.md`, "Releases"); a paper deletes it. `shared/test_upgrade_template.py`
+release entry marks its upgrade section. `test_template_issue_195_upgrade.py`
+and `test_template_issue_197_upgrade.py` upgrade papers across the releases
+that moved paper content and tooling. `shared/test_upgrade_template.py`
 runs the command against a fixture template repository with three tags.

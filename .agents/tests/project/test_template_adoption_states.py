@@ -47,8 +47,7 @@ VENUE_KIT = r"""% venuekit.sty: synthetic venue kit for the adoption-state tests
 
 
 def shipped_tree(root: Path) -> None:
-    """The working tree's tracked and new files, without this module (the copy
-    runs make check, which runs every test under .agents/tests)."""
+    """The working tree's tracked and new files, without this module."""
     listed = subprocess.run(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
         cwd=ROOT, capture_output=True, check=True,
@@ -242,8 +241,11 @@ def failed_steps(output: str) -> set[str]:
     return set(match.group(1).split(", ")) if match else set()
 
 
-@unittest.skipIf(shutil.which("latexmk") is None or shutil.which("pdftotext") is None,
-                 "the adoption states run the real builds")
+def setUpModule() -> None:
+    if shutil.which("latexmk") is None or shutil.which("pdftotext") is None:
+        raise unittest.SkipTest("the template's own tests build papers: they need latexmk and pdftotext")
+
+
 class AdoptionStateTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -436,7 +438,6 @@ class UpgradeStateTests(unittest.TestCase):
                                     self.upgrade.stdout)
                     self.assertEqual(upgraded.get(path), self.before.get(path))
 
-    @unittest.skipIf(shutil.which("latexmk") is None or shutil.which("pdftotext") is None, "make check builds the paper")
     def test_make_check_passes_after_the_upgrade(self) -> None:
         self.assertEqual(self.upgrade.returncode, 0)
         result = subprocess.run(["make", "check"], cwd=self.paper, env=caller_environment(),
