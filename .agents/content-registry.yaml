@@ -12406,6 +12406,17 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Fill one line per intentional exemption of this paper, with its reason."
+  - path: .agents/memory/shared/paper-foundation/appendix-as-its-own-tree.md
+    id: content-6c92277314f82a36
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "One appendix per file under paper/appendix/, input after \\appendix; sections/ holds main text only."
+    status: active
+    source: {"commit": "71945a6", "path": ".agents/memory/shared/paper-foundation/appendix-as-its-own-tree.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
 omitted: [
     {
       "id": "content-2f754321d62f08ba",

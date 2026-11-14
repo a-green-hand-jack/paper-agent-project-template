@@ -22,6 +22,7 @@ the record's own text never contains that heading line.
 - [paper-build/post-build-visual-inspection.md](paper-build/post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
 - [paper-build/tex-engine-from-texbin.md](paper-build/tex-engine-from-texbin.md) — TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
 - [paper-figures/figure-deck-and-export.md](paper-figures/figure-deck-and-export.md) — Draw conceptual figures as one slide deck in the notes tree, export with a project script, judge at print size.
+- [paper-foundation/appendix-as-its-own-tree.md](paper-foundation/appendix-as-its-own-tree.md) — One appendix per file under paper/appendix/, input after \appendix; sections/ holds main text only.
 - [paper-foundation/results-through-interface-macros.md](paper-foundation/results-through-interface-macros.md) — Reported numbers only through interface macros with a manifest source; planned results are never observations.
 - [paper-publication/official-venue-kit-unmodified.md](paper-publication/official-venue-kit-unmodified.md) — Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only.
 - [paper-publication/overleaf-paper-tree-only.md](paper-publication/overleaf-paper-tree-only.md) — Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force.

@@ -48,7 +48,7 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 
 | 路径 | 层面 | 用途 |
 | --- | --- | --- |
-| `paper/` | 产品 | 论文：`main.tex`、`submission.tex`、`blind.tex`、`authors.tex`、`macros.tex`、`refs.bib`、`sections/`、`figures/`、`tables/`、`algorithms/`、`style/` 和其中的 `Makefile` |
+| `paper/` | 产品 | 论文：`main.tex`、`submission.tex`、`blind.tex`、`authors.tex`、`macros.tex`、`refs.bib`、`sections/`（正文各节）、`appendix/`（每个附录一个文件）、`figures/`、`tables/`、`algorithms/`、`style/` 和其中的 `Makefile` |
 | `assets/` | 证据 | `MANIFEST.yaml`：每个报告数字、表格和图数据文件的源仓库、提交、运行、校验和及重新生成命令；大型文件的本地链接 |
 | `Makefile` | 构建入口 | 上述 `make` 目标 |
 | `.project/` | worktree 本地状态 | 构建输出、日志和截图；Git 忽略此目录 |
