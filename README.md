@@ -40,7 +40,7 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 | `make release-check` | 构建 `blind` 和 `submission`；匿名 PDF 或其源文件中存在作者身份（或模板占位身份）、`submission` 中留有注释或 TODO、页数超预算、参考文献未达到发布强度，或完整在线元数据审计未通过时失败（需要 `uv` 和网络） |
 | `make clean` | 清理构建输出 |
 
-三个版本来自同一份源：`paper/main.tex` 对应 `main`，单行的 `paper/submission.tex` 和 `paper/blind.tex` 只关闭部分层次。TeX 从 `PATH` 获取；如果排在前面的 `latexmk` 属于其他安装，则可设置 `TEXBIN=<TeX Live bin directory>`。构建需要 `latexmk`、`pdflatex` 和 `bibtex`；检查还需要 `pdftotext`、`pdfinfo`、PyYAML 和 markdown-it-py。
+三个版本来自同一份源：`paper/main.tex` 对应 `main`，单行的 `paper/submission.tex` 和 `paper/blind.tex` 只关闭部分层次。TeX 从 `PATH` 获取；如果排在前面的 `latexmk` 属于其他安装，则可设置 `TEXBIN=<TeX Live bin directory>`。构建需要 `latexmk`、`pdflatex` 和 `bibtex`；检查还需要 `pdftotext`、`pdfinfo`、PyYAML 和 markdown-it-py。`setup-worktree.sh` 在 `uv` 可用时把后两项装进该 worktree 的 `.project/venv`，`make check` 与 `make release-check` 优先使用它；设置 `AGENTS_PYTHON` 可指定其他解释器。
 
 单独复制 `paper/` 后，可用 `make -C <copy> main`（或 `blind`、`submission`）构建，输出写入 `<copy>/build/`。
 

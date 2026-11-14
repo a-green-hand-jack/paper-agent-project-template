@@ -76,7 +76,7 @@ bash .agents/scripts/shared/teardown-worktree.sh --migrate-to <canonical checkou
 
 - 带 `latexmk`、`pdflatex`、`bibtex` 及论文和投稿套件所需宏包的 TeX Live；
 - 用于 PDF 检查的 `pdftotext` 和 `pdfinfo`（poppler-utils）；
-- 用于脚本的 Python 3、PyYAML 和 markdown-it-py；开发面检查以隔离模式运行（忽略用户级 site-packages 和 `PYTHONPATH`），依赖须在该模式下可用。`make check`、`make release-check` 和继承命令默认使用 `PATH` 上的 `python3`；设置 `AGENTS_PYTHON` 为解释器路径即改用它。解释器拒绝 `pip install`（PEP 668 “externally managed”）时，创建一个装有这两项依赖的虚拟环境并 `export AGENTS_PYTHON=<venv>/bin/python`；`diagnose-environment.sh` 会检查这两项依赖并在缺失时输出 `FAIL`；
+- 用于脚本的 Python 3、PyYAML 和 markdown-it-py。`setup-project.sh` 在 `uv` 可用时创建 `.project/venv` 并把这两项依赖装进去，根 `Makefile`、`paper-check.sh` 和 `release-check.sh` 在 venv 存在时优先使用它；设置 `AGENTS_PYTHON` 为解释器路径即完全改用它。开发面检查以隔离模式运行（忽略用户级 site-packages 和 `PYTHONPATH`），因此没有 venv 也没有 `AGENTS_PYTHON` 时，`PATH` 上的 `python3` 必须能导入这两项依赖，否则 `make check` 失败；`diagnose-environment.sh` 会检查并输出 `FAIL`；
 - 可选的 `uv`，供使用 `.agents/scripts/shared/paper-references/reference-integrity/` 中锁定依赖的在线参考文献审计使用。
 
 `bash .agents/scripts/shared/setup-worktree.sh` 会报告缺失项。

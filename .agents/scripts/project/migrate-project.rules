@@ -1,3 +1,5 @@
 # Rules for the .project/ entries this paper's setup creates; the format is in
 # migrate-assets.sh (NAME|ACTION|WHY).
 build|drop|make rebuilds it from paper/: PDFs, intermediates, logs, page renders and caches
+venv|drop|setup-project.sh rebuilds it with uv: the project's Python environment for make check (PyYAML and markdown-it-py)
+tools|drop|tool-env.sh install rebuilds each optional CLI from the revision pinned in tool-environments.json; the CLI refetches its data

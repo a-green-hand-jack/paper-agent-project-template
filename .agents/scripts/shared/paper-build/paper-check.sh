@@ -12,6 +12,9 @@ cd "$root"
 build=${BUILD_DIR:-$root/.project/build}
 mkdir -p "$build/logs"
 export PYTHONPYCACHEPREFIX="$build/cache"
+if [[ -z ${AGENTS_PYTHON:-} && -x $root/.project/venv/bin/python3 ]]; then
+  export PATH="$root/.project/venv/bin:$PATH"
+fi
 python=${AGENTS_PYTHON:-python3}
 failed=()
 
