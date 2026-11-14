@@ -11,3 +11,6 @@ Respect the Human's venue, anonymity, page-budget and release choices. The three
 - [Publication planning and Overleaf](sources/publication-planning/reference.md)
 - [Paper release review](sources/release-review/reference.md)
 - [Poster build](sources/poster-build/reference.md)
+
+Overleaf edits are taken in by tree, byte for byte
+([`overleaf-tree-is-authoritative`](../../../memory/shared/paper-publication/overleaf-tree-is-authoritative.md)).

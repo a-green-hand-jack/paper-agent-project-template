@@ -8,6 +8,8 @@ trailing `## In this repository` section (see `template-adoption` step 5), and
 the record's own text never contains that heading line.
 
 <!-- registry-index:start -->
+- [collaborator-content-byte-for-byte.md](collaborator-content-byte-for-byte.md) — Manuscript content a collaborator wrote stays byte for byte; a needed change is proposed and attributed, never applied silently.
+- [credential-route-before-weaker-option.md](credential-route-before-weaker-option.md) — Check the device's existing credential route, and test the endpoint, before falling back to a weaker public route.
 - [host-files-owned-by-running-user.md](host-files-owned-by-running-user.md) — Keep host artifacts owned by the running user and stop at foreign ownership.
 - [issue-close-out.md](issue-close-out.md) — Complete or transfer outstanding duties before migrating and retiring an Issue worktree.
 - [issue-dispatch-by-difficulty.md](issue-dispatch-by-difficulty.md) — Confirm each dispatch selection and record provider, model, effort and reason.
@@ -19,11 +21,18 @@ the record's own text never contains that heading line.
 - [paper-build/page-budget-on-blind-build.md](paper-build/page-budget-on-blind-build.md) — Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
 - [paper-build/post-build-visual-inspection.md](paper-build/post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
 - [paper-build/tex-engine-from-texbin.md](paper-build/tex-engine-from-texbin.md) — TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
+- [paper-figures/figure-deck-and-export.md](paper-figures/figure-deck-and-export.md) — Draw conceptual figures as one slide deck under .agents/notes/figures/, export with a project script, judge at print size.
 - [paper-foundation/results-through-interface-macros.md](paper-foundation/results-through-interface-macros.md) — Reported numbers only through interface macros with a manifest source; planned results are never observations.
 - [paper-publication/official-venue-kit-unmodified.md](paper-publication/official-venue-kit-unmodified.md) — Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only.
 - [paper-publication/overleaf-paper-tree-only.md](paper-publication/overleaf-paper-tree-only.md) — Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force.
+- [paper-publication/overleaf-tree-is-authoritative.md](paper-publication/overleaf-tree-is-authoritative.md) — Take Overleaf edits in by tree, byte for byte, never by replaying intermediate commits; never pipe a build into an early-closing command.
 - [paper-publication/sync-overleaf-before-editing.md](paper-publication/sync-overleaf-before-editing.md) — Take in Overleaf edits before writing and deliver to both sides together.
 - [paper-references/reference-integrity.md](paper-references/reference-integrity.md) — Identity and claim support are separate, occurrence-level obligations.
+- [paper-writing/claims-set-expected-results.md](paper-writing/claims-set-expected-results.md) — Each claim fixes its experiment and its expected result before the runs; a planned result is never written as an observation.
+- [paper-writing/experiments-argue-for-claims.md](paper-writing/experiments-argue-for-claims.md) — Organise the evaluation claim by claim, one exhibit and one conclusion per subsection.
+- [paper-writing/non-hedged-claims.md](paper-writing/non-hedged-claims.md) — State the claim at the strength the evidence supports and report a reduced setting once, in the setup, not as hedging.
+- [paper-writing/notation-cost.md](paper-writing/notation-cost.md) — Introduce a symbol only where prose cannot be precise; the full formalism belongs in the appendix.
+- [paper-writing/undecided-content-in-author-comments.md](paper-writing/undecided-content-in-author-comments.md) — Undecided content lives in author comments inside paper/, never in the article text or the development plane.
 - [product-state-root.md](product-state-root.md) — Resolve worktree-local product state from the project marker.
 - [project-positioning-before-layout.md](project-positioning-before-layout.md) — Establish users, deliverables and domain concepts before choosing paths.
 - [provider-cost-routing.md](provider-cost-routing.md) — Use the cheapest capable provider/model and record why each real run is needed.

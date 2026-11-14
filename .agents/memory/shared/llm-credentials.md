@@ -108,6 +108,10 @@ Then follow `credential-setup` in the canonical checkout and in each worktree.
 | `SHARED_CREDENTIAL_FILE` | the device's shared file named by user-level configuration; none by default, and a paper runs without it |
 | `CREDENTIAL_DIR` | `credentials` |
 
+Before a run falls back to a public or reduced route, check the device's
+existing route and test the endpoint
+([`credential-route-before-weaker-option`](credential-route-before-weaker-option.md)).
+
 The online reference audits (`.agents/scripts/shared/paper-references/reference_env.py`) read the
 link `.project/credentials/.env` to the shared file, in a worktree through the
 `.project/credentials` link, and export only `BIBTEX_CHECK_MAILTO`,

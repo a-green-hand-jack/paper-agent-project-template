@@ -13,4 +13,7 @@ Identify the claim, source data and intended publication form. For quantitative 
 - [Method diagrams](sources/thesis-figure-skill/reference.md) and [TikZ correctness](sources/tikz-figure-code/reference.md)
 - [Reconstruct editable presentations](sources/image-to-editable-ppt/reference.md)
 
+Conceptual figures are drawn as slides and exported with a project script
+([`figure-deck-and-export`](../../../memory/shared/paper-figures/figure-deck-and-export.md)).
+
 A writing or design exemplar is not evidence for the figure's claim. Review changes to locked claims or interfaces before altering them.
