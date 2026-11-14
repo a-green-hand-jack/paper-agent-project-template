@@ -1,0 +1,9 @@
+# file<TAB>path<TAB>reason — a reference that is allowed not to exist.
+.agents/memory/shared/paper-build/tex-engine-from-texbin.md	paper/build/	describes the layout of a product repository, not this tree
+.agents/memory/shared/product-state-root.md	paper/build/	describes the layout of a product repository, not this tree
+.agents/skills/shared/template-upgrade/SKILL.md	.agents/content-registry.yaml.new	example of a written-but-unwritten file in the upgrade steps
+.agents/skills/shared/template-upgrade/SKILL.md	.agents/memory/shared/old.md	example of a removed record in the upgrade steps
+.agents/skills/shared/template-upgrade/SKILL.md	.agents/memory/shared/local.md	example of a locally edited record in the upgrade steps
+.agents/knowledge/shared/paper-publication/official-latex-templates.md	.agents/tools/_official_templates.py	historical evidence citation of the v0.3.1 layout
+.agents/knowledge/shared/credential-inventory.md	.agents/scripts/probe-credentials.sh	cites the upstream release (v0.1.16) that shipped the script, not a path here
+.agents/knowledge/shared/credential-inventory.md	.agents/tests/test_template_credentials.py	cites the upstream template's test for the same release

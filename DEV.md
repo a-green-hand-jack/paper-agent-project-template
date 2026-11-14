@@ -168,7 +168,7 @@ bash .agents/scripts/shared/inspect-state.sh
 make check
 ```
 
-`make check` 运行除模板自有测试（`.agents/tests/project/test_template_*.py`）之外的所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s <该测试所在目录> -p 'test_<name>.py'`（例如 `.agents/tests/shared/paper-references`）。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
+`make check` 运行除模板自有测试（`.agents/tests/project/test_template_*.py`）之外的所有单元测试；单独运行一个文件可使用 `python3 -m unittest discover -s <该测试所在目录> -p 'test_<name>.py'`（例如 `.agents/tests/shared/paper-references`）。`check-development.sh` 本身是继承脚本，因此“文档里点名的路径必须存在”这一步由本模板自己的 `.agents/scripts/project/check_development_paths.py` 在 `make check` 中完成：它检查 `AGENTS.md`、`README.md`、`DEV.md`、`.agents/{AGENTS,memory,knowledge,execution,scripts,notes}` 与非 vendored `SKILL.md` 里出现的 `.agents/…`、`paper/…` 路径，校验 `CLAUDE.md`、`.claude`、`.pi` 的链接目标，并按 `check-development-paths.allow` 列出显式豁免。开发面变更后还应运行 `bash .agents/scripts/shared/check-shells.sh`；使用 `bash .agents/scripts/shared/check-development.sh --write-indexes` 重新生成 registry 索引。通过单元测试不能代替 `make check`，二者也不能代替查看页面。
 
 ## 发布
 
