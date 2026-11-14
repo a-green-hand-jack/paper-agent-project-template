@@ -1,17 +1,20 @@
 # 发布说明
 
-本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.6.0:RELEASE_NOTES.md`）。
+本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.0:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.7.0 — 2026-11-14
+## v0.7.1 — 2026-11-14
 
-README 只写给论文。模板自己的起步、版本与升级不再占据人类入口。
+跟随 coding template v0.1.37 → v0.1.38。上一版已经把起步步骤搬进本文件的
+`## Starting from this template`；本版接过上游对其余问题的修正，`paper/`、三种构建
+与 Overleaf 投影不变。
 
-- **README 变成论文文档。** 标题与阶段、快速开始、写作、构建与检查、仓库结构、发布与 Overleaf；一屏能扫完，命令先于配置。
-- **起步步骤换位置。** "Use this template" 之后要做的六件事，见本文件末尾的 `## Starting from this template`；完整流程仍由 `template-adoption` 技能执行。
-- **版本与升级指向技能。** 模板版本、`upgrade-template.sh` 与缺陷反馈不再在 README 展开；每个发布的 `### Upgrading a paper from <tag>` 说明该版本怎么升，反馈走 `template-feedback`。
-- **清掉陈旧指针。** 删除对已退役 `template-sync` 的引用；结构表补上 `.agents/notes/` 和 `.claude`、`.pi` 链接。
-- **继承状态。** 升级命令为 **Command only.**；README 是 `upgrade: review` 文件，命令不会改写它，改写由论文自己决定。
+- **凭据的说法不再是空头承诺。** 上游把"项目在根目录登记 `credentials.yaml`"改成"采用后由
+  `llm-credentials` 建立"；本模板的 `AGENTS.md` 同步，并写明模板自身不调用 LLM、没有这个文件。
+- **README 的归属写对。** 上游 registry 把 `README.md` 从 `scope: project` 改成
+  `shared_with_adaptation` + `upgrade: review`：升级命令不改写已采用项目的 README，只在计划里
+  打印本版差异。本仓的 README 已是论文形状，按 review 处理即可。
+- **继承状态。** 继承脚本与 v0.1.38 逐字节一致；`check_agent_content.py` 与 `tool-env.sh` 是本地适配。
 
 ### Adoption states
 
@@ -24,12 +27,11 @@ README 只写给论文。模板自己的起步、版本与升级不再占据人�
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.6.0
+### Upgrading a paper from v0.7.0
 
-1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.7.0`（本版为 **Command only.**）。
-2. 按本文件的 README 形状重写论文仓库的 `README.md`：保留构建命令与结构表，删掉模板专用步骤；命令不会替你改，因为这份文件被登记为 `upgrade: review`。
-3. README 里若还有 `template-sync` 一类已退役命令的说明，删掉。
-4. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
+1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.7.1`（本版为 **Command only.**）。
+2. 若论文仓库的 `AGENTS.md` 仍写着"项目在根目录登记 `credentials.yaml`"，改成"采用后由 `llm-credentials` 建立"；这是上游唯一的正文改动。
+3. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
 
 ## Starting from this template
 
