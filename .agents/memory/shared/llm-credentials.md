@@ -101,17 +101,6 @@ record (see `template-adoption` step 5):
 
 Then follow `credential-setup` in the canonical checkout and in each worktree.
 
-## In this repository` section at the end of this
-record (see `template-adoption` step 5):
-
-- `SHARED_CREDENTIAL_FILE`: the device's shared file, taken from user-level
-  configuration. If the device has none, the project runs without it.
-- `CREDENTIAL_DIR`: the name of the Git-ignored directory under the canonical
-  checkout's `.project/` that holds the symlink to the shared file and the
-  project's own logins. This project uses `credentials`.
-
-Then follow `credential-setup` in the canonical checkout and in each worktree.
-
 ## In this repository
 
 | Slot | Value |
