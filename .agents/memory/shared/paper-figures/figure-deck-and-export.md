@@ -9,8 +9,7 @@ applies_to: paper repositories whose conceptual figures are drawn in a presentat
 
 ## Decision
 
-The editable source of a conceptual figure is one deck per paper, kept under
-`.agents/notes/figures/`, with one slide per figure. A project script cuts each
+The editable source of a conceptual figure is one deck per paper, kept in the figure notes directory (`.agents/notes/`), one slide per figure. A project script cuts each
 slide to its ink and writes the PDF into `paper/`. The deck itself never enters
 `paper/` or the built paper; only the exported asset does.
 
@@ -25,7 +24,7 @@ happens at print size and in the other renderer.
 ## Apply
 
 - Keep the brief, the per-figure description and the deck together under
-  `.agents/notes/figures/`, with the slide-to-figure map inside the export
+  the figure notes directory (`.agents/notes/`), with the slide-to-figure map inside the export
   script.
 - Export with the script, then judge the figure at its final size in the built
   page, not in the editor; a renderer may shrink subscripts or enlarge

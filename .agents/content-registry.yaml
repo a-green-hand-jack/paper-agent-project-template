@@ -10178,6 +10178,7 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+    optional: true
   - path: .agents/skills/shared/asset-lifecycle/
     id: content-caba82d80e7ee32b
     kind: skill
@@ -10201,6 +10202,7 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+    optional: true
   - path: .agents/skills/shared/credential-setup/
     id: content-dfe38b85b9fea043
     kind: skill
@@ -10236,6 +10238,7 @@ entries:
     updated: 2026-11-05
     supersedes: []
     superseded_by: []
+    optional: true
   - path: .agents/skills/shared/issue-workflow/
     id: content-8759e65e941a5603
     kind: skill
@@ -10645,28 +10648,6 @@ entries:
     updated: 2026-11-11
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/academic-voice/
-    id: content-64efce3c980def01
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, msimchowitz/writing-skills@214981f; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/academic-voice/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/better-usage/
-    id: content-391e1b802e3a98ff
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, msimchowitz/writing-skills@214981f; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/better-usage/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
   - path: .agents/skills/shared/paper-references/sources/citation-support-review/
     id: content-b74c6c93fecefd4d
     kind: code
@@ -10697,50 +10678,6 @@ entries:
     summary: "Prepare a Human decision and record it as a project memory record."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/decision-packet/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/figure-router/
-    id: content-fa336503f869688d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "House router for figure work, harvested from downstream papers and generalized."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/figure-router/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/icarus-figures/
-    id: content-6a4d5701e814aed2
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, TAO-QKV/Icarus-Figures@0bcaa40; front matter patched to parse, recorded in PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/icarus-figures/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/image-to-editable-ppt/
-    id: content-be03ff66bf8ae033
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, ningzimu/image-to-editable-ppt-skill@b7be494; patched to remove the fallback that read another tool's login, recorded in PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/image-to-editable-ppt/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/lieflat-less-ai-tone/
-    id: content-ed9f04bc8916c1c7
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, larashero3-dotcom/writing-dna-skill@d5145ef; standalone since the Writing DNA suite was retired; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/lieflat-less-ai-tone/SKILL.md"}
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
@@ -10810,17 +10747,6 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/proofread/
-    id: content-c0e62ed7f9f8488f
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, JakobThumm/proofreading@cf2f0d7; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/proofread/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
   - path: .agents/skills/shared/paper-publication/sources/publication-planning/
     id: content-cd078be1c73cbfdc
     kind: code
@@ -10854,17 +10780,6 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/scientific-english-editor/
-    id: content-4b52c1c3a7230dea
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, SailRain/scientific-english-editor-skill@2b5ed82; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/scientific-english-editor/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
   - path: .agents/skills/shared/paper-figures/sources/scientific-figure-workflow/
     id: content-3accc615e4856f9f
     kind: code
@@ -10876,72 +10791,6 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/scientific-writing/
-    id: content-8ac3817a4bec13ff
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored from a-green-hand-jack/research-skills@26226c9 with the maintainer's permission (no licence file upstream); PROVENANCE.md and SOURCES.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/scientific-writing/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/scipilot-figure-skill/
-    id: content-4165be43d08b2e4f
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, Haojae/scipilot-figure-skill@43098dd; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/scipilot-figure-skill/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/section-writing/
-    id: content-4c0ba287215bfe29
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Section drafting and revision; its references hold the paper-writing guide."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/section-writing/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/style-alignment/
-    id: content-919c812fe749a4d1
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Positioning, narrative and writing policy; its references hold the writing-style guide."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/style-alignment/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/thesis-figure-skill/
-    id: content-af7e28380a85b874
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, 0xE1337/thesis-figure-skill@ffe6d07; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/thesis-figure-skill/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/tikz-figure-code/
-    id: content-d545c1d0d87718f9
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored, MIT, 0xE1337/thesis-figure-skill@ffe6d07; PROVENANCE.md."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/tikz-figure-code/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
   - path: .agents/skills/shared/paper-writing/sources/writing-reference-finder/
     id: content-b9eb51196b81ce9d
     kind: code
@@ -10950,28 +10799,6 @@ entries:
     summary: "House skill harvested from downstream papers; exemplars are never citations."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/writing-reference-finder/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/writing-router/
-    id: content-54341f03187c2b74
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "House router for prose tasks, harvested from downstream papers and generalized."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/writing-router/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/.gitattributes
-    id: content-bc69baefe337a84d
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Whitespace exceptions for vendored files that keep upstream bytes git diff --check would report; extend it when vendoring such a file."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/.gitattributes"}
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
@@ -12311,7 +12138,7 @@ entries:
     kind: memory
     scope: shared
     owner: paper-template-maintainers
-    summary: "Draw conceptual figures as one slide deck under .agents/notes/figures/, export with a project script, judge at print size."
+    summary: "Draw conceptual figures as one slide deck in the notes tree, export with a project script, judge at print size."
     status: active
     source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-figures/figure-deck-and-export.md"}
     updated: 2026-11-14
@@ -12383,6 +12210,40 @@ entries:
     updated: 2026-11-14
     supersedes: []
     superseded_by: []
+  - path: .agents/scripts/project/check_development_paths.py
+    id: content-dbebdd48ae9b0840
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Check that development-plane documents name existing paths and that CLAUDE.md, .claude and .pi are the expected symlinks."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.py"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/project/check-development-paths.allow
+    id: content-69c61130a30cd310
+    kind: code
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Explicit exemptions for check-development-paths.py, each with its reason; printed when the check runs."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.allow"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+    adaptation: "Fill one line per intentional exemption of this paper, with its reason."
+  - path: .agents/skills/shared/.gitattributes
+    id: content-bc69baefe337a84d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Vendored files keep their upstream bytes; per-file whitespace exceptions live here."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/skills/shared/.gitattributes"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
 omitted: [
     {
       "id": "content-2f754321d62f08ba",
@@ -12403,6 +12264,81 @@ omitted: [
       "id": "content-50c86b7ed8ac2cf9",
       "path": "pyproject.toml",
       "reason": "Optional content left out here (recorded from an optional entry without a file)."
+    },
+    {
+      "id": "content-64efce3c980def01",
+      "path": ".agents/skills/shared/paper-writing/sources/academic-voice/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-391e1b802e3a98ff",
+      "path": ".agents/skills/shared/paper-writing/sources/better-usage/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-fa336503f869688d",
+      "path": ".agents/skills/shared/paper-figures/sources/figure-router/reference.md",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-6a4d5701e814aed2",
+      "path": ".agents/skills/shared/paper-figures/sources/icarus-figures/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-be03ff66bf8ae033",
+      "path": ".agents/skills/shared/paper-figures/sources/image-to-editable-ppt/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-ed9f04bc8916c1c7",
+      "path": ".agents/skills/shared/paper-writing/sources/lieflat-less-ai-tone/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-c0e62ed7f9f8488f",
+      "path": ".agents/skills/shared/paper-writing/sources/proofread/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-4b52c1c3a7230dea",
+      "path": ".agents/skills/shared/paper-writing/sources/scientific-english-editor/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-8ac3817a4bec13ff",
+      "path": ".agents/skills/shared/paper-writing/sources/scientific-writing/PROVENANCE.md",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-4165be43d08b2e4f",
+      "path": ".agents/skills/shared/paper-figures/sources/scipilot-figure-skill/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-4c0ba287215bfe29",
+      "path": ".agents/skills/shared/paper-writing/sources/section-writing/reference.md",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-919c812fe749a4d1",
+      "path": ".agents/skills/shared/paper-writing/sources/style-alignment/reference.md",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-af7e28380a85b874",
+      "path": ".agents/skills/shared/paper-figures/sources/thesis-figure-skill/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-d545c1d0d87718f9",
+      "path": ".agents/skills/shared/paper-figures/sources/tikz-figure-code/LICENSE",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-54341f03187c2b74",
+      "path": ".agents/skills/shared/paper-writing/sources/writing-router/reference.md",
+      "reason": "Vendored package deleted in #229: two downstream papers never used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
     }
   ]
 local_legacy_inventory: {

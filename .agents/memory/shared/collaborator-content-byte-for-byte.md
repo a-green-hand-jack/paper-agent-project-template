@@ -1,7 +1,7 @@
 ---
 name: collaborator-content-byte-for-byte
 date: 2026-11-14
-source: ResearchWorld_paper and RSI_light_paper `.agents/memory/project/collaborator-content.md`, both written after co-authored drafts were edited in place
+source: the collaborator-content record of both downstream papers, each written after co-authored drafts were edited in place
 applies_to: paper repositories whose manuscript, figures or captions a collaborator wrote
 ---
 

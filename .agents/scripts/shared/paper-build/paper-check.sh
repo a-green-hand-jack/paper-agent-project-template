@@ -63,6 +63,9 @@ run 'development registry' bash .agents/scripts/shared/check-development.sh
 step 'skills, memory and knowledge records'
 run 'agent content' "$python" .agents/scripts/shared/check_agent_content.py
 
+step 'referenced development paths'
+run 'paths' "$python" .agents/scripts/project/check_development_paths.py
+
 step 'unit tests'
 for group in shared project; do
   for directory in ".agents/tests/$group" ".agents/tests/$group"/*/; do

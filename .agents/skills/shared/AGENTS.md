@@ -24,7 +24,7 @@ product upgrades, results, milestones/archives and concise releases. Keep
 concrete project release examples outside shared packages.
 
 <!-- registry-index:start -->
-- [.gitattributes](.gitattributes) — Whitespace exceptions for vendored files that keep upstream bytes git diff --check would report; extend it when vendoring such a file.
+- [.gitattributes](.gitattributes) — Vendored files keep their upstream bytes; per-file whitespace exceptions live here.
 - [agent-communication](agent-communication/SKILL.md) — Resolve native addresses, reconcile backlog and record distinct delivery/receipt outcomes.
 - [asset-lifecycle](asset-lifecycle/SKILL.md) — Adapt asset classes, storage roots and migration evidence.
 - [benchmark-radar](benchmark-radar/SKILL.md) — Benchmark discovery, records and recent Radar evidence; vendored MIT from ktwu01/benchmark-radar@21f3018, PROVENANCE.md.
