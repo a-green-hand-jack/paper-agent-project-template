@@ -1,0 +1,2 @@
+# Vendored files keep their upstream bytes (each package's PROVENANCE.md hashes
+# them), including whitespace that git diff --check would otherwise report.

@@ -38,7 +38,7 @@ class ExistingPaperUpgrade(unittest.TestCase):
                            input=git("archive", "v0.4.6", cwd=template).stdout)
             git("init", "-q", cwd=paper)
             start_paper(paper)
-            old_skill = paper / ".agents/skills/shared/section-writing/SKILL.md"
+            old_skill = paper / ".agents/skills/shared/writing-reference-finder/SKILL.md"
             old_skill.write_text(old_skill.read_text() + "\n## In this repository\n\nLocal paper adaptation 195.\n")
             reference_fixture.fixture(paper, teX="\\section{Intro}\nA fixture claim~\\citep{k1,k2}.\n")
             reference_fixture.run(paper, "inventory", check=True)
@@ -95,7 +95,7 @@ class ExistingPaperUpgrade(unittest.TestCase):
             (paper / "AGENTS.md").write_text(drop_bullets(target_agents, lambda line: "protects the case branches" in line))
             upgraded = run("--resolved", "AGENTS.md", "v0.4.7-test")
             self.assertEqual(upgraded.returncode, 0, upgraded.stdout + upgraded.stderr)
-            moved = paper / ".agents/skills/shared/paper-writing/sources/section-writing/reference.md"
+            moved = paper / ".agents/skills/shared/paper-writing/sources/writing-reference-finder/reference.md"
             self.assertIn("Local paper adaptation 195.", moved.read_text())
             self.assertEqual(ledger.read_bytes(), ledger_bytes)
             after_reference_check = reference_fixture.run_checker(paper)
