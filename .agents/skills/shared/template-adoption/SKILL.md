@@ -191,9 +191,9 @@ and the coding template in `template.upstream`.
   template and removes the `upstream` block. The optional content of the
   coding template is mapped as follows: `llm-credentials`,
   `third-party-llm-compat-patches`, `credential-setup`, `credential-inventory`
-  and `gpt5-strict-backend-requests` are adopted together for the optional
-  `image-to-editable-ppt` CLI, without a `credentials.yaml`; the product
-  release skeleton is left out as `omitted:` records, and
+  and `gpt5-strict-backend-requests` are adopted together for a paper that
+  calls a provider, without a `credentials.yaml`; the product release skeleton
+  is left out as `omitted:` records, and
   `docker-objects-prefixed-and-removed`, `run-settings-from-config` and
   `serve-the-coding-agent` stay registered with `status: rejected`, because
   a paper starts no container, has no product run and keeps no run records or
