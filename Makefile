@@ -13,6 +13,10 @@ TEXBIN ?=
 BUILD_DIR := $(CURDIR)/.project/build
 export PAGE_BUDGET TEXBIN BUILD_DIR
 
+ifneq ($(wildcard $(CURDIR)/.project/venv/bin/python3),)
+export PATH := $(CURDIR)/.project/venv/bin:$(PATH)
+endif
+
 .PHONY: pdf blind submission check release-check clean
 
 pdf:

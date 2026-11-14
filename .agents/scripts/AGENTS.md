@@ -19,6 +19,7 @@ the optional reference audits with their locked dependencies in
 [`shared/AGENTS.md`](shared/AGENTS.md) describes each one.
 
 `project/` holds the setup hooks a paper adapts: `setup-project.sh`, run by
-`setup-worktree.sh`, creates `.project/build/` and reports the TeX tools;
-`migrate-project.rules` says that `.project/build/` is dropped at teardown
-because `make` rebuilds it.
+`setup-worktree.sh`, creates `.project/build/` and `.project/venv` (the Python
+the checks use) and reports the TeX tools; `migrate-project.rules` says that
+both are dropped at teardown because `make` and the setup rebuild them, and
+that `.project/tools/` is rebuilt by `tool-env.sh install`.
