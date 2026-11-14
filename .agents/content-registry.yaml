@@ -2,10 +2,10 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.7.0
+  version: v0.7.1
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.37
+    version: v0.1.38
 default_scope: project
 matching: "Most specific path wins; explicit entries override directory defaults."
 minimum_upgrade_source: v0.1.34
@@ -1360,15 +1360,15 @@ entries:
     id: content-b335630551682c19
     kind: document
     scope: shared_with_adaptation
-    owner: project-maintainers
+    owner: template-maintainers
     summary: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "README.md"}
     updated: unknown
+    adaptation: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
+    upgrade: review
     supersedes: []
     superseded_by: []
-    upgrade: review
-    adaptation: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
   - path: USER.md
     id: content-9afc5db23792a47e
     kind: document
