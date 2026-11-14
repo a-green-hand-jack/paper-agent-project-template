@@ -118,10 +118,10 @@ link `.project/credentials/.env` to the shared file, in a worktree through the
 `OPENALEX_API_KEY` and `S2_API_KEY` from it (`credential-setup` step 4). A root
 `.env` with only those keys stays a fallback and wins over the link.
 
-No script, build or check of this repository calls an LLM provider. The one
-shipped tool that can is the optional CLI fallback of `image-to-editable-ppt`
-(`editppt`), which reads `OPENAI_API_KEY`, `OPENAI_BASE_URL` and
-`PADDLE_OCR_TOKEN` from the environment; `credential-setup` step 4 governs how
+No script, build or check of this repository calls an LLM provider, and no
+vendored tool does either. A paper that adds one reads `OPENAI_API_KEY`,
+`OPENAI_BASE_URL` and its provider's variables from the environment only;
+`credential-setup` step 4 governs how
 they reach it, and the skill's own section keeps its configuration inside
 `.project/`.
 
