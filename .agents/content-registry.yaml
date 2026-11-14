@@ -12231,6 +12231,105 @@ entries:
     updated: 2026-11-11
     supersedes: []
     superseded_by: []
+  - path: .agents/memory/shared/collaborator-content-byte-for-byte.md
+    id: content-f1ce081d3317b16d
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Manuscript content a collaborator wrote stays byte for byte; a needed change is proposed and attributed, never applied silently."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/collaborator-content-byte-for-byte.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/claims-set-expected-results.md
+    id: content-91e4c87615610aa7
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Each claim fixes its experiment and its expected result before the runs; a planned result is never written as an observation."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/claims-set-expected-results.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/non-hedged-claims.md
+    id: content-b051ea4e2826a690
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "State the claim at the strength the evidence supports and report a reduced setting once, in the setup, not as hedging."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/non-hedged-claims.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/experiments-argue-for-claims.md
+    id: content-1658c5f86ccac8e7
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Organise the evaluation claim by claim, one exhibit and one conclusion per subsection."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/experiments-argue-for-claims.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/notation-cost.md
+    id: content-4cda64955d135895
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Introduce a symbol only where prose cannot be precise; the full formalism belongs in the appendix."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/notation-cost.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/undecided-content-in-author-comments.md
+    id: content-53e427429fe2e699
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Undecided content lives in author comments inside paper/, never in the article text or the development plane."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/undecided-content-in-author-comments.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-figures/figure-deck-and-export.md
+    id: content-eae20f0801c438da
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Draw conceptual figures as one slide deck under .agents/notes/figures/, export with a project script, judge at print size."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-figures/figure-deck-and-export.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-publication/overleaf-tree-is-authoritative.md
+    id: content-34225526bd837b8b
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Take Overleaf edits in by tree, byte for byte, never by replaying intermediate commits; never pipe a build into an early-closing command."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-publication/overleaf-tree-is-authoritative.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/credential-route-before-weaker-option.md
+    id: content-e9243486f704690a
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Check the device's existing credential route, and test the endpoint, before falling back to a weaker public route."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/credential-route-before-weaker-option.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
 omitted: [
     {
       "id": "content-2f754321d62f08ba",
