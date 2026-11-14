@@ -1,5 +1,5 @@
 """The adoption states this template documents, built from its shipped files in
-a temporary root and run through the real gates before each release (DEV.md,
+a temporary root and run through the real gates before each release (README.md,
 "Releases"), and the upgrade of a paper from an earlier release to them. A paper
 deletes this file with the rest of `scope: template`."""
 from __future__ import annotations

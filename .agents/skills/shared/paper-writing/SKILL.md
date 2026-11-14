@@ -5,7 +5,7 @@ description: Draft, revise or proofread scientific prose while preserving claims
 
 # Paper writing
 
-Identify whether the task concerns argument and section structure, narrative and style, sentence-level language, or final proofreading. Read `PAPER.md`, the active section and only the evidence and interfaces the task needs. Preserve the strength and meaning of claims; report uncertain scientific changes rather than silently making them. Draft structure before polishing language. Use exemplars to study expression, never as automatic claim support or bibliography entries.
+Identify whether the task concerns argument and section structure, narrative and style, sentence-level language, or final proofreading. Read the paper's brief record under `.agents/memory/project/paper-foundation/`, the active section and only the evidence and interfaces the task needs. Preserve the strength and meaning of claims; report uncertain scientific changes rather than silently making them. Draft structure before polishing language. Use exemplars to study expression, never as automatic claim support or bibliography entries.
 
 Use the following detailed guidance only when applicable; do not run every pass by default:
 

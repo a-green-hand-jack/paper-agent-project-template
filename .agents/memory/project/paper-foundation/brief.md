@@ -10,11 +10,9 @@ applies_to: this paper
 ## Decision
 
 This record holds the Human-authored brief the paper starts from. A brief
-written in a separate brief repository is ingested here with
-`paper-foundation`, which also copies its decided fields into `PAPER.md`; a
-brief can also be written here directly. Fill only what is decided: a field left
-empty or `TODO` stays `unresolved` in `PAPER.md`, and the agent never invents
-one. Mark as locked only the high-impact commitments that must not change
+written in a separate brief repository is ingested here with `paper-foundation`;
+a brief can also be written here directly. Fill only what is decided: a field
+left empty or `TODO` stays `unresolved` here, and the agent never invents one. Mark as locked only the high-impact commitments that must not change
 silently.
 
 ## Why
@@ -48,14 +46,11 @@ TODO: the single most important conclusion the paper wants readers to accept.
 
 - TODO: one entry per defensible contribution (central / supporting / optional)
 
-## Operating mode
+## Operating boundary
 
-- Mode: unresolved (`collaborative` or `autonomous`)
-- Approval boundary: in autonomous mode the agent drafts, self-reviews,
-  polishes and builds without step-by-step confirmation; it stops for Human
-  review before changing a locked item, approving a release or the final
-  submission. In collaborative mode the Human stays in the loop for each
-  substantive step.
+Writing is human-agent co-work. The agent drafts, self-reviews, polishes and
+builds; it stops for the Human before changing a locked item, approving a
+release or submitting.
 
 ## Evidence and materials
 
@@ -100,7 +95,5 @@ runs, URLs, or `none yet`):
 ## Template usage note
 
 Write this paper in a repository made from the `paper-agent-project-template`
-GitHub template. Ingest this brief with `paper-foundation`
-(`python3 .agents/skills/shared/paper-foundation/sources/paper-brief-ingest/scripts/paper_brief.py ingest --brief <path>`),
-then draft under the declared operating mode; `README.md` and `DEV.md` of the
-paper repository describe the workflow.
+GitHub template. Fill this brief with `paper-foundation`, then draft; the paper
+repository's `README.md` and skills describe the workflow.
