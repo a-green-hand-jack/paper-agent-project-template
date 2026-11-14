@@ -67,6 +67,6 @@ Then:
 | --- | --- |
 | `PATCH_DIR` | the vendored package: a vendored tool is changed in its copy under `.agents/skills/shared/<name>/`, and the change is recorded under "Local changes" in its `PROVENANCE.md`, so every clone runs the changed tool |
 
-The only vendored tool that sends provider requests is `image-to-editable-ppt`
-(image generation and edit requests to an OpenAI-compatible API). Its recorded
-change removes a backend; it is not a compatibility change.
+This repository vendors no tool that sends provider requests, so it carries no
+compatibility patch. A paper that adopts one records the patch in that copy's
+`PROVENANCE.md` under "Local changes".
