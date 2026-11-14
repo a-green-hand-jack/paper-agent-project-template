@@ -5,10 +5,10 @@ template:
   version: v0.4.13
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.35
+    version: v0.1.36
 default_scope: project
 matching: "Most specific path wins; explicit entries override directory defaults."
-minimum_upgrade_source: v0.1.34
+minimum_upgrade_source: v0.4.12
 classes: {
     "shared": {
       "meaning": "Generic process that can be reused across projects.",
@@ -3041,18 +3041,6 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/project/test_template_issue_197_upgrade.py
-    id: content-issue-197-upgrade-tests
-    kind: code
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Verify v0.4.7 paper tooling relocation preserves local data and upgrade behavior."
-    status: active
-    source: {"issue": 197}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-    language: python
   - path: .agents/tests/project/test_template_issue_216_upgrade.py
     id: paper-test-issue-216
     kind: code
@@ -3275,6 +3263,18 @@ entries:
     updated: 2026-11-14
     supersedes: []
     superseded_by: []
+  - path: paper/appendix/a-example.tex
+    id: content-4f8e3c93a1a3cbe1
+    kind: document
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "The first appendix, one file per appendix; replace with the paper's own appendices."
+    status: active
+    source: {"commit": "46d42e0", "path": "paper/appendix/a-example.tex"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+    adaptation: "Replace the placeholder with the paper's own appendices; keep one file per appendix."
 omitted: [
     {
       "id": "content-2f754321d62f08ba",
@@ -3295,5 +3295,10 @@ omitted: [
       "id": "content-50c86b7ed8ac2cf9",
       "path": "pyproject.toml",
       "reason": "Optional content left out here (recorded from an optional entry without a file)."
+    },
+    {
+      "id": "content-issue-197-upgrade-tests",
+      "path": ".agents/tests/project/test_template_issue_197_upgrade.py",
+      "reason": "Retired with #223: it exercised the registry migration map, which is gone."
     }
   ]
