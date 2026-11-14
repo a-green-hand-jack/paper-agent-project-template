@@ -22,4 +22,7 @@ the optional reference audits with their locked dependencies in
 `setup-worktree.sh`, creates `.project/build/` and `.project/venv` (the Python
 the checks use) and reports the TeX tools; `migrate-project.rules` says that
 both are dropped at teardown because `make` and the setup rebuild them, and
-that `.project/tools/` is rebuilt by `tool-env.sh install`.
+that `.project/tools/` is rebuilt by `tool-env.sh install`. `check_development_paths.py`
+runs inside `make check`: it fails when a document names a path that does not
+exist or a `CLAUDE.md`/`.claude`/`.pi` link points elsewhere, and it prints the
+exemptions it took from `check-development-paths.allow`.
