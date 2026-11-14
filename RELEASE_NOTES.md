@@ -1,15 +1,17 @@
 # 发布说明
 
-本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.4.13:RELEASE_NOTES.md`）。
+本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.6.0:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.6.0 — 2026-11-14
+## v0.7.0 — 2026-11-14
 
-本版跟随 coding template v0.1.36 → v0.1.37：registry 与 memory/knowledge 只保留当前记录，`retention` 机制被移除（上游 #179）。其余行为、`paper/` 自包含、三种构建和 Overleaf 投影不变。
+README 只写给论文。模板自己的起步、版本与升级不再占据人类入口。
 
-- **只留当前记录。** `status: superseded|retired` 的 memory/knowledge 记录连同文件一起删除，历史交给 git；`retention`、`retention_reason` 字段消失。替换链只要求"当前记录之间的指向不成环"，被替换的身份可以已不存在（作为 provenance）。
-- **升级会失败的地方。** 论文仓库若仍有 `retention*` 字段或 `status: superseded|retired` 条目，升级后 `check-development.sh` 会失败并指出具体记录；发布前删除这些记录即可，内容仍在 git 里。
-- **继承状态。** 继承脚本与 v0.1.37 逐字节一致；本仓已无 `retention` 或历史状态条目。
+- **README 变成论文文档。** 标题与阶段、快速开始、写作、构建与检查、仓库结构、发布与 Overleaf；一屏能扫完，命令先于配置。
+- **起步步骤换位置。** "Use this template" 之后要做的六件事，见本文件末尾的 `## Starting from this template`；完整流程仍由 `template-adoption` 技能执行。
+- **版本与升级指向技能。** 模板版本、`upgrade-template.sh` 与缺陷反馈不再在 README 展开；每个发布的 `### Upgrading a paper from <tag>` 说明该版本怎么升，反馈走 `template-feedback`。
+- **清掉陈旧指针。** 删除对已退役 `template-sync` 的引用；结构表补上 `.agents/notes/` 和 `.claude`、`.pi` 链接。
+- **继承状态。** 升级命令为 **Command only.**；README 是 `upgrade: review` 文件，命令不会改写它，改写由论文自己决定。
 
 ### Adoption states
 
@@ -22,8 +24,21 @@
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.5.0
+### Upgrading a paper from v0.6.0
 
-1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.6.0`（本版为 **Command only.**）。
-2. 删除 registry 中所有 `retention`/`retention_reason` 字段与 `status: superseded|retired` 的条目及其文件；需要保留的说法写进当前记录，历史留在 git。
-3. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
+1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.7.0`（本版为 **Command only.**）。
+2. 按本文件的 README 形状重写论文仓库的 `README.md`：保留构建命令与结构表，删掉模板专用步骤；命令不会替你改，因为这份文件被登记为 `upgrade: review`。
+3. README 里若还有 `template-sync` 一类已退役命令的说明，删掉。
+4. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
+
+## Starting from this template
+
+1. 用 GitHub 的 **Use this template** 创建论文仓库，公开之前建议选 **Private**；需要可复现的起点时，克隆一个发布标签。
+2. 运行 `bash .agents/scripts/shared/init-branches.sh`：创建并推送 `dev`，把它设为默认分支。工作分支从 `dev` 开始，发布时合并到 `main`。
+3. 每个 worktree 先运行 `bash .agents/scripts/shared/setup-worktree.sh`。
+4. 把采用工作交给 agent（`template-adoption`）：删除 registry 标记 `scope: template` 的文件并记为 `omitted`，把 `template` 块改成论文仓库，把本文档换成论文自己的发布说明，重写 README。
+5. 让 agent 填写留给论文的槽位：`page-budget-on-blind-build.md` 的 `PAGE_MARGIN`，`post-build-visual-inspection.md` 的 `MIN_FIGURE_TEXT` 与 `LAST_LINE_FILL`。
+6. 把论文简报交给 agent（`paper-foundation`）：`brief.md` 中未决定的内容保持 `unresolved`。
+
+模板升级：`bash .agents/scripts/shared/upgrade-template.sh --check <tag>` 输出计划，去掉 `--check` 应用；
+标记 **Command only.** 且没有冲突的版本不需要其他操作。
