@@ -12406,17 +12406,6 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Fill one line per intentional exemption of this paper, with its reason."
-  - path: .agents/skills/shared/.gitattributes
-    id: content-bc69baefe337a84d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Vendored files keep their upstream bytes; per-file whitespace exceptions live here."
-    status: active
-    source: {"commit": "4bca5aa", "path": ".agents/skills/shared/.gitattributes"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
 omitted: [
     {
       "id": "content-2f754321d62f08ba",
