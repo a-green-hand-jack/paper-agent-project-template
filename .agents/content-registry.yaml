@@ -1765,7 +1765,7 @@ entries:
     owner: paper-template-maintainers
     summary: "One row per reported result: source repository, commit, run, checksum, regeneration command, macro and use."
     status: active
-    source: {"commit": "PENDING", "path": ".agents/memory/project/paper-foundation/results-ledger.md"}
+    source: {"commit": "f268235e7d4c3aff2761c257fbc429dcae02e018", "path": ".agents/memory/project/paper-foundation/results-ledger.md"}
     updated: 2026-11-15
     supersedes: []
     superseded_by: []
