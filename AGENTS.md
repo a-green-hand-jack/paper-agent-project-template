@@ -4,24 +4,27 @@
 
 Before working, read this file, `.agents/AGENTS.md`, the Issue, and only the
 records and skills under `.agents/memory/`, `.agents/knowledge/` and
-`.agents/skills/` that the task needs. For paper work, start with `PAPER.md`
-(see "Paper work" below). Understand the existing text and boundaries before
-deciding to change anything.
+`.agents/skills/` that the task needs. For paper work, start with `paper/` and
+the records under `.agents/memory/project/paper-foundation/` (see "Paper work"
+below). Understand the existing text and boundaries before deciding to change
+anything.
 
 `CLAUDE.md` is a symlink to this file, so that Claude Code finds the same rules
 from the repository root. Change only `AGENTS.md`; never let the two diverge.
 
-## Three planes
+## Two surfaces
 
 - The product is the paper in `paper/`. It is self-contained: a copy of
   `paper/` alone builds, it never reads `.agents/`, and builds write to the
   worktree's `.project/build/`, never into `paper/` or the repository root.
+  It is what the Human reads, and open questions belong in author comments
+  inside it.
 - Agent rules, records, skills, scripts and checks live in `.agents/`.
-- The Human documents are in the root: `README.md`, `PAPER.md` (the Human
-  contract), `DEV.md` and `RELEASE_NOTES.md`.
 
-Do not copy development material into `paper/`, and do not keep the paper's
-behavior only in development material.
+`README.md` is the only Human document: what this is, how to build and release.
+A decision the paper depends on is a record under `.agents/memory/project/`,
+never a second Human document. Do not copy development material into `paper/`,
+and do not keep the paper's behavior only in development material.
 
 ## How to work
 
@@ -89,7 +92,7 @@ A release also passes `make release-check`.
 
 ### Orientation
 
-1. Read `PAPER.md`.
+1. Read `README.md`, then `.agents/memory/project/paper-foundation/brief.md`.
 2. Read `.agents/memory/project/paper-foundation/experiments.md` only for experiment, evidence,
    claim-support or result-interpretation work.
 3. Read `.agents/memory/project/paper-foundation/paper-interfaces.md` only for recurring
@@ -121,7 +124,7 @@ Skills are at `.agents/skills/shared/<name>/SKILL.md`.
 | bring an existing paper repository onto this template | `template-adoption` |
 | upgrade to a newer template release | `template-upgrade` |
 | report a defect in this template | `template-feedback` |
-| scripts, build or CI | no skill; `DEV.md` and `.agents/scripts/AGENTS.md` |
+| scripts, build or CI | no skill; `.agents/scripts/AGENTS.md` |
 
 Do not load skills for an ordinary local edit. Do not run manuscript-wide
 review passes while drafting a section: a version-level consistency review is
@@ -153,10 +156,10 @@ publication.
 The Agent retrieves, repairs BibTeX and the ledger from evidence, analyzes
 impact, offers alternatives, keeps the paper consistent, drafts, makes
 low-risk revisions, runs the builds and checks, prepares releases, maps
-template adoption and upgrades, and validates. In autonomous mode
-(`Mode: autonomous` in `PAPER.md`), the Agent also drafts, self-reviews,
-polishes and builds without step-by-step confirmation. It still stops for the
-Human before changing a locked item, approving a release or submitting.
+template adoption and upgrades, and validates. Writing a paper is human-agent
+co-work, not a hand-off: the Agent drafts, self-reviews, polishes and builds,
+and stops for the Human before changing a locked item, approving a release or
+submitting.
 
 ### Strong rules
 

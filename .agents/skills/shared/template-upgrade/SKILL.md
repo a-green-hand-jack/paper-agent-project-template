@@ -296,7 +296,7 @@ stay explicitly recorded as provenance, not fabricated replacement identities.
   `bash .agents/scripts/shared/upgrade-template.sh --check <TARGET_TAG>`
   first; its plan lists the path-level differences the release notes describe, because the registry carries no migration map.
   - The Human documents whose registry entry has `upgrade: review`
-    (`README.md`, `PAPER.md`, `DEV.md`) are the paper's own once it has
+    (`README.md`, `RELEASE_NOTES.md`) are the paper's own once it has
     started: the command never changes them and prints the release's diff
     for each under "Review", never as a conflict. Take from it only what the
     release notes' manual steps require, or what the paper wants.

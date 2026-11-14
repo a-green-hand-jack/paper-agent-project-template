@@ -12,7 +12,7 @@ applies_to: paper/macros.tex and every paper/ source that calls an interface mac
 Paper-facing names, notation and reported values reach the text only through
 the macros below. Each is defined in `paper/macros.tex` under an
 `% Interface: <Name>` marker and has one row here. The control cue says who may
-change it, with the meanings of `PAPER.md`: `locked` (only the Human),
+change it: `locked` (only the Human),
 `bounded` (an agent may change it within the stated limit), `free` and
 `unresolved`.
 
@@ -21,7 +21,7 @@ change it, with the meanings of `PAPER.md`: `locked` (only the Human),
 | `\PaperTODO{...}` | A visible placeholder that keeps the paper compilable. | free; `make release-check` rejects any use. | authoring helper |
 | `\PaperNote{...}` | A note between authors, shown only in the main build. | free; `make release-check` rejects any use. | authoring helper |
 | `\PaperIdentity{...}` | Declares, in `paper/authors.tex`, a string the blind build must not contain; typesets nothing. | locked | authoring helper |
-| `\PaperTitle{}` | The title of every build. | bounded wording; a change of positioning needs the Human. | `PAPER.md` |
+| `\PaperTitle{}` | The title of every build. | bounded wording; a change of positioning needs the Human. | the brief record |
 | `\MethodName{}` | The approved name of the proposed method or system. | locked meaning; a rename needs a review of every consumer. | not set |
 | `\CoreTerm{}` | The preferred term for the paper's central concept. | bounded wording; a new meaning needs the Human. | not set |
 | `\StateSymbol{}` | The main state or representation symbol of the method. | bounded notation; a new symbol needs a collision and consumer review. | not set |

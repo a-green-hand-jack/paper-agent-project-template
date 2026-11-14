@@ -142,5 +142,5 @@ data in the development tree.
   in `memory/` and the registry before it counts as recorded; a changing
   environment or external fact goes in `knowledge/`, with date and source; a
   repeatable operation goes in `skills/`. Paper content belongs in `paper/`,
-  and the Human contract in `PAPER.md`; not here. Session progress may remain
+  and the Human entry point is `README.md`; not here. Session progress may remain
   private; project knowledge may not.

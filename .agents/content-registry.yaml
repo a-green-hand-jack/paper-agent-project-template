@@ -1353,19 +1353,6 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
-  - path: DEV.md
-    id: content-730ae1431fd18156
-    kind: document
-    scope: shared_with_adaptation
-    owner: project-maintainers
-    summary: "Development process of a paper; keep the Issue, build, Overleaf and release sections and adapt names."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "DEV.md"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    upgrade: review
-    adaptation: "Development process of a paper; keep the Issue, build, Overleaf and release sections and adapt names."
   - path: README.md
     id: content-b335630551682c19
     kind: document
@@ -1621,17 +1608,6 @@ entries:
     summary: "House skill harvested from downstream papers; collects reviews into a dossier and a revision queue."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/openreview-review-collector/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-foundation/sources/paper-brief-ingest/
-    id: content-367f52325ba4f1e3
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Validates a brief and fills PAPER.md; carries scripts/paper_brief.py, which refuses to ingest into the template itself."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/paper-brief-ingest/SKILL.md"}
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
@@ -2391,18 +2367,6 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/tests/shared/paper-foundation/test_paper_brief.py
-    id: content-a0fe2907aa55e0f2
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Unit tests of the shared scripts (paper brief)."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_paper_brief.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
   - path: .agents/tests/shared/paper-build/test_paper_interfaces.py
     id: content-0cfac28e91dfe6ed
     kind: code
@@ -2487,19 +2451,6 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: PAPER.md
-    id: content-c7ca946f9fce4d89
-    kind: document
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "The Human contract with the locked, bounded, free and unresolved cues; a paper fills it, from its brief through paper-brief-ingest."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "PAPER.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "The Human contract with the locked, bounded, free and unresolved cues; a paper fills it, from its brief through paper-brief-ingest."
-    upgrade: review
   - path: Makefile
     id: content-76ed074a9305c040
     kind: document
@@ -3300,5 +3251,25 @@ omitted: [
       "id": "content-issue-197-upgrade-tests",
       "path": ".agents/tests/project/test_template_issue_197_upgrade.py",
       "reason": "Retired with #223: it exercised the registry migration map, which is gone."
+    },
+    {
+      "id": "content-730ae1431fd18156",
+      "path": "DEV.md",
+      "reason": "Deleted by the template in #221: the paper's Human surface is README.md and its decisions are project records; this file duplicated them and drifted."
+    },
+    {
+      "id": "content-367f52325ba4f1e3",
+      "path": ".agents/skills/shared/paper-foundation/sources/paper-brief-ingest/",
+      "reason": "Deleted in #221: the brief tool wrote into the removed Human contract."
+    },
+    {
+      "id": "content-a0fe2907aa55e0f2",
+      "path": ".agents/tests/shared/paper-foundation/test_paper_brief.py",
+      "reason": "Deleted in #221: the brief tool wrote into the removed Human contract."
+    },
+    {
+      "id": "content-c7ca946f9fce4d89",
+      "path": "PAPER.md",
+      "reason": "Deleted by the template in #221: the paper's Human surface is README.md and its decisions are project records; this file duplicated them and drifted."
     }
   ]
