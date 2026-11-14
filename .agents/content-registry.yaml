@@ -12311,7 +12311,7 @@ entries:
     kind: memory
     scope: shared
     owner: paper-template-maintainers
-    summary: "Draw conceptual figures as one slide deck under .agents/notes/figures/, export with a project script, judge at print size."
+    summary: "Draw conceptual figures as one slide deck in the notes tree, export with a project script, judge at print size."
     status: active
     source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-figures/figure-deck-and-export.md"}
     updated: 2026-11-14
@@ -12380,6 +12380,28 @@ entries:
     summary: "Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites."
     status: active
     source: {"commit": "7fed695", "path": ".agents/memory/shared/paper-writing/writing-exemplar-archive.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/project/check_development_paths.py
+    id: content-dbebdd48ae9b0840
+    kind: code
+    scope: project
+    owner: paper-template-maintainers
+    summary: "Check that development-plane documents name existing paths and that CLAUDE.md, .claude and .pi are the expected symlinks."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.py"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/project/check-development-paths.allow
+    id: content-69c61130a30cd310
+    kind: code
+    scope: project
+    owner: paper-template-maintainers
+    summary: "Explicit exemptions for check-development-paths.py, each with its reason; printed when the check runs."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.allow"}
     updated: 2026-11-14
     supersedes: []
     superseded_by: []
