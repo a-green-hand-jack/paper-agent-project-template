@@ -23,6 +23,16 @@ boundary; individual skills use `SKILL.md`, not another AGENTS. The registry
 policy explicitly lists allowed category-root files such as `entry-template.md`.
 Do not add README files here.
 
+`notes/` is the one tracked root outside the six categories: work in progress
+today (plans, figure decks and briefs, literature reading, revision reports).
+It is not guidance, it is not copied to a paper, and a conclusion that others
+must follow moves to `memory/` or `knowledge/`. Build output, downloads and
+renders stay in the ignored `.project/`.
+
+`.claude/` and `.pi/` are relative symlinks to `.agents/` so a runtime that looks
+only under its own hidden directory still finds `skills/`; `CLAUDE.md` remains
+the rules symlink. Do not replace either with a copy.
+
 Physical grouping is not reuse permission. Template-maintenance tests, harvest
 and template history live in `project/` but retain `scope: template`; downstream
 projects do not copy them. `shared_with_adaptation` retains the trailing

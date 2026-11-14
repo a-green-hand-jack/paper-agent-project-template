@@ -33,6 +33,7 @@ the record's own text never contains that heading line.
 - [paper-writing/non-hedged-claims.md](paper-writing/non-hedged-claims.md) — State the claim at the strength the evidence supports and report a reduced setting once, in the setup, not as hedging.
 - [paper-writing/notation-cost.md](paper-writing/notation-cost.md) — Introduce a symbol only where prose cannot be precise; the full formalism belongs in the appendix.
 - [paper-writing/undecided-content-in-author-comments.md](paper-writing/undecided-content-in-author-comments.md) — Undecided content lives in author comments inside paper/, never in the article text or the development plane.
+- [paper-writing/writing-exemplar-archive.md](paper-writing/writing-exemplar-archive.md) — Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites.
 - [product-state-root.md](product-state-root.md) — Resolve worktree-local product state from the project marker.
 - [project-positioning-before-layout.md](project-positioning-before-layout.md) — Establish users, deliverables and domain concepts before choosing paths.
 - [provider-cost-routing.md](provider-cost-routing.md) — Use the cheapest capable provider/model and record why each real run is needed.

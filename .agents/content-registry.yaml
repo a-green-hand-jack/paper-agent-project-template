@@ -42,7 +42,8 @@ policy: {
       "AGENTS.md",
       "CLAUDE.md",
       "content-registry.yaml",
-      "references"
+      "references",
+      "notes"
     ],
     "category_files": {
       "memory": [
@@ -272,6 +273,14 @@ policy: {
       {
         "pattern": "tikz-validator.py",
         "reason": "Third-party payload: vendored thesis-figure-skill script."
+      },
+      {
+        "pattern": ".claude",
+        "reason": "Agent runtime convention for the development-plane symlink."
+      },
+      {
+        "pattern": ".pi",
+        "reason": "Agent runtime convention for the development-plane symlink."
       }
     ],
     "metadata_authority": "registry owns identity/path/scope/owner/summary/status/relationships; frontmatter owns content source/date/applies_to",
@@ -12327,6 +12336,50 @@ entries:
     summary: "Check the device's existing credential route, and test the endpoint, before falling back to a weaker public route."
     status: active
     source: {"commit": "2b9f09f", "path": ".agents/memory/shared/credential-route-before-weaker-option.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .claude
+    id: content-e026f56c08dcdea4
+    kind: symlink-index
+    scope: shared
+    owner: template-maintainers
+    summary: "Relative symlink to .agents/ so a runtime that looks only under .claude finds the skills."
+    status: active
+    source: {"commit": "7fed695", "path": ".claude"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .pi
+    id: content-3f95c2c04fa4fd32
+    kind: symlink-index
+    scope: shared
+    owner: template-maintainers
+    summary: "Relative symlink to .agents/ so a runtime that looks only under .pi finds the skills."
+    status: active
+    source: {"commit": "7fed695", "path": ".pi"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/notes/
+    id: content-2420908dc9108902
+    kind: governance
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Tracked work in progress: plans, figure decks and briefs, literature reading, revision reports; conclusions move to memory or knowledge."
+    status: active
+    source: {"commit": "7fed695", "path": ".agents/notes/"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/writing-exemplar-archive.md
+    id: content-963d2e7447c74cc7
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites."
+    status: active
+    source: {"commit": "7fed695", "path": ".agents/memory/shared/paper-writing/writing-exemplar-archive.md"}
     updated: 2026-11-14
     supersedes: []
     superseded_by: []
