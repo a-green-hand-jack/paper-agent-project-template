@@ -12386,7 +12386,7 @@ entries:
   - path: .agents/scripts/project/check_development_paths.py
     id: content-dbebdd48ae9b0840
     kind: code
-    scope: project
+    scope: shared
     owner: paper-template-maintainers
     summary: "Check that development-plane documents name existing paths and that CLAUDE.md, .claude and .pi are the expected symlinks."
     status: active
@@ -12397,11 +12397,23 @@ entries:
   - path: .agents/scripts/project/check-development-paths.allow
     id: content-69c61130a30cd310
     kind: code
-    scope: project
+    scope: shared_with_adaptation
     owner: paper-template-maintainers
     summary: "Explicit exemptions for check-development-paths.py, each with its reason; printed when the check runs."
     status: active
     source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.allow"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+    adaptation: "Fill one line per intentional exemption of this paper, with its reason."
+  - path: .agents/skills/shared/.gitattributes
+    id: content-bc69baefe337a84d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Vendored files keep their upstream bytes; per-file whitespace exceptions live here."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/skills/shared/.gitattributes"}
     updated: 2026-11-14
     supersedes: []
     superseded_by: []
