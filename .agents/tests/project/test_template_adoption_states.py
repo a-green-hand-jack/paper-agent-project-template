@@ -36,6 +36,10 @@ CLONE = ".project/state/template-upgrade/paper-agent-project-template.git"
 # file, which v0.4.6 replaces with a generated index.
 DOCUMENTED_CONFLICTS = ()
 
+# The release whose notes describe them keeps them until the paper deletes them:
+# an `upgrade: review` file is never changed by the command.
+RETIRED_HUMAN_DOCS = {"PAPER.md", "DEV.md"}
+
 # A stand-in for a venue's official kit, with the kind of text real kits carry
 # about authors; no real kit's text.
 VENUE_KIT = r"""% venuekit.sty: synthetic venue kit for the adoption-state tests. Its macros
@@ -421,6 +425,8 @@ class UpgradeStateTests(unittest.TestCase):
                     # out; the upgraded and fresh papers record them separately.
                     for data in (mine, fresh):
                         data.pop("omitted", None)
+                        data["entries"] = [entry for entry in data["entries"]
+                                           if entry["path"] not in RETIRED_HUMAN_DOCS]
                     self.assertEqual(mine, fresh)
                 elif path.endswith("/AGENTS.md") and path in upgraded and path in expected:
                     mine, fresh = (data.decode() for data in (upgraded[path], expected[path]))
@@ -436,8 +442,8 @@ class UpgradeStateTests(unittest.TestCase):
                     self.assertEqual(links.sub(b"<link>", upgraded[path]), links.sub(b"<link>", original))
                 else:
                     new_optional = path not in upgraded and path.startswith(optional)
-                    self.assertTrue(path.startswith(("paper/", "assets/")) or path in owned or new_optional,
-                                    self.upgrade.stdout)
+                    self.assertTrue(path.startswith(("paper/", "assets/")) or path in owned
+                                    or path in RETIRED_HUMAN_DOCS or new_optional, self.upgrade.stdout)
                     self.assertEqual(upgraded.get(path), self.before.get(path))
 
     def test_make_check_passes_after_the_upgrade(self) -> None:
