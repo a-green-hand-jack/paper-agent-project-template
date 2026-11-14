@@ -219,6 +219,30 @@ class AgentContentChecks(unittest.TestCase):
             write(root / ".agents/memory/shared/b-lesson.md", record("b-lesson", ("## Decision", "## Why", "## Apply")))
             self.check_fails(root, ".agents/memory/shared/b-lesson.md: has no entry in .agents/content-registry.yaml")
 
+    def test_repeated_section_heading_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root)
+            edit(root / ".agents/memory/shared/a-lesson.md", "\n## Apply\n",
+                 "\n## Apply\n\nText.\n\n## Apply\n")
+            self.check_fails(root, "a-lesson.md: section heading is repeated: '## Apply'")
+
+    def test_section_heading_with_backtick_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root)
+            edit(root / ".agents/memory/shared/a-lesson.md", "\n## Apply\n",
+                 "\n## Apply` section at the end of this\nrecord (see `template-adoption` step 5):\n\n## Apply\n")
+            self.check_fails(root, "a-lesson.md: section heading carries a backtick")
+
+    def test_local_skill_section_heading_with_backtick_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root)
+            edit(root / ".agents/skills/shared/house/SKILL.md", "\n# House\n",
+                 "\n# House\n\n## In this repository` section at the end of this\n\nText.\n")
+            self.check_fails(root, "house/SKILL.md: section heading carries a backtick")
+
 
 if __name__ == "__main__":
     unittest.main()

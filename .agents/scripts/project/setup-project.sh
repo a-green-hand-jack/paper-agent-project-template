@@ -20,4 +20,19 @@ done
 for tool in pdftotext pdfinfo; do
   command -v "$tool" >/dev/null || echo "warning: $tool not found; make check needs poppler-utils" >&2
 done
-"${AGENTS_PYTHON:-python3}" -I -c 'import yaml, markdown_it' 2>/dev/null || echo 'warning: make check needs PyYAML and markdown-it-py available to isolated Python; set AGENTS_PYTHON to an interpreter that has them (DEV.md)' >&2
+
+if command -v uv >/dev/null 2>&1; then
+  [[ -x .project/venv/bin/python3 ]] || uv venv --quiet .project/venv
+  .project/venv/bin/python3 -I -c 'import yaml, markdown_it' 2>/dev/null ||
+    uv pip install --quiet --python .project/venv/bin/python3 PyYAML markdown-it-py ||
+    echo "warning: could not install PyYAML and markdown-it-py into .project/venv" >&2
+fi
+
+python=${AGENTS_PYTHON:-}
+if [[ -z $python ]]; then
+  if [[ -x .project/venv/bin/python3 ]]; then python=.project/venv/bin/python3; else python=python3; fi
+fi
+"$python" -I -c 'import yaml, markdown_it' 2>/dev/null || {
+  echo "warning: make check needs PyYAML and markdown-it-py under isolated Python (queried $python)" >&2
+  echo "warning: install uv and rerun this setup, or set AGENTS_PYTHON to an interpreter that has them" >&2
+}

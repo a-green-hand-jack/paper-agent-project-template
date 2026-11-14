@@ -4,11 +4,11 @@
 
 - **产品面**：`paper/` 中的论文，是一棵自包含的 LaTeX 文件树。单独复制 `paper/` 即可编译，Overleaf 也只接收这个目录。
 - **开发面**：`AGENTS.md` 和 `.agents/`，包含 Agent 规则、技能、记忆和知识记录、参考文献台账、脚本与检查。
-- **Human 面**：`README.md`、`PAPER.md`（论文契约）、`DEV.md` 和 `RELEASE_NOTES.md`，以及 Issue 和 PR。
+- **Human 面**：`README.md`（本页，唯一的人类入口）、`RELEASE_NOTES.md`，以及 Issue 和 PR。论文自己的决定是 `.agents/memory/project/` 下的记录，不再有第二份人类契约文档。
 
 默认在 `dev` 开发，按任务风险决定 Issue、审阅和 PR；如需派出 Herdr worktree，先确认是否派遣、coding agent、具体模型和 thinking level。构建即测试：`make check` 遇到未定义的引用或引文、缺失文件、重复定义的标签和损坏的接口宏时会失败。每次发布都对应 `main` 上的一个标签；论文报告的每个数字都可追溯到产生它的代码仓库、提交和运行。
 
-模板支持两种运行模式，由论文在 `PAPER.md` 中声明。**协作**模式下，Human 与 Agent 一起完成每个实质性步骤。**自主**模式下，Human 提供简报和材料，Agent 自行起草、审阅和构建；修改锁定项、发布或提交之前仍需停下来征求 Human 的决定。
+写作是 Human 与 Agent 的协作：Human 定主张、故事、实验公平性、重要解释与发布决定，Agent 起草、自审、润色、构建与验证；修改锁定项、批准发布或投稿之前，Agent 停下来取得 Human 的决定。
 
 ## 开始一篇论文
 
@@ -21,7 +21,7 @@
    - 将 `RELEASE_NOTES.md` 替换为论文自己的发布记录；初始为空，每个发布标签对应一个 `## <tag>` 标题。
    - 将本 README 改写为论文说明：介绍论文及构建方法。
 5. 填写模板留给论文的槽位：在 `.agents/memory/shared/paper-build/page-budget-on-blind-build.md`（`PAGE_MARGIN`）和 `.agents/memory/shared/paper-build/post-build-visual-inspection.md`（`MIN_FIGURE_TEXT`、`LAST_LINE_FILL`）末尾分别添加含 Slot/Value 表格的 `## In this repository` 小节。在两者都填写之前，`diagnose-environment.sh` 会发出警告。
-6. 将论文简报交给 Agent。`paper-foundation` 技能会验证简报，并填写 `PAPER.md` 中已决定的字段；未决定的内容保持为 `unresolved`。没有简报时，与 Agent 一起填写 `PAPER.md`。
+6. 将论文简报交给 Agent。`paper-foundation` 技能会验证简报，并写入 `.agents/memory/project/paper-foundation/brief.md`；未决定的内容保持为 `unresolved`。没有简报时，与 Agent 一起填写该记录。
 7. 确定投稿场所后，将其官方套件原样放入 `paper/`，在根目录 `Makefile` 中设置 `PAGE_BUDGET`，并在 `.agents/memory/project/paper-publication/publication.md` 中记录投稿场所（`paper-publication`）。将作者写入 `paper/authors.tex`，用每位真实作者的姓名、电子邮箱和机构对应的 `\PaperIdentity` 替换模板占位身份（`Template-Author-Name` 等）。在此之前，`make release-check` 的 `identity` 步骤会因占位身份失败，`leftovers` 会因模板的 `\PaperTODO` 文本失败，而 `pages` 在设置 `PAGE_BUDGET` 之前会失败；`make check` 则可以通过。占位文本不会匹配任何投稿套件的文本。
 8. 在 `paper/` 中写作。将每张结果表、每个图数据文件和每个报告的数字登记到 `assets/MANIFEST.yaml`，并且只通过 `paper/macros.tex` 中的接口宏将数字写入正文。
 
@@ -40,7 +40,7 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 | `make release-check` | 构建 `blind` 和 `submission`；匿名 PDF 或其源文件中存在作者身份（或模板占位身份）、`submission` 中留有注释或 TODO、页数超预算、参考文献未达到发布强度，或完整在线元数据审计未通过时失败（需要 `uv` 和网络） |
 | `make clean` | 清理构建输出 |
 
-三个版本来自同一份源：`paper/main.tex` 对应 `main`，单行的 `paper/submission.tex` 和 `paper/blind.tex` 只关闭部分层次。TeX 从 `PATH` 获取；如果排在前面的 `latexmk` 属于其他安装，则可设置 `TEXBIN=<TeX Live bin directory>`。构建需要 `latexmk`、`pdflatex` 和 `bibtex`；检查还需要 `pdftotext`、`pdfinfo`、PyYAML 和 markdown-it-py。
+三个版本来自同一份源：`paper/main.tex` 对应 `main`，单行的 `paper/submission.tex` 和 `paper/blind.tex` 只关闭部分层次。TeX 从 `PATH` 获取；如果排在前面的 `latexmk` 属于其他安装，则可设置 `TEXBIN=<TeX Live bin directory>`。构建需要 `latexmk`、`pdflatex` 和 `bibtex`；检查还需要 `pdftotext`、`pdfinfo`、PyYAML 和 markdown-it-py。`setup-worktree.sh` 在 `uv` 可用时把后两项装进该 worktree 的 `.project/venv`，`make check` 与 `make release-check` 优先使用它；设置 `AGENTS_PYTHON` 可指定其他解释器。
 
 单独复制 `paper/` 后，可用 `make -C <copy> main`（或 `blind`、`submission`）构建，输出写入 `<copy>/build/`。
 
@@ -48,7 +48,7 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 
 | 路径 | 层面 | 用途 |
 | --- | --- | --- |
-| `paper/` | 产品 | 论文：`main.tex`、`submission.tex`、`blind.tex`、`authors.tex`、`macros.tex`、`refs.bib`、`sections/`、`figures/`、`tables/`、`algorithms/`、`style/` 和其中的 `Makefile` |
+| `paper/` | 产品 | 论文：`main.tex`、`submission.tex`、`blind.tex`、`authors.tex`、`macros.tex`、`refs.bib`、`sections/`（正文各节）、`appendix/`（每个附录一个文件）、`figures/`、`tables/`、`algorithms/`、`style/` 和其中的 `Makefile` |
 | `assets/` | 证据 | `MANIFEST.yaml`：每个报告数字、表格和图数据文件的源仓库、提交、运行、校验和及重新生成命令；大型文件的本地链接 |
 | `Makefile` | 构建入口 | 上述 `make` 目标 |
 | `.project/` | worktree 本地状态 | 构建输出、日志和截图；Git 忽略此目录 |
@@ -56,9 +56,8 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 | `.github/` | 开发 | CI 及 Issue、PR 模板 |
 | `AGENTS.md`、`CLAUDE.md` | Agent 入口 | 规则和任务路由；`CLAUDE.md` 是指向 `AGENTS.md` 的符号链接 |
 | `README.md` | Human | 本页面 |
-| `PAPER.md` | Human | 论文契约：论文主张、叙事和风格，不得静默更改的内容，以及尚未决定的问题 |
-| `DEV.md` | Human | 论文的开发方式：Issue、构建、Overleaf、证据和发布 |
 | `RELEASE_NOTES.md` | Human | 每个发布标签对应一个标题 |
+| `.agents/memory/project/` | 记录 | 论文自己的决定：brief、实验与证据、接口、投稿场所 |
 
 `paper/refs.bib` 是论文实际引用的文献，`.agents/references/ledger.json`
 记录各处引用的身份和论断支持。`.agents/references/exemplars/` 保存写作、
@@ -69,7 +68,7 @@ Agent 首先读取 `AGENTS.md`，将每项任务路由到一个技能，并只�
 
 发布（投稿版本、arXiv 版本或终稿版本）通过从 `dev` 到 `main` 的 PR 完成：通过 `make release-check` 后，在 `main` 上创建例如 `submit-<venue>-<yyyy>`、`arxiv-v1` 或 `camera-ready` 的标签，并记录到 `RELEASE_NOTES.md`。
 
-Overleaf 通过 `.agents/scripts/shared/paper-publication/overleaf-sync.sh` 镜像 `dev` 上的 `paper/`：`status` 比较两边，`push` 将 `HEAD:paper` 快进推送到 Overleaf，`pull` 将 Overleaf 编辑拉到 `sync/overleaf-*` 分支供 PR 使用。两个方向都会检查文件树相等，仓库根目录不会发送到 Overleaf。具体说明见 `DEV.md`。
+Overleaf 通过 `.agents/scripts/shared/paper-publication/overleaf-sync.sh` 镜像 `dev` 上的 `paper/`：`status` 比较两边，`push` 将 `HEAD:paper` 快进推送到 Overleaf，`pull` 将 Overleaf 编辑拉到 `sync/overleaf-*` 分支供 PR 使用。两个方向都会检查文件树相等，仓库根目录不会发送到 Overleaf。取舍与失败边界见 `paper-publication` 技能。
 
 ## 为什么使用这个模板
 

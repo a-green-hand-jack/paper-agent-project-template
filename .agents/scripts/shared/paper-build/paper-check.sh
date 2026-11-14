@@ -12,6 +12,9 @@ cd "$root"
 build=${BUILD_DIR:-$root/.project/build}
 mkdir -p "$build/logs"
 export PYTHONPYCACHEPREFIX="$build/cache"
+if [[ -z ${AGENTS_PYTHON:-} && -x $root/.project/venv/bin/python3 ]]; then
+  export PATH="$root/.project/venv/bin:$PATH"
+fi
 python=${AGENTS_PYTHON:-python3}
 failed=()
 
@@ -59,6 +62,9 @@ run 'development registry' bash .agents/scripts/shared/check-development.sh
 
 step 'skills, memory and knowledge records'
 run 'agent content' "$python" .agents/scripts/shared/check_agent_content.py
+
+step 'referenced development paths'
+run 'paths' "$python" .agents/scripts/project/check_development_paths.py
 
 step 'unit tests'
 for group in shared project; do

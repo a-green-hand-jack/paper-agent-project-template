@@ -13,7 +13,7 @@ This record holds what the paper needs experiments to establish and which
 choices need the Human. It is not a run ledger and not a second copy of raw
 results: the code repositories own their runs, and every result the paper
 reports is registered in `assets/MANIFEST.yaml` with its repository, commit,
-run, checksum and regeneration command. Use the control cues of `PAPER.md`:
+run, checksum and regeneration command. Use the control cues of the brief and interface records:
 `locked`, `bounded`, `free` and `unresolved`.
 
 | ID | Paper question | Supports | Manifest entries | State |

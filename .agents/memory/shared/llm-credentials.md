@@ -101,17 +101,6 @@ record (see `template-adoption` step 5):
 
 Then follow `credential-setup` in the canonical checkout and in each worktree.
 
-## In this repository` section at the end of this
-record (see `template-adoption` step 5):
-
-- `SHARED_CREDENTIAL_FILE`: the device's shared file, taken from user-level
-  configuration. If the device has none, the project runs without it.
-- `CREDENTIAL_DIR`: the name of the Git-ignored directory under the canonical
-  checkout's `.project/` that holds the symlink to the shared file and the
-  project's own logins. This project uses `credentials`.
-
-Then follow `credential-setup` in the canonical checkout and in each worktree.
-
 ## In this repository
 
 | Slot | Value |
@@ -119,16 +108,20 @@ Then follow `credential-setup` in the canonical checkout and in each worktree.
 | `SHARED_CREDENTIAL_FILE` | the device's shared file named by user-level configuration; none by default, and a paper runs without it |
 | `CREDENTIAL_DIR` | `credentials` |
 
+Before a run falls back to a public or reduced route, check the device's
+existing route and test the endpoint
+([`credential-route-before-weaker-option`](credential-route-before-weaker-option.md)).
+
 The online reference audits (`.agents/scripts/shared/paper-references/reference_env.py`) read the
 link `.project/credentials/.env` to the shared file, in a worktree through the
 `.project/credentials` link, and export only `BIBTEX_CHECK_MAILTO`,
 `OPENALEX_API_KEY` and `S2_API_KEY` from it (`credential-setup` step 4). A root
 `.env` with only those keys stays a fallback and wins over the link.
 
-No script, build or check of this repository calls an LLM provider. The one
-shipped tool that can is the optional CLI fallback of `image-to-editable-ppt`
-(`editppt`), which reads `OPENAI_API_KEY`, `OPENAI_BASE_URL` and
-`PADDLE_OCR_TOKEN` from the environment; `credential-setup` step 4 governs how
+No script, build or check of this repository calls an LLM provider, and no
+vendored tool does either. A paper that adds one reads `OPENAI_API_KEY`,
+`OPENAI_BASE_URL` and its provider's variables from the environment only;
+`credential-setup` step 4 governs how
 they reach it, and the skill's own section keeps its configuration inside
 `.project/`.
 

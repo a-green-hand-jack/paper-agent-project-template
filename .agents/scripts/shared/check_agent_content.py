@@ -47,6 +47,22 @@ RECORD_SECTIONS = {
 ROW = re.compile(r"^\|\s*`([^`]+)`\s*\|\s*`?([^|`]*)`?\s*\|\s*([0-9a-fA-F]{64})\s*\|\s*(.+?)\s*\|\s*$")
 
 
+def heading_errors(text: str) -> list[str]:
+    """A section heading must be unique and must not carry a backtick."""
+    problems: list[str] = []
+    seen: set[str] = set()
+    for line in text.splitlines():
+        if not line.startswith("## "):
+            continue
+        heading = line[3:]
+        if "`" in heading:
+            problems.append(f"section heading carries a backtick: {line.strip()!r}")
+        if heading in seen:
+            problems.append(f"section heading is repeated: {line.strip()!r}")
+        seen.add(heading)
+    return problems
+
+
 class Report:
     def __init__(self) -> None:
         self.failed = False
@@ -147,6 +163,9 @@ def check_skills(root: Path, entries: dict, report: Report) -> None:
         index = index_path.read_text(encoding="utf-8") if index_path.is_file() else ""
         if f"]({skill.name}/SKILL.md)" not in index:
             report.error(f"{shown}: `{relative}/` is not listed in {index_path.relative_to(root).as_posix()}")
+        if not (skill / "PROVENANCE.md").is_file():
+            for problem in heading_errors(entry.read_text(encoding="utf-8")):
+                report.error(f"{shown}: {problem}")
         if entries.get(f".agents/skills/{relative}/", {}).get("kind") != "skill":
             report.error(f"{shown}: .agents/skills/{relative}/ has no skill entry in .agents/content-registry.yaml")
         for stray in ("README.md", "AGENTS.md"):
@@ -190,6 +209,8 @@ def check_records(root: Path, plane: str, entries: dict, report: Report) -> None
             positions = [text.find(f"\n{heading}\n") for heading in RECORD_SECTIONS[plane]]
             if -1 in positions or positions != sorted(positions):
                 report.error(f"{shown}: needs the sections {', '.join(RECORD_SECTIONS[plane])} in this order")
+            for problem in heading_errors(text):
+                report.error(f"{shown}: {problem}")
             if f"]({path.relative_to(directory).as_posix()})" not in index:
                 report.error(f"{shown}: not linked from {index_path.relative_to(root).as_posix()}")
     print(f"CHECKED {count} {plane} records")

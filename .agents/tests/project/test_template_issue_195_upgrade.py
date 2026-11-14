@@ -21,24 +21,24 @@ class ExistingPaperUpgrade(unittest.TestCase):
             shipped_tree(template)
             registry = template / ".agents/content-registry.yaml"
             data = content_registry.loads(registry.read_text())
-            data["template"]["version"] = "v0.4.7-test"
+            data["template"]["version"] = "v0.4.14-test"
             registry.write_text(content_registry.dumps(data))
             notes = template / "RELEASE_NOTES.md"
             notes.write_text(notes.read_text().replace(
-                "# 发布说明\n", "# 发布说明\n\n## v0.4.7-test\n\n"
-                "### Upgrading a paper from v0.4.6\n\n1. Review the migration plan.\n", 1))
+                "# 发布说明\n", "# 发布说明\n\n## v0.4.14-test\n\n"
+                "### Upgrading a paper from v0.4.13\n\n1. Review the migration plan.\n", 1))
             git("add", "-A", cwd=template)
             git("commit", "-qm", "candidate", cwd=template)
-            git("tag", "v0.4.7-test", cwd=template)
-            git("fetch", "-q", f"file://{ROOT}", "refs/tags/v0.4.6:refs/tags/v0.4.6", cwd=template)
+            git("tag", "v0.4.14-test", cwd=template)
+            git("fetch", "-q", f"file://{ROOT}", "refs/tags/v0.4.13:refs/tags/v0.4.13", cwd=template)
 
             paper = base / "paper"
             paper.mkdir()
             subprocess.run(["tar", "-x", "-C", str(paper)], check=True,
-                           input=git("archive", "v0.4.6", cwd=template).stdout)
+                           input=git("archive", "v0.4.13", cwd=template).stdout)
             git("init", "-q", cwd=paper)
             start_paper(paper)
-            old_skill = paper / ".agents/skills/shared/section-writing/SKILL.md"
+            old_skill = paper / ".agents/skills/shared/paper-writing/sources/writing-reference-finder/reference.md"
             old_skill.write_text(old_skill.read_text() + "\n## In this repository\n\nLocal paper adaptation 195.\n")
             reference_fixture.fixture(paper, teX="\\section{Intro}\nA fixture claim~\\citep{k1,k2}.\n")
             reference_fixture.run(paper, "inventory", check=True)
@@ -86,16 +86,14 @@ class ExistingPaperUpgrade(unittest.TestCase):
                 return subprocess.run(["bash", str(script), *arguments], cwd=paper,
                                       capture_output=True, text=True, check=False)
             before = tree(paper)
-            plan = run("--check", "v0.4.7-test")
+            plan = run("--check", "v0.4.14-test")
             self.assertEqual(tree(paper), before, "preflight must be read-only")
-            self.assertNotEqual(plan.returncode, 0, plan.stdout + plan.stderr)
-            self.assertEqual(refused_paths(plan.stdout), ["AGENTS.md"], plan.stdout + plan.stderr)
-            self.assertNotIn("has no `## v0.4.7-test` entry", plan.stdout)
-            target_agents = git("show", "v0.4.7-test:AGENTS.md", cwd=template).stdout.decode()
-            (paper / "AGENTS.md").write_text(drop_bullets(target_agents, lambda line: "protects the case branches" in line))
-            upgraded = run("--resolved", "AGENTS.md", "v0.4.7-test")
+            self.assertEqual(plan.returncode, 0, plan.stdout + plan.stderr)
+            self.assertIn("Refused (conflicts): 0", plan.stdout, plan.stdout)
+            self.assertNotIn("has no `## v0.4.14-test` entry", plan.stdout)
+            upgraded = run("v0.4.14-test")
             self.assertEqual(upgraded.returncode, 0, upgraded.stdout + upgraded.stderr)
-            moved = paper / ".agents/skills/shared/paper-writing/sources/section-writing/reference.md"
+            moved = old_skill
             self.assertIn("Local paper adaptation 195.", moved.read_text())
             self.assertEqual(ledger.read_bytes(), ledger_bytes)
             after_reference_check = reference_fixture.run_checker(paper)
@@ -108,7 +106,7 @@ class ExistingPaperUpgrade(unittest.TestCase):
                                          cwd=paper, capture_output=True, text=True, check=False)
             self.assertEqual(development.returncode, 0, development.stdout + development.stderr)
             after = tree(paper)
-            repeat = run("v0.4.7-test")
+            repeat = run("v0.4.14-test")
             self.assertEqual(repeat.returncode, 0, repeat.stdout + repeat.stderr)
             self.assertEqual(tree(paper), after, "repeating the upgrade must not change bytes")
 
@@ -138,12 +136,6 @@ class DerivedTemplateUpgrade(unittest.TestCase):
                            if entry["id"] == "content-5e1742dff7120958")
             original_path = renamed["path"]
             renamed["path"] = ".agents/memory/project/upstream-renamed-dispatch.md"
-            data["migrations"].append({
-                "from": [{"id": renamed["id"], "path": original_path}],
-                "to": [{"id": renamed["id"], "path": renamed["path"]}],
-                "action": "rename", "reason": "Exercise an upstream-only rename.",
-                "source_commit": "fixture", "verification": "derived upgrade regression",
-            })
             registry.write_text(content_registry.dumps(data))
             notes.write_text(notes.read_text().replace("# 发布说明\n", "# 发布说明\n\n## test-up-2\n\n"
                              "### Upgrading a project from test-up-1\n\n1. Review the plan.\n", 1))

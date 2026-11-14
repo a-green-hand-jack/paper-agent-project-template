@@ -1,5 +1,5 @@
 """The adoption states this template documents, built from its shipped files in
-a temporary root and run through the real gates before each release (DEV.md,
+a temporary root and run through the real gates before each release (README.md,
 "Releases"), and the upgrade of a paper from an earlier release to them. A paper
 deletes this file with the rest of `scope: template`."""
 from __future__ import annotations
@@ -29,12 +29,16 @@ PLACEHOLDER_ERROR = "still declares the template placeholder"
 CALLER_VARIABLES = ("PAGE_BUDGET", "BUILD_DIR", "MAKEFLAGS", "MAKELEVEL", "MFLAGS", "PYTHONPYCACHEPREFIX")
 ENTRIES = 100
 # The release a paper is upgraded from with upgrade-template.sh.
-UPGRADE_SOURCE = "v0.4.1"
+UPGRADE_SOURCE = "v0.4.12"
 CLONE = ".project/state/template-upgrade/paper-agent-project-template.git"
 # The conflict the v0.4.6 upgrade section documents for a paper from before it:
 # README "Start a paper" had it delete this template's index lines from this
 # file, which v0.4.6 replaces with a generated index.
-DOCUMENTED_CONFLICTS = (".agents/memory/project/AGENTS.md", "AGENTS.md")
+DOCUMENTED_CONFLICTS = ()
+
+# The release whose notes describe them keeps them until the paper deletes them:
+# an `upgrade: review` file is never changed by the command.
+RETIRED_HUMAN_DOCS = {"PAPER.md", "DEV.md"}
 
 # A stand-in for a venue's official kit, with the kind of text real kits carry
 # about authors; no real kit's text.
@@ -301,7 +305,9 @@ def git(*arguments: str, cwd: Path, **options) -> subprocess.CompletedProcess:
 def tree(root: Path) -> dict[str, bytes]:
     return {str(path.relative_to(root)): os.readlink(path).encode() if path.is_symlink() else path.read_bytes()
             for path in root.rglob("*")
-            if (path.is_file() or path.is_symlink()) and path.relative_to(root).parts[0] not in (".git", ".project")}
+            if (path.is_file() or path.is_symlink())
+            and path.relative_to(root).parts[0] not in (".git", ".project")
+            and "__pycache__" not in path.parts}
 
 
 class ReleaseNotesTests(unittest.TestCase):
@@ -374,6 +380,8 @@ class UpgradeStateTests(unittest.TestCase):
                 cls.index_only.append(path)
         resolved += cls.index_only
         cls.upgrade = run(*[part for path in resolved for part in ("--resolved", path)], cls.target)
+        subprocess.run(["bash", ".agents/scripts/shared/check-development.sh", "--write-indexes"],
+                       cwd=cls.paper, capture_output=True, check=False)
         cls.expected = base / "expected"
         shipped_tree(cls.expected)
         start_paper(cls.expected)
@@ -413,10 +421,12 @@ class UpgradeStateTests(unittest.TestCase):
                     mine, fresh = (content_registry.loads(data.decode()) for data in (upgraded[path], expected[path]))
                     for entry in mine["entries"]:
                         entry.pop("legacy_frontmatter", None)
-                    # Each repository keeps its own schema 1 history.
-                    self.assertEqual(mine["local_legacy_inventory"]["version"], UPGRADE_SOURCE)
+                    # Omissions are provenance for content this template keeps
+                    # out; the upgraded and fresh papers record them separately.
                     for data in (mine, fresh):
-                        data.pop("local_legacy_inventory")
+                        data.pop("omitted", None)
+                        data["entries"] = [entry for entry in data["entries"]
+                                           if entry["path"] not in RETIRED_HUMAN_DOCS]
                     self.assertEqual(mine, fresh)
                 elif path.endswith("/AGENTS.md") and path in upgraded and path in expected:
                     mine, fresh = (data.decode() for data in (upgraded[path], expected[path]))
@@ -425,17 +435,15 @@ class UpgradeStateTests(unittest.TestCase):
                     self.assertTrue(all(any(f"]({Path(name.rstrip('/')).name}" in line for name in missing_optional)
                                         for line in extra), extra)
                 elif path in project and path.startswith(".agents/"):
-                    source_path = next((item["path"] for migration in registry["migrations"]
-                                        if any(dest["path"] == path for dest in migration.get("to", []))
-                                        for item in migration.get("from", []) if item["path"] in self.before), path)
+                    source_path = path
                     head, _, body = self.before[source_path].partition(b"\n---\n")
                     original = fields.sub(b"", head + b"\n") + b"---\n" + body
                     links = re.compile(rb"(?<=\]\()[^)\s]+")
                     self.assertEqual(links.sub(b"<link>", upgraded[path]), links.sub(b"<link>", original))
                 else:
                     new_optional = path not in upgraded and path.startswith(optional)
-                    self.assertTrue(path.startswith(("paper/", "assets/")) or path in owned or new_optional,
-                                    self.upgrade.stdout)
+                    self.assertTrue(path.startswith(("paper/", "assets/")) or path in owned
+                                    or path in RETIRED_HUMAN_DOCS or new_optional, self.upgrade.stdout)
                     self.assertEqual(upgraded.get(path), self.before.get(path))
 
     def test_make_check_passes_after_the_upgrade(self) -> None:
