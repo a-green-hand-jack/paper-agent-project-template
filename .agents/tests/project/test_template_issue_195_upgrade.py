@@ -138,12 +138,6 @@ class DerivedTemplateUpgrade(unittest.TestCase):
                            if entry["id"] == "content-5e1742dff7120958")
             original_path = renamed["path"]
             renamed["path"] = ".agents/memory/project/upstream-renamed-dispatch.md"
-            data["migrations"].append({
-                "from": [{"id": renamed["id"], "path": original_path}],
-                "to": [{"id": renamed["id"], "path": renamed["path"]}],
-                "action": "rename", "reason": "Exercise an upstream-only rename.",
-                "source_commit": "fixture", "verification": "derived upgrade regression",
-            })
             registry.write_text(content_registry.dumps(data))
             notes.write_text(notes.read_text().replace("# 发布说明\n", "# 发布说明\n\n## test-up-2\n\n"
                              "### Upgrading a project from test-up-1\n\n1. Review the plan.\n", 1))
