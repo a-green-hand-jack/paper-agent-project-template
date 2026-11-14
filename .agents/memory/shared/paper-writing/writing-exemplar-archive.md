@@ -10,7 +10,7 @@ applies_to: paper repositories that keep example papers to study structure and e
 ## Decision
 
 Example papers are read from `.project/artifacts/writing-exemplars/`, which is
-ignored, or from an external asset declared in `assets/MANIFEST.yaml`. What a
+ignored, or from managed storage outside the repository. What a
 cohort taught goes to a knowledge record as a card; the papers, PDFs, source
 bundles and screenshots themselves never enter Git.
 
@@ -28,7 +28,7 @@ review stay useful. The card is what the paper actually cites.
   keep the reading log next to the download, not in the repository.
 - Write one knowledge card per cohort: what the exemplar does, the sentence or
   figure worth imitating, and the claim it does *not* support.
-- When material must be retained, move it to managed storage and register it in
-  `assets/MANIFEST.yaml` with source, checksum and the command that produced it.
+- When material must be retained, move it to managed storage and record its
+  location, checksum and the command that produced it in the reading log.
 - An exemplar is a writing model, never a citation: a factual claim taken from
   one is verified in the original before it enters the manuscript.

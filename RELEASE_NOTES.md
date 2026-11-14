@@ -1,20 +1,16 @@
 # 发布说明
 
-本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.0:RELEASE_NOTES.md`）。
+本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.1:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.7.1 — 2026-11-14
+## v0.8.0 — 2026-11-15
 
-跟随 coding template v0.1.37 → v0.1.38。上一版已经把起步步骤搬进本文件的
-`## Starting from this template`；本版接过上游对其余问题的修正，`paper/`、三种构建
-与 Overleaf 投影不变。
+`assets/` 退役。论文报告的是别人的运行，模板不再保留一个外部资产目录：结果来源改由记录承载。
 
-- **凭据的说法不再是空头承诺。** 上游把"项目在根目录登记 `credentials.yaml`"改成"采用后由
-  `llm-credentials` 建立"；本模板的 `AGENTS.md` 同步，并写明模板自身不调用 LLM、没有这个文件。
-- **README 的归属写对。** 上游 registry 把 `README.md` 从 `scope: project` 改成
-  `shared_with_adaptation` + `upgrade: review`：升级命令不改写已采用项目的 README，只在计划里
-  打印本版差异。本仓的 README 已是论文形状，按 review 处理即可。
-- **继承状态。** 继承脚本与 v0.1.38 逐字节一致；`check_agent_content.py` 与 `tool-env.sh` 是本地适配。
+- **结果台账换成记录。** `.agents/memory/project/paper-foundation/results-ledger.md` 一行一个上报值：id、类型、`observed`/`planned`、来源仓库与提交/运行、文件与 SHA-256、重生成命令、接口宏和使用位置。
+- **`assets/` 删除。** 目录里只有一份 schema 和空的 `assets: []`，连一份真实资产都不该随模板发布；它的链接机制（`.project/assets.links`）在论文里没有用途——大文件（原始日志、checkpoint、数据集）留在产生它的代码仓库或受管存储，本仓库不保存指向它们的机器路径。小文件仍在 `paper/tables/`、`paper/figures/` 里提交。
+- **规则、记录与技能同步。** `AGENTS.md`、`.agents/AGENTS.md`、`README.md`、`experiments.md`、`paper-interfaces.md`、`results-through-interface-macros.md`、`writing-exemplar-archive.md`、`paper-foundation`、`paper-figures` 与 `asset-lifecycle` 技能、`.gitignore` 的 `assets/*` 例外，以及路径检查的前缀表，全部改指台账。
+- **一项已知的上游缺口。** 继承的 `diagnose-environment.sh` 仍要求 `assets/MANIFEST.yaml` 并报 `FAIL assets manifest`，`setup-worktree.sh` 每次运行都会警告，`migrate-assets.sh` 在 worktree 退休时会把 `assets/` 建回来。上游已报 #183；这些脚本保持逐字节继承，不在本仓库改。
 
 ### Adoption states
 
@@ -27,11 +23,15 @@
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.7.0
+### Upgrading a paper from v0.7.1
 
-1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.7.1`（本版为 **Command only.**）。
-2. 若论文仓库的 `AGENTS.md` 仍写着"项目在根目录登记 `credentials.yaml`"，改成"采用后由 `llm-credentials` 建立"；这是上游唯一的正文改动。
-3. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
+本版删掉了一个目录，命令不会动论文自己拥有的路径，所以迁移要手动完成。
+
+1. 取来本版的新记录：`git show <本版标签>:.agents/memory/project/paper-foundation/results-ledger.md > .agents/memory/project/paper-foundation/results-ledger.md`（它登记为 `optional`，升级命令只在计划里提示，不会替你写）。
+2. 把 `assets/MANIFEST.yaml` 的每条条目改写成台账里的一行；论文正文与 `paper-interfaces.md` 里引用的 manifest id 一并改成台账 id。
+3. 删除 `assets/` 目录。
+4. 从 `.agents/content-registry.yaml` 删掉 `assets/README.md`、`assets/MANIFEST.yaml`、`assets/.gitkeep` 三条；留着会变成 dangling active entry，`make check` 会失败。
+5. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
 
 ## Starting from this template
 

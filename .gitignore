@@ -20,13 +20,6 @@ dist/
 .idea/
 .vscode/
 
-# Asset payloads and machine-specific links stay local. Keep only the stable
-# manifest, documentation and placeholder tracked in the repository.
-assets/*
-!assets/README.md
-!assets/MANIFEST.yaml
-!assets/.gitkeep
-
 # LaTeX leftovers of a build run in place instead of through make; make writes
 # them to .project/build/ (or paper/build/ in a copy of paper/ alone).
 *.aux

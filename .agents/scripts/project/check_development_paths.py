@@ -13,7 +13,7 @@ from pathlib import Path
 ROOTS = ("AGENTS.md", "README.md", "DEV.md", ".agents/AGENTS.md", ".agents/notes/AGENTS.md",
          ".agents/scripts/AGENTS.md", ".agents/skills/AGENTS.md")
 TREES = (".agents/memory", ".agents/knowledge", ".agents/execution")
-PATH = re.compile(r"(?<![\w/.-])((?:\.agents|paper|assets)/[A-Za-z0-9_./-]+)")
+PATH = re.compile(r"(?<![\w/.-])((?:\.agents|paper)/[A-Za-z0-9_./-]+)")
 SKIP_PREFIX = ("paper/images/",)
 SKIP_TREE = (".agents/memory/project/template-maintenance/",)
 ALLOW = ".agents/scripts/project/check-development-paths.allow"

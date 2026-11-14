@@ -2,8 +2,9 @@
 
 This directory belongs to coding agent development, never to product runtime or
 release payloads. Product code stays in the declared product tree, human docs
-stay at the root, and runtime state stays in ignored `.project/`. External assets
-keep their existing manifest/link policy.
+stay at the root, and runtime state stays in ignored `.project/`. A reported
+result has one row in the project's results ledger; the records that cite it sit
+next to it.
 
 ## Six categories
 

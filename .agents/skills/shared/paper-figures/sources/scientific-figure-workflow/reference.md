@@ -43,9 +43,10 @@ Use this for any figure that carries numeric evidence.
 
 1. Identify the exact claim and evidence the figure supports, and its cue in
    `PAPER.md`.
-2. Locate the data source: an entry in `assets/MANIFEST.yaml` (source
+2. Locate the data source: its row in
+   `.agents/memory/project/paper-foundation/results-ledger.md` (source
    repository, commit, run or config id, checksum, regeneration command), read
-   through its `assets/<name>` link or a small committed data file. Never type
+   from the source repository or from a small committed data file. Never type
    numbers into a script.
 3. Choose the plot family and reference style (`scipilot-figure-skill`).
 4. Generate with a script, preferably Matplotlib or Seaborn with a publication

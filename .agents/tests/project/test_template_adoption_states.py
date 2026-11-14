@@ -302,6 +302,13 @@ def git(*arguments: str, cwd: Path, **options) -> subprocess.CompletedProcess:
                           cwd=cwd, check=True, capture_output=True, **options)
 
 
+def path_suffixes(path: str) -> list[str]:
+    """A group index links a record relative to its group directory, so a
+    registry path matches when any of its trailing segments does."""
+    parts = path.rstrip("/").split("/")
+    return ["/".join(parts[index:]) for index in range(len(parts))]
+
+
 def tree(root: Path) -> dict[str, bytes]:
     return {str(path.relative_to(root)): os.readlink(path).encode() if path.is_symlink() else path.read_bytes()
             for path in root.rglob("*")
@@ -380,6 +387,17 @@ class UpgradeStateTests(unittest.TestCase):
                 cls.index_only.append(path)
         resolved += cls.index_only
         cls.upgrade = run(*[part for path in resolved for part in ("--resolved", path)], cls.target)
+        # The v0.8.0 upgrade section's manual step: the paper moves the entries
+        # of `assets/MANIFEST.yaml` to the results-ledger record, then deletes the
+        # folder and their registry entries. The command never touches a path the
+        # paper owns.
+        if (cls.paper / "assets").is_dir():
+            shutil.rmtree(cls.paper / "assets")
+            registry_path = cls.paper / ".agents/content-registry.yaml"
+            data = content_registry.loads(registry_path.read_text(encoding="utf-8"))
+            data["entries"] = [entry for entry in data["entries"]
+                               if not entry["path"].startswith("assets/")]
+            registry_path.write_text(content_registry.dumps(data), encoding="utf-8")
         subprocess.run(["bash", ".agents/scripts/shared/check-development.sh", "--write-indexes"],
                        cwd=cls.paper, capture_output=True, check=False)
         cls.expected = base / "expected"
@@ -401,11 +419,12 @@ class UpgradeStateTests(unittest.TestCase):
     def test_the_upgrade_reaches_a_fresh_paper_of_this_release(self) -> None:
         """Every path equals a paper started from this tree, except the
         project-owned paper files, the Human documents marked `upgrade: review`
-        and `assets/`, which keep the paper's own text (records only lose the
-        front-matter fields the registry now owns), optional content that is
-        new in this release, which the command leaves to a manual adoption, and
-        the generated index lines of that content. The registry equals the
-        fresh paper's apart from the command's record of the moved fields."""
+        which keep the paper's own text (records only lose the front-matter
+        fields the registry now owns), optional content that is new in this
+        release, which the command leaves to a manual adoption, and the
+        generated index lines of that content. The registry equals the fresh
+        paper's apart from the command's record of the moved fields. A record
+        that is new in this release equals the release's copy."""
         self.assertEqual(self.upgrade.returncode, 0, self.upgrade.stdout + self.upgrade.stderr)
         upgraded, expected = tree(self.paper), tree(self.expected)
         registry = content_registry.loads((ROOT / ".agents/content-registry.yaml").read_text(encoding="utf-8"))
@@ -432,9 +451,16 @@ class UpgradeStateTests(unittest.TestCase):
                     mine, fresh = (data.decode() for data in (upgraded[path], expected[path]))
                     self.assertEqual(outside_index(mine), outside_index(fresh))
                     extra = set(fresh.splitlines()) ^ set(mine.splitlines())
-                    self.assertTrue(all(any(f"]({Path(name.rstrip('/')).name}" in line for name in missing_optional)
+                    self.assertTrue(all(any(f"]({suffix}" in line
+                                            for name in missing_optional
+                                            for suffix in path_suffixes(name))
                                         for line in extra), extra)
-                elif path in project and path.startswith(".agents/"):
+                elif path in project and path.startswith(".agents/") and path in upgraded:
+                    if path not in self.before:
+                        # A record new in this release: the paper's copy equals
+                        # the release's, because the upgrade wrote it whole.
+                        self.assertEqual(upgraded[path], expected.get(path))
+                        continue
                     source_path = path
                     head, _, body = self.before[source_path].partition(b"\n---\n")
                     original = fields.sub(b"", head + b"\n") + b"---\n" + body
@@ -442,7 +468,7 @@ class UpgradeStateTests(unittest.TestCase):
                     self.assertEqual(links.sub(b"<link>", upgraded[path]), links.sub(b"<link>", original))
                 else:
                     new_optional = path not in upgraded and path.startswith(optional)
-                    self.assertTrue(path.startswith(("paper/", "assets/")) or path in owned
+                    self.assertTrue(path.startswith("paper/") or path in owned
                                     or path in RETIRED_HUMAN_DOCS or new_optional, self.upgrade.stdout)
                     self.assertEqual(upgraded.get(path), self.before.get(path))
 
