@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.6.0
+  version: v0.7.0
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.37
@@ -1361,14 +1361,14 @@ entries:
     kind: document
     scope: shared_with_adaptation
     owner: project-maintainers
-    summary: "Rewrite for the paper (what it is, how to build it); keep the directory table and the build commands."
+    summary: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "README.md"}
     updated: unknown
     supersedes: []
     superseded_by: []
     upgrade: review
-    adaptation: "Rewrite for the paper (what it is, how to build it); keep the directory table and the build commands."
+    adaptation: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
   - path: USER.md
     id: content-9afc5db23792a47e
     kind: document
@@ -2596,7 +2596,7 @@ entries:
     kind: document
     scope: template
     owner: paper-template-maintainers
-    summary: "Template release history stays in the template repository; a paper keeps its own release notes, one entry per release tag."
+    summary: "Template release history stays in the template repository; a paper keeps its own release notes, one entry per release tag. The template's starting steps live in its `## Starting from this template` section."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "RELEASE_NOTES.md"}
     updated: 2026-10-26
