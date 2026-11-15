@@ -12,8 +12,11 @@
 
 \definecolor{authorAgent}{HTML}{7048E8}
 
+% A comment may be written in Chinese, which authors do. CJKutf8 is loaded only
+% in the build that shows comments, so submission and blind keep no dependency.
+\ifPaperNotes\RequirePackage{CJKutf8}\fi
 \newcommand{\AuthorComment}[3]{%
-  \ifPaperNotes{\color{#1}[\textbf{#2:} #3]}\fi
+  \ifPaperNotes{\color{#1}[\textbf{#2:} \begin{CJK}{UTF8}{gbsn}#3\end{CJK}]}\fi
 }
 \newcommand{\agent}[1]{\AuthorComment{authorAgent}{Agent}{#1}}
 
