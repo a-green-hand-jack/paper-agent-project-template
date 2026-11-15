@@ -14,6 +14,9 @@
 
 % A comment may be written in Chinese, which authors do. CJKutf8 is loaded only
 % in the build that shows comments, so submission and blind keep no dependency.
+% A CI that installs TeX on Ubuntu names latex-cjk-common (this file) and
+% latex-cjk-chinese (the glyphs); texlive-lang-cjk does not carry them
+% (.agents/knowledge/shared/paper-build/cjk-comments-need-the-cjk-package.md).
 \ifPaperNotes\RequirePackage{CJKutf8}\fi
 \newcommand{\AuthorComment}[3]{%
   \ifPaperNotes{\color{#1}[\textbf{#2:} \begin{CJK}{UTF8}{gbsn}#3\end{CJK}]}\fi
