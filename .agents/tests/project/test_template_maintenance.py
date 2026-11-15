@@ -37,6 +37,17 @@ class BuildEntryTests(unittest.TestCase):
         self.assertIn("PAGE_BUDGET", entry["summary"])
 
 
+class AuthorCommentTests(unittest.TestCase):
+    def test_a_comment_may_be_written_in_chinese(self) -> None:
+        """Authors write Chinese comments (#256). `\ifPaperNotes` is true in the
+        main build only, so CJKutf8 is loaded there and never in the submission
+        or blind build."""
+        text = (ROOT / "paper/style/author-comments.sty").read_text(encoding="utf-8")
+        self.assertIn("\\ifPaperNotes\\RequirePackage{CJKutf8}\\fi", text)
+        body = text.split("\\newcommand{\\AuthorComment}", 1)[1]
+        self.assertIn("\\begin{CJK}{UTF8}{gbsn}", body)
+
+
 class ReferenceEnvironmentTests(unittest.TestCase):
     def test_uv_may_be_any_version_at_or_above_the_floor(self) -> None:
         """`required-version = "==0.11.23"` refused every host uv but one, so the

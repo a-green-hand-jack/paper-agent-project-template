@@ -3,16 +3,16 @@
 本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.1:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.10.0 — 2026-11-15
+## v0.10.1 — 2026-11-15
 
-从 `ResearchWorld_paper` 11 月的三轮作者评审里收下三条经验。#251 改了一条现有规则，属行为变更。
+作者用中文写批注，模板却排不出来（#256）。
 
-- **未决内容改为可见占位。** 新记录 `shared/paper-writing/undecided-content-visible-placeholder.md` 取代原来那条"未决内容写在作者批注里"：稿件里用 `\PaperTODO{...}`（每个构建都可见、发布门禁必拦），原文与"在等什么"进 `.agents/notes/` 的工作笔记与拥有它的 Issue；作者批注只承载一轮评审的话，答复它的改动删除它。`AGENTS.md` 与 `paper-writing` 技能同步。
-- **批注宏必须走 `\AuthorComment`。** 同一记录写明：批注命令声明在 `paper/style/author-comments.sty` 且是 `\AuthorComment` 的调用，否则 `make release-check` 枚举不到——下游的盒子式宏（`\annote`/`\cnote`）正是这样躲过门禁的（#251）。
-- **一轮评审是一个可测量的流程。** 新参考 `paper-writing/sources/revision-rounds/reference.md`：作者标出的是习惯样本，先按节计数再计划，before/after 计划等批准，改完重量并报告前后计数；修一个口头禅不能装上另一个（#252）。
-- **结果未定稿的处置。** `claims-set-expected-results` 增一节：新快照只改数字、不动主张措辞，差异报告给作者并记进 Issue；实验侧撤掉的实验不删描述，改可见占位并写清 owner（#252）。
-- **末行修复的操作细节。** `post-build-visual-inspection` 补第 6、7 条：在 blind 构建上量末行、修一处要重量到全过、两栏与单栏分别量；**禁止**用 `\looseness`、`\vspace`、`\linebreak` 或负 `\parfillskip` 凑行，为凑行加的词必须是真内容并报告（#253）。
-- **路径检查容忍"已删未提交"的文件**：`git ls-files` 仍列出、工作区已删除的文档不再让它崩。
+- `paper/style/author-comments.sty` 现在在显示批注的构建里加载 `CJKutf8`，并把批注正文包进
+  `CJK` 环境；`submission` 与 `blind` 不加载 CJK，依赖面不变。
+- 之前 `main` 会在第一个中文字符处失败（`Unicode character 标`）；`RSI_light_paper` 2026-11-15
+  同步作者新批注时撞上，PR #21 在论文侧修了一次。
+- 加了一条测试：`author-comments.sty` 必须在 `\ifPaperNotes` 下加载 CJK，并且批注正文包在
+  `CJK` 环境里——这条约束靠构建发现不了，只能靠断言。
 
 ### Adoption states
 
@@ -25,13 +25,13 @@
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.9.1
+### Upgrading a paper from v0.10.0
 
-**Command only，但行为有变更：**
+**Command only，但 `paper/` 属产品面，升级命令不动它：**
 
-1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.10.0`。
-2. 若论文仍按旧规则把未决事项停在作者批注里，本版之后应改成 `\PaperTODO{...}` + 一份 `.agents/notes/` 笔记；论文自己的记录若写了更强的本地规则（例如作者原话逐字保留），保留它并在记录里说明未决项怎样标记。
-3. 检查 `paper/style/author-comments.sty` 里的每个批注命令是否都是 `\AuthorComment` 的调用；`make release-check` 只枚举它能看见的命令。
+1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.10.1`（开发面与 v0.10.0 相同）。
+2. 若本仓库要用中文批注，把模板本版的 `paper/style/author-comments.sty` 里那三行（`\ifPaperNotes\RequirePackage{CJKutf8}\fi` 与批注正文的 `CJK` 环境）照抄进自己的 sty；抄完 `make pdf`、`make submission`、`make blind` 三个构建都要过。
+3. 改了 `paper/` 之后按 `paper-publication` 的流程 push 到 Overleaf，让作者那边也能编译。
 
 ## Starting from this template
 
