@@ -15,9 +15,9 @@ result, claim form, figure, table or LaTeX interface macro.
 - the entry in `.agents/memory/project/paper-foundation/paper-interfaces.md` (each interface
   macro's meaning, control cue and source);
 - `paper/macros.tex` and its active consumers;
-- for a value taken from a code repository, its entry in
-  `assets/MANIFEST.yaml` (source repository, commit, run or config, checksum,
-  regeneration command);
+- for a value taken from a code repository, its row in
+  `.agents/memory/project/paper-foundation/results-ledger.md` (source
+  repository, commit, run or config, checksum, regeneration command);
 - the related claim or experiment record only when meaning or result
   interpretation is involved.
 

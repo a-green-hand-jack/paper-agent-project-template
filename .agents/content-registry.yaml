@@ -2,10 +2,10 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.7.1
+  version: v0.8.0
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
-    version: v0.1.38
+    version: v0.1.39
 default_scope: project
 matching: "Most specific path wins; explicit entries override directory defaults."
 minimum_upgrade_source: v0.1.34
@@ -1326,13 +1326,13 @@ entries:
     kind: document
     scope: shared_with_adaptation
     owner: project-maintainers
-    summary: "Keep the template rules (.project/, assets/* exceptions, LaTeX leftovers); add the paper's own."
+    summary: "Keep the template rules (.project/, LaTeX leftovers); add the paper's own."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".gitignore"}
     updated: unknown
     supersedes: []
     superseded_by: []
-    adaptation: "Keep the template rules (.project/, assets/* exceptions, LaTeX leftovers); add the paper's own."
+    adaptation: "Keep the template rules (.project/, LaTeX leftovers); add the paper's own. This repository keeps no asset folder, so the template's assets/* exceptions are dropped."
   - path: AGENTS.md
     id: content-a54ff182c7e8acf5
     kind: governance
@@ -1381,40 +1381,6 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Not adopted: PAPER.md is the Human contract of a paper."
-  - path: assets/.gitkeep
-    id: content-f5efa2163683da9b
-    kind: document
-    scope: project
-    owner: project-maintainers
-    summary: "Repository-owned content; preserve during template upgrades."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "assets/.gitkeep"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-  - path: assets/MANIFEST.yaml
-    id: content-0ba786346343226c
-    kind: document
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Keep the schema, then register the destination project's actual assets."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "assets/MANIFEST.yaml"}
-    updated: unknown
-    adaptation: "Keep the schema, then register the paper's actual result tables, figure data and reported numbers with their source repository, commit, run, checksum and regeneration command."
-    supersedes: []
-    superseded_by: []
-  - path: assets/README.md
-    id: content-588247153e773e3a
-    kind: document
-    scope: shared
-    owner: project-maintainers
-    summary: "Asset directory rules."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "assets/README.md"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
   - path: src/.gitkeep
     id: content-42e145566039681e
     kind: document
@@ -1792,6 +1758,18 @@ entries:
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
+  - path: .agents/memory/project/paper-foundation/results-ledger.md
+    id: content-f2fdc8fc7d2d634a
+    kind: memory
+    scope: project
+    owner: paper-template-maintainers
+    summary: "One row per reported result: source repository, commit, run, checksum, regeneration command, macro and use."
+    status: active
+    source: {"commit": "f268235e7d4c3aff2761c257fbc429dcae02e018", "path": ".agents/memory/project/paper-foundation/results-ledger.md"}
+    updated: 2026-11-15
+    supersedes: []
+    superseded_by: []
+    optional: true
   - path: .agents/memory/project/paper-publication/publication.md
     id: content-79d7090b2d54afda
     kind: memory
@@ -3184,5 +3162,20 @@ omitted: [
       "id": "content-54341f03187c2b74",
       "path": ".agents/skills/shared/paper-writing/sources/writing-router/",
       "reason": "Vendored package deleted in #229: neither downstream paper used it and the stored payload outweighed its guidance; re-add it from its provenance if a paper needs it again."
+    },
+    {
+      "id": "content-f5efa2163683da9b",
+      "path": "assets/.gitkeep",
+      "reason": "Retired in v0.8.0: a paper reports runs it does not own, and results have one row in the results-ledger record. Kept out so an upgrade does not restore it."
+    },
+    {
+      "id": "content-0ba786346343226c",
+      "path": "assets/MANIFEST.yaml",
+      "reason": "Retired in v0.8.0: a paper reports runs it does not own, and results have one row in the results-ledger record. Kept out so an upgrade does not restore it."
+    },
+    {
+      "id": "content-588247153e773e3a",
+      "path": "assets/README.md",
+      "reason": "Retired in v0.8.0: a paper reports runs it does not own, and results have one row in the results-ledger record. Kept out so an upgrade does not restore it."
     }
   ]

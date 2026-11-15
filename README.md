@@ -22,7 +22,7 @@ make pdf                                         # 然后打开 .project/build/m
 - 还没定的内容写进作者批注，不要写成正文里的结论；`submission` 与 `blind` 构建会自动去掉批注。
 - 让 agent 改的时候说清改哪一节、改成什么。它会把决定记进 `.agents/memory/project/`；
   看不懂那些记录时，让它用平实的语言复述一遍。
-- 论文里出现的每个数字都来自 `assets/MANIFEST.yaml` 登记的运行，并且只能经由
+- 论文里出现的每个数字都来自 `.agents/memory/project/paper-foundation/results-ledger.md` 登记的运行，并且只能经由
   `paper/macros.tex` 的接口宏写进正文；不要手抄数字。
 - 引用只来自 `paper/refs.bib`，每条引用和它所支持的句子记在 `.agents/references/ledger.json`。
 
@@ -48,10 +48,10 @@ make pdf                                         # 然后打开 .project/build/m
 | 路径 | 是什么 |
 | --- | --- |
 | `paper/` | 论文本身，自包含；单独复制也能构建，详见下面一行 |
-| `assets/MANIFEST.yaml` | 每个数字、表格和图数据文件的来源仓库、提交、运行、校验和与重生成命令 |
 | `Makefile` | 上面那些命令；输出写到 `.project/build/` |
 | `.project/` | 构建输出、日志和截图；Git 忽略，不进论文 |
-| `.agents/` | agent 的工作面：规则、技能、记录、台账、脚本与检查；入口 `.agents/AGENTS.md`，`notes/` 放工作笔记 |
+| `.agents/` | agent 的工作面：规则、技能、记录、随笔、脚本与检查；入口 `.agents/AGENTS.md`，`notes/` 放工作笔记 |
+| `.agents/memory/project/paper-foundation/` | 论文的记录：简报、实验、接口宏与结果台账（`results-ledger.md`） |
 | `.claude/`、`.pi/` | 指向 `.agents/` 的链接，让对应的 agent 找到同一份规则 |
 | `AGENTS.md`、`CLAUDE.md` | agent 的规则与任务路由；`CLAUDE.md` 是指向 `AGENTS.md` 的链接 |
 | `RELEASE_NOTES.md` | 每次发布的说明：当前版本一节，历史在标签里 |

@@ -8,6 +8,7 @@ record is a separate Markdown file with the fields in
 - [paper-foundation/brief.md](paper-foundation/brief.md) — Starter record a paper fills from its brief.
 - [paper-foundation/experiments.md](paper-foundation/experiments.md) — Starter record of the paper's evidence questions.
 - [paper-foundation/paper-interfaces.md](paper-foundation/paper-interfaces.md) — Starter record of the paper's interface macros; make check reads it.
+- [paper-foundation/results-ledger.md](paper-foundation/results-ledger.md) — One row per reported result: source repository, commit, run, checksum, regeneration command, macro and use.
 - [paper-publication/publication.md](paper-publication/publication.md) — Starter record of the paper's venue, kit, budget, Overleaf and release tags.
 - [template-maintenance/ci-tex-install-bounded.md](template-maintenance/ci-tex-install-bounded.md) — Bound the CI Ubuntu mirror preflight and TeX install, and rerun runner DNS failures instead of bypassing required checks.
 - [template-maintenance/derived-template-upgrade-command.md](template-maintenance/derived-template-upgrade-command.md) — A derived template follows its upstream with the target release's command directory and keeps the inherited scripts byte-identical.

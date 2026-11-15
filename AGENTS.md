@@ -70,12 +70,13 @@ and do not keep the paper's behavior only in development material.
 ## Context and state
 
 Every worktree first runs `.agents/scripts/shared/setup-worktree.sh`. All local state
-goes in that worktree's `.project/`. An external asset has an `assets/` link
-and an entry in `assets/MANIFEST.yaml`. Credentials are injected only by path
-or runtime environment, and never written into Git, logs or the manifest; a
-once adopted, `llm-credentials` creates a root `credentials.yaml` that lists the
-credentials a project needs, by name only; this template calls no LLM itself and
-carries no such file.
+goes in that worktree's `.project/`. A reported result has one row in
+[`results-ledger.md`](.agents/memory/project/paper-foundation/results-ledger.md);
+a large payload stays in the code repository or managed storage that produces
+it. Credentials are injected only by path or runtime environment, and never
+written into Git, logs or the manifest; once adopted, `llm-credentials` creates a
+root `credentials.yaml` that lists the credentials a project needs, by name only;
+this template calls no LLM itself and carries no such file.
 
 ## Evidence
 
@@ -169,7 +170,8 @@ submitting.
 - Do not promote expected or unresolved results to evidence; a planned result
   is never written as an observation.
 - A reported number reaches the text only through an interface macro in
-  `paper/macros.tex` whose source is an entry in `assets/MANIFEST.yaml`
+  `paper/macros.tex` whose source is a row in
+  [`results-ledger.md`](.agents/memory/project/paper-foundation/results-ledger.md)
   ([`results-through-interface-macros`](.agents/memory/shared/paper-foundation/results-through-interface-macros.md)).
 - Do not turn correlation into causal language without support.
 - Do not silently change a locked claim, story decision, experiment

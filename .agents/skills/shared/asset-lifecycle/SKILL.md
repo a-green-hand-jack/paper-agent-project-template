@@ -69,15 +69,17 @@ then delete on a person's decision.
 
 ## In this repository
 
-The assets of a paper are the results it reports. Register every result table,
-figure data file and reported number taken from a code repository in
-`assets/MANIFEST.yaml` with the source repository, commit, run or config
-identifier, checksum and regeneration command (the entry format is in the
-manifest header). A small table or figure file the paper includes is committed
-under `paper/tables/` or `paper/figures/`; its manifest entry names that path
-as `paper_path`. Large payloads (raw logs, checkpoints) stay in their code
-repository or managed storage and are linked under `assets/` as above.
+This repository keeps no `assets/` directory and no asset links: a paper's
+external evidence is the runs it reports, and each one has a row in
+`.agents/memory/project/paper-foundation/results-ledger.md` with its source
+repository, commit, run or config identifier, checksum and regeneration
+command.
 
-- Step 2 (Register its id): also record `paper_path` and, for a number, the
-  interface macro in `paper/macros.tex` that carries it
+- Step 2 (Register its id): also record where the paper uses it — a small file
+  committed under `paper/tables/` or `paper/figures/`, and the interface macro
+  in `paper/macros.tex` that carries a number
   ([`results-through-interface-macros`](../../../memory/shared/paper-foundation/results-through-interface-macros.md)).
+- Register a large payload (raw logs, a checkpoint, a dataset) in the same row.
+  It stays in the code repository or managed storage that produces it; this
+  repository holds no link to it, because a link target is a machine path that
+  no fresh clone can resolve.

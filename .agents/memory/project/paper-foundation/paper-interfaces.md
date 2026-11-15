@@ -49,7 +49,7 @@ it (see [`../shared/results-through-interface-macros.md`](../../shared/paper-fou
   three. `\PaperTODO`, `\PaperNote`, `\PaperIdentity` and `\PaperTitle` are
   required.
 - For a reported value, the source names the experiment record in
-  [`experiments.md`](experiments.md) and the asset id in `assets/MANIFEST.yaml`
+  [`experiments.md`](experiments.md) and the id in [`results-ledger.md`](results-ledger.md)
   that produced it. Update the value, the source and the record together.
 - Display helpers that are not paper-facing content (formatting commands, table
   layouts) belong in `paper/style/`, not here.

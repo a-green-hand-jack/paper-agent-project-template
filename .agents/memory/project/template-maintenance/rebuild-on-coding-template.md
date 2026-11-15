@@ -41,7 +41,7 @@ The tables below are the map.
 | `.agents/` | adapted | Rebuilt on the upstream development plane; see the subtrees below. |
 | `.env.example` | adapted | The upstream file plus the variable names the online reference audits read (`BIBTEX_CHECK_MAILTO`, `OPENALEX_API_KEY`, `S2_API_KEY`). Names only, no values. |
 | `.github/` | adapted | Adopted unchanged: `workflows/template-check.yml` and the Issue and PR templates. New: `workflows/paper-check.yml`, which runs `make check`, `make submission` and a build of `paper/` alone. Preserved: `workflows/reference-validation.yml`, with the new paths and without the personal fallback e-mail. Rejected: `pr-validation.yml` and `build-release.yml`, which tested retired variants, release instances and template-sync. |
-| `.gitignore` | adapted | The upstream rules are merged in (`.project/`, the `assets/*` exceptions, `!.env.example`). The LaTeX-leftover and local-runtime rules stay. `paper/*.pdf` replaces `paper/main*.pdf` and covers a build run in place. |
+| `.gitignore` | adapted | The upstream rules are merged in (`.project/`, `!.env.example`); the `assets/*` exceptions were dropped when this template retired its asset folder (v0.8.0). The LaTeX-leftover and local-runtime rules stay. `paper/*.pdf` replaces `paper/main*.pdf` and covers a build run in place. |
 | `AGENT_GUIDE.md` | rejected (folded) | Task routing went to `AGENTS.md`, starting a paper to `README.md`, and the process to `DEV.md`. |
 | `AGENTS.md` | adapted | The upstream rules in English (three planes, work units, state, evidence) with `paper/` as the product tree, plus the paper's task routing, control cues and strong rules. |
 | `ANATOMY.md` | rejected (folded) | The directory table went to `README.md`; each directory's rules are in its own `AGENTS.md`. |
@@ -49,7 +49,7 @@ The tables below are the map.
 | `CLAUDE.md` | adopted | Now a relative symlink to `AGENTS.md`; it was a regular file. |
 | `CONTRIBUTING.md` | rejected (folded) | Folded into `DEV.md`: the Issue and PR flow from `dev`, verification and releases. |
 | `DECISIONS.md` | adapted (moved) | Split into typed records; see "Earlier decisions" below. |
-| `EXPERIMENTS.md` | adapted (moved) | Became the starter record `.agents/memory/project/experiments.md`. Results from code repositories are registered in `assets/MANIFEST.yaml`. |
+| `EXPERIMENTS.md` | adapted (moved) | Became the starter record `.agents/memory/project/paper-foundation/experiments.md`. Results from code repositories are registered in the results-ledger record. |
 | `LATEX_TEMPLATES.md` | adapted (moved) | Became the dated knowledge record `.agents/knowledge/shared/official-latex-templates.md`. The `external-latex` build profile and the official-template smoke tests are retired. |
 | `Makefile` | adapted | The public build entry: `pdf`, `blind`, `submission`, `check`, `release-check` and `clean`. It delegates to `paper/Makefile`, takes `TEXBIN` and `PAGE_BUDGET` overrides, and writes to `.project/build/`. `VARIANT=` is retired. |
 | `PAPER.md` | preserved | The four cues and the headings that downstreams and `paper-brief.py` use stay. The operating-mode text names the three builds, and locked claims link to their evidence. |
@@ -62,8 +62,10 @@ The tables below are the map.
 | `references/` | adapted (moved) | `ledger.json` moved to `.agents/references/ledger.json`. |
 | `releases/` | rejected | Release records are replaced by tags and `RELEASE_NOTES.md` (D2). |
 
-New top-level paths: `DEV.md`, `RELEASE_NOTES.md` (this template's own release
-history, `scope: template`), `assets/README.md` and `assets/MANIFEST.yaml`.
+New top-level paths: `DEV.md` and `RELEASE_NOTES.md` (this template's own
+release history, `scope: template`). The inherited `assets/` folder was retired
+in v0.8.0; its manifest became the record
+`.agents/memory/project/paper-foundation/results-ledger.md`.
 
 ### Upstream top-level paths (v0.1.13)
 
@@ -75,7 +77,7 @@ history, `scope: template`), `assets/README.md` and `assets/MANIFEST.yaml`.
 | `RELEASE_NOTES.md` | rejected | It is the coding template's own history; this template keeps its own. |
 | `.env.example`, `.gitignore` | adapted | See above. |
 | `.github/` | adopted | See above; `paper-check.yml` is added beside it. |
-| `assets/` | adapted | `README.md` and `MANIFEST.yaml` describe a paper's evidence: result tables, figure data and reported numbers from code repositories. |
+| `assets/` | rejected (retired in v0.8.0) | The folder held the paper's results manifest plus the link surface for large payloads. A paper reports runs it does not own: the manifest became the record `results-ledger.md`, and a large payload stays in the code repository or managed storage that produces it. |
 | `src/`, `pyproject.toml`, `Dockerfile`, `.dockerignore`, `install.sh` | rejected | The product tree is `paper/`, and a paper has no package, container or installer. `DEV.md` says so, and `diagnose-environment.sh` reports these files as optional ones that are absent. |
 
 ### `.agents/` subtrees of this repository
@@ -152,7 +154,7 @@ applied the shared files; these are the decisions it left to this repository.
 | `paper/refs.bib` | preserved | The marker path is updated to `.agents/references/ledger.json`. |
 | `paper/sections/` | preserved | Placeholder sections. |
 | `paper/style/` | preserved | `paper-harness.sty` (T1 encoding) and `compat.sty`. Their `README.md` became comments in the packages. |
-| `paper/figures/`, `paper/tables/` | preserved | `.gitkeep` files replace their `README.md` files. The figure-source policy moved to `DEV.md` and the figure skills. `figures/srcs/` is dropped, because editable sources are evidence assets in the manifest. |
+| `paper/figures/`, `paper/tables/` | preserved | `.gitkeep` files replace their `README.md` files. The figure-source policy moved to `DEV.md` and the figure skills. `figures/srcs/` is dropped, because editable sources are evidence recorded in the results ledger. |
 | `paper/algorithms/` | adapted (new) | Required by #156. |
 | `paper/variants/` | rejected | Retired by #156 in favour of macro-switched builds. |
 | `paper/generated/` | rejected | Retired by #156. Numbers enter through `macros.tex`, each with a manifest source. |
