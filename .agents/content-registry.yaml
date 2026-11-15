@@ -1244,7 +1244,7 @@ entries:
     owner: template-maintainers
     summary: "Guard the reviewed build entry, the uv floor and the retired-document check."
     status: active
-    source: {"commit": "PENDING", "path": ".agents/tests/project/test_template_maintenance.py"}
+    source: {"commit": "490f169ae81beaeb7ca2baa141c434b950272b67", "path": ".agents/tests/project/test_template_maintenance.py"}
     updated: 2026-11-15
     supersedes: []
     superseded_by: []
