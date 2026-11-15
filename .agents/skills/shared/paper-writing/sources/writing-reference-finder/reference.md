@@ -15,9 +15,9 @@ adds an entry to `paper/refs.bib` and never supports a scientific claim.
    teach: introduction framing, formal setup, method exposition, experiments,
    limitations, related-work positioning, or the architecture of a whole
    paper.
-2. **Load the paper's context.** Read `PAPER.md` for the topic, the
+2. **Load the paper's context.** Read the brief record for the topic, the
    contribution and the claim boundaries and, when a section is the target,
-   its file under `paper/sections/`. Take topic keywords from `PAPER.md`.
+   its file under `paper/sections/`. Take topic keywords from the brief record.
    Never upload unpublished manuscript text to an external service.
 3. **Search official sources first**, following
    `references/search-playbook.md`: venue award pages, then official paper

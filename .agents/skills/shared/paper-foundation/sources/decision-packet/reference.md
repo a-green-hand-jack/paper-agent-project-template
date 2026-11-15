@@ -12,7 +12,7 @@ outside a bounded area.
 
 ## Minimum context
 
-- the current contract entry in `PAPER.md` or the project record it lives in
+- the current contract entry in the brief record or the project record it lives in
   (`.agents/memory/project/paper-foundation/experiments.md`, `paper-interfaces.md`,
   `publication.md`);
 - the latest applicable decision record in `.agents/memory/project/`;
@@ -43,7 +43,7 @@ separate focused packet and use a separate Human approval gate for each.
 After the Human answers, record it in the repository; a decision left only in
 chat or in `.project/` notes is not recorded.
 
-1. Update the contract it changes: `PAPER.md` or the project record.
+1. Update the contract it changes: the brief record or the project record.
 2. Write the decision as its own record `.agents/memory/project/<topic>.md`
    from `.agents/memory/entry-template.md`: front matter (`name`, `date`,
    `source`, `scope: project`, `applies_to`, `status: active`, `supersedes`,
@@ -51,7 +51,7 @@ chat or in `.project/` notes is not recorded.
    chosen, the paper objects it affects, rejected alternatives when relevant,
    and which future change needs review again.
 3. Add the record to the index `.agents/memory/project/AGENTS.md`, and link it
-   from `PAPER.md` when it changes a cue.
+   from the brief record when it changes a cue.
 4. When it replaces an earlier decision, set the earlier record's
    `status: superseded` and `superseded_by`, and the new record's
    `supersedes`; do not rewrite the earlier decision's text.

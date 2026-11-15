@@ -8,14 +8,14 @@ are written and organised?", not "Which papers must the manuscript cite?".
 
 Record these before searching:
 
-- the paper's topic in one sentence, taken from `PAPER.md`;
+- the paper's topic in one sentence, taken from the brief record;
 - the target section or writing problem;
 - the venue family and the recency window;
 - whether only award papers count, or strong non-award papers too;
 - whether LaTeX source is needed or reading the PDF is enough.
 
 Derive topic keywords from the paper's identity and contribution in
-`PAPER.md`: the research object, the method family, the evaluation setting
+the brief record: the research object, the method family, the evaluation setting
 and the closest neighbouring areas. Use two to five keywords per query.
 
 ## 2. Source hierarchy

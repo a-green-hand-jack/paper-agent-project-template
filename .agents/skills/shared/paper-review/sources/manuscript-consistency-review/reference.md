@@ -19,7 +19,7 @@ score, accept/reject recommendation or mandatory gate between writing steps.
 
 Read in this order:
 
-1. `PAPER.md`;
+1. the paper's brief record;
 2. `.agents/memory/project/paper-foundation/experiments.md` for experimental claims,
    conditions, results and maximum interpretations;
 3. `.agents/memory/project/paper-foundation/paper-interfaces.md` and `paper/macros.tex` for

@@ -12,7 +12,7 @@ never the paper's. Its content comes only from the paper.
 
 ## Minimum context
 
-- `PAPER.md`: locked and bounded items bind the poster too;
+- the paper's brief record: locked and bounded items bind the poster too;
 - `.agents/memory/project/paper-publication/publication.md` for the venue and the poster's
   record, and the venue's poster facts in `.agents/knowledge/shared/` (for
   example `venue-neurips-2026-poster.md`), rechecked on the official page

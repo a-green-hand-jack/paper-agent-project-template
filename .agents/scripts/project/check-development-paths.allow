@@ -7,3 +7,4 @@
 .agents/knowledge/shared/paper-publication/official-latex-templates.md	.agents/tools/_official_templates.py	historical evidence citation of the v0.3.1 layout
 .agents/knowledge/shared/credential-inventory.md	.agents/scripts/probe-credentials.sh	cites the upstream release (v0.1.16) that shipped the script, not a path here
 .agents/knowledge/shared/credential-inventory.md	.agents/tests/test_template_credentials.py	cites the upstream template's test for the same release
+.agents/skills/shared/template-adoption/SKILL.md	DEV.md	the inherited step names the adopted project's DEV.md, which the coding template still ships; a paper reads its check commands from README.md
