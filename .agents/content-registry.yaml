@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.8.0
+  version: v0.9.0
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.39
@@ -513,13 +513,12 @@ entries:
   - path: .agents/memory/AGENTS.md
     id: content-705fb762bfd65ec0
     kind: governance
-    scope: shared_with_adaptation
+    scope: shared
     owner: template-maintainers
     summary: "Directory boundary and registry-generated navigation."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/AGENTS.md"}
     updated: unknown
-    adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
     supersedes: []
     superseded_by: []
   - path: .agents/memory/CLAUDE.md
@@ -570,13 +569,12 @@ entries:
   - path: .agents/memory/shared/AGENTS.md
     id: content-3c4500c018b7c54a
     kind: governance
-    scope: shared_with_adaptation
+    scope: shared
     owner: template-maintainers
     summary: "Directory boundary and registry-generated navigation."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/shared/AGENTS.md"}
     updated: unknown
-    adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
     supersedes: []
     superseded_by: []
   - path: .agents/memory/shared/CLAUDE.md
@@ -1076,13 +1074,12 @@ entries:
   - path: .agents/skills/shared/development-writing/
     id: content-cb61277464accae6
     kind: skill
-    scope: shared_with_adaptation
+    scope: shared
     owner: template-maintainers
     summary: "Write Issues, PRs, comments and commits around reader decisions and traceable evidence."
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/skills/shared/development-writing/SKILL.md"}
     updated: unknown
-    adaptation: "Common reader and evidence principles plus Issue, PR, comment and commit guidance; neutral examples in references. Uses writing.language by default for commits; any project-specific commit language or convention goes only in the trailing adaptation section. Historical project cases are not part of this shared package."
     supersedes: []
     superseded_by: []
   - path: .agents/skills/shared/engineering-change/
@@ -1240,6 +1237,17 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+  - path: .agents/tests/project/test_template_maintenance.py
+    id: content-3364b46416e978e9
+    kind: test
+    scope: template
+    owner: template-maintainers
+    summary: "Guard the reviewed build entry, the uv floor and the retired-document check."
+    status: active
+    source: {"commit": "490f169ae81beaeb7ca2baa141c434b950272b67", "path": ".agents/tests/project/test_template_maintenance.py"}
+    updated: 2026-11-15
+    supersedes: []
+    superseded_by: []
   - path: .agents/tests/shared/AGENTS.md
     id: content-4a7bfbeb8c35c5b7
     kind: governance
@@ -1380,7 +1388,7 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
-    adoption: "Not adopted: PAPER.md is the Human contract of a paper."
+    adoption: "Not adopted: a paper has no installed product; the reader-facing role belongs to README.md and the paper."
   - path: src/.gitkeep
     id: content-42e145566039681e
     kind: document
@@ -2272,13 +2280,14 @@ entries:
     kind: document
     scope: shared_with_adaptation
     owner: paper-template-maintainers
-    summary: "Public build entry; set PAGE_BUDGET to the venue's limit (or none); keep the targets."
+    summary: "Public build entry; set PAGE_BUDGET to the venue's limit (or none); kept by the paper, never merged."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "Makefile"}
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
-    adaptation: "Public build entry; set PAGE_BUDGET to the venue's limit (or none); keep the targets."
+    adaptation: "Keep the targets and set PAGE_BUDGET; the release notes give the diff of every change, and the command never merges this file. A three-way merge inserted a block the paper already had (Issue #245)."
+    upgrade: review
   - path: paper/Makefile
     id: content-641a9d53b7c23ceb
     kind: document

@@ -23,7 +23,7 @@ literature search use `citation-support-review`.
 
 ## Context to read first
 
-1. `PAPER.md`: the paper's identity, locked and bounded claims, current
+1. the paper's brief record: identity, locked and bounded claims, current
    evidence state and unresolved decisions.
 2. `.agents/memory/project/paper-foundation/experiments.md` when feedback touches results,
    baselines, protocols, ablations or claim support.
@@ -98,7 +98,7 @@ challenge), `tamnd/openreview-cli` (a terminal client for public forums) and
 
 1. **Establish the forum's identity.** Record venue, track, submission or
    forum id, the title as OpenReview shows it, and the collection date. If the
-   title or id conflicts with `PAPER.md`, stop and ask.
+   title or id conflicts with the brief record, stop and ask.
 2. **Capture raw material.** Keep review text, ratings, confidence, questions,
    official comments, meta-review, decision and author responses separate.
 3. **Label roles.** Each item is one of `review`, `official_comment`,
@@ -117,7 +117,7 @@ challenge), `tamnd/openreview-cli` (a terminal client for public forums) and
    `global`.
 7. **Classify risk and authority.** Mark whether a point touches a locked or
    bounded claim, the interpretation of an experiment, a paper interface, the
-   release state, or a decision `PAPER.md` reserves for the Human.
+   release state, or a decision the brief record reserves for the Human.
 8. **Cluster.** Merge duplicate concerns across reviewers while recording who
    raised them; never drop a concern because only one reviewer raised it.
 9. **Write the dossier** in the formats below.

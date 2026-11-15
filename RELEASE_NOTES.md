@@ -3,14 +3,20 @@
 本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.1:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.8.0 — 2026-11-15
+## v0.9.0 — 2026-11-15
 
-`assets/` 退役（跟随 coding template v0.1.39）。论文报告的是别人的运行，模板不再保留一个外部资产目录：结果来源改由记录承载。
+两个下游论文从 v0.4.12 升到 v0.8.0 时暴露的三处升级链路缺陷。
 
-- **结果台账换成记录。** `.agents/memory/project/paper-foundation/results-ledger.md` 一行一个上报值：id、类型、`observed`/`planned`、来源仓库与提交/运行、文件与 SHA-256、重生成命令、接口宏和使用位置。
-- **`assets/` 删除。** 目录里只有一份 schema 和空的 `assets: []`，连一份真实资产都不该随模板发布；它的链接机制（`.project/assets.links`）在论文里没有用途——大文件（原始日志、checkpoint、数据集）留在产生它的代码仓库或受管存储，本仓库不保存指向它们的机器路径。小文件仍在 `paper/tables/`、`paper/figures/` 里提交。
-- **规则、记录与技能同步。** `AGENTS.md`、`.agents/AGENTS.md`、`README.md`、`experiments.md`、`paper-interfaces.md`、`results-through-interface-macros.md`、`writing-exemplar-archive.md`、`paper-foundation`、`paper-figures` 与 `asset-lifecycle` 技能、`.gitignore` 的 `assets/*` 例外，以及路径检查的前缀表，全部改指台账。
-- **上游把资产步骤变成可选。** 本版同时跟随 coding template v0.1.38 → v0.1.39（上游 #185/#186）：`diagnose-environment.sh` 在没有 `assets/` 时打印 `skip assets manifest` 而不是 `FAIL`，`setup-worktree.sh` 不再警告，`migrate-assets.sh` 退休时不再把目录建回来。三个脚本与 v0.1.39 逐字节一致。
+- **构建入口不再被自动合并。** 三方合并把论文本地已有的 `ifneq ($(wildcard …venv…))` 块再插一份，
+  重复运行还会累加（`RSI_light_paper` 升完后同一段有三份）。`Makefile` 改为 `upgrade: review`：
+  升级只打印本版的差异，合并由论文决定（#245）。
+- **uv 不再被钉死在一个补丁版本。** `reference-integrity/uv.toml` 从 `==0.11.23` 改成 `>=0.11.23`；
+  依赖由 `uv.lock` 固定，宿主 uv 更新不该让 `make release-check` 的元数据审计直接拒跑（#246）。
+- **退役的根目录文档收尾。** v0.5.0 删掉 `PAPER.md`/`DEV.md` 后，13 个技能与索引文件里还有 28 处
+  指向 `PAPER.md`，现在都改指 `paper-foundation/brief.md` 与相关记录；`.agents/memory/AGENTS.md`、
+  `.agents/memory/shared/AGENTS.md`、`development-writing` 改为 `shared`（不再要求论文写本地适配段，
+  消掉下游诊断的三条 warning）；路径检查现在也扫技能自带的 `sources/**/*.md`，并拒绝任何指向
+  `PAPER.md`、`DEV.md` 的引用——只读共享技能里那处合法的 `DEV.md`（指被采用项目的检查命令）走 allow 文件（#247）。
 
 ### Adoption states
 
@@ -23,15 +29,17 @@
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.7.1
+### Upgrading a paper from v0.8.0
 
-本版删掉了一个目录，命令不会动论文自己拥有的路径，所以迁移要手动完成。
+**Command only.** 没有必须手动完成的步骤，但有三件事值得顺手做：
 
-1. 取来本版的新记录：`git show <本版标签>:.agents/memory/project/paper-foundation/results-ledger.md > .agents/memory/project/paper-foundation/results-ledger.md`（它登记为 `optional`，升级命令只在计划里提示，不会替你写）。
-2. 把 `assets/MANIFEST.yaml` 的每条条目改写成台账里的一行；论文正文与 `paper-interfaces.md` 里引用的 manifest id 一并改成台账 id。
-3. 删除 `assets/` 目录。
-4. 从 `.agents/content-registry.yaml` 删掉 `assets/README.md`、`assets/MANIFEST.yaml`、`assets/.gitkeep` 三条；留着会变成 dangling active entry，`make check` 会失败。
-5. 运行 `bash .agents/scripts/shared/check-development.sh --write-indexes`，再运行 `make check`。
+1. 升级计划里 `Makefile` 现在显示为 “the project's own (upgrade: review)” 并打印本版差异；命令不再改写它。
+   如果上一次升级已经给 `Makefile` 插入了重复的 `ifneq ($(wildcard …venv…))` 块（`RSI_light_paper` 是三份），
+   删掉多余副本。
+2. 升级后 `diagnose-environment.sh` 不应再报 `warn adaptation section missing`（那三个文件已改为 `shared`）；
+   若还报，说明本地的 registry 仍是旧 scope，跑一次 `check-development.sh --write-indexes`。
+3. 路径检查现在会扫技能自带的 `sources/**/*.md`：如果你的仓库里还有指向已退役根目录文档的引用，
+   `check-development.sh` 或项目检查脚本会指出它；改为指向 `paper-foundation/brief.md`。
 
 ## Starting from this template
 

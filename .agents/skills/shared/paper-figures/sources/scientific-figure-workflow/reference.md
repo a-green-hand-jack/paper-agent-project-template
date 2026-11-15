@@ -42,7 +42,7 @@ figure.
 Use this for any figure that carries numeric evidence.
 
 1. Identify the exact claim and evidence the figure supports, and its cue in
-   `PAPER.md`.
+   the brief record.
 2. Locate the data source: its row in
    `.agents/memory/project/paper-foundation/results-ledger.md` (source
    repository, commit, run or config id, checksum, regeneration command), read

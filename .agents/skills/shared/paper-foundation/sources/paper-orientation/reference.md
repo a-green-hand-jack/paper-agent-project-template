@@ -25,7 +25,8 @@ Classify the repository before editing:
 
 - **template repository**: origin is the registry's `template.repository`
   (the template itself, which also records `template.upstream`). Do not write
-  paper content here; template work follows `DEV.md`. A new paper is a new
+  paper content here; template work follows `README.md` and the
+  `template-maintenance` records. A new paper is a new
   repository made from the template as `README.md` describes, or starts from a
   brief through `paper-brief-ingest`.
 - **paper repository**: the registry's `template` names the paper template and
@@ -66,7 +67,7 @@ authorship, venue choice or approval state.
 
 ## Reading order
 
-1. Read `PAPER.md`.
+1. Read the brief record (`.agents/memory/project/paper-foundation/brief.md`).
 2. Read `.agents/memory/project/paper-foundation/experiments.md` only when the task touches
    experiments, evidence, result interpretation or claim support.
 3. Read `.agents/memory/project/paper-foundation/paper-interfaces.md` and `paper/macros.tex`

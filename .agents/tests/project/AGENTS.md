@@ -7,4 +7,5 @@ Keep repository-owned content here; reuse scope is recorded independently in the
 - [test_template_adoption_states.py](test_template_adoption_states.py) — Builds the adoption states this template documents from its shipped files, checks them against the newest RELEASE_NOTES.md entry and upgrades a fresh paper from v0.4.1 to them; a paper made from the template deletes it.
 - [test_template_issue_195_upgrade.py](test_template_issue_195_upgrade.py) — Exercise upgrades preserving local paper content and evidence.
 - [test_template_issue_216_upgrade.py](test_template_issue_216_upgrade.py) — Upgrade a paper that left template content out and check its omissions stay single and out.
+- [test_template_maintenance.py](test_template_maintenance.py) — Guard the reviewed build entry, the uv floor and the retired-document check.
 <!-- registry-index:end -->

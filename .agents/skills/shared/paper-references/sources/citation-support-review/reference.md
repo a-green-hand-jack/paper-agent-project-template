@@ -26,7 +26,7 @@ exemplar enters the bibliography only through this workflow.
   occurrence and any existing evidence records;
 - `.agents/memory/shared/paper-references/reference-integrity.md` for the durable rules, verdict
   semantics and offline gates; load it once per session;
-- `.agents/memory/project/paper-foundation/experiments.md` or `PAPER.md` only when they define
+- `.agents/memory/project/paper-foundation/experiments.md` or the brief record only when they define
   the claim or interpretation being checked.
 
 Do not load the complete manuscript, all references or the full ledger for an
