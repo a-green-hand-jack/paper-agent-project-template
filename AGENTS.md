@@ -17,8 +17,8 @@ from the repository root. Change only `AGENTS.md`; never let the two diverge.
 - The product is the paper in `paper/`. It is self-contained: a copy of
   `paper/` alone builds, it never reads `.agents/`, and builds write to the
   worktree's `.project/build/`, never into `paper/` or the repository root.
-  It is what the Human reads, and open questions belong in author comments
-  inside it.
+  It is what the Human reads; an open question is a visible `\PaperTODO{...}`
+  inside it, with its detail in a note under `.agents/notes/`.
 - Agent rules, records, skills, scripts and checks live in `.agents/`.
 
 `README.md` is the only Human document: what this is, how to build and release.

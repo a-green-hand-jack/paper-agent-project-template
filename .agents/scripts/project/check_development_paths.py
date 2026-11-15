@@ -54,7 +54,7 @@ def skill_sources(root: Path, files: list[str]) -> list[str]:
 
 
 def documents(root: Path, files: list[str]) -> list[str]:
-    chosen = [name for name in ROOTS if name in files]
+    chosen = [name for name in ROOTS if name in files and (root / name).is_file()]
     for name in files:
         if not name.endswith(".md"):
             continue
@@ -70,6 +70,8 @@ def documents(root: Path, files: list[str]) -> list[str]:
 def references(root: Path, files: list[str]) -> list[tuple[str, str]]:
     found = []
     for name in documents(root, files):
+        if not (root / name).is_file():
+            continue  # listed by Git, deleted in the working tree
         text = (root / name).read_text(encoding="utf-8", errors="replace")
         for raw in PATH.findall(text):
             path = raw.rstrip(".,;:)`'\"")
@@ -84,6 +86,8 @@ def references(root: Path, files: list[str]) -> list[tuple[str, str]]:
 def retired_references(root: Path, files: list[str]) -> list[tuple[str, str]]:
     found = []
     for name in documents(root, files):
+        if not (root / name).is_file():
+            continue
         text = (root / name).read_text(encoding="utf-8", errors="replace")
         found.extend((name, match) for match in RETIRED_NAME.findall(text))
     return found
