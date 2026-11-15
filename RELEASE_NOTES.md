@@ -3,18 +3,16 @@
 本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.1:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.10.1 — 2026-11-15
+## v0.10.2 — 2026-11-15
 
-作者用中文写批注，模板却排不出来（#256）。
+把中文批注的 CI 依赖写成可查的事实，而不是发布说明里的一句附注。
 
-- `paper/style/author-comments.sty` 现在在显示批注的构建里加载 `CJKutf8`，并把批注正文包进
-  `CJK` 环境；`submission` 与 `blind` 不加载 CJK，依赖面不变。
-- 之前 `main` 会在第一个中文字符处失败（`Unicode character 标`）；`RSI_light_paper` 2026-11-15
-  同步作者新批注时撞上，PR #21 在论文侧修了一次。
-- 加了一条测试：`author-comments.sty` 必须在 `\ifPaperNotes` 下加载 CJK，并且批注正文包在
-  `CJK` 环境里——这条约束靠构建发现不了，只能靠断言。
-- CI 的两个 TeX 安装步骤加上 `texlive-lang-cjk`：Ubuntu 的最小 TeX 里没有 `CJKutf8.sty`，
-  第一次跑本版时 `check` 与 `paper-only` 都在 `author-comments.sty:17` 报 “File CJKutf8.sty not found”。
+- 新知识记录 `.agents/knowledge/shared/paper-build/cjk-comments-need-the-cjk-package.md`：
+  `CJKutf8.sty` 在 Ubuntu 上由 `latex-cjk-common` 提供；`texlive-lang-cjk` 是 metapackage，
+  真正的文件在 Recommends 里，`--no-install-recommends` 装不到；中文字形要 `latex-cjk-chinese`
+  （arphic 字体），缺字体时构建成功但 PDF 是空框，日志里有 `Missing character`。
+  证据是 v0.10.1 的三次 CI 运行与 `dpkg-deb -c` 的文件清单。
+- `paper/style/author-comments.sty` 头部注明这两包与记录位置，论文抄这段样式时能直接看到。
 
 ### Adoption states
 
@@ -27,13 +25,10 @@
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.10.0
+### Upgrading a paper from v0.10.1
 
-**Command only，但 `paper/` 属产品面，升级命令不动它：**
-
-1. 运行 `bash .agents/scripts/shared/upgrade-template.sh v0.10.1`（开发面与 v0.10.0 相同）。
-2. 若本仓库要用中文批注，把模板本版的 `paper/style/author-comments.sty` 里那三行（`\ifPaperNotes\RequirePackage{CJKutf8}\fi` 与批注正文的 `CJK` 环境）照抄进自己的 sty；抄完 `make pdf`、`make submission`、`make blind` 三个构建都要过。
-3. 改了 `paper/` 之后按 `paper-publication` 的流程 push 到 Overleaf，让作者那边也能编译。
+**Command only.** 知识记录随升级进入 `.agents/`；`paper/style/author-comments.sty` 那两行注释
+属产品面，需要时照抄。CI 的安装清单加 `latex-cjk-common` 与 `latex-cjk-chinese`（若本仓库用中文批注）。
 
 ## Starting from this template
 
