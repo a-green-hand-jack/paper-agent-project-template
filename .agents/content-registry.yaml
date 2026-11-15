@@ -1116,7 +1116,7 @@ entries:
     owner: project-maintainers
     summary: "An undecided item is a visible PaperTODO whose detail sits in a note and an Issue; author comments last one review round."
     status: active
-    source: {"commit": "PENDING", "path": ".agents/memory/shared/paper-writing/undecided-content-visible-placeholder.md"}
+    source: {"commit": "3f80d3fe980311cf4e64b19d7810f39cf5760606", "path": ".agents/memory/shared/paper-writing/undecided-content-visible-placeholder.md"}
     updated: 2026-11-15
     supersedes: []
     superseded_by: []
