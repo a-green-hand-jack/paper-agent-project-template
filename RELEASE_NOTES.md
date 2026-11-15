@@ -3,20 +3,12 @@
 本文件只描述当前发布；历史版本保留在各自的标签里（例如 `git show v0.7.1:RELEASE_NOTES.md`）。
 基于本模板创建的论文维护自己的发布说明，不复制此历史。
 
-## v0.9.0 — 2026-11-15
+## v0.9.1 — 2026-11-15
 
-两个下游论文从 v0.4.12 升到 v0.8.0 时暴露的三处升级链路缺陷。
+v0.9.0 的收尾：还有三处指针指向 v0.5.0 已删的 `DEV.md`。
 
-- **构建入口不再被自动合并。** 三方合并把论文本地已有的 `ifneq ($(wildcard …venv…))` 块再插一份，
-  重复运行还会累加（`RSI_light_paper` 升完后同一段有三份）。`Makefile` 改为 `upgrade: review`：
-  升级只打印本版的差异，合并由论文决定（#245）。
-- **uv 不再被钉死在一个补丁版本。** `reference-integrity/uv.toml` 从 `==0.11.23` 改成 `>=0.11.23`；
-  依赖由 `uv.lock` 固定，宿主 uv 更新不该让 `make release-check` 的元数据审计直接拒跑（#246）。
-- **退役的根目录文档收尾。** v0.5.0 删掉 `PAPER.md`/`DEV.md` 后，13 个技能与索引文件里还有 28 处
-  指向 `PAPER.md`，现在都改指 `paper-foundation/brief.md` 与相关记录；`.agents/memory/AGENTS.md`、
-  `.agents/memory/shared/AGENTS.md`、`development-writing` 改为 `shared`（不再要求论文写本地适配段，
-  消掉下游诊断的三条 warning）；路径检查现在也扫技能自带的 `sources/**/*.md`，并拒绝任何指向
-  `PAPER.md`、`DEV.md` 的引用——只读共享技能里那处合法的 `DEV.md`（指被采用项目的检查命令）走 allow 文件（#247）。
+- `.agents/tests/AGENTS.md` 说慢测试在模板发布时本地跑，指向 `DEV.md` 的“发布”节；改为指向 `RELEASE_NOTES.md` 的“验证与范围”。
+- 两条 `template-maintenance` 记录（`derived-template-upgrade-command`、`paper-template-extension-boundary`）里“差异记在 `DEV.md`”“当前命令在 `DEV.md`”改为 `## In this repository` 段与 `README.md`。
 
 ### Adoption states
 
@@ -29,17 +21,9 @@
 | existing bibliography, migrated ledger | `identity`, `leftovers`, `pages`, `references` |
 | venue kit | `identity`, `leftovers`, `pages` |
 
-### Upgrading a paper from v0.8.0
+### Upgrading a paper from v0.9.0
 
-**Command only.** 没有必须手动完成的步骤，但有三件事值得顺手做：
-
-1. 升级计划里 `Makefile` 现在显示为 “the project's own (upgrade: review)” 并打印本版差异；命令不再改写它。
-   如果上一次升级已经给 `Makefile` 插入了重复的 `ifneq ($(wildcard …venv…))` 块（`RSI_light_paper` 是三份），
-   删掉多余副本。
-2. 升级后 `diagnose-environment.sh` 不应再报 `warn adaptation section missing`（那三个文件已改为 `shared`）；
-   若还报，说明本地的 registry 仍是旧 scope，跑一次 `check-development.sh --write-indexes`。
-3. 路径检查现在会扫技能自带的 `sources/**/*.md`：如果你的仓库里还有指向已退役根目录文档的引用，
-   `check-development.sh` 或项目检查脚本会指出它；改为指向 `paper-foundation/brief.md`。
+**Command only.** 纯文档改动，没有需要手工完成的步骤。
 
 ## Starting from this template
 
