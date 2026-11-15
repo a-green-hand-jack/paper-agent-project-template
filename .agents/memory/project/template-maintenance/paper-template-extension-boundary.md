@@ -36,5 +36,5 @@ local adaptations, optional rejection and user-owned records. A path move must
 cover the callers, test discovery and real old-version upgrade, including
 conflict preflight and repeat-upgrade behavior. Keep necessary local upstream
 fixes explicit and review them when following another upstream release. The
-operational rules and current commands live in the skills, `DEV.md` and the
+operational rules and current commands live in the skills, `README.md` and the
 reference governance, not in this decision record.

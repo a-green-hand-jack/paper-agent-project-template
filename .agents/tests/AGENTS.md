@@ -65,7 +65,8 @@ The `project/test_template_*.py` files are this template's own tests
 minutes, so `make check` leaves them out: the `check` job of
 `paper-check.yml` runs them where TeX is installed, the inherited
 `template-check.yml` step skips them because that job has no TeX, and
-a template release runs them locally (`DEV.md`, "发布"):
+a template release runs them locally (`RELEASE_NOTES.md`, the release's
+"验证与范围"):
 
 ```bash
 python3 -m unittest discover -s .agents/tests/project -p 'test_template_*.py'

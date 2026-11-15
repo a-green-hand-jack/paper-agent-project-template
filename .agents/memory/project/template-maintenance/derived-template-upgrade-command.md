@@ -44,7 +44,7 @@ identity when the target itself had `omitted:` records; v0.1.34 fixed it
   `policy.root_files`.
 - Compare each inherited script with the followed release using `cmp`, and each
   inherited record above its `## In this repository` section. Record a
-  difference that must stay in `DEV.md` ("与模板的关系") with its reason, and
+  difference that must stay in a `## In this repository` note with its reason, and
   report a generic fix to the coding template instead of keeping it here.
 - Upstream's upgrade regression tests can be run on this repository's command
   copy from a checkout of the followed release:
