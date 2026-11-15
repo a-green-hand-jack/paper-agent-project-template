@@ -517,7 +517,7 @@ entries:
     owner: template-maintainers
     summary: "CJKutf8.sty ships in latex-cjk-common, not texlive-lang-cjk on Ubuntu; Chinese glyphs need latex-cjk-chinese."
     status: active
-    source: {"commit": "PENDING", "path": ".agents/knowledge/shared/paper-build/cjk-comments-need-the-cjk-package.md"}
+    source: {"commit": "62d3d865bd1dc45dfe45ffed274f668c009072c5", "path": ".agents/knowledge/shared/paper-build/cjk-comments-need-the-cjk-package.md"}
     updated: 2026-11-15
     supersedes: []
     superseded_by: []
