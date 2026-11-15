@@ -66,7 +66,8 @@ jobs:
             texlive-plain-generic \
             texlive-pictures \
             texlive-science \
-            texlive-bibtex-extra
+            texlive-bibtex-extra \
+            texlive-lang-cjk
 
       - name: Initialize worktree state
         run: bash .agents/scripts/shared/setup-worktree.sh
@@ -152,7 +153,8 @@ jobs:
             texlive-plain-generic \
             texlive-pictures \
             texlive-science \
-            texlive-bibtex-extra
+            texlive-bibtex-extra \
+            texlive-lang-cjk
 
       - name: Build every form with only paper/ present
         run: |

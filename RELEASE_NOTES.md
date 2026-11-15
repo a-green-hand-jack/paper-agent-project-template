@@ -13,6 +13,8 @@
   同步作者新批注时撞上，PR #21 在论文侧修了一次。
 - 加了一条测试：`author-comments.sty` 必须在 `\ifPaperNotes` 下加载 CJK，并且批注正文包在
   `CJK` 环境里——这条约束靠构建发现不了，只能靠断言。
+- CI 的两个 TeX 安装步骤加上 `texlive-lang-cjk`：Ubuntu 的最小 TeX 里没有 `CJKutf8.sty`，
+  第一次跑本版时 `check` 与 `paper-only` 都在 `author-comments.sty:17` 报 “File CJKutf8.sty not found”。
 
 ### Adoption states
 
