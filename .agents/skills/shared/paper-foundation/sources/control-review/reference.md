@@ -12,7 +12,7 @@ limitation, result interpretation or stable paper interface.
 
 ## Minimum context
 
-- the relevant section of `PAPER.md`;
+- the relevant part of the paper's brief record;
 - `.agents/memory/project/paper-foundation/experiments.md` only for experiment or result
   changes;
 - `.agents/memory/project/paper-foundation/paper-interfaces.md` only for recurring semantic

@@ -13,7 +13,7 @@ version or another release that the Human approves and that is tagged on
 
 ## Minimum context
 
-- `PAPER.md` and `.agents/memory/project/paper-foundation/experiments.md`,
+- the paper's brief record and `.agents/memory/project/paper-foundation/experiments.md`,
   `paper-interfaces.md` and `publication.md`;
 - the current decision records in `.agents/memory/project/`;
 - the build being released (`blind` for an anonymous submission, otherwise

@@ -22,7 +22,7 @@ Run from the repository root (rules in
 `.agents/memory/shared/paper-references/reference-integrity.md`):
 
 ```bash
-python3 .agents/scripts/shared/check_bibtex_format.py
+python3 .agents/scripts/shared/paper-references/check_bibtex_format.py
 python3 .agents/scripts/shared/paper-references/check_reference_corrections.py
 python3 .agents/scripts/shared/paper-references/check_reference_metadata.py
 python3 .agents/scripts/shared/paper-references/check_reference_integrity.py --profile draft

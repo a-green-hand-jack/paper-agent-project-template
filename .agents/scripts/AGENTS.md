@@ -8,9 +8,9 @@ precondition and should be delegated to the approved worktree or asset manager.
 ## In this repository
 
 `shared/` holds scripts inherited from `coding-agent-project-template` and this
-template's own scripts that a paper inherits. Keep the upstream scripts byte-identical to the followed release; `DEV.md`
-("与模板的关系") lists any local difference that must stay, and says how to
-recheck after each upstream upgrade. Paper-specific scripts include: `paper-check.sh`
+template's own scripts that a paper inherits. Keep the upstream scripts byte-identical to the followed release;
+`template-upgrade` says how to recheck after each upstream upgrade, and a local
+difference that must stay is a `## In this repository` note in this file. Paper-specific scripts include: `paper-check.sh`
 (`make check`) and `release-check.sh` (`make release-check`), which write only
 under `.project/build/`; `overleaf-sync.sh`; the build, interface and
 content checks; the offline reference gate and citation-support records; and

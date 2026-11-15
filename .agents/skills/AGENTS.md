@@ -13,7 +13,7 @@ second list of summaries here.
   the generated index in [`shared/AGENTS.md`](shared/AGENTS.md) lists them. A
   paper's own skills go in `project/<name>/` and state their commands,
   evidence and failure boundaries.
-- Skills give process, not permission: `PAPER.md` and the records take
+- Skills give process, not permission: the brief record and the records take
   precedence over any skill text.
 - Load the one owner skill for the task (the root `AGENTS.md` routes tasks to
   them), and a second skill only when the owner skill or the Human names it.

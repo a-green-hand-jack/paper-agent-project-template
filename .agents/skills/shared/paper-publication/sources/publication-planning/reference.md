@@ -17,7 +17,7 @@ Use `release-review` to prepare a tagged release.
 
 - `.agents/memory/project/paper-publication/publication.md` (venue, page budget, builds,
   Overleaf, release tags);
-- `PAPER.md` and the decision records it links;
+- the paper's brief record and the decision records it links;
 - `.agents/memory/shared/paper-build/one-source-three-builds.md`;
 - the active venue entry `.agents/knowledge/shared/venue-<venue>-<year>.md`
   when a concrete venue is active;
