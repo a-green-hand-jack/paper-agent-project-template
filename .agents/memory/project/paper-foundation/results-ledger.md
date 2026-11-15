@@ -25,7 +25,7 @@ applies_to: every reported number, table or figure data file the paper takes fro
 
 | Id | Kind | Status | Source | File and SHA-256 | Regenerate | Macro | Used in |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | number, table or figure-data | observed or planned | `OWNER/REPOSITORY@COMMIT`, run or configuration | `path/in/the/repository`; `sha256:…` | the command that rebuilds it | `\MainResult` or — | `paper/tables/main.tex` or — |
+| — | number, table or figure-data | observed or planned | `OWNER/REPOSITORY@COMMIT`, run or configuration | `path/in/the/repository`; `sha256:…` | the command that rebuilds it | `\MainResult` or — | `paper/tables/<table>.tex` or — |
 
 ## Why
 

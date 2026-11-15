@@ -5,12 +5,12 @@
 
 ## v0.8.0 — 2026-11-15
 
-`assets/` 退役。论文报告的是别人的运行，模板不再保留一个外部资产目录：结果来源改由记录承载。
+`assets/` 退役（跟随 coding template v0.1.39）。论文报告的是别人的运行，模板不再保留一个外部资产目录：结果来源改由记录承载。
 
 - **结果台账换成记录。** `.agents/memory/project/paper-foundation/results-ledger.md` 一行一个上报值：id、类型、`observed`/`planned`、来源仓库与提交/运行、文件与 SHA-256、重生成命令、接口宏和使用位置。
 - **`assets/` 删除。** 目录里只有一份 schema 和空的 `assets: []`，连一份真实资产都不该随模板发布；它的链接机制（`.project/assets.links`）在论文里没有用途——大文件（原始日志、checkpoint、数据集）留在产生它的代码仓库或受管存储，本仓库不保存指向它们的机器路径。小文件仍在 `paper/tables/`、`paper/figures/` 里提交。
 - **规则、记录与技能同步。** `AGENTS.md`、`.agents/AGENTS.md`、`README.md`、`experiments.md`、`paper-interfaces.md`、`results-through-interface-macros.md`、`writing-exemplar-archive.md`、`paper-foundation`、`paper-figures` 与 `asset-lifecycle` 技能、`.gitignore` 的 `assets/*` 例外，以及路径检查的前缀表，全部改指台账。
-- **一项已知的上游缺口。** 继承的 `diagnose-environment.sh` 仍要求 `assets/MANIFEST.yaml` 并报 `FAIL assets manifest`，`setup-worktree.sh` 每次运行都会警告，`migrate-assets.sh` 在 worktree 退休时会把 `assets/` 建回来。上游已报 #183；这些脚本保持逐字节继承，不在本仓库改。
+- **上游把资产步骤变成可选。** 本版同时跟随 coding template v0.1.38 → v0.1.39（上游 #185/#186）：`diagnose-environment.sh` 在没有 `assets/` 时打印 `skip assets manifest` 而不是 `FAIL`，`setup-worktree.sh` 不再警告，`migrate-assets.sh` 退休时不再把目录建回来。三个脚本与 v0.1.39 逐字节一致。
 
 ### Adoption states
 
