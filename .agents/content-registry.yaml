@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.9.1
+  version: v0.10.0
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.39
@@ -510,6 +510,77 @@ entries:
     supersedes: []
     superseded_by: []
     refresh_after: "when a provider changes its request validation, or when a named client changes its default parameters or its routing of GPT-5.x models; otherwise recheck before the next batch against a backend not checked in the last 90 days"
+  - path: .agents/knowledge/shared/paper-publication/official-latex-templates.md
+    id: content-ef8c7935ff310bfe
+    kind: knowledge
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Official publisher and venue kits and their authorities as last compiled by the retired smoke tests."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/official-latex-templates.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    refresh_after: "before a paper adopts one of these kits; the smoke tests that kept this list current were retired in v0.4.0"
+  - path: .agents/knowledge/shared/paper-publication/venue-iclr-2027.md
+    id: content-64b3ad46c0508f04
+    kind: knowledge
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Dated ICLR 2027 facts and kit hashes; refresh at the decisions and the camera-ready instructions."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-iclr-2027.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    refresh_after: "2026-12-16 (final decisions), and when the camera-ready instructions arrive (announced for mid-February 2027)"
+  - path: .agents/knowledge/shared/paper-publication/venue-icml-2026.md
+    id: content-230ddb81aa36d949
+    kind: knowledge
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Dated ICML 2026 facts and kit hashes; ICML 2027 unknown until its call is published."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-icml-2026.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    refresh_after: "when https://icml.cc/Conferences/2027/CallForPapers stops returning 404; write venue-icml-2027 then"
+  - path: .agents/knowledge/shared/paper-publication/venue-neurips-2026-poster.md
+    id: content-92a8325c090c84d7
+    kind: knowledge
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Dated NeurIPS 2026 poster sizes and print deadlines; recheck before ordering."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-neurips-2026-poster.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    refresh_after: "before ordering a print, and before 2026-11-04 (the first order deadline)"
+  - path: .agents/knowledge/shared/paper-publication/venue-template.md
+    id: content-3709a4fecb6b40af
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Record shape for a venue's submission facts; unknown values stay UNKNOWN."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/VENUE_TEMPLATE.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/knowledge/shared/paper-references/bibliographic-metadata-services.md
+    id: content-3306a1757f23c130
+    kind: knowledge
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Services, variables and secrets of the online reference audits."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/bibliographic-metadata-services.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    refresh_after: "when bibtex-updater or pybtex changes version in uv.lock, or when a service changes its API, rate limits or key requirements"
   - path: .agents/memory/AGENTS.md
     id: content-705fb762bfd65ec0
     kind: governance
@@ -566,6 +637,163 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+  - path: .agents/memory/project/harvest-decisions.md
+    id: content-bd0b8663e50f26d6
+    kind: memory
+    scope: template
+    owner: template-maintainers
+    summary: "Preserve lasting harvest decisions and reasons without repeating run reports."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/project/harvest-decisions.md"}
+    updated: 2026-10-24
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/memory/project/paper-foundation/brief.md
+    id: content-129a141821db166c
+    kind: memory
+    scope: project
+    owner: paper-template-maintainers
+    summary: "Starter record a paper fills from its brief."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/brief.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/paper-foundation/experiments.md
+    id: content-b529e9d91177535a
+    kind: memory
+    scope: project
+    owner: paper-template-maintainers
+    summary: "Starter record of the paper's evidence questions."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/experiments.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/paper-foundation/paper-interfaces.md
+    id: content-095031c3e80db308
+    kind: memory
+    scope: project
+    owner: paper-template-maintainers
+    summary: "Starter record of the paper's interface macros; make check reads it."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/paper-interfaces.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/paper-foundation/results-ledger.md
+    id: content-f2fdc8fc7d2d634a
+    kind: memory
+    scope: project
+    owner: paper-template-maintainers
+    summary: "One row per reported result: source repository, commit, run, checksum, regeneration command, macro and use."
+    status: active
+    source: {"commit": "f268235e7d4c3aff2761c257fbc429dcae02e018", "path": ".agents/memory/project/paper-foundation/results-ledger.md"}
+    updated: 2026-11-15
+    supersedes: []
+    superseded_by: []
+    optional: true
+  - path: .agents/memory/project/paper-publication/publication.md
+    id: content-79d7090b2d54afda
+    kind: memory
+    scope: project
+    owner: paper-template-maintainers
+    summary: "Starter record of the paper's venue, kit, budget, Overleaf and release tags."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/publication.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-dispatch-decisions.md
+    id: content-5e1742dff7120958
+    kind: memory
+    scope: template
+    owner: template-maintainers
+    summary: "Template maintenance uses Codex first, with explicit capability and cost-based dispatch."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/project/template-work-runs-on-codex.md"}
+    updated: 2026-10-28
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/memory/project/template-maintenance/ci-tex-install-bounded.md
+    id: content-ci-tex-install-bounded
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Bound the CI Ubuntu mirror preflight and TeX install, and rerun runner DNS failures instead of bypassing required checks."
+    status: active
+    source: {"issue": 205}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/derived-template-upgrade-command.md
+    id: content-derived-template-upgrade-command
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "A derived template follows its upstream with the target release's command directory and keeps the inherited scripts byte-identical."
+    status: active
+    source: {"issue": 218, "upstream": "v0.1.34"}
+    updated: 2026-11-13
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/paper-run-boundary.md
+    id: content-87453f37a4a46350
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "The boundary between this template and paper-run (#152)."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/paper-run-boundary.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/paper-template-extension-boundary.md
+    id: content-paper-template-extension-boundary
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Why the paper template keeps inherited development, paper capabilities and product evidence in distinct boundaries."
+    status: active
+    source: {"issues": [195, 197], "commit": "80bfd1d"}
+    updated: 2026-11-05
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/protected-case-branches.md
+    id: content-e232649022b0410b
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "This template's protected case branches and trackers (DEC-0014); a paper records its own."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/protected-case-branches.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/rebuild-on-coding-template.md
+    id: content-ec9e77d7482cdd80
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "This template's v0.4.0 migration map; a paper made from the template deletes it."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/rebuild-on-coding-template.md"}
+    updated: 2026-10-26
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/project/template-maintenance/repository-identity.md
+    id: content-10778fcb1176db12
+    kind: memory
+    scope: template
+    owner: paper-template-maintainers
+    summary: "This template's name, description and branches."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/repository-identity.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
   - path: .agents/memory/shared/AGENTS.md
     id: content-3c4500c018b7c54a
     kind: governance
@@ -586,6 +814,28 @@ entries:
     status: active
     source: {"issue": 133}
     updated: unknown
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/collaborator-content-byte-for-byte.md
+    id: content-f1ce081d3317b16d
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Manuscript content a collaborator wrote stays byte for byte; a needed change is proposed and attributed, never applied silently."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/collaborator-content-byte-for-byte.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/credential-route-before-weaker-option.md
+    id: content-e9243486f704690a
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Check the device's existing credential route, and test the endpoint, before falling back to a weaker public route."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/credential-route-before-weaker-option.md"}
+    updated: 2026-11-14
     supersedes: []
     superseded_by: []
   - path: .agents/memory/shared/docker-objects-prefixed-and-removed.md
@@ -668,6 +918,217 @@ entries:
     status: active
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/shared/look-at-the-artifact-before-concluding.md"}
     updated: 2026-10-23
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/optional-cli-environments.md
+    id: content-issue-202-optional-cli-environments
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Optional CLIs run from the project environment under .project/tools, with no user-level fallback."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-build/one-source-three-builds.md
+    id: content-ebd85c6aa3a78ee3
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "main, submission and blind from one source in a fixed order, each removing a layer."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/one-source-three-builds.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-build/page-budget-on-blind-build.md
+    id: content-2603e306270576f1
+    kind: memory
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/page-budget-on-blind-build.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build."
+  - path: .agents/memory/shared/paper-build/post-build-visual-inspection.md
+    id: content-2d06ea5d7e128611
+    kind: memory
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/post-build-visual-inspection.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
+  - path: .agents/memory/shared/paper-build/tex-engine-from-texbin.md
+    id: content-11e912c3abdabd0f
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/tex-engine-from-texbin.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-figures/figure-deck-and-export.md
+    id: content-eae20f0801c438da
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Draw conceptual figures as one slide deck in the notes tree, export with a project script, judge at print size."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-figures/figure-deck-and-export.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-foundation/appendix-as-its-own-tree.md
+    id: content-6c92277314f82a36
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "One appendix per file under paper/appendix/, input after \\appendix; sections/ holds main text only."
+    status: active
+    source: {"commit": "71945a6", "path": ".agents/memory/shared/paper-foundation/appendix-as-its-own-tree.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-foundation/results-through-interface-macros.md
+    id: content-92f166ab50d3c28b
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Reported numbers only through interface macros with a manifest source; planned results are never observations."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/results-through-interface-macros.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-publication/official-venue-kit-unmodified.md
+    id: content-217f93089be3eada
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/official-venue-kit-unmodified.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-publication/overleaf-paper-tree-only.md
+    id: content-4f4e2f0d90f1eeda
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/overleaf-paper-tree-only.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-publication/overleaf-tree-is-authoritative.md
+    id: content-34225526bd837b8b
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Take Overleaf edits in by tree, byte for byte, never by replaying intermediate commits; never pipe a build into an early-closing command."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-publication/overleaf-tree-is-authoritative.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-publication/sync-overleaf-before-editing.md
+    id: content-b45e11608eed7f06
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Take in Overleaf edits before writing and deliver to both sides together."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/sync-overleaf-before-editing.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-references/reference-integrity.md
+    id: content-c4f6ba821f80cc3a
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Identity and claim support are separate, occurrence-level obligations."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/reference-integrity.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/claims-set-expected-results.md
+    id: content-91e4c87615610aa7
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Each claim fixes its experiment and its expected result before the runs; a planned result is never written as an observation."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/claims-set-expected-results.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/experiments-argue-for-claims.md
+    id: content-1658c5f86ccac8e7
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Organise the evaluation claim by claim, one exhibit and one conclusion per subsection."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/experiments-argue-for-claims.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/non-hedged-claims.md
+    id: content-b051ea4e2826a690
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "State the claim at the strength the evidence supports and report a reduced setting once, in the setup, not as hedging."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/non-hedged-claims.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/notation-cost.md
+    id: content-4cda64955d135895
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Introduce a symbol only where prose cannot be precise; the full formalism belongs in the appendix."
+    status: active
+    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/notation-cost.md"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/undecided-content-visible-placeholder.md
+    id: content-cc5945f730b2f18c
+    kind: memory
+    scope: shared
+    owner: project-maintainers
+    summary: "An undecided item is a visible PaperTODO whose detail sits in a note and an Issue; author comments last one review round."
+    status: active
+    source: {"commit": "3f80d3fe980311cf4e64b19d7810f39cf5760606", "path": ".agents/memory/shared/paper-writing/undecided-content-visible-placeholder.md"}
+    updated: 2026-11-15
+    supersedes: []
+    superseded_by: []
+  - path: .agents/memory/shared/paper-writing/writing-exemplar-archive.md
+    id: content-963d2e7447c74cc7
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites."
+    status: active
+    source: {"commit": "7fed695", "path": ".agents/memory/shared/paper-writing/writing-exemplar-archive.md"}
+    updated: 2026-11-14
     supersedes: []
     superseded_by: []
   - path: .agents/memory/shared/product-state-root.md
@@ -753,6 +1214,17 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Not adopted: a paper starts no product containers or coding-agent runtime."
+  - path: .agents/memory/shared/skill-frontmatter-validity.md
+    id: content-4933b492602239ff
+    kind: memory
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Every SKILL.md front matter parses; make check re-parses them."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/skill-frontmatter-validity.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
   - path: .agents/memory/shared/speed-and-parallelism-by-measurement.md
     id: content-773ed08a0eb2fb12
     kind: memory
@@ -775,6 +1247,108 @@ entries:
     updated: 2026-10-15
     adaptation: "Fill PATCH_DIR; here a vendored tool is changed in its vendored copy and the change is recorded in its PROVENANCE.md."
     optional: true
+    supersedes: []
+    superseded_by: []
+  - path: .agents/notes/
+    id: content-2420908dc9108902
+    kind: governance
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Tracked work in progress: plans, figure decks and briefs, literature reading, revision reports; conclusions move to memory or knowledge."
+    status: active
+    source: {"commit": "7fed695", "path": ".agents/notes/"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/AGENTS.md
+    id: content-14beaeda52effe3b
+    kind: governance
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Rules of the reference ledger and its policy."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/references/AGENTS.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Keep the ledger and policy rules; a paper adds its own reference conventions."
+  - path: .agents/references/exemplars/
+    id: paper-exemplar-records
+    kind: code
+    scope: project
+    owner: project-maintainers
+    summary: "Paper-specific writing, figure and poster exemplar records."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+    optional: true
+  - path: .agents/references/exemplars/AGENTS.md
+    id: paper-exemplar-agents-md
+    kind: governance
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/figures/.gitkeep
+    id: paper-exemplar-figures--gitkeep
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/posters/.gitkeep
+    id: paper-exemplar-posters--gitkeep
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/exemplars/writing/.gitkeep
+    id: paper-exemplar-writing--gitkeep
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/references/ledger.json
+    id: content-8990bd74f4ea3814
+    kind: document
+    scope: project
+    owner: paper-template-maintainers
+    summary: "The paper's reference ledger and policy; the template ships an empty ledger and an enforced policy; never copy a populated ledger."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/references/ledger.json"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    optional: true
+  - path: .agents/references/policy.json
+    id: content-6b457c742a9a99b0
+    kind: document
+    scope: project
+    owner: paper-template-maintainers
+    summary: "The paper's reference ledger and policy; the template ships an empty ledger and an enforced policy; never copy a populated ledger."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/references/policy.json"}
+    updated: 2026-10-20
     supersedes: []
     superseded_by: []
   - path: .agents/scripts/AGENTS.md
@@ -823,6 +1397,53 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+  - path: .agents/scripts/project/check-development-paths.allow
+    id: content-69c61130a30cd310
+    kind: code
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Explicit exemptions for check-development-paths.py, each with its reason; printed when the check runs."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.allow"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+    adaptation: "Fill one line per intentional exemption of this paper, with its reason."
+  - path: .agents/scripts/project/check_development_paths.py
+    id: content-dbebdd48ae9b0840
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Check that development-plane documents name existing paths and that CLAUDE.md, .claude and .pi are the expected symlinks."
+    status: active
+    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.py"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/project/migrate-project.rules
+    id: content-5592d3598750123a
+    kind: code
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Teardown rules for the .project/ entries setup-project.sh creates (build is dropped); a paper adds a line for each entry it creates."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/migrate-project.rules"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Teardown rules for the .project/ entries setup-project.sh creates (build is dropped); a paper adds a line for each entry it creates."
+  - path: .agents/scripts/project/setup-project.sh
+    id: content-dd13bc57786740b2
+    kind: code
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "This template's setup hook (creates .project/build/, reports the TeX tools); a paper adds its own setup lines."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/setup-project.sh"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "This template's setup hook (creates .project/build/, reports the TeX tools); a paper adds its own setup lines."
   - path: .agents/scripts/shared/AGENTS.md
     id: content-817065ac6ea7fcf5
     kind: governance
@@ -844,6 +1465,51 @@ entries:
     status: active
     source: {"issue": 133}
     updated: unknown
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/check-development.sh
+    id: content-cfcf34ec8a5477ae
+    kind: code
+    scope: shared
+    owner: template-maintainers
+    summary: "Public development-plane registry and layout check."
+    status: active
+    source: {"issue": 133}
+    updated: 2026-10-28
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/check-shells.sh
+    id: content-7a6da73bf405c9e9
+    kind: code
+    scope: shared
+    owner: template-maintainers
+    summary: "Check every nested development Shell script without missing glob arguments."
+    status: active
+    source: {"issue": 133}
+    updated: 2026-10-28
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/check_agent_content.py
+    id: content-9376245e5932b7c5
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Check skill front matter, record structure and vendored-file hashes against the registry."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-agent-content.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/content_registry.py
+    id: content-39c013db44f2683d
+    kind: code
+    scope: shared
+    owner: template-maintainers
+    summary: "Validate development identities, naming, provenance, lifecycle and generated indexes."
+    status: active
+    source: {"issue": 133}
+    updated: 2026-10-28
     supersedes: []
     superseded_by: []
   - path: .agents/scripts/shared/diagnose-environment.sh
@@ -906,6 +1572,206 @@ entries:
     adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
     supersedes: []
     superseded_by: []
+  - path: .agents/scripts/shared/paper-build/check_paper_build.py
+    id: content-870bfa562ec92701
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Read one build: log problems, main-text pages, PDF underscores, blind identity and leftovers."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-paper-build.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-build/check_paper_interfaces.py
+    id: content-fdc6e798a6740cb0
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Check the interface macros of paper/macros.tex against their record."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-paper-interfaces.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-build/paper-check.sh
+    id: content-8624f9df96064345
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "make check: build main and blind, run the build, reference, interface and content checks and the unit tests."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/paper-check.sh"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/paper-publication/overleaf-sync.sh
+    id: content-cccf92ecec609660
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "status, push and pull between HEAD:paper and an Overleaf project, fast-forward only."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/overleaf-sync.sh"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/paper-publication/release-check.sh
+    id: content-d6fe6393f637c209
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "make release-check: release gates of the blind and submission builds."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/release-check.sh"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/paper-references/bib_identity.py
+    id: content-145aed8ea633ef00
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Shared BibTeX identity normalization for the reference checks."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_bib_identity.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/bounded_run.py
+    id: content-ac271e9b5042f50f
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Bounded subprocess runner for the online reference audits."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_bounded_run.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/check_bibtex_format.py
+    id: content-6c2865d4ba80b555
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Optional BibTeX format audit in the locked reference environment."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-bibtex-format.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/check_reference_corrections.py
+    id: content-bf199be2a7a9a01d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Optional validation of proposed BibTeX corrections."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-reference-corrections.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/check_reference_integrity.py
+    id: content-c4cd69fab46dda4f
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Offline reference gate at draft, review and release strength."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-reference-integrity.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/check_reference_metadata.py
+    id: content-e2d2c53a9043efb0
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Optional online metadata audit in the locked reference environment."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-reference-metadata.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/citation_occurrences.py
+    id: content-e79711b3396c6bdf
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Citation occurrence scanner shared by the reference gate and evidence tool."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_citation_occurrences.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/reference-integrity/
+    id: content-cd1a78dc5f68c5dc
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Locked dependencies of the optional reference checks (bibtex-updater, pybtex) and their licence inventory."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/reference-integrity"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/paper-references/reference_env.py
+    id: content-5c52fe0cbf4b59c8
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Load the reference-audit variables from the shared credential link."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_reference_env.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/reference_evidence.py
+    id: content-d02e8d28ceb097e2
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Record and migrate occurrence-level citation-support evidence."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/reference-evidence.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/validate_bibtex_correction.py
+    id: content-bbada582c0813ad0
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "pybtex validator of one proposed BibTeX correction."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_validate-bibtex-correction.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py
+    id: content-2f63b4acafe27f6c
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "pybtex validator of a bibliography's format."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_validate-bibtex-with-pybtex.py"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
   - path: .agents/scripts/shared/probe-credentials.sh
     id: content-3182af54c7c22de0
     kind: code
@@ -940,6 +1806,28 @@ entries:
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/scripts/teardown-worktree.sh"}
     updated: unknown
     adaptation: "Keep local adaptations in the trailing In this repository section for skills/memory; review other files per template-upgrade."
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/tool-env.sh
+    id: content-issue-202-tool-env
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Create and run project-local environments for optional CLIs."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+  - path: .agents/scripts/shared/tool-environments.json
+    id: content-issue-202-tool-manifest
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Pinned sources, revisions and project-local paths for optional CLIs."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
     supersedes: []
     superseded_by: []
   - path: .agents/scripts/shared/upgrade-template.sh
@@ -1000,6 +1888,29 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+  - path: .agents/skills/project/template-harvest/
+    id: content-b9c35aae7cec1956
+    kind: skill
+    scope: template
+    owner: template-maintainers
+    summary: "Maintainer procedure that collects settled downstream practice; keep it in the template repository and never copy it downstream."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/skills/template-harvest/SKILL.md"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/skills/shared/.gitattributes
+    id: content-bc69baefe337a84d
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Whitespace exceptions for vendored files that keep upstream bytes git diff --check would report; extend it when vendoring such a file."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/.gitattributes"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
   - path: .agents/skills/shared/AGENTS.md
     id: content-f5eee484f7dcc916
     kind: governance
@@ -1045,6 +1956,17 @@ entries:
     source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/skills/shared/asset-lifecycle/SKILL.md"}
     updated: unknown
     adaptation: "Adapt asset classes and storage roots; here result tables, figure data and reported numbers from code repositories."
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/benchmark-radar/
+    id: paper-skill-benchmark-radar
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Benchmark discovery, records and recent Radar evidence; vendored MIT from ktwu01/benchmark-radar@21f3018, PROVENANCE.md."
+    status: active
+    source: {"issue": 199}
+    updated: 2026-11-11
     supersedes: []
     superseded_by: []
   - path: .agents/skills/shared/cli-first-operations/
@@ -1120,6 +2042,215 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Rejected since v0.4.6: a paper has no long-running product runtime."
+  - path: .agents/skills/shared/paper-figures/
+    id: paper-skill-paper-figures
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Scientific data figures and editable diagrams."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-figures/sources/scientific-figure-workflow/
+    id: content-3accc615e4856f9f
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "House figure workflow, harvested from downstream papers and generalized; names no image provider."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/scientific-figure-workflow/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-foundation/
+    id: paper-skill-paper-foundation
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Paper context, brief, control decisions and stable interfaces."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-foundation/sources/control-review/
+    id: content-7b975c257972cfcc
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Review before changing anything a control cue protects."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/control-review/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-foundation/sources/decision-packet/
+    id: content-6af4c8ab94dfaec9
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Prepare a Human decision and record it as a project memory record."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/decision-packet/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-foundation/sources/paper-interface-maintenance/
+    id: content-9adf5d592634e8cb
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Interface macros, the paper-interfaces record and manifest entries change together."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/paper-interface-maintenance/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-foundation/sources/paper-orientation/
+    id: content-78c4bcb4b1067400
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Session start and context recovery for a paper repository."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/paper-orientation/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-publication/
+    id: paper-skill-paper-publication
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Paper publication, Overleaf and posters."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-publication/sources/poster-build/
+    id: content-c075556e2c07b59d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "House skill for the optional poster/ product tree, harvested from a downstream paper and generalized."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/poster-build/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-publication/sources/publication-planning/
+    id: content-cd078be1c73cbfdc
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Venue, page budget, builds and every Overleaf status, pull or push request."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/publication-planning/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-publication/sources/release-review/
+    id: content-50d8d6040f28a9bd
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "make release-check, the release PR from dev to main and the tag."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/release-review/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-references/
+    id: paper-skill-paper-references
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Manuscript citation identity and claim support."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-references/sources/citation-support-review/
+    id: content-b74c6c93fecefd4d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Occurrence-level citation support at Draft, Review and Release strength."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/citation-support-review/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-references/sources/reference-repair/
+    id: content-79ec0e6021571a83
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Repair BibTeX identity, metadata, duplicates and versions."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/reference-repair/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-review/
+    id: paper-skill-paper-review
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Manuscript consistency and peer-review triage."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-review/sources/manuscript-consistency-review/
+    id: content-48c2e4f51a6608fd
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Findings-only review of a version the Human names."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/manuscript-consistency-review/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-review/sources/openreview-review-collector/
+    id: content-acd903a868b58cc0
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "House skill harvested from downstream papers; collects reviews into a dossier and a revision queue."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/openreview-review-collector/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-writing/
+    id: paper-skill-paper-writing
+    kind: skill
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Paper writing, structure, language and proofreading."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+  - path: .agents/skills/shared/paper-writing/sources/writing-reference-finder/
+    id: content-b9eb51196b81ce9d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "House skill harvested from downstream papers; exemplars are never citations."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/writing-reference-finder/SKILL.md"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
   - path: .agents/skills/shared/project-memory-governance/
     id: content-c176f7ea4cb32f1c
     kind: skill
@@ -1237,6 +2368,126 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
+  - path: .agents/tests/project/test_template_adoption_states.py
+    id: content-ed370ffcde71c896
+    kind: code
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Builds the adoption states this template documents from its shipped files, checks them against the newest RELEASE_NOTES.md entry and upgrades a fresh paper from v0.4.1 to them; a paper made from the template deletes it."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_adoption_states.py"}
+    updated: 2026-10-26
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/tests/project/test_template_agent_communication.py
+    id: content-9cf8cf7022c1fe93
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for agent communication."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_agent_communication.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_codex_context.py
+    id: content-d1d7855321571c56
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for codex context."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_codex_context.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_credentials.py
+    id: content-7776f6afbe1b9ac6
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for credentials."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_credentials.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_development.py
+    id: content-52fd7d28e9e85c13
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Public checker counterexamples, Git symlink modes, normalized discovery and recursive Shell checks."
+    status: rejected
+    source: {"issue": 133}
+    updated: 2026-10-28
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_diagnose.py
+    id: content-40ef232b9bbe5038
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for diagnose."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_diagnose.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_dispatch.py
+    id: content-b563e4d394fb72a5
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for dispatch."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_dispatch.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_governance.py
+    id: content-56fb5a6c5987010a
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for governance."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_governance.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_issue_195_upgrade.py
+    id: paper-test-issue-195
+    kind: code
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Exercise upgrades preserving local paper content and evidence."
+    status: active
+    source: {"issue": 195}
+    updated: 2026-11-04
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/tests/project/test_template_issue_216_upgrade.py
+    id: paper-test-issue-216
+    kind: code
+    scope: template
+    owner: paper-template-maintainers
+    summary: "Upgrade a paper that left template content out and check its omissions stay single and out."
+    status: active
+    source: {"issue": 216}
+    updated: 2026-11-13
+    supersedes: []
+    superseded_by: []
+    language: python
   - path: .agents/tests/project/test_template_maintenance.py
     id: content-3364b46416e978e9
     kind: test
@@ -1248,6 +2499,42 @@ entries:
     updated: 2026-11-15
     supersedes: []
     superseded_by: []
+  - path: .agents/tests/project/test_template_migrate.py
+    id: content-f8282f489f4886e5
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for migrate."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_migrate.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_upgrade.py
+    id: content-0de7c4c04cbf7011
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for upgrade."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_upgrade.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .agents/tests/project/test_template_upgrade_release.py
+    id: content-c6aa1dc381db7682
+    kind: code
+    scope: template
+    owner: template-maintainers
+    summary: "Template-only regression checks for upgrade release."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_upgrade_release.py"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
   - path: .agents/tests/shared/AGENTS.md
     id: content-4a7bfbeb8c35c5b7
     kind: governance
@@ -1271,887 +2558,39 @@ entries:
     updated: unknown
     supersedes: []
     superseded_by: []
-  - path: .env.example
-    id: content-a3046da0d15a27e8
-    kind: document
-    scope: shared_with_adaptation
-    owner: project-maintainers
-    summary: "Variable names only; keep the reference-audit names and add the paper's own."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".env.example"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adaptation: "Variable names only; keep the reference-audit names and add the paper's own."
-  - path: .github/ISSUE_TEMPLATE/bug.yml
-    id: content-45b5634e925b8689
-    kind: document
-    scope: shared
-    owner: project-maintainers
-    summary: "Repository-owned content; preserve during template upgrades."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/ISSUE_TEMPLATE/bug.yml"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-  - path: .github/ISSUE_TEMPLATE/feature.yml
-    id: content-e5e34a44eb79bba1
-    kind: document
-    scope: shared
-    owner: project-maintainers
-    summary: "Repository-owned content; preserve during template upgrades."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/ISSUE_TEMPLATE/feature.yml"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-  - path: .github/PULL_REQUEST_TEMPLATE.md
-    id: content-18813c86948efc57
-    kind: document
-    scope: shared
-    owner: project-maintainers
-    summary: "Repository-owned content; preserve during template upgrades."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/PULL_REQUEST_TEMPLATE.md"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-  - path: .github/workflows/template-check.yml
-    id: content-ec7ad9f8b4798de8
-    kind: document
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Hosted CI for the template checks."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/workflows/template-check.yml"}
-    updated: unknown
-    adaptation: "Hosted CI for the template checks. Adopt it when the issue-workflow <CI> slot is yes; leave it out when it is no, and template-upgrade keeps it out. Its result is noted on the PR and never gates a merge; the gate is the issue-workflow <LOCAL_CHECK>, which runs the same steps locally."
-    optional: true
-    supersedes: []
-    superseded_by: []
-  - path: .gitignore
-    id: content-bc37d034bad56458
-    kind: document
-    scope: shared_with_adaptation
-    owner: project-maintainers
-    summary: "Keep the template rules (.project/, LaTeX leftovers); add the paper's own."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".gitignore"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adaptation: "Keep the template rules (.project/, LaTeX leftovers); add the paper's own. This repository keeps no asset folder, so the template's assets/* exceptions are dropped."
-  - path: AGENTS.md
-    id: content-a54ff182c7e8acf5
-    kind: governance
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Directory boundary and registry-generated navigation."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "AGENTS.md"}
-    updated: unknown
-    adaptation: "Agent rules and the paper task routing; a paper keeps the three planes and the routing and adds its own rules."
-    supersedes: []
-    superseded_by: []
-  - path: CLAUDE.md
-    id: content-6ebdb617a8104a77
-    kind: symlink-index
-    scope: shared
-    owner: template-maintainers
-    summary: "Recreate as a relative symlink to AGENTS.md; never duplicate its content."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "CLAUDE.md"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-  - path: README.md
-    id: content-b335630551682c19
-    kind: document
-    scope: shared_with_adaptation
-    owner: template-maintainers
-    summary: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
-    status: active
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "README.md"}
-    updated: unknown
-    adaptation: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
-    upgrade: review
-    supersedes: []
-    superseded_by: []
-  - path: USER.md
-    id: content-9afc5db23792a47e
-    kind: document
-    scope: project
-    owner: project-maintainers
-    summary: "Repository-owned content; preserve during template upgrades."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "USER.md"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Not adopted: a paper has no installed product; the reader-facing role belongs to README.md and the paper."
-  - path: src/.gitkeep
-    id: content-42e145566039681e
-    kind: document
-    scope: project
-    owner: project-maintainers
-    summary: "Repository-owned content; preserve during template upgrades."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "src/.gitkeep"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Not adopted: the product tree is paper/, not src/."
-  - path: .agents/scripts/shared/content_registry.py
-    id: content-39c013db44f2683d
+  - path: .agents/tests/shared/paper-build/test_author_comments.py
+    id: content-issue-203-author-comments-test
     kind: code
-    scope: shared
-    owner: template-maintainers
-    summary: "Validate development identities, naming, provenance, lifecycle and generated indexes."
-    status: active
-    source: {"issue": 133}
-    updated: 2026-10-28
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/check-development.sh
-    id: content-cfcf34ec8a5477ae
-    kind: code
-    scope: shared
-    owner: template-maintainers
-    summary: "Public development-plane registry and layout check."
-    status: active
-    source: {"issue": 133}
-    updated: 2026-10-28
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/check-shells.sh
-    id: content-7a6da73bf405c9e9
-    kind: code
-    scope: shared
-    owner: template-maintainers
-    summary: "Check every nested development Shell script without missing glob arguments."
-    status: active
-    source: {"issue": 133}
-    updated: 2026-10-28
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/optional-cli-environments.md
-    id: content-issue-202-optional-cli-environments
-    kind: memory
     scope: shared
     owner: paper-template-maintainers
-    summary: "Optional CLIs run from the project environment under .project/tools, with no user-level fallback."
+    summary: "Release-check leftovers coverage for per-author comments."
     status: active
-    source: {"issue": 202}
+    source: {"issue": 203}
     updated: 2026-11-11
     supersedes: []
     superseded_by: []
-  - path: .agents/scripts/shared/tool-env.sh
-    id: content-issue-202-tool-env
+    language: python
+  - path: .agents/tests/shared/paper-build/test_paper_interfaces.py
+    id: content-0cfac28e91dfe6ed
     kind: code
     scope: shared
     owner: paper-template-maintainers
-    summary: "Create and run project-local environments for optional CLIs."
+    summary: "Unit tests of the shared scripts (paper interfaces)."
     status: active
-    source: {"issue": 202}
-    updated: 2026-11-11
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/tool-environments.json
-    id: content-issue-202-tool-manifest
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Pinned sources, revisions and project-local paths for optional CLIs."
-    status: active
-    source: {"issue": 202}
-    updated: 2026-11-11
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-references/sources/citation-support-review/
-    id: content-b74c6c93fecefd4d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Occurrence-level citation support at Draft, Review and Release strength."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/citation-support-review/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-foundation/sources/control-review/
-    id: content-7b975c257972cfcc
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Review before changing anything a control cue protects."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/control-review/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-foundation/sources/decision-packet/
-    id: content-6af4c8ab94dfaec9
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Prepare a Human decision and record it as a project memory record."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/decision-packet/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-review/sources/manuscript-consistency-review/
-    id: content-48c2e4f51a6608fd
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Findings-only review of a version the Human names."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/manuscript-consistency-review/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-review/sources/openreview-review-collector/
-    id: content-acd903a868b58cc0
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "House skill harvested from downstream papers; collects reviews into a dossier and a revision queue."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/openreview-review-collector/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-foundation/sources/paper-interface-maintenance/
-    id: content-9adf5d592634e8cb
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Interface macros, the paper-interfaces record and manifest entries change together."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/paper-interface-maintenance/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-foundation/sources/paper-orientation/
-    id: content-78c4bcb4b1067400
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Session start and context recovery for a paper repository."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/paper-orientation/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-publication/sources/poster-build/
-    id: content-c075556e2c07b59d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "House skill for the optional poster/ product tree, harvested from a downstream paper and generalized."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/poster-build/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-publication/sources/publication-planning/
-    id: content-cd078be1c73cbfdc
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Venue, page budget, builds and every Overleaf status, pull or push request."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/publication-planning/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-references/sources/reference-repair/
-    id: content-79ec0e6021571a83
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Repair BibTeX identity, metadata, duplicates and versions."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/reference-repair/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-publication/sources/release-review/
-    id: content-50d8d6040f28a9bd
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "make release-check, the release PR from dev to main and the tag."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/release-review/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/sources/scientific-figure-workflow/
-    id: content-3accc615e4856f9f
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "House figure workflow, harvested from downstream papers and generalized; names no image provider."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/scientific-figure-workflow/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/sources/writing-reference-finder/
-    id: content-b9eb51196b81ce9d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "House skill harvested from downstream papers; exemplars are never citations."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/writing-reference-finder/SKILL.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/.gitattributes
-    id: content-bc69baefe337a84d
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Whitespace exceptions for vendored files that keep upstream bytes git diff --check would report; extend it when vendoring such a file."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/skills/shared/.gitattributes"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-publication/official-venue-kit-unmodified.md
-    id: content-217f93089be3eada
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Official kit for the exact venue and year, unmodified with its helper packages; a migration changes typesetting only."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/official-venue-kit-unmodified.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-build/one-source-three-builds.md
-    id: content-ebd85c6aa3a78ee3
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "main, submission and blind from one source in a fixed order, each removing a layer."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/one-source-three-builds.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-publication/overleaf-paper-tree-only.md
-    id: content-4f4e2f0d90f1eeda
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Overleaf receives HEAD:paper as a fast-forward checked by tree; never the root, never force."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/overleaf-paper-tree-only.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-build/page-budget-on-blind-build.md
-    id: content-2603e306270576f1
-    kind: memory
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/page-budget-on-blind-build.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build."
-  - path: .agents/memory/shared/paper-build/post-build-visual-inspection.md
-    id: content-2d06ea5d7e128611
-    kind: memory
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/post-build-visual-inspection.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
-  - path: .agents/memory/shared/paper-references/reference-integrity.md
-    id: content-c4f6ba821f80cc3a
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Identity and claim support are separate, occurrence-level obligations."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/reference-integrity.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-foundation/results-through-interface-macros.md
-    id: content-92f166ab50d3c28b
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Reported numbers only through interface macros with a manifest source; planned results are never observations."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/results-through-interface-macros.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/skill-frontmatter-validity.md
-    id: content-4933b492602239ff
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Every SKILL.md front matter parses; make check re-parses them."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/skill-frontmatter-validity.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-publication/sync-overleaf-before-editing.md
-    id: content-b45e11608eed7f06
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Take in Overleaf edits before writing and deliver to both sides together."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/sync-overleaf-before-editing.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-build/tex-engine-from-texbin.md
-    id: content-11e912c3abdabd0f
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/tex-engine-from-texbin.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/paper-foundation/brief.md
-    id: content-129a141821db166c
-    kind: memory
-    scope: project
-    owner: paper-template-maintainers
-    summary: "Starter record a paper fills from its brief."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/brief.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/paper-foundation/experiments.md
-    id: content-b529e9d91177535a
-    kind: memory
-    scope: project
-    owner: paper-template-maintainers
-    summary: "Starter record of the paper's evidence questions."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/experiments.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/paper-foundation/paper-interfaces.md
-    id: content-095031c3e80db308
-    kind: memory
-    scope: project
-    owner: paper-template-maintainers
-    summary: "Starter record of the paper's interface macros; make check reads it."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/paper-interfaces.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/paper-foundation/results-ledger.md
-    id: content-f2fdc8fc7d2d634a
-    kind: memory
-    scope: project
-    owner: paper-template-maintainers
-    summary: "One row per reported result: source repository, commit, run, checksum, regeneration command, macro and use."
-    status: active
-    source: {"commit": "f268235e7d4c3aff2761c257fbc429dcae02e018", "path": ".agents/memory/project/paper-foundation/results-ledger.md"}
-    updated: 2026-11-15
-    supersedes: []
-    superseded_by: []
-    optional: true
-  - path: .agents/memory/project/paper-publication/publication.md
-    id: content-79d7090b2d54afda
-    kind: memory
-    scope: project
-    owner: paper-template-maintainers
-    summary: "Starter record of the paper's venue, kit, budget, Overleaf and release tags."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/publication.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/knowledge/shared/paper-references/bibliographic-metadata-services.md
-    id: content-3306a1757f23c130
-    kind: knowledge
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Services, variables and secrets of the online reference audits."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/bibliographic-metadata-services.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    refresh_after: "when bibtex-updater or pybtex changes version in uv.lock, or when a service changes its API, rate limits or key requirements"
-  - path: .agents/knowledge/shared/paper-publication/official-latex-templates.md
-    id: content-ef8c7935ff310bfe
-    kind: knowledge
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Official publisher and venue kits and their authorities as last compiled by the retired smoke tests."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/official-latex-templates.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    refresh_after: "before a paper adopts one of these kits; the smoke tests that kept this list current were retired in v0.4.0"
-  - path: .agents/knowledge/shared/paper-publication/venue-iclr-2027.md
-    id: content-64b3ad46c0508f04
-    kind: knowledge
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Dated ICLR 2027 facts and kit hashes; refresh at the decisions and the camera-ready instructions."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-iclr-2027.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    refresh_after: "2026-12-16 (final decisions), and when the camera-ready instructions arrive (announced for mid-February 2027)"
-  - path: .agents/knowledge/shared/paper-publication/venue-icml-2026.md
-    id: content-230ddb81aa36d949
-    kind: knowledge
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Dated ICML 2026 facts and kit hashes; ICML 2027 unknown until its call is published."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-icml-2026.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    refresh_after: "when https://icml.cc/Conferences/2027/CallForPapers stops returning 404; write venue-icml-2027 then"
-  - path: .agents/knowledge/shared/paper-publication/venue-neurips-2026-poster.md
-    id: content-92a8325c090c84d7
-    kind: knowledge
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Dated NeurIPS 2026 poster sizes and print deadlines; recheck before ordering."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-neurips-2026-poster.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    refresh_after: "before ordering a print, and before 2026-11-04 (the first order deadline)"
-  - path: .agents/knowledge/shared/paper-publication/venue-template.md
-    id: content-3709a4fecb6b40af
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Record shape for a venue's submission facts; unknown values stay UNKNOWN."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/VENUE_TEMPLATE.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/references/AGENTS.md
-    id: content-14beaeda52effe3b
-    kind: governance
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Rules of the reference ledger and its policy."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/references/AGENTS.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Keep the ledger and policy rules; a paper adds its own reference conventions."
-  - path: .agents/references/ledger.json
-    id: content-8990bd74f4ea3814
-    kind: document
-    scope: project
-    owner: paper-template-maintainers
-    summary: "The paper's reference ledger and policy; the template ships an empty ledger and an enforced policy; never copy a populated ledger."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/references/ledger.json"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    optional: true
-  - path: .agents/references/policy.json
-    id: content-6b457c742a9a99b0
-    kind: document
-    scope: project
-    owner: paper-template-maintainers
-    summary: "The paper's reference ledger and policy; the template ships an empty ledger and an enforced policy; never copy a populated ledger."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/references/policy.json"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/paper-build/paper-check.sh
-    id: content-8624f9df96064345
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "make check: build main and blind, run the build, reference, interface and content checks and the unit tests."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/paper-check.sh"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/paper-publication/release-check.sh
-    id: content-d6fe6393f637c209
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "make release-check: release gates of the blind and submission builds."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/release-check.sh"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/paper-publication/overleaf-sync.sh
-    id: content-cccf92ecec609660
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "status, push and pull between HEAD:paper and an Overleaf project, fast-forward only."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/overleaf-sync.sh"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/shared/paper-build/check_paper_build.py
-    id: content-870bfa562ec92701
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Read one build: log problems, main-text pages, PDF underscores, blind identity and leftovers."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-paper-build.py"}
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_paper_interfaces.py"}
     updated: 2026-10-20
     supersedes: []
     superseded_by: []
     language: python
-  - path: .agents/scripts/shared/paper-build/check_paper_interfaces.py
-    id: content-fdc6e798a6740cb0
+  - path: .agents/tests/shared/paper-publication/test_overleaf_sync.py
+    id: content-9f959e075a89c673
     kind: code
     scope: shared
     owner: paper-template-maintainers
-    summary: "Check the interface macros of paper/macros.tex against their record."
+    summary: "Unit tests of the shared scripts (overleaf sync)."
     status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-paper-interfaces.py"}
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_overleaf_sync.py"}
     updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/check_agent_content.py
-    id: content-9376245e5932b7c5
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Check skill front matter, record structure and vendored-file hashes against the registry."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-agent-content.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/check_reference_integrity.py
-    id: content-c4cd69fab46dda4f
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Offline reference gate at draft, review and release strength."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-reference-integrity.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/reference_evidence.py
-    id: content-d02e8d28ceb097e2
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Record and migrate occurrence-level citation-support evidence."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/reference-evidence.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/check_bibtex_format.py
-    id: content-6c2865d4ba80b555
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Optional BibTeX format audit in the locked reference environment."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-bibtex-format.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/check_reference_metadata.py
-    id: content-e2d2c53a9043efb0
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Optional online metadata audit in the locked reference environment."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-reference-metadata.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/check_reference_corrections.py
-    id: content-bf199be2a7a9a01d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Optional validation of proposed BibTeX corrections."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-reference-corrections.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/bib_identity.py
-    id: content-145aed8ea633ef00
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Shared BibTeX identity normalization for the reference checks."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_bib_identity.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/bounded_run.py
-    id: content-ac271e9b5042f50f
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Bounded subprocess runner for the online reference audits."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_bounded_run.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/citation_occurrences.py
-    id: content-e79711b3396c6bdf
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Citation occurrence scanner shared by the reference gate and evidence tool."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_citation_occurrences.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/reference_env.py
-    id: content-5c52fe0cbf4b59c8
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Load the reference-audit variables from the shared credential link."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_reference_env.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/validate_bibtex_correction.py
-    id: content-bbada582c0813ad0
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "pybtex validator of one proposed BibTeX correction."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_validate-bibtex-correction.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/validate_bibtex_with_pybtex.py
-    id: content-2f63b4acafe27f6c
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "pybtex validator of a bibliography's format."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/_validate-bibtex-with-pybtex.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/scripts/shared/paper-references/reference-integrity/
-    id: content-cd1a78dc5f68c5dc
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Locked dependencies of the optional reference checks (bibtex-updater, pybtex) and their licence inventory."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/reference-integrity"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/project/setup-project.sh
-    id: content-dd13bc57786740b2
-    kind: code
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "This template's setup hook (creates .project/build/, reports the TeX tools); a paper adds its own setup lines."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/setup-project.sh"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "This template's setup hook (creates .project/build/, reports the TeX tools); a paper adds its own setup lines."
-  - path: .agents/scripts/project/migrate-project.rules
-    id: content-5592d3598750123a
-    kind: code
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Teardown rules for the .project/ entries setup-project.sh creates (build is dropped); a paper adds a line for each entry it creates."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/migrate-project.rules"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Teardown rules for the .project/ entries setup-project.sh creates (build is dropped); a paper adds a line for each entry it creates."
-  - path: .agents/tests/shared/test_agent_content.py
-    id: content-01423cfe9c518a0c
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Unit tests of the shared scripts (agent content)."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_agent_content.py"}
-    updated: 2026-10-26
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/tests/shared/test_tool_env.py
-    id: content-issue-202-tool-env-test
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Pin, isolation and no-fallback tests for the project tool environment."
-    status: active
-    source: {"issue": 202}
-    updated: 2026-11-11
     supersedes: []
     superseded_by: []
     language: python
@@ -2176,42 +2615,6 @@ entries:
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_bibtex_format_helper.py"}
     updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/tests/shared/paper-publication/test_overleaf_sync.py
-    id: content-9f959e075a89c673
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Unit tests of the shared scripts (overleaf sync)."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_overleaf_sync.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/tests/shared/paper-build/test_paper_interfaces.py
-    id: content-0cfac28e91dfe6ed
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Unit tests of the shared scripts (paper interfaces)."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_paper_interfaces.py"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/tests/shared/paper-build/test_author_comments.py
-    id: content-issue-203-author-comments-test
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Release-check leftovers coverage for per-author comments."
-    status: active
-    source: {"issue": 203}
-    updated: 2026-11-11
     supersedes: []
     superseded_by: []
     language: python
@@ -2263,6 +2666,30 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
+  - path: .agents/tests/shared/test_agent_content.py
+    id: content-01423cfe9c518a0c
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Unit tests of the shared scripts (agent content)."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_agent_content.py"}
+    updated: 2026-10-26
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/tests/shared/test_tool_env.py
+    id: content-issue-202-tool-env-test
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Pin, isolation and no-fallback tests for the project tool environment."
+    status: active
+    source: {"issue": 202}
+    updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+    language: python
   - path: .agents/tests/shared/test_upgrade_template.py
     id: content-4cf7ff6359ee2021
     kind: code
@@ -2275,464 +2702,62 @@ entries:
     supersedes: []
     superseded_by: []
     language: python
-  - path: Makefile
-    id: content-76ed074a9305c040
+  - path: .claude
+    id: content-e026f56c08dcdea4
+    kind: symlink-index
+    scope: shared
+    owner: template-maintainers
+    summary: "Relative symlink to .agents/ so a runtime that looks only under .claude finds the skills."
+    status: active
+    source: {"commit": "7fed695", "path": ".claude"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: .env.example
+    id: content-a3046da0d15a27e8
     kind: document
     scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Public build entry; set PAGE_BUDGET to the venue's limit (or none); kept by the paper, never merged."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "Makefile"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Keep the targets and set PAGE_BUDGET; the release notes give the diff of every change, and the command never merges this file. A three-way merge inserted a block the paper already had (Issue #245)."
-    upgrade: review
-  - path: paper/Makefile
-    id: content-641a9d53b7c23ceb
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "latexmk builds of main, blind and submission into BUILD_DIR, with the TEXBIN override; replace with the template's on upgrade unless the paper changed it."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/Makefile"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: paper/main.tex
-    id: content-01944e90eeb85eb7
-    kind: document
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Keep the build switches, the authors.tex input and the PaperMainTextEnd label; the document class, packages and sections are the paper's."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/main.tex"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Keep the build switches, the authors.tex input and the PaperMainTextEnd label; the document class, packages and sections are the paper's."
-  - path: paper/blind.tex
-    id: content-b06f39ac4446c527
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "One-line entry file of the anonymous build."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/blind.tex"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: paper/submission.tex
-    id: content-3538efa81918d909
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "One-line entry file of the named build without notes."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/submission.tex"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: paper/authors.tex
-    id: content-2b382f815f7a32d7
-    kind: document
-    scope: project
-    owner: paper-template-maintainers
-    summary: "The paper's author identity and its PaperIdentity strings."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/authors.tex"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: paper/macros.tex
-    id: content-548b46df121f8fa4
-    kind: document
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Keep the required interface markers (PaperTODO, PaperNote, PaperIdentity, PaperTitle); add the paper's interfaces with markers."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/macros.tex"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-    adaptation: "Keep the required interface markers (PaperTODO, PaperNote, PaperIdentity, PaperTitle); add the paper's interfaces with markers."
-  - path: paper/style/
-    id: content-a21ad93a2b6fe43d
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Display macros (paper-harness.sty with T1 encoding), per-author comments (author-comments.sty) and the venue-kit compatibility layer (compat.sty)."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/style"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .github/workflows/paper-check.yml
-    id: content-68d6511862dc20fb
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Issue and PR templates and CI (template-check, paper-check, reference-validation); a paper keeps the job names its branch protection requires."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".github/workflows/paper-check.yml"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .github/workflows/reference-validation.yml
-    id: content-4d1bc3ea0490089f
-    kind: document
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Issue and PR templates and CI (template-check, paper-check, reference-validation); a paper keeps the job names its branch protection requires."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".github/workflows/reference-validation.yml"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-foundation/
-    id: paper-skill-paper-foundation
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Paper context, brief, control decisions and stable interfaces."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-writing/
-    id: paper-skill-paper-writing
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Paper writing, structure, language and proofreading."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-figures/
-    id: paper-skill-paper-figures
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Scientific data figures and editable diagrams."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-references/
-    id: paper-skill-paper-references
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Manuscript citation identity and claim support."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-review/
-    id: paper-skill-paper-review
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Manuscript consistency and peer-review triage."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/paper-publication/
-    id: paper-skill-paper-publication
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Paper publication, Overleaf and posters."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/skills/shared/benchmark-radar/
-    id: paper-skill-benchmark-radar
-    kind: skill
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Benchmark discovery, records and recent Radar evidence; vendored MIT from ktwu01/benchmark-radar@21f3018, PROVENANCE.md."
-    status: active
-    source: {"issue": 199}
-    updated: 2026-11-11
-    supersedes: []
-    superseded_by: []
-  - path: .agents/references/exemplars/
-    id: paper-exemplar-records
-    kind: code
-    scope: project
     owner: project-maintainers
-    summary: "Paper-specific writing, figure and poster exemplar records."
+    summary: "Variable names only; keep the reference-audit names and add the paper's own."
     status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".env.example"}
+    updated: unknown
     supersedes: []
     superseded_by: []
-    optional: true
-  - path: .agents/references/exemplars/AGENTS.md
-    id: paper-exemplar-agents-md
-    kind: governance
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/references/exemplars/writing/.gitkeep
-    id: paper-exemplar-writing--gitkeep
+    adaptation: "Variable names only; keep the reference-audit names and add the paper's own."
+  - path: .github/ISSUE_TEMPLATE/bug.yml
+    id: content-45b5634e925b8689
     kind: document
     scope: shared
-    owner: paper-template-maintainers
-    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    owner: project-maintainers
+    summary: "Repository-owned content; preserve during template upgrades."
     status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/ISSUE_TEMPLATE/bug.yml"}
+    updated: unknown
     supersedes: []
     superseded_by: []
-  - path: .agents/references/exemplars/figures/.gitkeep
-    id: paper-exemplar-figures--gitkeep
+  - path: .github/ISSUE_TEMPLATE/feature.yml
+    id: content-e5e34a44eb79bba1
     kind: document
     scope: shared
-    owner: paper-template-maintainers
-    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    owner: project-maintainers
+    summary: "Repository-owned content; preserve during template upgrades."
     status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/ISSUE_TEMPLATE/feature.yml"}
+    updated: unknown
     supersedes: []
     superseded_by: []
-  - path: .agents/references/exemplars/posters/.gitkeep
-    id: paper-exemplar-posters--gitkeep
+  - path: .github/PULL_REQUEST_TEMPLATE.md
+    id: content-18813c86948efc57
     kind: document
     scope: shared
-    owner: paper-template-maintainers
-    summary: "Exemplar guidance and empty topic scaffold; paper-specific records remain project-owned."
+    owner: project-maintainers
+    summary: "Repository-owned content; preserve during template upgrades."
     status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/template-maintenance/paper-run-boundary.md
-    id: content-87453f37a4a46350
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "The boundary between this template and paper-run (#152)."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/paper-run-boundary.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/template-maintenance/protected-case-branches.md
-    id: content-e232649022b0410b
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "This template's protected case branches and trackers (DEC-0014); a paper records its own."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/protected-case-branches.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/template-maintenance/rebuild-on-coding-template.md
-    id: content-ec9e77d7482cdd80
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "This template's v0.4.0 migration map; a paper made from the template deletes it."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/rebuild-on-coding-template.md"}
-    updated: 2026-10-26
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/template-maintenance/repository-identity.md
-    id: content-10778fcb1176db12
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "This template's name, description and branches."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/project/repository-identity.md"}
-    updated: 2026-10-20
-    supersedes: []
-    superseded_by: []
-  - path: .agents/tests/project/test_template_adoption_states.py
-    id: content-ed370ffcde71c896
-    kind: code
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Builds the adoption states this template documents from its shipped files, checks them against the newest RELEASE_NOTES.md entry and upgrades a fresh paper from v0.4.1 to them; a paper made from the template deletes it."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/tests/test_adoption_states.py"}
-    updated: 2026-10-26
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: RELEASE_NOTES.md
-    id: content-68d24fa81558aae3
-    kind: document
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Template release history stays in the template repository; a paper keeps its own release notes, one entry per release tag. The template's starting steps live in its `## Starting from this template` section."
-    status: active
-    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "RELEASE_NOTES.md"}
-    updated: 2026-10-26
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/harvest-decisions.md
-    id: content-bd0b8663e50f26d6
-    kind: memory
-    scope: template
-    owner: template-maintainers
-    summary: "Preserve lasting harvest decisions and reasons without repeating run reports."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/project/harvest-decisions.md"}
-    updated: 2026-10-24
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/memory/project/template-dispatch-decisions.md
-    id: content-5e1742dff7120958
-    kind: memory
-    scope: template
-    owner: template-maintainers
-    summary: "Template maintenance uses Codex first, with explicit capability and cost-based dispatch."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/memory/project/template-work-runs-on-codex.md"}
-    updated: 2026-10-28
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/skills/project/template-harvest/
-    id: content-b9c35aae7cec1956
-    kind: skill
-    scope: template
-    owner: template-maintainers
-    summary: "Maintainer procedure that collects settled downstream practice; keep it in the template repository and never copy it downstream."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/skills/template-harvest/SKILL.md"}
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/PULL_REQUEST_TEMPLATE.md"}
     updated: unknown
     supersedes: []
     superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_agent_communication.py
-    id: content-9cf8cf7022c1fe93
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for agent communication."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_agent_communication.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_codex_context.py
-    id: content-d1d7855321571c56
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for codex context."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_codex_context.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_credentials.py
-    id: content-7776f6afbe1b9ac6
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for credentials."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_credentials.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_diagnose.py
-    id: content-40ef232b9bbe5038
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for diagnose."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_diagnose.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_dispatch.py
-    id: content-b563e4d394fb72a5
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for dispatch."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_dispatch.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_governance.py
-    id: content-56fb5a6c5987010a
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for governance."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_governance.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_migrate.py
-    id: content-f8282f489f4886e5
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for migrate."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_migrate.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_upgrade.py
-    id: content-0de7c4c04cbf7011
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for upgrade."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_upgrade.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_upgrade_release.py
-    id: content-c6aa1dc381db7682
-    kind: code
-    scope: template
-    owner: template-maintainers
-    summary: "Template-only regression checks for upgrade release."
-    status: rejected
-    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".agents/tests/test_template_upgrade_release.py"}
-    updated: unknown
-    supersedes: []
-    superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
   - path: .github/release-examples/coordination-flow.mmd
     id: content-84b6c8e95af6fcab
     kind: document
@@ -2769,6 +2794,87 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: .github/workflows/paper-check.yml
+    id: content-68d6511862dc20fb
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Issue and PR templates and CI (template-check, paper-check, reference-validation); a paper keeps the job names its branch protection requires."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".github/workflows/paper-check.yml"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .github/workflows/reference-validation.yml
+    id: content-4d1bc3ea0490089f
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Issue and PR templates and CI (template-check, paper-check, reference-validation); a paper keeps the job names its branch protection requires."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".github/workflows/reference-validation.yml"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: .github/workflows/template-check.yml
+    id: content-ec7ad9f8b4798de8
+    kind: document
+    scope: shared_with_adaptation
+    owner: template-maintainers
+    summary: "Hosted CI for the template checks."
+    status: active
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".github/workflows/template-check.yml"}
+    updated: unknown
+    adaptation: "Hosted CI for the template checks. Adopt it when the issue-workflow <CI> slot is yes; leave it out when it is no, and template-upgrade keeps it out. Its result is noted on the PR and never gates a merge; the gate is the issue-workflow <LOCAL_CHECK>, which runs the same steps locally."
+    optional: true
+    supersedes: []
+    superseded_by: []
+  - path: .gitignore
+    id: content-bc37d034bad56458
+    kind: document
+    scope: shared_with_adaptation
+    owner: project-maintainers
+    summary: "Keep the template rules (.project/, LaTeX leftovers); add the paper's own."
+    status: active
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": ".gitignore"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adaptation: "Keep the template rules (.project/, LaTeX leftovers); add the paper's own. This repository keeps no asset folder, so the template's assets/* exceptions are dropped."
+  - path: .pi
+    id: content-3f95c2c04fa4fd32
+    kind: symlink-index
+    scope: shared
+    owner: template-maintainers
+    summary: "Relative symlink to .agents/ so a runtime that looks only under .pi finds the skills."
+    status: active
+    source: {"commit": "7fed695", "path": ".pi"}
+    updated: 2026-11-14
+    supersedes: []
+    superseded_by: []
+  - path: AGENTS.md
+    id: content-a54ff182c7e8acf5
+    kind: governance
+    scope: shared_with_adaptation
+    owner: template-maintainers
+    summary: "Directory boundary and registry-generated navigation."
+    status: active
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "AGENTS.md"}
+    updated: unknown
+    adaptation: "Agent rules and the paper task routing; a paper keeps the three planes and the routing and adds its own rules."
+    supersedes: []
+    superseded_by: []
+  - path: CLAUDE.md
+    id: content-6ebdb617a8104a77
+    kind: symlink-index
+    scope: shared
+    owner: template-maintainers
+    summary: "Recreate as a relative symlink to AGENTS.md; never duplicate its content."
+    status: active
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "CLAUDE.md"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
   - path: DEVELOPMENT_WRITING_EXAMPLE.md
     id: content-0c5e67f956787359
     kind: document
@@ -2781,6 +2887,32 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
+  - path: Makefile
+    id: content-76ed074a9305c040
+    kind: document
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Public build entry; set PAGE_BUDGET to the venue's limit (or none); kept by the paper, never merged."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "Makefile"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Keep the targets and set PAGE_BUDGET; the release notes give the diff of every change, and the command never merges this file. A three-way merge inserted a block the paper already had (Issue #245)."
+    upgrade: review
+  - path: README.md
+    id: content-b335630551682c19
+    kind: document
+    scope: shared_with_adaptation
+    owner: template-maintainers
+    summary: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
+    status: active
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "README.md"}
+    updated: unknown
+    adaptation: "Rewrite for the paper: title and stage, quick start, where to write, the build and check commands, the repository map; the template's starting steps live in RELEASE_NOTES.md, not here."
+    upgrade: review
+    supersedes: []
+    superseded_by: []
   - path: RELEASE_EXAMPLE.md
     id: content-52c2bbc16305d22f
     kind: document
@@ -2793,250 +2925,38 @@ entries:
     supersedes: []
     superseded_by: []
     adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_development.py
-    id: content-52fd7d28e9e85c13
-    kind: code
+  - path: RELEASE_NOTES.md
+    id: content-68d24fa81558aae3
+    kind: document
     scope: template
-    owner: template-maintainers
-    summary: "Public checker counterexamples, Git symlink modes, normalized discovery and recursive Shell checks."
+    owner: paper-template-maintainers
+    summary: "Template release history stays in the template repository; a paper keeps its own release notes, one entry per release tag. The template's starting steps live in its `## Starting from this template` section."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "RELEASE_NOTES.md"}
+    updated: 2026-10-26
+    supersedes: []
+    superseded_by: []
+  - path: USER.md
+    id: content-9afc5db23792a47e
+    kind: document
+    scope: project
+    owner: project-maintainers
+    summary: "Repository-owned content; preserve during template upgrades."
     status: rejected
-    source: {"issue": 133}
-    updated: 2026-10-28
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "USER.md"}
+    updated: unknown
     supersedes: []
     superseded_by: []
-    adoption: "Upstream template-only content (coding-agent-project-template); not adopted."
-  - path: .agents/tests/project/test_template_issue_195_upgrade.py
-    id: paper-test-issue-195
-    kind: code
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Exercise upgrades preserving local paper content and evidence."
-    status: active
-    source: {"issue": 195}
-    updated: 2026-11-04
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/tests/project/test_template_issue_216_upgrade.py
-    id: paper-test-issue-216
-    kind: code
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Upgrade a paper that left template content out and check its omissions stay single and out."
-    status: active
-    source: {"issue": 216}
-    updated: 2026-11-13
-    supersedes: []
-    superseded_by: []
-    language: python
-  - path: .agents/memory/project/template-maintenance/paper-template-extension-boundary.md
-    id: content-paper-template-extension-boundary
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Why the paper template keeps inherited development, paper capabilities and product evidence in distinct boundaries."
-    status: active
-    source: {"issues": [195, 197], "commit": "80bfd1d"}
-    updated: 2026-11-05
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/template-maintenance/derived-template-upgrade-command.md
-    id: content-derived-template-upgrade-command
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "A derived template follows its upstream with the target release's command directory and keeps the inherited scripts byte-identical."
-    status: active
-    source: {"issue": 218, "upstream": "v0.1.34"}
-    updated: 2026-11-13
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/project/template-maintenance/ci-tex-install-bounded.md
-    id: content-ci-tex-install-bounded
-    kind: memory
-    scope: template
-    owner: paper-template-maintainers
-    summary: "Bound the CI Ubuntu mirror preflight and TeX install, and rerun runner DNS failures instead of bypassing required checks."
-    status: active
-    source: {"issue": 205}
-    updated: 2026-11-11
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/collaborator-content-byte-for-byte.md
-    id: content-f1ce081d3317b16d
-    kind: memory
+    adoption: "Not adopted: a paper has no installed product; the reader-facing role belongs to README.md and the paper."
+  - path: paper/Makefile
+    id: content-641a9d53b7c23ceb
+    kind: document
     scope: shared
     owner: paper-template-maintainers
-    summary: "Manuscript content a collaborator wrote stays byte for byte; a needed change is proposed and attributed, never applied silently."
+    summary: "latexmk builds of main, blind and submission into BUILD_DIR, with the TEXBIN override; replace with the template's on upgrade unless the paper changed it."
     status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/collaborator-content-byte-for-byte.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-writing/claims-set-expected-results.md
-    id: content-91e4c87615610aa7
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Each claim fixes its experiment and its expected result before the runs; a planned result is never written as an observation."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/claims-set-expected-results.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-writing/non-hedged-claims.md
-    id: content-b051ea4e2826a690
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "State the claim at the strength the evidence supports and report a reduced setting once, in the setup, not as hedging."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/non-hedged-claims.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-writing/experiments-argue-for-claims.md
-    id: content-1658c5f86ccac8e7
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Organise the evaluation claim by claim, one exhibit and one conclusion per subsection."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/experiments-argue-for-claims.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-writing/notation-cost.md
-    id: content-4cda64955d135895
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Introduce a symbol only where prose cannot be precise; the full formalism belongs in the appendix."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/notation-cost.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-writing/undecided-content-in-author-comments.md
-    id: content-53e427429fe2e699
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Undecided content lives in author comments inside paper/, never in the article text or the development plane."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/undecided-content-in-author-comments.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-figures/figure-deck-and-export.md
-    id: content-eae20f0801c438da
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Draw conceptual figures as one slide deck in the notes tree, export with a project script, judge at print size."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-figures/figure-deck-and-export.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-publication/overleaf-tree-is-authoritative.md
-    id: content-34225526bd837b8b
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Take Overleaf edits in by tree, byte for byte, never by replaying intermediate commits; never pipe a build into an early-closing command."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-publication/overleaf-tree-is-authoritative.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/credential-route-before-weaker-option.md
-    id: content-e9243486f704690a
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Check the device's existing credential route, and test the endpoint, before falling back to a weaker public route."
-    status: active
-    source: {"commit": "2b9f09f", "path": ".agents/memory/shared/credential-route-before-weaker-option.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .claude
-    id: content-e026f56c08dcdea4
-    kind: symlink-index
-    scope: shared
-    owner: template-maintainers
-    summary: "Relative symlink to .agents/ so a runtime that looks only under .claude finds the skills."
-    status: active
-    source: {"commit": "7fed695", "path": ".claude"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .pi
-    id: content-3f95c2c04fa4fd32
-    kind: symlink-index
-    scope: shared
-    owner: template-maintainers
-    summary: "Relative symlink to .agents/ so a runtime that looks only under .pi finds the skills."
-    status: active
-    source: {"commit": "7fed695", "path": ".pi"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/notes/
-    id: content-2420908dc9108902
-    kind: governance
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Tracked work in progress: plans, figure decks and briefs, literature reading, revision reports; conclusions move to memory or knowledge."
-    status: active
-    source: {"commit": "7fed695", "path": ".agents/notes/"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/memory/shared/paper-writing/writing-exemplar-archive.md
-    id: content-963d2e7447c74cc7
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites."
-    status: active
-    source: {"commit": "7fed695", "path": ".agents/memory/shared/paper-writing/writing-exemplar-archive.md"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/project/check_development_paths.py
-    id: content-dbebdd48ae9b0840
-    kind: code
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "Check that development-plane documents name existing paths and that CLAUDE.md, .claude and .pi are the expected symlinks."
-    status: active
-    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.py"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-  - path: .agents/scripts/project/check-development-paths.allow
-    id: content-69c61130a30cd310
-    kind: code
-    scope: shared_with_adaptation
-    owner: paper-template-maintainers
-    summary: "Explicit exemptions for check-development-paths.py, each with its reason; printed when the check runs."
-    status: active
-    source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.allow"}
-    updated: 2026-11-14
-    supersedes: []
-    superseded_by: []
-    adaptation: "Fill one line per intentional exemption of this paper, with its reason."
-  - path: .agents/memory/shared/paper-foundation/appendix-as-its-own-tree.md
-    id: content-6c92277314f82a36
-    kind: memory
-    scope: shared
-    owner: paper-template-maintainers
-    summary: "One appendix per file under paper/appendix/, input after \\appendix; sections/ holds main text only."
-    status: active
-    source: {"commit": "71945a6", "path": ".agents/memory/shared/paper-foundation/appendix-as-its-own-tree.md"}
-    updated: 2026-11-14
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/Makefile"}
+    updated: 2026-10-20
     supersedes: []
     superseded_by: []
   - path: paper/appendix/a-example.tex
@@ -3051,6 +2971,86 @@ entries:
     supersedes: []
     superseded_by: []
     adaptation: "Replace the placeholder with the paper's own appendices; keep one file per appendix."
+  - path: paper/authors.tex
+    id: content-2b382f815f7a32d7
+    kind: document
+    scope: project
+    owner: paper-template-maintainers
+    summary: "The paper's author identity and its PaperIdentity strings."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/authors.tex"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: paper/blind.tex
+    id: content-b06f39ac4446c527
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "One-line entry file of the anonymous build."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/blind.tex"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: paper/macros.tex
+    id: content-548b46df121f8fa4
+    kind: document
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Keep the required interface markers (PaperTODO, PaperNote, PaperIdentity, PaperTitle); add the paper's interfaces with markers."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/macros.tex"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Keep the required interface markers (PaperTODO, PaperNote, PaperIdentity, PaperTitle); add the paper's interfaces with markers."
+  - path: paper/main.tex
+    id: content-01944e90eeb85eb7
+    kind: document
+    scope: shared_with_adaptation
+    owner: paper-template-maintainers
+    summary: "Keep the build switches, the authors.tex input and the PaperMainTextEnd label; the document class, packages and sections are the paper's."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/main.tex"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    adaptation: "Keep the build switches, the authors.tex input and the PaperMainTextEnd label; the document class, packages and sections are the paper's."
+  - path: paper/style/
+    id: content-a21ad93a2b6fe43d
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Display macros (paper-harness.sty with T1 encoding), per-author comments (author-comments.sty) and the venue-kit compatibility layer (compat.sty)."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/style"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: paper/submission.tex
+    id: content-3538efa81918d909
+    kind: document
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "One-line entry file of the named build without notes."
+    status: active
+    source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": "paper/submission.tex"}
+    updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+  - path: src/.gitkeep
+    id: content-42e145566039681e
+    kind: document
+    scope: project
+    owner: project-maintainers
+    summary: "Repository-owned content; preserve during template upgrades."
+    status: rejected
+    source: {"commit": "d07f49d2f6e02ad531d920c8c8fb994f44e88971", "path": "src/.gitkeep"}
+    updated: unknown
+    supersedes: []
+    superseded_by: []
+    adoption: "Not adopted: the product tree is paper/, not src/."
 omitted: [
     {
       "id": "content-2f754321d62f08ba",

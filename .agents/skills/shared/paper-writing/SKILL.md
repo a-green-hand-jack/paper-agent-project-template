@@ -9,12 +9,16 @@ Identify whether the task concerns argument and section structure, narrative and
 
 - [Finding and recording exemplars](sources/writing-reference-finder/reference.md)
   ([`writing-exemplar-archive`](../../../memory/shared/paper-writing/writing-exemplar-archive.md))
+- [Running one review round](sources/revision-rounds/reference.md): a marked place
+  is a sample of a habit, so count it, plan before and after, wait for approval,
+  then edit, measure and report the counts
 
 When the task is the argument rather than the prose, read the matching record
 under [`.agents/memory/shared/paper-writing/`](../../../memory/shared/paper-writing/):
 claims fix their experiment and expected result, claims are stated without
-hedging, the evaluation is organised claim by claim, notation is a cost, and
-undecided content lives in author comments. Collaborator text stays byte for
+hedging, the evaluation is organised claim by claim, notation is a cost, and an
+undecided item is a visible `\PaperTODO{...}` whose detail sits in a note and an
+Issue. Collaborator text stays byte for
 byte ([`collaborator-content-byte-for-byte`](../../../memory/shared/collaborator-content-byte-for-byte.md)).
 
 For changed paper source, run the project's build checks and inspect affected pages when layout can change.

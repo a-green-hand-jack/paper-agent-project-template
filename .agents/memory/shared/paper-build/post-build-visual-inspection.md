@@ -20,6 +20,20 @@ applies_to: repositories that build a paper, poster or other typeset product who
    them, lines holding one character or word, paragraph last lines shorter than
    `LAST_LINE_FILL`, paragraphs split without need, overfull lines, and running
    headers that are wrong for the form.
+6. **Measure a last line, do not judge it by eye.** Take the line boxes from the
+   **blind** build (comments in `main` move the breaks), compute
+   `(line right − column left) / column width` for every body line that stops
+   short of the right edge, and list those below `LAST_LINE_FILL`. Fix by cutting
+   words so the paragraph ends a line earlier, by rewording, or by adding
+   content. A repair moves every break after it, so measure again — and again —
+   until no paragraph is listed. Two-column main text and one-column appendix
+   have different column widths; measure each on its own pages.
+7. **Never move text with a spacing command.** `\looseness`, `\vspace`,
+   `\linebreak`, a negative `\parfillskip` or a stretched `\emergencystretch`
+   buys a line at the cost of a layout the other rendering of the same source
+   will not reproduce; every repair is a wording or content change. Lines that
+   end in inline mathematics, headings and footnotes are misjudged by extracting
+   boxes and are settled by looking at the page.
 4. **Report what was inspected.** Name the build, the pages looked at and what
    was not checked. Never claim visual approval without looking at the
    rendered pages.
@@ -43,8 +57,10 @@ end of this record (see `template-adoption` step 5):
 - `MIN_FIGURE_TEXT`: the smallest in-figure text relative to the caption, for
   example `1.0` (as large as the caption).
 - `LAST_LINE_FILL`: the shortest acceptable last line of a paragraph, for
-  example "no line of one or two words". A stub is fixed by rewording, never by
-  padding.
+  example "no line of one or two words", or a fill such as two thirds of the
+  column. A stub is fixed by rewording, cutting or adding content, never by
+  padding or spacing commands, and a word added to fill a line is content that
+  must be true and is reported to the Human.
 
 Then:
 

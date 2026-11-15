@@ -34,3 +34,17 @@ and it lets an experiment repository work from a fixed specification.
   with the Human whether the claim weakens; do not silently replace the
   expected result with the observed one.
 - Reported numbers reach the text only through the interface macros.
+
+## When the results are not final
+
+A snapshot still moving a number does not license a rewrite of the claim. When a
+new run or a corrected aggregation changes a value, update the value and keep the
+wording of the claim; report what the new number says against the claim to the
+Human and record it in the Issue. Weakening or strengthening a claim is the
+Human's decision, and a claim quietly rewritten to match a snapshot is no longer
+the claim the experiments were designed to test.
+
+When the experiment side drops or changes a run the paper describes, do not
+delete the description and do not silently substitute another result: ask the
+experiment side, and keep the item visible (a `\PaperTODO{...}` whose note names
+the owner) until it is answered.
