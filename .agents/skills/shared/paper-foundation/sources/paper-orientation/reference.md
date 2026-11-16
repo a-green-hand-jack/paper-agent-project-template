@@ -27,8 +27,8 @@ Classify the repository before editing:
   (the template itself, which also records `template.upstream`). Do not write
   paper content here; template work follows `README.md` and the
   `template-maintenance` records. A new paper is a new
-  repository made from the template as `README.md` describes, or starts from a
-  brief through `paper-brief-ingest`.
+  repository made from the template as `README.md` describes, and its brief
+  fills `.agents/memory/project/paper-foundation/brief.md`.
 - **paper repository**: the registry's `template` names the paper template and
   tag it adopted, origin is a different repository, and there is no `upstream`
   block. Use the ordinary paper workflows; template releases arrive through
@@ -58,7 +58,8 @@ Operating mode: collaborative or autonomous
 
 When the Human provides a brief (a brief file, a brief repository or the filled
 starter record `.agents/memory/project/paper-foundation/brief.md`), it is this packet in
-structured form; use `paper-brief-ingest` instead of transcribing it.
+structured form; check each supplied field against the evidence before writing
+it as decided, and keep the rest `unresolved`.
 
 With no evidence, limit work to clarification, an evidence plan or an outline.
 A section draft requires supplied or Human-approved claims and evidence for
@@ -81,7 +82,7 @@ authorship, venue choice or approval state.
    touches (the index is `.agents/memory/project/AGENTS.md`).
 6. Inspect the active paper section and the current Git diff.
 7. Load one owner skill from the routing in `AGENTS.md`. Language and figure
-   passes are loaded through `writing-router` or `figure-router` only when the
+   passes are loaded through `paper-writing` or `paper-figures` only when the
    owner skill or the Human asks for them; never load the whole family.
 
 ## Overleaf before the first edit

@@ -82,4 +82,5 @@ and are only a planning stand-in for ICML 2027, whose pages are not published.
 ## Refresh
 
 When the ICML 2027 call for papers is published, write `venue-icml-2027.md`
-from `venue-template.md` and mark this record superseded for 2027 planning.
+from `venue-template.md`, list this record's ID in its `supersedes`, and delete
+this record with its registry entry once no paper still targets ICML 2026.

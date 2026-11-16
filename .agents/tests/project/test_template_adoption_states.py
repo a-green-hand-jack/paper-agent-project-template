@@ -132,7 +132,8 @@ def start_paper(root: Path) -> None:
     (root / "RELEASE_NOTES.md").write_text("# Release notes\n", encoding="utf-8")
     (root / "README.md").write_text("# A paper\n\nBuild it with `make check`.\n", encoding="utf-8")
     for record, slots in ((".agents/memory/shared/paper-build/page-budget-on-blind-build.md", ("PAGE_MARGIN",)),
-                          (".agents/memory/shared/paper-build/post-build-visual-inspection.md", ("MIN_FIGURE_TEXT", "LAST_LINE_FILL"))):
+                          (".agents/memory/shared/paper-build/post-build-visual-inspection.md",
+                           ("MIN_FIGURE_TEXT", "LAST_LINE_FILL", "MAX_WORD_SPACE"))):
         rows = "".join(f"| `{slot}` | to be set for the venue |\n" for slot in slots)
         record_path = root / record
         if not record_path.exists():

@@ -2,7 +2,7 @@ schema_version: 2
 purpose: "Record which development-plane content is reusable across repositories and which content belongs to one concrete project."
 template:
   repository: https://github.com/a-green-hand-jack/paper-agent-project-template
-  version: v0.10.2
+  version: v0.11.0
   upstream:
     repository: https://github.com/a-green-hand-jack/coding-agent-project-template
     version: v0.1.39
@@ -554,7 +554,7 @@ entries:
     summary: "Dated ICML 2026 facts and kit hashes; ICML 2027 unknown until its call is published."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/knowledge/shared/venue-icml-2026.md"}
-    updated: 2026-10-20
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
     refresh_after: "when https://icml.cc/Conferences/2027/CallForPapers stops returning 404; write venue-icml-2027 then"
@@ -971,13 +971,13 @@ entries:
     kind: memory
     scope: shared_with_adaptation
     owner: paper-template-maintainers
-    summary: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
+    summary: "Fill MIN_FIGURE_TEXT, LAST_LINE_FILL and MAX_WORD_SPACE; look at and measure the rendered pages before calling a build done."
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/memory/shared/post-build-visual-inspection.md"}
-    updated: 2026-10-20
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
-    adaptation: "Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done."
+    adaptation: "Fill MIN_FIGURE_TEXT, LAST_LINE_FILL and MAX_WORD_SPACE; look at and measure the rendered pages before calling a build done."
   - path: .agents/memory/shared/paper-build/tex-engine-from-texbin.md
     id: content-11e912c3abdabd0f
     kind: memory
@@ -1091,14 +1091,15 @@ entries:
   - path: .agents/memory/shared/paper-writing/experiments-argue-for-claims.md
     id: content-1658c5f86ccac8e7
     kind: memory
-    scope: shared
+    scope: shared_with_adaptation
     owner: paper-template-maintainers
-    summary: "Organise the evaluation claim by claim, one exhibit and one conclusion per subsection."
+    summary: "Fill CLAIM_NAMING; organise the evaluation by claim, one exhibit and one conclusion per subsection."
     status: active
     source: {"commit": "2b9f09f", "path": ".agents/memory/shared/paper-writing/experiments-argue-for-claims.md"}
-    updated: 2026-11-14
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
+    adaptation: "Fill CLAIM_NAMING (named or implicit; default named) in the trailing section."
   - path: .agents/memory/shared/paper-writing/non-hedged-claims.md
     id: content-b051ea4e2826a690
     kind: memory
@@ -1135,14 +1136,15 @@ entries:
   - path: .agents/memory/shared/paper-writing/writing-exemplar-archive.md
     id: content-963d2e7447c74cc7
     kind: memory
-    scope: shared
+    scope: shared_with_adaptation
     owner: paper-template-maintainers
-    summary: "Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites."
+    summary: "Fill EXEMPLAR_STORE; exemplars are writing models, and a card in knowledge/ is what the paper uses."
     status: active
     source: {"commit": "7fed695", "path": ".agents/memory/shared/paper-writing/writing-exemplar-archive.md"}
-    updated: 2026-11-14
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
+    adaptation: "Fill EXEMPLAR_STORE (default the ignored .project/artifacts/writing-exemplars/; a tracked store is listed in policy.root_files) in the trailing section."
   - path: .agents/memory/shared/product-state-root.md
     id: content-c3d2513ef2533407
     kind: memory
@@ -1429,7 +1431,7 @@ entries:
     summary: "Check that development-plane documents name existing paths and that CLAUDE.md, .claude and .pi are the expected symlinks."
     status: active
     source: {"commit": "4bca5aa", "path": ".agents/scripts/project/check-development-paths.py"}
-    updated: 2026-11-14
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
   - path: .agents/scripts/project/migrate-project.rules
@@ -1605,6 +1607,18 @@ entries:
     status: active
     source: {"commit": "3bd31fc03f997910971f42fdce0d43d8a7005b04", "path": ".agents/scripts/check-paper-interfaces.py"}
     updated: 2026-10-20
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/scripts/shared/paper-build/page_measure.py
+    id: content-3038bec83ed06ce1
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Measure rendered pages: short last lines, stretched word spacing, early column ends and section height."
+    status: active
+    source: {"issue": 263}
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
     language: python
@@ -2062,7 +2076,7 @@ entries:
     summary: "Scientific data figures and editable diagrams."
     status: active
     source: {"issue": 195}
-    updated: 2026-11-04
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
   - path: .agents/skills/shared/paper-figures/sources/scientific-figure-workflow/
@@ -2084,7 +2098,7 @@ entries:
     summary: "Paper context, brief, control decisions and stable interfaces."
     status: active
     source: {"issue": 195}
-    updated: 2026-11-04
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
   - path: .agents/skills/shared/paper-foundation/sources/control-review/
@@ -2216,7 +2230,7 @@ entries:
     summary: "Manuscript consistency and peer-review triage."
     status: active
     source: {"issue": 195}
-    updated: 2026-11-04
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
   - path: .agents/skills/shared/paper-review/sources/manuscript-consistency-review/
@@ -2249,7 +2263,7 @@ entries:
     summary: "Paper writing, structure, language and proofreading."
     status: active
     source: {"issue": 195}
-    updated: 2026-11-04
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
   - path: .agents/skills/shared/paper-writing/sources/writing-reference-finder/
@@ -2508,7 +2522,7 @@ entries:
     summary: "Guard the reviewed build entry, the uv floor and the retired-document check."
     status: active
     source: {"commit": "490f169ae81beaeb7ca2baa141c434b950272b67", "path": ".agents/tests/project/test_template_maintenance.py"}
-    updated: 2026-11-15
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
   - path: .agents/tests/project/test_template_migrate.py
@@ -2579,6 +2593,18 @@ entries:
     status: active
     source: {"issue": 203}
     updated: 2026-11-11
+    supersedes: []
+    superseded_by: []
+    language: python
+  - path: .agents/tests/shared/paper-build/test_page_measure.py
+    id: content-720645a5f24d4355
+    kind: code
+    scope: shared
+    owner: paper-template-maintainers
+    summary: "Unit tests of the shared scripts (page measurement)."
+    status: active
+    source: {"issue": 263}
+    updated: 2026-11-16
     supersedes: []
     superseded_by: []
     language: python
