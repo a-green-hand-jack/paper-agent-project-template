@@ -7,8 +7,9 @@ Two uses of external papers have distinct authority:
   evidence for the cited identities and individual claim occurrences.
 - Writing and design exemplars teach presentation. They are not citations or
   evidence merely because they are useful examples. Keep durable, sourced
-  exemplar cards in `exemplars/` and downloaded material in
-  `.project/artifacts/writing-exemplars/`; use `paper-writing`.
+  exemplar cards in `exemplars/` and downloaded material in the project's
+  exemplar store (`EXEMPLAR_STORE` of `writing-exemplar-archive`, by default
+  `.project/artifacts/writing-exemplars/`); use `paper-writing`.
   A work used for both purposes still needs independent citation review.
 
 - `ledger.json` — the reference ledger (`paper-reference-ledger-v2`): the

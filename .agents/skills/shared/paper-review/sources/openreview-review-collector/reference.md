@@ -258,15 +258,17 @@ accept a limitation, or choose a rebuttal or revision strategy.
 
 The dossier feeds the paper's revision work; it does not change the paper.
 
-- decisions the queue raises: `decision-packet`;
-- locked or bounded claims: `control-review`;
-- prose revisions: `writing-router`, which routes to `section-writing`;
-- names, notation and result macros: `paper-interface-maintenance`;
-- requested citations: `citation-support-review`;
+- decisions the queue raises: `paper-foundation` (its `decision-packet` source);
+- locked or bounded claims: `paper-foundation` (its `control-review` source);
+- prose revisions: `paper-writing` (its `revision-rounds` source);
+- figures: `paper-figures`;
+- names, notation and result macros: `paper-foundation` (its
+  `paper-interface-maintenance` source);
+- requested citations: `paper-references` (its `citation-support-review` source);
 - new experiments: recorded in `.agents/memory/project/paper-foundation/experiments.md` and
   run in the code repository; the paper only reports their results;
-- a camera-ready or revision build: `publication-planning` and
-  `release-review`.
+- a camera-ready or revision build: `paper-publication` (its
+  `publication-planning` and `release-review` sources).
 
 ## Boundaries
 

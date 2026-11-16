@@ -1,7 +1,7 @@
 ---
 name: post-build-visual-inspection
 date: 2026-10-20
-source: Issue #156 §7; visual-inspection records of the downstream paper repositories, including figure labels judged legible from an asset render that printed at half the caption size on the page
+source: Issues #156 §7 and #263; visual-inspection records of the downstream paper repositories, including figure labels judged legible from an asset render that printed at half the caption size on the page
 applies_to: repositories that build a paper, poster or other typeset product whose layout a person will read
 ---
 
@@ -19,7 +19,23 @@ applies_to: repositories that build a paper, poster or other typeset product who
 3. **Check the known failure classes:** floats far from the text that cites
    them, lines holding one character or word, paragraph last lines shorter than
    `LAST_LINE_FILL`, paragraphs split without need, overfull lines, and running
-   headers that are wrong for the form.
+   headers that are wrong for the form. Three more show only on the page:
+   - **stretched vertical space**: a style's `\flushbottom` stretches the space
+     around headings, paragraphs and floats so that columns end level, which
+     opens blank lines under a caption or between paragraphs; whether the body
+     is `\raggedbottom` is the paper's choice, recorded in its publication
+     record;
+   - **a heading moved to the next column**: with `\raggedbottom`, a heading
+     that cannot keep two lines under it at the column foot moves on and leaves
+     the column short; the repair is wording (cut until it fits, or add a true
+     sentence that fills the column), and it moves everything after it;
+   - **floats stacked or off their page**: two floats on top of each other in
+     one column, a column float directly under a page-wide one, a `[h]` float
+     splitting a column, or a float on another page than its first reference;
+     a page-wide float lands at the earliest at the top of the next page, so
+     its source is declared a page ahead.
+   A justified line can also be stretched by material that does not break,
+   such as a boxed citation: list lines whose spacing exceeds `MAX_WORD_SPACE`.
 6. **Measure a last line, do not judge it by eye.** Take the line boxes from the
    **blind** build (comments in `main` move the breaks), compute
    `(line right − column left) / column width` for every body line that stops
@@ -51,7 +67,7 @@ looked like a finished one.
 
 ## Apply
 
-Each project fills two parameters in the `## In this repository` section at the
+Each project fills three parameters in the `## In this repository` section at the
 end of this record (see `template-adoption` step 5):
 
 - `MIN_FIGURE_TEXT`: the smallest in-figure text relative to the caption, for
@@ -61,6 +77,8 @@ end of this record (see `template-adoption` step 5):
   column. A stub is fixed by rewording, cutting or adding content, never by
   padding or spacing commands, and a word added to fill a line is content that
   must be true and is reported to the Human.
+- `MAX_WORD_SPACE`: the widest acceptable median space in a justified line,
+  as a multiple of the page's median space, for example `1.8`.
 
 Then:
 
@@ -72,6 +90,18 @@ Then:
 3. `pdftotext -layout` helps find text, but merges adjacent paragraphs and
    keeps line numbers of an anonymous build; do not measure layout from it
    alone.
-4. Float placement, last-line targets and spacing preferences differ between
+4. Measure with `.agents/scripts/shared/paper-build/page_measure.py`, which reads
+   the line boxes of `pdftotext -bbox-layout` from the blind build and takes
+   its page range from the build's `.aux` (`--part main` ends at
+   `PaperMainTextEnd`, `--part appendix` starts at appendix A):
+   `last-lines --below <LAST_LINE_FILL>`, `word-spacing --factor
+   <MAX_WORD_SPACE>`, `column-gaps` (columns more than 1.5 lines short of the
+   text area; the last page is judged by eye) and `section-height --from
+   <heading>` (the column height a section takes against a length the author
+   set). Its output is a list of candidates to confirm on the page, not a
+   check, and `make check` does not run it. Measure again after every repair.
+5. Compare each float's page, from its `\newlabel` in the build's `.aux`, with
+   the page of its first reference in the text; list the floats that differ.
+6. Float placement, last-line targets and spacing preferences differ between
    papers and venues; a paper records its own in its publication record, and
    never changes a venue kit's margins or spacing to win space.

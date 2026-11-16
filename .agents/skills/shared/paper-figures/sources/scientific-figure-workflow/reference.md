@@ -12,8 +12,8 @@ description: >-
 
 Own the figure-production workflow, not the scientific claim. Keep final paper
 figures accurate, reproducible where they carry evidence, visually inspected
-and editable enough for revision. `figure-router` routes figure work; this
-skill sets the workflow, the storage and the quality gates.
+and editable enough for revision. `paper-figures` routes figure work; this
+source sets the workflow, the storage and the quality gates.
 
 ## First Decision: Data Figure Or Schematic
 
@@ -48,9 +48,9 @@ Use this for any figure that carries numeric evidence.
    repository, commit, run or config id, checksum, regeneration command), read
    from the source repository or from a small committed data file. Never type
    numbers into a script.
-3. Choose the plot family and reference style (`scipilot-figure-skill`).
+3. Choose the plot family and reference style.
 4. Generate with a script, preferably Matplotlib or Seaborn with a publication
-   style helper (`icarus-figures`).
+   style helper.
 5. Export vector-first (`.pdf`, `.svg`) plus a raster preview when useful.
 6. Rebuild the paper and run the gate in
    `.agents/memory/shared/paper-build/post-build-visual-inspection.md`.
@@ -72,8 +72,8 @@ carries no evidence and has been checked by hand.
    confidential.
 3. The Human and Agent take composition ideas from the drafts, not factual
    content.
-4. Recreate the selected design in an editable medium (`thesis-figure-skill`
-   with `tikz-figure-code`, or `image-to-editable-ppt` for an editable deck).
+4. Recreate the selected design in an editable medium: TikZ, or a slide deck
+   exported by a project script (`figure-deck-and-export`).
 5. Replace generated text with real, editable labels.
 6. Check every arrow, module, label and ordering against the manuscript.
 7. Rebuild the paper and run the inspection gate.

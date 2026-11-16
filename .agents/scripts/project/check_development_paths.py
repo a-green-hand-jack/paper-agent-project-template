@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check that the paths and links the development plane names really exist, and
-that no document still points at a root document this template retired."""
+that no document still points at a root document or a skill this template
+retired."""
 
 from __future__ import annotations
 
@@ -19,6 +20,16 @@ PATH = re.compile(r"(?<![\w/.-])((?:\.agents|paper)/[A-Za-z0-9_./-]+)")
 # under .agents/memory/project/paper-foundation/.
 RETIRED = ("PAPER.md", "DEV.md")
 RETIRED_NAME = re.compile(r"(?<![\w/.-])(" + "|".join(re.escape(name) for name in RETIRED) + r")(?![\w-])")
+# Skills and skill sources a template release removed (#229); a document that
+# still routes to one sends an agent to a name that does not exist (#262). The
+# repository's own `omitted:` skill packages are added at run time.
+RETIRED_SKILLS = (
+    "academic-voice", "better-usage", "figure-router", "icarus-figures", "image-to-editable-ppt",
+    "lieflat-less-ai-tone", "paper-brief-ingest", "proofread", "scientific-english-editor",
+    "scientific-writing", "scipilot-figure-skill", "section-writing", "style-alignment",
+    "thesis-figure-skill", "tikz-figure-code", "writing-router",
+)
+REGISTRY = ".agents/content-registry.yaml"
 SKIP_PREFIX = ("paper/images/",)
 SKIP_TREE = (".agents/memory/project/template-maintenance/",)
 ALLOW = ".agents/scripts/project/check-development-paths.allow"
@@ -93,6 +104,43 @@ def retired_references(root: Path, files: list[str]) -> list[tuple[str, str]]:
     return found
 
 
+def registry_text(root: Path) -> str:
+    file = root / REGISTRY
+    return file.read_text(encoding="utf-8") if file.is_file() else ""
+
+
+def is_template(text: str) -> bool:
+    """A repository that follows an upstream template publishes shared text itself."""
+    block = re.search(r"(?ms)^template:\n((?:[ \t]+.*\n?)*)", text)
+    return bool(block and re.search(r"(?m)^  upstream:", block.group(1)))
+
+
+def retired_skills(root: Path, files: list[str], text: str) -> set[str]:
+    names = set(RETIRED_SKILLS)
+    if "\nomitted:" in text:
+        omitted = text.split("\nomitted:", 1)[1]
+        names.update(path.rstrip("/").rsplit("/", 1)[-1]
+                     for path in re.findall(r'"path": "(\.agents/skills/[^"]+/)"', omitted))
+    present = {path.rstrip("/").rsplit("/", 1)[-1]
+               for path in re.findall(r"(?m)^  - path: (\.agents/skills/\S+/)$", text)}
+    present.update(Path(name).parent.name for name in files
+                   if name.startswith(".agents/skills/") and name.endswith(("/SKILL.md", "/reference.md")))
+    return names - present
+
+
+def retired_skill_references(root: Path, files: list[str], names: set[str]) -> list[tuple[str, str]]:
+    if not names:
+        return []
+    pattern = re.compile(r"`(" + "|".join(re.escape(name) for name in sorted(names)) + r")`")
+    found = []
+    for name in documents(root, files):
+        if not (root / name).is_file():
+            continue
+        text = (root / name).read_text(encoding="utf-8", errors="replace")
+        found.extend((name, match) for match in pattern.findall(text))
+    return found
+
+
 def allowed(root: Path) -> dict[tuple[str, str], str]:
     file = root / ALLOW
     granted = {}
@@ -151,7 +199,18 @@ def main() -> int:
             exempt += 1
             continue
         failures.append(f"{name}: {path} is retired; name the record that replaced it")
+    text = registry_text(root)
+    skills = retired_skills(root, files, text)
+    warnings = []
+    for name, skill in retired_skill_references(root, files, skills):
+        if (name, skill) in granted:
+            exempt += 1
+            continue
+        problem = f"{name}: `{skill}` is a retired skill; route to the skill or source that replaced it"
+        (failures if is_template(text) else warnings).append(problem)
     failures.extend(link_errors(root, files))
+    for warning in warnings:
+        print(f"WARN {warning}")
     for failure in failures:
         print(f"FAIL {failure}")
     if failures:
@@ -159,6 +218,7 @@ def main() -> int:
         return 1
     print(f"OK paths: {len(checked) - exempt} references and their links exist; "
           f"no reference to a retired {', '.join(RETIRED)}; "
+          f"{len(warnings)} reference(s) to {len(skills)} retired skill name(s) to clean up; "
           f"{exempt} allowed by {ALLOW}; {len(SKIP_TREE)} historical tree(s) not scanned")
     return 0
 
