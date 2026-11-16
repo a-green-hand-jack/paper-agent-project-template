@@ -39,8 +39,10 @@ adds an entry to `paper/refs.bib` and never supports a scientific claim.
 ## Storage
 
 - Downloads (PDFs, arXiv source bundles) and working cards go under
-  `.project/artifacts/writing-exemplars/<topic-or-cohort>/`. They are not
-  committed: the papers are third-party copyrighted material.
+  `<EXEMPLAR_STORE>/<topic-or-cohort>/`, the store the project chose in
+  [`writing-exemplar-archive`](../../../../../memory/shared/paper-writing/writing-exemplar-archive.md);
+  by default the ignored `.project/artifacts/writing-exemplars/`, because the
+  papers are third-party copyrighted material.
 - A card the Human wants to keep with the repository becomes a dated, sourced
   project-owned card under `.agents/references/exemplars/writing/`, registered
   in the content registry; record sources and check dates for changing facts.

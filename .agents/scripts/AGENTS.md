@@ -24,5 +24,8 @@ the checks use) and reports the TeX tools; `migrate-project.rules` says that
 both are dropped at teardown because `make` and the setup rebuild them, and
 that `.project/tools/` is rebuilt by `tool-env.sh install`. `check_development_paths.py`
 runs inside `make check`: it fails when a document names a path that does not
-exist or a `CLAUDE.md`/`.claude`/`.pi` link points elsewhere, and it prints the
-exemptions it took from `check-development-paths.allow`.
+exist or a `CLAUDE.md`/`.claude`/`.pi` link points elsewhere, flags a retired
+skill name in backticks (an error in the template, a warning in a paper), and
+it prints the exemptions it took from `check-development-paths.allow`.
+`shared/paper-build/page_measure.py` measures rendered pages for
+`post-build-visual-inspection`; `make check` does not run it.

@@ -19,7 +19,7 @@ the record's own text never contains that heading line.
 - [optional-cli-environments.md](optional-cli-environments.md) — Optional CLIs run from the project environment under .project/tools, with no user-level fallback.
 - [paper-build/one-source-three-builds.md](paper-build/one-source-three-builds.md) — main, submission and blind from one source in a fixed order, each removing a layer.
 - [paper-build/page-budget-on-blind-build.md](paper-build/page-budget-on-blind-build.md) — Set PAGE_BUDGET in the Makefile and fill PAGE_MARGIN in the trailing section; measured on the blind build.
-- [paper-build/post-build-visual-inspection.md](paper-build/post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT and LAST_LINE_FILL; look at the rendered pages before calling a build done.
+- [paper-build/post-build-visual-inspection.md](paper-build/post-build-visual-inspection.md) — Fill MIN_FIGURE_TEXT, LAST_LINE_FILL and MAX_WORD_SPACE; look at and measure the rendered pages before calling a build done.
 - [paper-build/tex-engine-from-texbin.md](paper-build/tex-engine-from-texbin.md) — TeX binaries from an overridable TEXBIN; build leftovers stay out of tracked trees.
 - [paper-figures/figure-deck-and-export.md](paper-figures/figure-deck-and-export.md) — Draw conceptual figures as one slide deck in the notes tree, export with a project script, judge at print size.
 - [paper-foundation/appendix-as-its-own-tree.md](paper-foundation/appendix-as-its-own-tree.md) — One appendix per file under paper/appendix/, input after \appendix; sections/ holds main text only.
@@ -30,11 +30,11 @@ the record's own text never contains that heading line.
 - [paper-publication/sync-overleaf-before-editing.md](paper-publication/sync-overleaf-before-editing.md) — Take in Overleaf edits before writing and deliver to both sides together.
 - [paper-references/reference-integrity.md](paper-references/reference-integrity.md) — Identity and claim support are separate, occurrence-level obligations.
 - [paper-writing/claims-set-expected-results.md](paper-writing/claims-set-expected-results.md) — Each claim fixes its experiment and its expected result before the runs; a planned result is never written as an observation.
-- [paper-writing/experiments-argue-for-claims.md](paper-writing/experiments-argue-for-claims.md) — Organise the evaluation claim by claim, one exhibit and one conclusion per subsection.
+- [paper-writing/experiments-argue-for-claims.md](paper-writing/experiments-argue-for-claims.md) — Fill CLAIM_NAMING; organise the evaluation by claim, one exhibit and one conclusion per subsection.
 - [paper-writing/non-hedged-claims.md](paper-writing/non-hedged-claims.md) — State the claim at the strength the evidence supports and report a reduced setting once, in the setup, not as hedging.
 - [paper-writing/notation-cost.md](paper-writing/notation-cost.md) — Introduce a symbol only where prose cannot be precise; the full formalism belongs in the appendix.
 - [paper-writing/undecided-content-visible-placeholder.md](paper-writing/undecided-content-visible-placeholder.md) — An undecided item is a visible PaperTODO whose detail sits in a note and an Issue; author comments last one review round.
-- [paper-writing/writing-exemplar-archive.md](paper-writing/writing-exemplar-archive.md) — Study exemplars from the ignored .project/artifacts tree or a registered asset; a card in knowledge/ is what the paper cites.
+- [paper-writing/writing-exemplar-archive.md](paper-writing/writing-exemplar-archive.md) — Fill EXEMPLAR_STORE; exemplars are writing models, and a card in knowledge/ is what the paper uses.
 - [product-state-root.md](product-state-root.md) — Resolve worktree-local product state from the project marker.
 - [project-positioning-before-layout.md](project-positioning-before-layout.md) — Establish users, deliverables and domain concepts before choosing paths.
 - [provider-cost-routing.md](provider-cost-routing.md) — Use the cheapest capable provider/model and record why each real run is needed.

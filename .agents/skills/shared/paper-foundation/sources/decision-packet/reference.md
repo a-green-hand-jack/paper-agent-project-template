@@ -46,15 +46,17 @@ chat or in `.project/` notes is not recorded.
 1. Update the contract it changes: the brief record or the project record.
 2. Write the decision as its own record `.agents/memory/project/<topic>.md`
    from `.agents/memory/entry-template.md`: front matter (`name`, `date`,
-   `source`, `scope: project`, `applies_to`, `status: active`, `supersedes`,
-   `superseded_by`) and the sections Decision, Why and Apply. State what was
-   chosen, the paper objects it affects, rejected alternatives when relevant,
-   and which future change needs review again.
-3. Add the record to the index `.agents/memory/project/AGENTS.md`, and link it
-   from the brief record when it changes a cue.
-4. When it replaces an earlier decision, set the earlier record's
-   `status: superseded` and `superseded_by`, and the new record's
-   `supersedes`; do not rewrite the earlier decision's text.
+   `source`, `applies_to`) and the sections Decision, Why and Apply. State what
+   was chosen, the paper objects it affects, rejected alternatives when
+   relevant, and which future change needs review again.
+3. Register it in `.agents/content-registry.yaml` (`scope: project`,
+   `status: active`), regenerate the index in `.agents/memory/project/AGENTS.md`
+   with `check-development.sh --write-indexes`, and link it from the brief
+   record when it changes a cue.
+4. When it replaces an earlier decision, list the earlier record's ID in the
+   new entry's `supersedes`, then delete the earlier record and its registry
+   entry; Git keeps its text. The registry never carries
+   `status: superseded`.
 
 Record durable, high-impact choices only, not every sentence edit or passing
 discussion.

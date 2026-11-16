@@ -21,9 +21,12 @@ record is a separate Markdown file with the fields in
 
 ## In this repository
 
-A paper records its own decisions here, one topic per file; a decision replaced
-later is marked superseded in the registry and names its successor. The four
-starters (`brief`, `experiments`, `paper-interfaces`, `publication`) are the
-paper's records that a paper made from this template fills. This template's
-own records are `scope: template` in the registry; a paper made from the
-template deletes them.
+A paper records its own decisions here, one topic per file. A decision replaced
+later is deleted together with its registry entry, and Git keeps its body; the
+record that replaces it lists the old ID in `supersedes` as provenance. The
+registry never carries `status: superseded` or `status: retired`.
+
+This template ships four starter records (`brief`, `experiments`,
+`paper-interfaces`, `publication`) for a paper to fill; a paper rewrites this
+sentence to name the records it actually keeps. This template's own records are
+`scope: template` in the registry; a paper made from the template deletes them.
